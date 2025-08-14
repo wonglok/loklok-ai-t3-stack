@@ -712,6 +712,9 @@ Implement "${slug}" react component (${eachObject.componentName}), only write co
 include zustand store "useFrontEnd" in header like the following:
 import { useFrontEnd } from '/ui/useFrontEnd.js'
 
+React Requirements:
+- shadcn Library for User Interface Framework
+
 Zustand Store Requirements:
     - always use zustand store "useFrontEnd" to call props and backend procedures like this: 
 
