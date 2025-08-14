@@ -22,6 +22,7 @@ import {
     PromptInputModelSelectItem,
     PromptInputModelSelectTrigger,
     PromptInputModelSelectValue,
+    //
     // PromptInputSubmit,
     // PromptInputTextarea,
     // PromptInputToolbar,
@@ -30,19 +31,18 @@ import {
     // PromptInputButton,
 } from "@/components/ai-elements/prompt-input";
 
-//
 // import { PreviewPanelLoader } from "./PreviewPanelLoader";
 // import { Conversation } from "@/components/ai-elements/conversation";
 // import { StickToBottom, useStickToBottomContext } from "use-stick-to-bottom";
 // import { ServerAIClient } from "../util/ServerAIClient";
 // import * as webllm from "@mlc-ai/web-llm";
 // import { LoaderDisplay } from "@/game/GameCanvas";
-//
 
 import Editor from "@monaco-editor/react";
 import { useEffect, useState } from "react";
 import * as pathUtil from "path";
 import { format } from "date-fns";
+import { CodePod } from "../util/CodePod";
 
 let getLang = (filename: string) => {
     if (pathUtil.extname(filename) === ".json") {
@@ -95,14 +95,15 @@ function MonacoEditor({
     value,
     height,
     defaultLanguage,
-    track = false,
 }: {
-    track?: boolean;
-    defaultLanguage?: string;
     value: string;
     height: string;
+    defaultLanguage?: string;
 }) {
     let llmStatus = useGenAI((r) => r.llmStatus);
+    let files = useGenAI((r) => r.files);
+    let sortedFiles = files?.slice().sort(sortDate).reverse();
+
     let [editor, setEditor] = useState<any>();
 
     useEffect(() => {
@@ -112,6 +113,7 @@ function MonacoEditor({
     }, [editor]);
 
     useEffect(() => {
+        let track = sortedFiles[0]?.content === value;
         if (llmStatus !== "writing") {
         } else {
             if (track) {
@@ -167,18 +169,6 @@ export function ControlPanel() {
     let setupLLMProgress = useGenAI((r) => r.setupLLMProgress);
     let expandID = useGenAI((r) => r.expandID);
 
-    // let technicalSpecificationDraft = useGenAI(
-    //     (r) => r.technicalSpecificationDraft
-    // );
-    // let mongooseCodeDraft = useGenAI((r) => r.mongooseCodeDraft);
-    // let zustandStateTRPCMaanagerDraft = useGenAI(
-    //     (r) => r.zustandStateTRPCMaanagerDraft
-    // );
-
-    // let createBackendProceduresDraft = useGenAI(
-    //     (r) => r.createBackendProceduresDraft
-    // );
-
     let stopFunc = useGenAI((r) => r.stopFunc);
     let files = useGenAI((r) => r.files);
 
@@ -201,8 +191,6 @@ export function ControlPanel() {
             }
         }
     }, [llmStatus, files?.length]);
-
-    //
 
     return (
         <>
@@ -312,12 +300,17 @@ export function ControlPanel() {
                     </>
                 )}
 
+                <div className="h-full w-[500px] shrink-0 bg-gray-200">
+                    <CodePod></CodePod>
+                </div>
+
                 {files && (
                     <>
                         <div
                             className="flex h-full shrink-0"
                             style={{ width: `calc(100% - 350px)` }}
                         >
+                            {/* file list */}
                             <div className="h-full w-[250px] overflow-y-scroll border-r border-gray-300">
                                 {/*  */}
                                 <button
@@ -364,9 +357,9 @@ export function ControlPanel() {
                                             </div>
                                         );
                                     })}
-
-                                {/*  */}
                             </div>
+
+                            {/* 250 */}
                             <div
                                 className="h-full"
                                 style={{ width: `calc(100% - 250px)` }}
@@ -425,10 +418,6 @@ export function ControlPanel() {
 
                                                                     <MonacoEditor
                                                                         height="90vh"
-                                                                        track={
-                                                                            file.path ===
-                                                                            expandID
-                                                                        }
                                                                         defaultLanguage={getLang(
                                                                             file.filename,
                                                                         )}
@@ -449,147 +438,6 @@ export function ControlPanel() {
                         </div>
                     </>
                 )}
-
-                {/* {zustandStateTRPCMaanagerDraft && (
-                    <>
-                        <div
-                            className=" shrink-0 w-[55vw] p-3 bg-gray-200 flex items-center justify-center"
-                            style={{ height: `calc(100%)` }}
-                        >
-                            <div className="w-full h-full bg-white rounded-xl">
-                                <div className="w-full h-full">
-                                    <div className="w-full h-full">
-                                        <div className="w-full h-full text-sm py-6">
-                                            {llmStatus === "downloading" && (
-                                                <>
-                                                    <div className="w-full h-36 text-sm flex items-center justify-center text-center">
-                                                        <LoaderIcon className="animate-spin mr-3 block"></LoaderIcon>{" "}
-                                                        <div className="my-4">
-                                                            {setupLLMProgress}
-                                                        </div>
-                                                    </div>
-                                                </>
-                                            )}
-
-                                            <MonacoEditor
-                                                height="90vh"
-                                                defaultLanguage="markdown"
-                                                value={
-                                                    zustandStateTRPCMaanagerDraft
-                                                }
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </>
-                )}
-
-                {createBackendProceduresDraft && (
-                    <>
-                        <div
-                            className=" shrink-0 w-[55vw] p-3 bg-gray-200 flex items-center justify-center"
-                            style={{ height: `calc(100%)` }}
-                        >
-                            <div className="w-full h-full bg-white rounded-xl">
-                                <div className="w-full h-full">
-                                    <div className="w-full h-full">
-                                        <div className="w-full h-full text-sm py-6">
-                                            {llmStatus === "downloading" && (
-                                                <>
-                                                    <div className="w-full h-36 text-sm flex items-center justify-center text-center">
-                                                        <LoaderIcon className="animate-spin mr-3 block"></LoaderIcon>{" "}
-                                                        <div className="my-4">
-                                                            {setupLLMProgress}
-                                                        </div>
-                                                    </div>
-                                                </>
-                                            )}
-
-                                            <MonacoEditor
-                                                height="90vh"
-                                                defaultLanguage="markdown"
-                                                value={
-                                                    createBackendProceduresDraft
-                                                }
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </>
-                )}
-
-                {mongooseCodeDraft && (
-                    <>
-                        <div
-                            className=" shrink-0 w-[55vw] p-3 bg-gray-200 flex items-center justify-center"
-                            style={{ height: `calc(100%)` }}
-                        >
-                            <div className="w-full h-full bg-white rounded-xl">
-                                <div className="w-full h-full">
-                                    <div className="w-full h-full">
-                                        <div className="w-full h-full text-sm py-6">
-                                            {llmStatus === "downloading" && (
-                                                <>
-                                                    <div className="w-full h-36 text-sm flex items-center justify-center text-center">
-                                                        <LoaderIcon className="animate-spin mr-3 block"></LoaderIcon>{" "}
-                                                        <div className="my-4">
-                                                            {setupLLMProgress}
-                                                        </div>
-                                                    </div>
-                                                </>
-                                            )}
-
-                                            <MonacoEditor
-                                                height="90vh"
-                                                defaultLanguage="markdown"
-                                                value={mongooseCodeDraft}
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </>
-                )}
-
-                {technicalSpecificationDraft && (
-                    <>
-                        <div
-                            className=" shrink-0 w-[55vw] p-3 bg-gray-200 flex items-center justify-center"
-                            style={{ height: `calc(100%)` }}
-                        >
-                            <div className="w-full h-full bg-white rounded-xl">
-                                <div className="w-full h-full">
-                                    <div className="w-full h-full">
-                                        <div className="w-full h-full text-sm py-6">
-                                            {llmStatus === "downloading" && (
-                                                <>
-                                                    <div className="w-full h-36 text-sm flex items-center justify-center text-center">
-                                                        <LoaderIcon className="animate-spin mr-3 block"></LoaderIcon>{" "}
-                                                        <div className="my-4">
-                                                            {setupLLMProgress}
-                                                        </div>
-                                                    </div>
-                                                </>
-                                            )}
-                                            <MonacoEditor
-                                                height="90vh"
-                                                defaultLanguage="markdown"
-                                                value={
-                                                    technicalSpecificationDraft
-                                                }
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </>
-                )} */}
             </div>
 
             {/*  */}

@@ -6,37 +6,44 @@ export default function Page() {
     let { show } = useFilesFrame({
         files: [
             {
-                path: `/entry/main.js`,
+                path: `/src/main.js`,
                 content: /* javascript */ `
-import * as lok from '../src/lok.js'
+import { App } from '../src/App.js'
+import * as ReactDOM from 'react-dom'
+import * as React from 'react'
+
+let domElement = document.querySelector('#run_code_div')
+
+if (!domElement?.root) {
+    domElement.root = ReactDOM.createRoot(domElement)
+    domElement.root.render(<App></App>)
+}
+        `,
+            },
+            {
+                path: `/src/App.js`,
+                content: /* javascript */ `
 import * as ReactDOM from 'react-dom'
 import * as React from 'react'
 import { Canvas } from '@react-three/fiber'
 import { Sphere, MeshTransmissionMaterial, Environment, OrbitControls } from '@react-three/drei'
 
-let root = ReactDOM.createRoot(document.querySelector('#run_code_div'))
-
-root.render(<div className="w-full h-full">
-    <Canvas className="w-full h-full">
-        <Sphere>
-            <MeshTransmissionMaterial color="white" thickness={1.1}></MeshTransmissionMaterial>
-        </Sphere>
-        <Environment preset="lobby" background></Environment>
-        <OrbitControls></OrbitControls>
-    </Canvas>
-</div>)
-
-console.log('lok', lok)
-        `,
-            },
-            {
-                path: `/src/lok.js`,
-                content: /* javascript */ `
-export const yo = 'loklok'
+export function App () {
+    return <div className="w-full h-full">
+        <Canvas className="w-full h-full">
+            <Sphere>
+                <MeshTransmissionMaterial color="white" thickness={1.1}></MeshTransmissionMaterial>
+            </Sphere>
+            <Environment preset="lobby" background></Environment>
+            <OrbitControls></OrbitControls>
+        </Canvas>
+    </div>
+}
 `,
             },
         ],
     });
+
     return (
         <>
             {/*  */}

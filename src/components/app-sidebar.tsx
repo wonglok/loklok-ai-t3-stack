@@ -77,7 +77,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 url: `/developer`,
                 icon: Server,
                 isActive: [`/developer/generator`].some((s) =>
-                    pathname.startsWith(s)
+                    pathname.startsWith(s),
                 ),
                 items: [
                     {
@@ -227,7 +227,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                                                     </Link>
                                                 </SidebarMenuButton>
                                             </SidebarMenuItem>
-                                        )
+                                        ),
                                     )}
                                 </SidebarMenu>
                             </SidebarGroup>

@@ -30,7 +30,6 @@ export function CodeRunner() {
                 enforceIntegrity: false,
                 resolve: (id, parentUrl, resolve) => {
                     console.log(id)
-
                     let fileEntry = fileList.find((it) => {
                         return it.path === id
                     })
@@ -39,11 +38,11 @@ export function CodeRunner() {
             }
 
             // @ts-ignore
-            window.importRemoteModule = window.importRemoteModule || (() => { })
+            window.importHttpModule = window.importHttpModule || (() => { })
             // @ts-ignore
-            window.importRemoteModule(`/dynamic-linked-library/es-module-shims/es-module-shims.js`).then(() => {
+            window.importHttpModule(`/dynamic-linked-library/es-module-shims/es-module-shims.js`).then(() => {
                 // @ts-ignore
-                window.importShim('/entry/main.js')
+                window.importShim('/src/main.js')
             })
         }
         run()
@@ -56,7 +55,7 @@ export function CodeRunner() {
                 dangerouslySetInnerHTML={{
                     __html: `
         <script>
-        window.importRemoteModule = (v) => import(v);
+        window.importHttpModule = (v) => import(v);
         </script>
 `,
                 }}

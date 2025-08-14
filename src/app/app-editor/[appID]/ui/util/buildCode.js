@@ -2,56 +2,61 @@
 
 import { transform } from 'sucrase'
 import path from 'path'
-export const URLPrefix = `loklok:`
 
 export const buildCode = async ({ files = [] }) => {
+    const URLPrefix = `loklok-protocol:`
+
+    let siteOrigin = `${location.origin}`
+
     //
     console.log('building:start')
-
-    // "rollup": "2.56.3",
 
     // yarn add rollup@"2.56.3"
     let rollup = await import('rollup/dist/rollup.browser.js').then(rmod => rmod.rollup);
 
     // @ts-ignore
     let bundler = rollup({
-        input: `${URLPrefix}/entry/main.js`,
+        input: `${URLPrefix}/src/main.js`,
         plugins: [
             {
                 name: 'loklok-runner',
-                async resolveId(myself, others) {
-                    console.log(myself, others)
-                    if (!others) {
-                        return myself
-                    }
-                    let baseURL = `${location.origin}`
+                async resolveId(moduleName, parentBaseURL) {
+                    //
 
-                    if (myself === 'react-dom') {
-                        return `${baseURL}/dynamic-linked-library/react-dom19.js`
-                    }
-                    if (myself === 'react') {
-                        return `${baseURL}/dynamic-linked-library/react19.js`
-                    }
-                    if (myself === '@react-three/fiber') {
-                        return `${baseURL}/dynamic-linked-library/@react-three/fiber.js`
-                    }
-                    if (myself === '@react-three/drei') {
-                        return `${baseURL}/dynamic-linked-library/@react-three/drei.js`
+                    console.log(moduleName, parentBaseURL)
+
+                    //
+
+                    if (!parentBaseURL) {
+                        return moduleName
                     }
 
-                    if (myself === 'three') {
-                        return `${baseURL}/dynamic-linked-library/three/build/three.module.js`
+                    if (moduleName === 'react-dom') {
+                        return `${siteOrigin}/dynamic-linked-library/react-dom19.js`
                     }
-                    if (myself.indexOf('three/examples/') === 0) {
-                        return `${baseURL}/dynamic-linked-library/three/examples/${myself.replace('three/examples/', '')}`
+                    if (moduleName === 'react') {
+                        return `${siteOrigin}/dynamic-linked-library/react19.js`
+                    }
+                    if (moduleName === '@react-three/fiber') {
+                        return `${siteOrigin}/dynamic-linked-library/@react-three/fiber.js`
+                    }
+                    if (moduleName === '@react-three/drei') {
+                        return `${siteOrigin}/dynamic-linked-library/@react-three/drei.js`
                     }
 
-                    return new URL(myself, others).href
+                    if (moduleName === 'three') {
+                        return `${siteOrigin}/dynamic-linked-library/three/build/three.module.js`
+                    }
+                    if (moduleName.indexOf('three/examples/') === 0) {
+                        return `${siteOrigin}/dynamic-linked-library/three/examples/${moduleName.replace('three/examples/', '')}`
+                    }
+
+                    return new URL(moduleName, parentBaseURL).href
                 },
 
                 async load(id) {
                     if (id.indexOf('http') === 0) {
-                        return fetch(id)
+                        return fetch(id, { mode: 'cors', method: 'GET' })
                             .then((r) => r.text())
                             .then((t) => {
                                 return `${t}`
@@ -59,11 +64,16 @@ export const buildCode = async ({ files = [] }) => {
                     }
 
                     let file = files.find((e) => `${URLPrefix}${e.path}` === id)
-
                     if (!file) {
                         return `console.log('file is not found', ${JSON.stringify(id)})`
                     }
 
+                    if (path.extname(file.path) === '.vertex') {
+                        return `export default ${JSON.stringify(file.content)}`
+                    }
+                    if (path.extname(file.path) === '.fragment') {
+                        return `export default ${JSON.stringify(file.content)}`
+                    }
                     if (path.extname(file.path) === '.json') {
                         return `export default ${file.content}`
                     }
@@ -76,26 +86,20 @@ export const buildCode = async ({ files = [] }) => {
                     if (path.extname(file.path) === '.fs') {
                         return `export default ${JSON.stringify(file.content)}`
                     }
-                    if (path.extname(file.path) === '.vertex') {
-                        return `export default ${JSON.stringify(file.content)}`
-                    }
-                    if (path.extname(file.path) === '.fragment') {
-                        return `export default ${JSON.stringify(file.content)}`
-                    }
 
                     if (file?.content) {
-                        let tf = transform(file.content || '', {
+                        let javascript = transform(file.content || '', {
                             transforms: ['jsx'],
-                            // preserveDynamicImport: true,
+                            preserveDynamicImport: true,
                             production: true,
                             jsxPragma: 'React.createElement',
                             jsxFragmentPragma: 'React.Fragment',
                         }).code
 
-                        return tf
+                        return javascript
                     }
 
-                    return `console.log('yo, not-found-module',${JSON.stringify(id)})`
+                    return `console.log('moudle is not found',${JSON.stringify(id)})`
                 },
             },
         ],
@@ -106,7 +110,7 @@ export const buildCode = async ({ files = [] }) => {
     let gen = await compiler.generate({
         output: {
             format: 'esm',
-            // inlineDynamicImports: true,
+            inlineDynamicImports: true,
         },
     })
 
@@ -116,9 +120,6 @@ export const buildCode = async ({ files = [] }) => {
             path: res.facadeModuleId.replace(URLPrefix, ''),
         }
     })
-
-    // console.log(finalOutput)
-    // console.table(finalOutput)
 
     console.log('building:end')
 

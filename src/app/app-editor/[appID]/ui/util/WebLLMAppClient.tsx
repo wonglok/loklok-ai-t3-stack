@@ -31,11 +31,15 @@ You are an AI Coding Agent with following description:
 - You are Joyful and Wise. 
 - You love short and sweet sentences and clear and insightful code comments.`;
 
+//
+
 // if (process.env.NODE_ENV === "development") {
 //     if (typeof window !== "undefined") {
 //         appsCode.setItem(useGenAI.getState().appID, []);
 //     }
 // }
+
+//
 
 export const WebLLMAppClient = {
     ["resetApp"]: async () => {
@@ -111,9 +115,9 @@ export const WebLLMAppClient = {
         //     engine,
         // });
 
-        // await WebLLMAppClient.createReactComponents({
-        //     engine,
-        // });
+        await WebLLMAppClient.createReactComponents({
+            engine,
+        });
 
         useGenAI.getState().stopFunc();
     },
@@ -132,48 +136,38 @@ export const WebLLMAppClient = {
         engine: webllm.MLCEngineInterface;
         userPrompt: string;
     }) => {
-        // // @ts-ignore
-        // let mongoosePrompt = await import("../prompts/mongoosePrompt.md").then(
-        //     (r) => r.default
-        // );
-
-        let messages: any = [
-            {
-                role: `system`,
-                content: `
-${aiPersonality}
-`,
-            },
-
-            {
-                role: "user",
-                content: `Here's what the user want to build for the latest features:
-${userPrompt}`,
-            },
-
-            {
-                role: `user`,
-                content: `
-Your Instruction:
-
-- Please improve the user requirements using markdown foramt
-
-- List out all the database table and data field needed
-
-- List out all the screens needed by the app
-
-- List out all the backend procedure needed by the screens
-            
-`,
-            },
-        ];
-
         //
 
         {
             ///////////////////////////////////////////////////////////////////////////////////
             // manifest
             ///////////////////////////////////////////////////////////////////////////////////
+
+            let messages: any = [
+                {
+                    role: `system`,
+                    content: `${aiPersonality}`,
+                },
+
+                {
+                    role: "user",
+                    content: `Here's what the user want to build for the latest features:
+${userPrompt}`,
+                },
+
+                {
+                    role: `user`,
+                    content: `
+Your Instruction:
+
+- Please improve the user requirements using markdown foramt
+- List out all the database table and data field needed
+- List out all the screens needed by the app
+- List out all the backend procedure needed by the screens
+
+`,
+                },
+            ];
 
             const request: webllm.ChatCompletionRequest = {
                 stream: true,
@@ -236,8 +230,7 @@ ${studyText}`,
                     role: `user`,
                     content: `
 Your Instruction:
-
-Please help figure out what kind of database table does this app need?
+Please generate the database collection information.
 `,
                 },
             ],
@@ -252,21 +245,22 @@ Please help figure out what kind of database table does this app need?
                                 .array(
                                     z.object({
                                         slug: z.string(),
-
                                         tableName: z.string(),
-                                        tableDescription: z
-                                            .string()
-                                            .describe("short description"),
-                                        dataFields: z.array(
-                                            z.object({
-                                                name: z.string(),
-                                                type: z
-                                                    .string()
-                                                    .describe(
-                                                        "mongoose data type compatible",
-                                                    ),
-                                            }),
-                                        ),
+                                        // tableDescription: z
+                                        //     .string()
+                                        //     .describe(
+                                        //         "full description of the table, including the data fields name and data field type",
+                                        //     ),
+                                        // dataFields: z.array(
+                                        //     z.object({
+                                        //         name: z.string(),
+                                        //         type: z
+                                        //             .string()
+                                        //             .describe(
+                                        //                 "mongoose data type compatible",
+                                        //             ),
+                                        //     }),
+                                        // ),
                                     }),
                                 )
                                 .describe("mongoose database tables"),
@@ -281,16 +275,15 @@ Please help figure out what kind of database table does this app need?
             request: request,
             engine,
         });
-
-        let database = await WebLLMAppClient.readFileParseJSONContent({
+        let rootObject = await WebLLMAppClient.readFileParseJSONContent({
             path: `/app/database.json`,
         });
 
-        for (let eachObject of database.mongoose) {
+        for (let eachObject of rootObject.mongoose) {
             //
             {
                 let slug = eachObject.slug;
-                let eachTet = JSON.stringify(eachObject);
+                let eachText = JSON.stringify(eachObject);
 
                 let messages: any = [
                     {
@@ -313,21 +306,15 @@ Your Instruction:
 ${mongoosePromptEach}
                     `,
                     },
-
                     {
                         role: "user",
                         content: `
-Here's the mongoose data fields;
-${eachTet}
+Here's the mongoose database definiton:
+${studyText}
+
+Please only implement "${slug}" collection (${eachObject.tableName}) only:
 `.trim(),
                     },
-                    //                     {
-                    //                         role: "user",
-                    //                         content: `
-                    // Here's the Use Case of the entire app
-                    // ${studyText}
-                    // `.trim(),
-                    //                     },
                 ];
 
                 ///////////////////////////////////////////////////////////////////////////////////
@@ -437,7 +424,7 @@ ${trpcPromptEach}`.trim(),
                         content: `
 Instruction:
 
-Implement code inside the  "example code" according to the "user requirement technical specification" that i provided above.
+Implement code inside the "example code" according to the "user requirement technical specification" that user has provided above.
 
 - only use mutation for procedure
 
@@ -455,8 +442,6 @@ Implement code inside the  "example code" according to the "user requirement tec
                     temperature: 0.0,
                     max_tokens: 4096,
                 };
-
-                //
 
                 await WebLLMAppClient.llmRequestToFileStream({
                     engine,
@@ -618,12 +603,6 @@ if needed, save all resutls to useFrontendStore.setState({key1:value1}) replace 
     }: {
         engine: webllm.MLCEngineInterface;
     }) => {
-        let ns = {
-            draft: "createFrontEndSDKDraft",
-            ok: "createFrontEndSDKFinal",
-        };
-        useGenAI.setState({ [ns.draft]: " " });
-
         let reactSystemPrompt = await import(
             // @ts-ignore
             "../prompts/reactSystemPrompt.md"
@@ -632,38 +611,84 @@ if needed, save all resutls to useFrontendStore.setState({key1:value1}) replace 
         let files: any[] =
             (await WebLLMAppClient.readFilesFromLocalDB()) as any[];
 
-        let others = files.filter((r) => r.path.includes("/zustand/"));
+        // let others = files.filter((r) => r.path.includes("/zustand/"));
 
-        let mongooseText = await WebLLMAppClient.readFileContent({
-            path: `/manifest/mongoose.json`,
+        let studyText = await WebLLMAppClient.readFileContent({
+            path: `/app/study.md`,
         });
 
-        let componentsText = await WebLLMAppClient.readFileContent({
-            path: `/manifest/components.json`,
+        const request: webllm.ChatCompletionRequest = {
+            stream: true,
+            stream_options: { include_usage: true },
+            messages: [
+                {
+                    role: `system`,
+                    content: `
+${aiPersonality}
+`,
+                },
+
+                {
+                    role: "user",
+                    content: `Here's what the requirements are:
+${studyText}`,
+                },
+
+                {
+                    role: `user`,
+                    content: `
+Your Instruction:
+Please generate the json according to json schema.
+`,
+                },
+            ],
+            temperature: 0.0,
+            response_format: {
+                type: "json_object",
+                schema: JSON.stringify(
+                    z.toJSONSchema(
+                        z.object({
+                            version: z.literal("2025-08-12---init"),
+                            components: z
+                                .array(
+                                    z.object({
+                                        slug: z.string(),
+                                        componentName: z.string(),
+
+                                        // componentDescription: z
+                                        //     .string()
+                                        //     .describe(
+                                        //         "full description of the compon, including the data fields name and data field type",
+                                        //     ),
+                                    }),
+                                )
+                                .describe("mongoose database tables"),
+                        }),
+                    ),
+                ),
+            },
+        };
+
+        await WebLLMAppClient.llmRequestToFileStream({
+            path: `/app/components.json`,
+            request: request,
+            engine,
         });
 
-        let proceduresText = await WebLLMAppClient.readFileContent({
-            path: `/manifest/procedures.json`,
+        const rootObject = await WebLLMAppClient.readFileParseJSONContent({
+            path: `/app/components.json`,
         });
 
-        let componentsList = JSON.parse(componentsText.trim()).components;
-
-        console.log(componentsList);
-
-        for (let componentDef of componentsList) {
+        for (const eachObject of rootObject.components) {
             //
             {
-                let slug = componentDef?.slug;
+                let slug = eachObject?.slug;
 
-                let componentJSONString = JSON.stringify(componentDef);
-                console.log(componentJSONString);
+                let componentJSONString = JSON.stringify(eachObject);
 
                 let technicalSpecificationFinal = `
-${mongooseText}
-// procedures for refernece.
-${proceduresText}
-
-        `;
+${studyText}
+`;
 
                 let messages: any = [
                     {
@@ -683,7 +708,8 @@ ${technicalSpecificationFinal}`,
                     {
                         role: "user",
                         content: `
-Implement this react component, only write code, no need comment or explain:
+
+Implement "${slug}" react component (${eachObject.componentName}), only write code, no need comment or explain:
 ${componentJSONString}
 
 Zustand Store Requirements:
@@ -722,23 +748,23 @@ function BearCounter() {
                 await WebLLMAppClient.llmRequestToFileStream({
                     engine,
                     request,
-                    path: `/components/${slug}.js.temp.md`,
+                    path: `/ui/${slug}.js.temp.md`,
                 });
 
                 let modelCode =
                     await WebLLMAppClient.extractFirstCodeBlockContent({
                         markdown: await WebLLMAppClient.readFileContent({
-                            path: `/components/${slug}.js.temp.md`,
+                            path: `/ui/${slug}.js.temp.md`,
                         }),
                     });
 
                 await WebLLMAppClient.removeFileByPath({
-                    path: `/components/${slug}.js.temp.md`,
+                    path: `/ui/${slug}.js.temp.md`,
                 });
 
                 await WebLLMAppClient.writeToFile({
                     content: modelCode,
-                    path: `/components/${slug}.js`,
+                    path: `/ui/${slug}.js`,
                 });
             }
         }

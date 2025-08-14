@@ -1,12 +1,16 @@
 'use client'
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export const useFilesFrame = ({
+    // Default Code
+    // Default Code
+    // Default Code
+    // Default Code
     files = [
 
         {
-            path: `/entry/main.js`,
+            path: `/src/main.js`,
             content: /* javascript */ `
                 import * as lok from '../src/lok.js'
                 import ReactDOM from 'react-dom'
@@ -23,40 +27,57 @@ export const useFilesFrame = ({
             `,
         },
     ]
-
+    // Default Code
+    // Default Code
+    // Default Code
+    // Default Code
 }) => {
     let [frame, setFrame] = useState("");
+    let refTimer = useRef(-5000)
 
     useEffect(() => {
         if (files.length === 0) {
             return
         }
+        let run = () => {
+            import("./buildCode").then(({ buildCode }) => {
+                buildCode({
+                    files: files,
+                }).then((fileArray) => {
+                    //
 
-        import("./buildCode").then(({ buildCode }) => {
-            buildCode({
-                files: files,
-            }).then((fileArray) => {
-                //
+                    console.log(fileArray);
 
-                console.log(fileArray);
+                    let url = new URL(`${location.origin}/app-editor/running`);
 
-                let url = new URL(`${location.origin}/app-editor/running`);
+                    if (!url.searchParams.has("blob")) {
+                        url.searchParams.set(
+                            "blob",
+                            URL.createObjectURL(
+                                new Blob([JSON.stringify(fileArray)], {
+                                    type: "application/javascript",
+                                }),
+                            ),
+                        );
 
-                if (!url.searchParams.has("blob")) {
-                    url.searchParams.set(
-                        "blob",
-                        URL.createObjectURL(
-                            new Blob([JSON.stringify(fileArray)], {
-                                type: "application/javascript",
-                            }),
-                        ),
-                    );
-
-                    // console.log(url.href);
-                    setFrame(url.href);
-                }
+                        setFrame(url.href);
+                    }
+                });
             });
-        });
+        }
+
+        if (refTimer.current === -5000) {
+            run()
+        }
+
+        // @ts-ignore
+        clearTimeout(refTimer.current)
+        // @ts-ignore
+        refTimer.current = setTimeout(() => {
+            //
+            run()
+            //
+        }, 500)
     }, [files.map(r => r.content + r.path).join('_')])
 
     return {
