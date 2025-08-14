@@ -107,7 +107,7 @@ function MonacoEditor({
 
     useEffect(() => {
         if (editor) {
-            editor.updateOptions({ wordWrap: true });
+            editor.updateOptions({ wordWrap: false });
         }
     }, [editor]);
 

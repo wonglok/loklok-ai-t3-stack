@@ -256,7 +256,7 @@ Please help figure out what kind of database table does this app need?
                                         tableName: z.string(),
                                         tableDescription: z
                                             .string()
-                                            .describe("description"),
+                                            .describe("short description"),
                                         dataFields: z.array(
                                             z.object({
                                                 name: z.string(),
@@ -321,13 +321,13 @@ Here's the mongoose data fields;
 ${eachTet}
 `.trim(),
                     },
-                    {
-                        role: "user",
-                        content: `
-Here's the Use Case of the entire app
-${studyText}
-`.trim(),
-                    },
+                    //                     {
+                    //                         role: "user",
+                    //                         content: `
+                    // Here's the Use Case of the entire app
+                    // ${studyText}
+                    // `.trim(),
+                    //                     },
                 ];
 
                 ///////////////////////////////////////////////////////////////////////////////////
