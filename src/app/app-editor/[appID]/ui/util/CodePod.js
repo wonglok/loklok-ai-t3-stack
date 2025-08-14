@@ -6,7 +6,6 @@ import { useFilesFrame } from "./useFilesFrame";
 export function CodePod() {
     let files = useGenAI(r => r.files) || []
 
-
     let componentsManifest
 
     try {
@@ -14,9 +13,10 @@ export function CodePod() {
     } catch (e) {
         // console.log(e)
     }
+
     // console.log(componentsManifest?.components)
 
-    let importString = componentsManifest?.components?.reduce((acc, item, key) => {
+    let importUIComponentSnippet = componentsManifest?.components?.reduce((acc, item, key) => {
 
         // some file may not show upp because it's being written by ai
         if (files.some(r => r.filename.includes(item.slug))) {
@@ -26,7 +26,7 @@ export function CodePod() {
         return acc
     }, '') || '';
 
-    // console.log(importString)
+    // console.log(importUIComponentSnippet)
 
     let { show } = useFilesFrame({
         files: [
@@ -55,7 +55,7 @@ import { useFrontEnd } from '/ui/useFrontEnd.js'
 
 import componentsRoot from '/app/components.json'
 
-${importString}
+${importUIComponentSnippet}
 
 export function App () {
     let apple = useFrontEnd((r) => r.apple);
@@ -78,9 +78,6 @@ export function App () {
 }
 `,
             },
-
-            //
-            //
             {
                 path: `/src/main.js`,
                 content: /* javascript */ `

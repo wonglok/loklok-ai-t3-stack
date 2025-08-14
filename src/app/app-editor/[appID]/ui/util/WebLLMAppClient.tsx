@@ -689,10 +689,6 @@ Please make sure the components are unique.
 
                 let componentJSONString = JSON.stringify(eachObject);
 
-                let technicalSpecificationFinal = `
-${studyText}
-`;
-
                 let messages: any = [
                     {
                         role: `system`,
@@ -703,7 +699,7 @@ ${studyText}
                     {
                         role: "user",
                         content: `Here's the "user requirement technical specification":
-${technicalSpecificationFinal}`,
+${studyText}`,
                     },
 
                     // ${reactSystemPrompt}
@@ -713,29 +709,16 @@ ${technicalSpecificationFinal}`,
                         content: `
 
 Implement "${slug}" react component (${eachObject.componentName}), only write code, no need comment or explain:
-${componentJSONString}
+
+include zustand store "useFrontEnd" in header like the following:
+import { useFrontEnd } from '/ui/useFrontEnd.js'
 
 Zustand Store Requirements:
     - always use zustand store "useFrontEnd" to call props and backend procedures like this: 
 
 React JS Requirement:
     - Use named export in ESM
-    - Try to write component code in a way that can be reused.
-
-Zustand Store + React Component example:
-
-include zustand store "useFrontEnd" in header like the following:
-import { useFrontEnd } from '/ui/useFrontEnd.js'
-
-export function BearCounter() {
-    const bears = useBearStore((state) => state.bears) // always use zustand with a specific selector 
-    const apple = useBearStore((state) => state.apple) // always use zustand with a specific selector 
-    const orange = useBearStore((state) => state.orange) // always use zustand with a specific selector 
-    const uploadOrange = useBearStore((state) => state.uploadOrange) // always use zustand with a specific selector 
-    
-    return <h1>We have {bears.length} around here ...</h1>
-}
-
+    - DO NOT USE "export default" !!
 `,
                     },
 
