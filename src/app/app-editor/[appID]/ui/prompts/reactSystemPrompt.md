@@ -4,7 +4,7 @@ React Component for HTML
 
 add following import for React Component:
 import { useState } from "react";
-import { useFrontendStore } from "./useFrontendStore";
+import { useFrontendStore } from "/ui/useFrontendStore";
 
 - save JWT to zustand and localStorage with appID as Key after user loggin successfully
 - save JWT to zustand and localStorage with appID as Key after user registered successfully
