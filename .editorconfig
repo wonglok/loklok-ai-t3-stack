@@ -1,0 +1,15 @@
+root = true
+
+[*]
+indent_style = space
+indent_size = 4
+
+[{*.ts,*.tsx,*.js,*.jsx,*.css,*.scss}]
+insert_final_newline = true
+indent_size = 4
+
+[{package.json,package-lock.json,manifest.json,electron-builder.json5}]
+indent_size = 4
+
+[*.yml]
+indent_size = 4
