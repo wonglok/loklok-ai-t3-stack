@@ -14,14 +14,19 @@ export function WebGPUGate({ children }: { children?: ReactElement }) {
         //     });
 
         let run = async () => {
-            let isAvailable: any =
-                typeof navigator !== "undefined" && navigator.gpu !== undefined;
+            if (typeof window !== "undefined") {
+                let isAvailable: any =
+                    typeof navigator !== "undefined" &&
+                    (navigator as any).gpu !== undefined;
 
-            if (typeof window !== "undefined" && isAvailable) {
-                isAvailable = await navigator.gpu.requestAdapter();
+                if (isAvailable) {
+                    isAvailable = await (navigator as any).gpu.requestAdapter();
+                }
+
+                setOK(!!isAvailable);
+            } else {
+                setOK(false);
             }
-
-            setOK(!!isAvailable);
         };
         run();
     }, []);

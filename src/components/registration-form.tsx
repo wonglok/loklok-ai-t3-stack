@@ -4,8 +4,8 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { BRAND_NAME } from "../../branding-config/Branding";
 
+const BRAND_NAME = "";
 export function RegistrationForm({
     className,
     ...props

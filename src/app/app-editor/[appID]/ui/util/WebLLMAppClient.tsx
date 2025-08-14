@@ -180,61 +180,10 @@ Your Instruction:
                 stream_options: { include_usage: true },
                 messages: messages,
                 temperature: 0.0,
-                // response_format: {
-                //     type: "json_object",
-                //     schema: JSON.stringify(
-                //         z.toJSONSchema(
-                //             z.object({
-                //                 version: z.literal("2025-08-12---init"),
-                //                 // mongoose: z
-                //                 //     .array(
-                //                 //         z.object({
-                //                 //             tableTitle: z.string(),
-                //                 //             slug: z.string(),
-                //                 //             description: z
-                //                 //                 .string()
-                //                 //                 .describe("purpose"),
-                //                 //             datafields: z.array(
-                //                 //                 z.object({
-                //                 //                     name: z.string(),
-                //                 //                     dataType: z
-                //                 //                         .string()
-                //                 //                         .describe(
-                //                 //                             "mongoose data type compatible",
-                //                 //                         ),
-                //                 //                 }),
-                //                 //             ),
-                //                 //         }),
-                //                 //     )
-                //                 //     .describe("mongoose"),
-                //                 // backEndProcedures: z
-                //                 //     .array(
-                //                 //         z.object({
-                //                 //             slug: z.string(),
-                //                 //             description: z.string(),
-                //                 //             params: z.array(z.string()),
-                //                 //             securityChecks: z.string(),
-                //                 //         }),
-                //                 //     )
-                //                 //     .describe("backend procedures"),
-
-                //                 // userInterfaceComponents: z
-                //                 //     .array(
-                //                 //         z.object({
-                //                 //             componentSlug: z.string(),
-                //                 //             functionalDescription: z.string(),
-                //                 //             visualDescription: z.string(),
-                //                 //         }),
-                //                 //     )
-                //                 //     .describe("user interface components"),
-                //             }),
-                //         ),
-                //     ),
-                // },
             };
 
             await WebLLMAppClient.llmRequestToFileStream({
-                path: `/app/study.json`,
+                path: `/app/study.md`,
                 request: request,
                 engine,
             });
@@ -257,20 +206,13 @@ Your Instruction:
     }: {
         engine: webllm.MLCEngineInterface;
     }) => {
-        // let ns = {
-        //     draft: "mongooseCodeDraft",
-        //     ok: "mongooseCodeFinal",
-        // };
-
-        // useGenAI.setState({ [ns.draft]: " " });
-
         let mongoosePromptEach = await import(
             // @ts-ignore
             "../prompts/mongoosePromptEach.md"
         ).then((r) => r.default);
 
         let studyText = await WebLLMAppClient.readFileContent({
-            path: `/app/study.json`,
+            path: `/app/study.md`,
         });
 
         const request: webllm.ChatCompletionRequest = {
@@ -343,17 +285,6 @@ Please help figure out what kind of database table does this app need?
         let database = await WebLLMAppClient.readFileParseJSONContent({
             path: `/app/database.json`,
         });
-
-        // let technicalSpecificationFinal = `
-        // Mongoose:
-        // ${mongoose}
-
-        // Procedures:
-        // ${procedures}
-
-        // React Components:
-        // ${components}
-        // `.trim();
 
         for (let eachObject of database.mongoose) {
             //
