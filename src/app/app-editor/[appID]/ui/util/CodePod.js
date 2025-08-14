@@ -7,12 +7,18 @@ export function CodePod() {
     let files = useGenAI(r => r.files) || []
 
 
-    let componentsManifest = JSON.parse(files.find(r => r.path === '/app/components.json')?.content || '{}')
+    let componentsManifest
 
+    try {
+        componentsManifest = JSON.parse(files.find(r => r.path === '/app/components.json')?.content || '{}')
+    } catch (e) {
+        // console.log(e)
+    }
     // console.log(componentsManifest?.components)
 
     let importString = componentsManifest?.components?.reduce((acc, item, key) => {
 
+        // some file may not show upp because it's being written by ai
         if (files.some(r => r.filename.includes(item.slug))) {
             acc += `import ${item.componentName} from "/ui/${item.slug}.js"\n`
         }
@@ -20,8 +26,11 @@ export function CodePod() {
         return acc
     }, '') || '';
 
+    // console.log(importString)
+
     let { show } = useFilesFrame({
         files: [
+            ...files,
             {
                 path: `/ui/useFrontEnd.js`,
                 content: /* javascript */ `
@@ -34,7 +43,6 @@ export const useFrontEnd = create((set, get) =>{
 })
                 `,
             },
-            ...files,
 
             {
                 path: `/src/App.js`,
@@ -43,7 +51,7 @@ import * as ReactDOM from 'react-dom'
 import * as React from 'react'
 import { Canvas } from '@react-three/fiber'
 import { Sphere, MeshTransmissionMaterial, Environment, OrbitControls } from '@react-three/drei'
-import { useFrontEnd } from '../ui/useFrontEnd.js'
+import { useFrontEnd } from '/ui/useFrontEnd.js'
 
 import componentsRoot from '/app/components.json'
 
@@ -51,8 +59,6 @@ ${importString}
 
 export function App () {
     let apple = useFrontEnd((r) => r.apple);
-
-    
 
     return <div className="w-full h-full relative">
         <Canvas className="w-full h-full ">
@@ -65,6 +71,8 @@ export function App () {
 
         <div className=" absolute top-0 left-0 z-100">
             {apple}
+
+            <PlatformAdminLoginComponent></PlatformAdminLoginComponent>
         </div>
     </div>
 }

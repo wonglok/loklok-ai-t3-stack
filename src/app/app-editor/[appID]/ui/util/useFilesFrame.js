@@ -62,6 +62,9 @@ export const useFilesFrame = ({
 
                         setFrame(url.href);
                     }
+                }).catch((e) => {
+                    console.log('front end build failed...')
+                    console.error(e)
                 });
             });
         }

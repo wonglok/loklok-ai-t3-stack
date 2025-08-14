@@ -103,9 +103,9 @@ export const WebLLMAppClient = {
             engine,
         });
 
-        await WebLLMAppClient.createMongooseFromSpec({
-            engine,
-        });
+        // await WebLLMAppClient.createMongooseFromSpec({
+        //     engine,
+        // });
 
         // await WebLLMAppClient.createBackendProcedures({
         //     engine,
@@ -719,9 +719,13 @@ Zustand Store Requirements:
     - always use zustand store "useFrontEnd" to call props and backend procedures like this: 
 
 React JS Requirement:
+    - Use named export in ESM
     - Try to write component code in a way that can be reused.
 
 Zustand Store + React Component example:
+
+include zustand store "useFrontEnd" in header like the following:
+import { useFrontEnd } from '/ui/useFrontEnd.js'
 
 export function BearCounter() {
     const bears = useBearStore((state) => state.bears) // always use zustand with a specific selector 

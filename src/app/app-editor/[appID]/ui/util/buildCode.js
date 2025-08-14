@@ -64,7 +64,7 @@ export const buildCode = async ({ files = [] }) => {
 
                     let file = files.find((e) => `${URLPrefix}${e.path}` === id)
                     if (!file) {
-                        return `console.log('file is not found', ${JSON.stringify(id)})`
+                        return `console.log('file is not found or is under generation', ${JSON.stringify(id)})`
                     }
 
                     if (path.extname(file.path) === '.vertex') {
