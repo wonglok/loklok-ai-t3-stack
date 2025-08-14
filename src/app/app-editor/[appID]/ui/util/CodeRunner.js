@@ -12,7 +12,7 @@ export function CodeRunner() {
             let urlSelf = new URL(window.location.href)
             let blobURL = urlSelf.searchParams.get('blob')
 
-            let fileList = await fetch(blobURL).then((r) => r.json())
+            let fileList = await fetch(blobURL).then((r) => r.json()) || []
 
             // @ts-ignore
             window.LokLokNpm = window.LokLokNpm || {}

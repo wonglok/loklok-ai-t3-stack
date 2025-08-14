@@ -114,26 +114,33 @@ export const buildCode = async ({ files = [] }) => {
             },
         ],
     })
+    try {
 
-    let compiler = await bundler
+        let compiler = await bundler
 
-    let gen = await compiler.generate({
-        output: {
-            format: 'esm',
-            inlineDynamicImports: true,
-        },
-    })
+        let gen = await compiler.generate({
+            output: {
+                format: 'esm',
+                inlineDynamicImports: true,
+            },
+        })
 
-    let finalOutput = gen.output.map((res) => {
-        return {
-            ...res,
-            path: res.facadeModuleId.replace(URLPrefix, ''),
-        }
-    })
+        let finalOutput = gen.output.map((res) => {
+            return {
+                ...res,
+                path: res.facadeModuleId.replace(URLPrefix, ''),
+            }
+        })
 
-    console.log('building:end')
+        console.log('building:end')
 
-    return finalOutput
+        return finalOutput
+
+    } catch (e) {
+        console.log(e)
+
+        return ''
+    }
 }
 
 //
