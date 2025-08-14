@@ -67,6 +67,9 @@ export const buildCode = async ({ files = [] }) => {
                         return `console.log('file is not found or is under generation', ${JSON.stringify(id)})`
                     }
 
+                    if (path.extname(file.path) === '.json') {
+                        return `export default ${JSON.stringify(file.content)}`
+                    }
                     if (path.extname(file.path) === '.vertex') {
                         return `export default ${JSON.stringify(file.content)}`
                     }

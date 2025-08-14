@@ -603,11 +603,6 @@ if needed, save all resutls to useFrontendStore.setState({key1:value1}) replace 
     }: {
         engine: webllm.MLCEngineInterface;
     }) => {
-        let reactSystemPrompt = await import(
-            // @ts-ignore
-            "../prompts/reactSystemPrompt.md"
-        ).then((r) => r.default);
-
         let files: any[] =
             (await WebLLMAppClient.readFilesFromLocalDB()) as any[];
 
@@ -685,6 +680,11 @@ Please make sure the components are unique.
         for (const eachObject of rootObject.components) {
             //
             {
+                let reactSystemPrompt = await import(
+                    // @ts-ignore
+                    "../prompts/reactSystemPrompt.md"
+                ).then((r) => r.default);
+
                 let slug = eachObject?.slug;
 
                 let componentJSONString = JSON.stringify(eachObject);
@@ -716,9 +716,7 @@ import { useFrontEnd } from '/ui/useFrontEnd.js'
 Zustand Store Requirements:
     - always use zustand store "useFrontEnd" to call props and backend procedures like this: 
 
-React JS Requirement:
-    - Use named export in ESM
-    - DO NOT USE "export default" !!
+${reactSystemPrompt}
 `,
                     },
 

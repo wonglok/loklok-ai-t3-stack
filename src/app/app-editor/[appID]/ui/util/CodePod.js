@@ -20,7 +20,7 @@ export function CodePod() {
 
         // some file may not show upp because it's being written by ai
         if (files.some(r => r.filename.includes(item.slug))) {
-            acc += `import ${item.componentName} from "/ui/${item.slug}.js"\n`
+            acc += `import { ${item.componentName} } from "/ui/${item.slug}.js"\n`
         }
 
         return acc
@@ -71,8 +71,6 @@ export function App () {
 
         <div className=" absolute top-0 left-0 z-100">
             {apple}
-
-            <PlatformAdminLoginComponent></PlatformAdminLoginComponent>
         </div>
     </div>
 }
