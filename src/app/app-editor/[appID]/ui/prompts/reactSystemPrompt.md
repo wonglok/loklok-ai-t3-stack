@@ -31,6 +31,3 @@ import { useFrontendStore } from "/ui/useFrontendStore";
 - @react-three/fiber + drei for Frontend 3D
 - Zustand for state management for Frontend State Management
 
-- DO NOT USE default export 
-- AWLAYS USE named export like the following:
-- export const ExampleComponent = () => { return <div>123</div> };

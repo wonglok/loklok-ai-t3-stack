@@ -636,7 +636,6 @@ Your Instruction:
 Please generate the json according to json schema.
 
 Please make sure the components are unique.
-
 `,
                 },
             ],
@@ -716,7 +715,8 @@ import { useFrontEnd } from '/ui/useFrontEnd.js'
 Zustand Store Requirements:
     - always use zustand store "useFrontEnd" to call props and backend procedures like this: 
 
-${reactSystemPrompt}
+Always use this way to export component:
+export { ${eachObject.componentName} };
 `,
                     },
 
