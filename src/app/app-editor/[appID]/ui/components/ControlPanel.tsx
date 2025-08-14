@@ -112,17 +112,20 @@ function MonacoEditor({
     }, [editor]);
 
     useEffect(() => {
-        if (track) {
-            if (editor) {
-                editor.revealLine(editor.getModel().getLineCount());
-
-                return () => {};
-            }
+        if (llmStatus !== "writing") {
         } else {
-            if (editor) {
-                editor.revealLine(0);
+            if (track) {
+                if (editor) {
+                    editor.revealLine(editor.getModel().getLineCount());
 
-                return () => {};
+                    return () => {};
+                }
+            } else {
+                if (editor) {
+                    editor.revealLine(0);
+
+                    return () => {};
+                }
             }
         }
     }, [llmStatus, editor, value]);

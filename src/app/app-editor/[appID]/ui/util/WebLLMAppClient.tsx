@@ -22,14 +22,14 @@ const appsCode = createInstance({
     name: "apps_code",
 });
 
-const aiPersonality = `Role: 
+const aiPersonality = `AI Role: 
 
 You are an AI Coding Agent with following description:
 
 - You are a senior fullstack developer. 
-- You help user to code things.
+- You love helping user to code things.
 - You are Joyful and Wise. 
-- You love short and sweet code comments.`;
+- You love short and sweet sentences and clear and insightful code comments.`;
 
 // if (process.env.NODE_ENV === "development") {
 //     if (typeof window !== "undefined") {
@@ -94,7 +94,7 @@ export const WebLLMAppClient = {
             llmStatus: "writing",
         });
 
-        await WebLLMAppClient.elaborateSpec({
+        await WebLLMAppClient.studyRequirements({
             userPrompt: userPrompt,
             engine,
         });
@@ -124,7 +124,7 @@ export const WebLLMAppClient = {
     ///////////////////////////////////////////////////////////////////////////////////
     // elaborateSpec
     ///////////////////////////////////////////////////////////////////////////////////
-    [`elaborateSpec`]: async ({
+    [`studyRequirements`]: async ({
         userPrompt,
 
         engine,
@@ -156,7 +156,14 @@ ${userPrompt}`,
                 content: `
 Your Instruction:
 
-Generate JSON according to the JSON schema.
+- Please improve the user requirements using markdown foramt
+
+- List out all the database table and data field needed
+
+- List out all the screens needed by the app
+
+- List out all the backend procedure needed by the screens
+            
 `,
             },
         ];
@@ -167,103 +174,73 @@ Generate JSON according to the JSON schema.
             ///////////////////////////////////////////////////////////////////////////////////
             // manifest
             ///////////////////////////////////////////////////////////////////////////////////
+
             const request: webllm.ChatCompletionRequest = {
                 stream: true,
                 stream_options: { include_usage: true },
                 messages: messages,
                 temperature: 0.0,
-                response_format: {
-                    type: "json_object",
-                    schema: JSON.stringify(
-                        z.toJSONSchema(
-                            z.object({
-                                version: z.literal("2025-08-12---init"),
+                // response_format: {
+                //     type: "json_object",
+                //     schema: JSON.stringify(
+                //         z.toJSONSchema(
+                //             z.object({
+                //                 version: z.literal("2025-08-12---init"),
+                //                 // mongoose: z
+                //                 //     .array(
+                //                 //         z.object({
+                //                 //             tableTitle: z.string(),
+                //                 //             slug: z.string(),
+                //                 //             description: z
+                //                 //                 .string()
+                //                 //                 .describe("purpose"),
+                //                 //             datafields: z.array(
+                //                 //                 z.object({
+                //                 //                     name: z.string(),
+                //                 //                     dataType: z
+                //                 //                         .string()
+                //                 //                         .describe(
+                //                 //                             "mongoose data type compatible",
+                //                 //                         ),
+                //                 //                 }),
+                //                 //             ),
+                //                 //         }),
+                //                 //     )
+                //                 //     .describe("mongoose"),
+                //                 // backEndProcedures: z
+                //                 //     .array(
+                //                 //         z.object({
+                //                 //             slug: z.string(),
+                //                 //             description: z.string(),
+                //                 //             params: z.array(z.string()),
+                //                 //             securityChecks: z.string(),
+                //                 //         }),
+                //                 //     )
+                //                 //     .describe("backend procedures"),
 
-                                titleOfApp: z.string(),
-                                description: z.string(),
-                                useCases: z
-                                    .array(
-                                        z.object({
-                                            userRoleSlug: z
-                                                .string()
-                                                .describe("user involved"),
-                                            usages: z.array(
-                                                z
-                                                    .string()
-                                                    .describe(
-                                                        "usage description",
-                                                    ),
-                                            ),
-                                        }),
-                                    )
-                                    .describe(
-                                        "who can do waht with the software",
-                                    ),
-
-                                mongoose: z
-                                    .array(
-                                        z.object({
-                                            tableTitle: z.string(),
-                                            slug: z.string(),
-                                            description: z
-                                                .string()
-                                                .describe("purpose"),
-                                            datafields: z.array(
-                                                z.object({
-                                                    name: z.string(),
-                                                    dataType: z
-                                                        .string()
-                                                        .describe(
-                                                            "mongoose data type compatible",
-                                                        ),
-                                                }),
-                                            ),
-                                        }),
-                                    )
-                                    .describe("mongoose"),
-
-                                backEndProcedures: z
-                                    .array(
-                                        z.object({
-                                            slug: z.string(),
-                                            description: z.string(),
-                                            params: z.array(
-                                                z.object({
-                                                    name: z.string(),
-                                                    dataType: z.string(),
-                                                }),
-                                            ),
-                                        }),
-                                    )
-                                    .describe("backend procedures"),
-
-                                components: z
-                                    .array(
-                                        z.object({
-                                            componentSlug: z.string(),
-                                            description: z.string(),
-                                            backendProcedures: z.array(
-                                                z.string(),
-                                            ),
-                                        }),
-                                    )
-                                    .describe(
-                                        "make sure all procedures are implemented via components, make sure all use case are implemented in components",
-                                    ),
-                            }),
-                        ),
-                    ),
-                },
+                //                 // userInterfaceComponents: z
+                //                 //     .array(
+                //                 //         z.object({
+                //                 //             componentSlug: z.string(),
+                //                 //             functionalDescription: z.string(),
+                //                 //             visualDescription: z.string(),
+                //                 //         }),
+                //                 //     )
+                //                 //     .describe("user interface components"),
+                //             }),
+                //         ),
+                //     ),
+                // },
             };
 
             await WebLLMAppClient.llmRequestToFileStream({
-                path: `/app/manifest.json`,
+                path: `/app/study.json`,
                 request: request,
                 engine,
             });
 
             ///////////////////////////////////////////////////////////////////////////////////
-            // manifest
+            // usecase
             ///////////////////////////////////////////////////////////////////////////////////
         }
 
@@ -292,15 +269,82 @@ Generate JSON according to the JSON schema.
             "../prompts/mongoosePromptEach.md"
         ).then((r) => r.default);
 
-        let manifestText = await WebLLMAppClient.readFileContent({
-            path: `/app/manifest.json`,
+        let studyText = await WebLLMAppClient.readFileContent({
+            path: `/app/study.json`,
         });
 
-        console.log(manifestText);
+        const request: webllm.ChatCompletionRequest = {
+            stream: true,
+            stream_options: { include_usage: true },
+            messages: [
+                {
+                    role: `system`,
+                    content: `
+${aiPersonality}
+`,
+                },
 
-        let manifestJSON = JSON.parse(manifestText.trim());
+                {
+                    role: "user",
+                    content: `Here's what the requirements are:
+${studyText}`,
+                },
 
-        //         let technicalSpecificationFinal = `
+                {
+                    role: `user`,
+                    content: `
+Your Instruction:
+
+Please help figure out what kind of database table does this app need?
+`,
+                },
+            ],
+            temperature: 0.0,
+            response_format: {
+                type: "json_object",
+                schema: JSON.stringify(
+                    z.toJSONSchema(
+                        z.object({
+                            version: z.literal("2025-08-12---init"),
+                            mongoose: z
+                                .array(
+                                    z.object({
+                                        slug: z.string(),
+
+                                        tableName: z.string(),
+                                        tableDescription: z
+                                            .string()
+                                            .describe("description"),
+                                        dataFields: z.array(
+                                            z.object({
+                                                name: z.string(),
+                                                type: z
+                                                    .string()
+                                                    .describe(
+                                                        "mongoose data type compatible",
+                                                    ),
+                                            }),
+                                        ),
+                                    }),
+                                )
+                                .describe("mongoose database tables"),
+                        }),
+                    ),
+                ),
+            },
+        };
+
+        await WebLLMAppClient.llmRequestToFileStream({
+            path: `/app/database.json`,
+            request: request,
+            engine,
+        });
+
+        let database = await WebLLMAppClient.readFileParseJSONContent({
+            path: `/app/database.json`,
+        });
+
+        // let technicalSpecificationFinal = `
         // Mongoose:
         // ${mongoose}
 
@@ -311,13 +355,11 @@ Generate JSON according to the JSON schema.
         // ${components}
         // `.trim();
 
-        for (let mongooseDef of manifestJSON.mongoose) {
+        for (let eachObject of database.mongoose) {
             //
             {
-                console.log(mongooseDef);
-                let mongooseDefText = JSON.stringify(mongooseDef);
-
-                let slug = mongooseDef.slug;
+                let slug = eachObject.slug;
+                let eachTet = JSON.stringify(eachObject);
 
                 let messages: any = [
                     {
@@ -329,7 +371,7 @@ Generate JSON according to the JSON schema.
                         content: `
 Your Instruction:
 
-1. implement to fullfill the full user requirements.
+1. Implement to fullfill the full user requirements.
 2. Avoid Using Preserved Keyworads in Javascript as Model names. such as Map, WeakMap, Proxy, etc...
 3. only need 1 function
 `,
@@ -337,13 +379,22 @@ Your Instruction:
                     {
                         role: "user",
                         content: `Here's the existing code as reference:
-${mongoosePromptEach}`,
+${mongoosePromptEach}
+                    `,
+                    },
+
+                    {
+                        role: "user",
+                        content: `
+Here's the mongoose data fields;
+${eachTet}
+`.trim(),
                     },
                     {
                         role: "user",
-                        content:
-                            `here's the Full Technical Specification of Mongoose
-${mongooseDefText}
+                        content: `
+Here's the Use Case of the entire app
+${studyText}
 `.trim(),
                     },
                 ];
@@ -626,6 +677,8 @@ if needed, save all resutls to useFrontendStore.setState({key1:value1}) replace 
                 content: modelCode,
                 path: `/frontend/sdk.js`,
             });
+
+            //
         }
     },
 
@@ -790,6 +843,25 @@ function BearCounter() {
         }
 
         return file?.content || "";
+    },
+
+    readFileParseJSONContent: async ({
+        path = "/manifest/mongoose.json",
+        throwError = false,
+    }: {
+        path: string;
+        throwError?: boolean;
+    }) => {
+        let files = JSON.parse(
+            JSON.stringify(useGenAI.getState().files),
+        ) as MyFile[];
+        let file = files.find((r) => r.path === path);
+
+        if (!file && throwError) {
+            throw "not found";
+        }
+
+        return JSON.parse(file?.content);
     },
 
     writeToFile: async ({
