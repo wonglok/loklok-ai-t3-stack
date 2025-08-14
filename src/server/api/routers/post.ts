@@ -16,7 +16,7 @@ export const postRouter = createTRPCRouter({
     .input(z.object({ text: z.string() }))
     .query(({ input }) => {
       return {
-        greeting: `Hello ${input.text}`,
+        greeting: `Hello 123 ${input.text}`,
       };
     }),
 
