@@ -23,14 +23,14 @@ export const buildCode = async ({ files = [] }) => {
                 async resolveId(moduleName, parentBaseURL) {
                     //
 
-                    console.log(moduleName, parentBaseURL)
-
-                    //
+                    console.log('resolving module: ', moduleName, parentBaseURL)
 
                     if (!parentBaseURL) {
                         return moduleName
                     }
-
+                    if (moduleName === 'zustand') {
+                        return `${siteOrigin}/dynamic-linked-library/zustand.js`
+                    }
                     if (moduleName === 'react-dom') {
                         return `${siteOrigin}/dynamic-linked-library/react-dom19.js`
                     }
@@ -43,12 +43,11 @@ export const buildCode = async ({ files = [] }) => {
                     if (moduleName === '@react-three/drei') {
                         return `${siteOrigin}/dynamic-linked-library/@react-three/drei.js`
                     }
-
                     if (moduleName === 'three') {
-                        return `${siteOrigin}/dynamic-linked-library/three/build/three.module.js`
+                        return `${siteOrigin}/dynamic-linked-library/three.js-r179/three/build/three.module.js`
                     }
                     if (moduleName.indexOf('three/examples/') === 0) {
-                        return `${siteOrigin}/dynamic-linked-library/three/examples/${moduleName.replace('three/examples/', '')}`
+                        return `${siteOrigin}/dynamic-linked-library/three.js-r179/three/examples/${moduleName.replace('three/examples/', '')}`
                     }
 
                     return new URL(moduleName, parentBaseURL).href
@@ -88,15 +87,23 @@ export const buildCode = async ({ files = [] }) => {
                     }
 
                     if (file?.content) {
-                        let javascript = transform(file.content || '', {
-                            transforms: ['jsx'],
-                            preserveDynamicImport: true,
-                            production: true,
-                            jsxPragma: 'React.createElement',
-                            jsxFragmentPragma: 'React.Fragment',
-                        }).code
+                        try {
+                            let javascript = transform(file.content || '', {
+                                transforms: ['jsx'],
+                                preserveDynamicImport: true,
+                                production: true,
+                                jsxPragma: 'React.createElement',
+                                jsxFragmentPragma: 'React.Fragment',
+                            }).code
 
-                        return javascript
+                            return javascript
+                        } catch (e) {
+                            console.log(e)
+                            console.log(file?.content)
+
+                            return file?.content
+                        }
+
                     }
 
                     return `console.log('moudle is not found',${JSON.stringify(id)})`

@@ -3,6 +3,7 @@ import * as React from 'react'
 import * as ReactDOM from 'react-dom/client'
 import * as Drei from '@react-three/drei'
 import * as Fiber from '@react-three/fiber'
+import * as Zustand from 'zustand'
 
 const here = import.meta.dirname
 
@@ -110,5 +111,29 @@ export default LokLokNpm['react-dom19']['${keyname}'];
     }
     fs.writeFileSync(`${here}/public/dynamic-linked-library/react-dom19.js`, text)
     console.log('dynamic-linked-library: react-dom19')
+}
+
+{
+    let text = `
+// @ts-ignore
+window.LokLokNpm = window.LokLokNpm || {};
+// @ts-ignore
+const LokLokNpm = window.LokLokNpm;
+
+LokLokNpm['zustand'] = LokLokNpm['zustand'] || {}; 
+`
+    for (let keyname in Zustand) {
+        if (keyname !== 'default') {
+            text += `
+export const ${keyname} = LokLokNpm['zustand']['${keyname}'];
+`
+        } else {
+            text += `
+export default LokLokNpm['zustand']['${keyname}'];
+`
+        }
+    }
+    fs.writeFileSync(`${here}/public/dynamic-linked-library/zustand.js`, text)
+    console.log('dynamic-linked-library: zustand')
 }
 

@@ -3,6 +3,7 @@ import ReactDOM19 from 'react-dom/client'
 import * as React19 from 'react'
 import * as ReactThreeDrei from '@react-three/drei'
 import * as ReactThreeFiber from '@react-three/fiber'
+import * as Zustand from 'zustand'
 
 export function CodeRunner() {
     React19.useEffect(() => {
@@ -23,6 +24,7 @@ export function CodeRunner() {
             LokLokNpm.React = React19
             LokLokNpm['@react-three/drei'] = ReactThreeDrei
             LokLokNpm['@react-three/fiber'] = ReactThreeFiber
+            LokLokNpm['zustand'] = Zustand
 
             // @ts-ignore
             window.esmsInitOptions = {

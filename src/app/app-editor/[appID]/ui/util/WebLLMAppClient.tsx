@@ -162,7 +162,7 @@ Your Instruction:
 
 - Please improve the user requirements using markdown foramt
 - List out all the database table and data field needed
-- List out all the screens needed by the app
+- List out all the screen names needed by the app and their page route (pathname with params) 
 - List out all the backend procedure needed by the screens
 
 `,
@@ -639,6 +639,9 @@ ${studyText}`,
                     content: `
 Your Instruction:
 Please generate the json according to json schema.
+
+Please make sure the components are unique.
+
 `,
                 },
             ],
@@ -662,7 +665,7 @@ Please generate the json according to json schema.
                                         //     ),
                                     }),
                                 )
-                                .describe("mongoose database tables"),
+                                .describe("unique react ui components"),
                         }),
                     ),
                 ),
@@ -719,7 +722,8 @@ React JS Requirement:
     - Try to write component code in a way that can be reused.
 
 Zustand Store + React Component example:
-function BearCounter() {
+
+export function BearCounter() {
     const bears = useBearStore((state) => state.bears) // always use zustand with a specific selector 
     const apple = useBearStore((state) => state.apple) // always use zustand with a specific selector 
     const orange = useBearStore((state) => state.orange) // always use zustand with a specific selector 
@@ -727,6 +731,7 @@ function BearCounter() {
     
     return <h1>We have {bears.length} around here ...</h1>
 }
+
 `,
                     },
 
