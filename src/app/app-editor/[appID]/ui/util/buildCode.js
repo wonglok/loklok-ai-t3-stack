@@ -2,20 +2,20 @@
 
 import { transform } from 'sucrase'
 import path from 'path'
-import * as WouterMain from 'wouter'
-import * as WouterHash from 'wouter/use-hash-location'
-
-
-const libs = {
-    ['wouter']: WouterMain,
-    ['wouter/use-hash-location']: WouterHash,
-}
 
 
 export const buildCode = async ({ files = [] }) => {
-    const URLPrefix = `dynamic-npm:`
 
-    let siteOrigin = `${location.origin}`
+
+    const loaders = {
+        ['wouter']: () => import('wouter'),
+        ['wouter/use-hash-location']: () => import('wouter/use-hash-location'),
+    }
+    const libs = {}
+
+    const CodePrefix = `dynamic-code:`
+    const NPMPrefix = `dynamic-npm:`
+    const NetworkPrefix = `${location.origin}`
 
     //
     console.log('building:start')
@@ -25,7 +25,7 @@ export const buildCode = async ({ files = [] }) => {
 
     // @ts-ignore
     let bundler = rollup({
-        input: `${URLPrefix}/src/main.js`,
+        input: `${CodePrefix}/src/main.js`,
         plugins: [
             {
                 name: 'loklok-runner',
@@ -38,61 +38,69 @@ export const buildCode = async ({ files = [] }) => {
                         return moduleName
                     }
                     if (moduleName === 'zustand') {
-                        return `${siteOrigin}/dynamic-linked-library/zustand.js`
+                        return `${NetworkPrefix}/dynamic-linked-library/zustand.js`
                     }
                     if (moduleName === 'wouter') {
-                        return `dynamic-npm://wouter`
+                        if (loaders[moduleName]) {
+                            libs[moduleName] = await loaders[moduleName]()
+                        }
+                        return `${NPMPrefix}wouter`
                     }
                     if (moduleName === 'wouter/use-hash-location') {
-                        return `dynamic-npm://wouter/use-hash-location`
+                        if (loaders[moduleName]) {
+                            libs[moduleName] = await loaders[moduleName]()
+                        }
+                        return `${NPMPrefix}wouter/use-hash-location`
                     }
+
+                    /// NETWORK LOAD ///
                     if (moduleName === 'react-dom') {
-                        return `${siteOrigin}/dynamic-linked-library/react-dom19.js`
+                        return `${NetworkPrefix}/dynamic-linked-library/react-dom19.js`
                     }
                     if (moduleName === 'react') {
-                        return `${siteOrigin}/dynamic-linked-library/react19.js`
+                        return `${NetworkPrefix}/dynamic-linked-library/react19.js`
                     }
                     if (moduleName === '@react-three/fiber') {
-                        return `${siteOrigin}/dynamic-linked-library/@react-three/fiber.js`
+                        return `${NetworkPrefix}/dynamic-linked-library/@react-three/fiber.js`
                     }
                     if (moduleName === '@react-three/drei') {
-                        return `${siteOrigin}/dynamic-linked-library/@react-three/drei.js`
+                        return `${NetworkPrefix}/dynamic-linked-library/@react-three/drei.js`
                     }
                     if (moduleName === 'three') {
-                        return `${siteOrigin}/dynamic-linked-library/three.js-r179/three/build/three.module.js`
+                        return `${NetworkPrefix}/dynamic-linked-library/three.js-r179/three/build/three.module.js`
                     }
                     if (moduleName.indexOf('three/examples/') === 0) {
-                        return `${siteOrigin}/dynamic-linked-library/three.js-r179/three/examples/${moduleName.replace('three/examples/', '')}`
+                        return `${NetworkPrefix}/dynamic-linked-library/three.js-r179/three/examples/${moduleName.replace('three/examples/', '')}`
                     }
 
                     return new URL(moduleName, parentBaseURL).href
                 },
 
                 async load(id) {
-                    console.log(id)
-
-                    if (id.indexOf('dynamic-npm://') === 0) {
-                        let pureID = id.replace('dynamic-npm://', '')
+                    if (id.indexOf(`${NPMPrefix}`) === 0) {
+                        let pureID = id.replace(`${NPMPrefix}`, '')
                         console.log('dynamic-npm', pureID)
 
                         let text
+
+                        let npmID = JSON.stringify(pureID)
 
                         text = `
                                 // @ts-ignore
                                 window.LokLokNpm = window.LokLokNpm || {};
                                 // @ts-ignore
                                 const LokLokNpm = window.LokLokNpm;
-                                LokLokNpm[${JSON.stringify(pureID)}] = LokLokNpm[${JSON.stringify(pureID)}] || {}; 
+                                LokLokNpm[${npmID}] = LokLokNpm[${npmID}] || {}; 
                             `
 
-                        for (let keyname in libs[pureID]) {
-                            if (keyname !== 'default') {
+                        for (let propertyName in libs[pureID]) {
+                            if (propertyName !== 'default') {
                                 text += `
-                        export const ${keyname} = LokLokNpm[${JSON.stringify(pureID)}]['${keyname}'];
+                        export const ${propertyName} = LokLokNpm[${npmID}]['${propertyName}'];
                         `
                             } else {
                                 text += `
-                        export default LokLokNpm[${JSON.stringify(pureID)}]['${keyname}'];
+                        export default LokLokNpm[${npmID}]['${propertyName}'];
                         `
                             }
                         }
@@ -109,7 +117,7 @@ export const buildCode = async ({ files = [] }) => {
                             })
                     }
 
-                    let file = files.find((e) => `${URLPrefix}${e.path}` === id)
+                    let file = files.find((e) => `${CodePrefix}${e.path}` === id)
                     if (!file) {
                         return `console.log('file is not found or is under generation', ${JSON.stringify(id)})`
                     }
@@ -175,7 +183,7 @@ export const buildCode = async ({ files = [] }) => {
         let finalOutput = gen.output.map((res) => {
             return {
                 ...res,
-                path: res.facadeModuleId.replace(URLPrefix, ''),
+                path: res.facadeModuleId.replace(CodePrefix, ''),
             }
         })
 
@@ -185,7 +193,7 @@ export const buildCode = async ({ files = [] }) => {
 
     } catch (e) {
         console.log('building:error')
-        console.error(e)
+        console.log(e)
 
         return ''
     }

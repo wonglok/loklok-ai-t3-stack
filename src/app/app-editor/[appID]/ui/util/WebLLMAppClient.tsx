@@ -98,26 +98,26 @@ export const WebLLMAppClient = {
             llmStatus: "writing",
         });
 
-        await WebLLMAppClient.studyRequirements({
-            userPrompt: userPrompt,
-            engine,
-        });
+        // await WebLLMAppClient.studyRequirements({
+        //     userPrompt: userPrompt,
+        //     engine,
+        // });
 
-        // // await WebLLMAppClient.createMongooseFromSpec({
-        // //     engine,
-        // // });
+        // // // await WebLLMAppClient.createMongooseFromSpec({
+        // // //     engine,
+        // // // });
 
-        // // await WebLLMAppClient.createBackendProcedures({
-        // //     engine,
-        // // });
+        // // // await WebLLMAppClient.createBackendProcedures({
+        // // //     engine,
+        // // // });
 
-        // // await WebLLMAppClient.createFrontEndSDK({
-        // //     engine,
-        // // });
+        // // // await WebLLMAppClient.createFrontEndSDK({
+        // // //     engine,
+        // // // });
 
-        await WebLLMAppClient.createReactComponents({
-            engine,
-        });
+        // await WebLLMAppClient.createReactComponents({
+        //     engine,
+        // });
 
         await WebLLMAppClient.createAppRootRouterComponents({
             engine,
@@ -181,7 +181,7 @@ Your Instruction:
             };
 
             await WebLLMAppClient.llmRequestToFileStream({
-                path: `/app/study.md`,
+                path: `/blueprint/app-study.md`,
                 request: request,
                 engine,
             });
@@ -210,7 +210,7 @@ Your Instruction:
         ).then((r) => r.default);
 
         let studyText = await WebLLMAppClient.readFileContent({
-            path: `/app/study.md`,
+            path: `/blueprint/app-study.md`,
         });
 
         const request: webllm.ChatCompletionRequest = {
@@ -279,6 +279,7 @@ Please generate the database collection information.
             request: request,
             engine,
         });
+
         let rootObject = await WebLLMAppClient.readFileParseJSONContent({
             path: `/app/database.json`,
         });
@@ -614,7 +615,7 @@ if needed, save all resutls to useSDK.setState({key1:value1}) replace "key1", re
         // let others = files.filter((r) => r.path.includes("/zustand/"));
 
         let studyText = await WebLLMAppClient.readFileContent({
-            path: `/app/study.md`,
+            path: `/blueprint/app-study.md`,
         });
 
         const request: webllm.ChatCompletionRequest = {
@@ -701,16 +702,12 @@ Please make sure the components are unique.
                         content: `${aiPersonality}
 `,
                     },
-
                     {
                         role: "user",
                         content: `Here's the "user requirement technical specification":
 ${studyText}
 `,
                     },
-
-                    // ${reactSystemPrompt}
-
                     {
                         role: "user",
                         content: `
@@ -772,7 +769,7 @@ export { ${componentName} };
     createAppRootRouterComponents: async ({ engine }) => {
         {
             let studyText = await WebLLMAppClient.readFileContent({
-                path: `/app/study.md`,
+                path: `/blueprint/app-study.md`,
             });
 
             const rootObjectComponents =
@@ -815,8 +812,10 @@ Your Instruction:
 
 import { Router, Route, Redirect } from "wouter";
 import { useHashLocation } from "wouter/use-hash-location";
-import { PlatformAdminLoginComponent } from '/ui/PlatformAdminLoginComponent'; // please follow the base path of "/ui/...." 
-import { PastorDashboardComponent } from '/ui/PastorDashboardComponent'; // please follow the base path of "/ui/...." 
+import { PlatformAdminLoginComponent } from '/ui/PlatformAdminLoginComponent.js'; // please follow the base path of "/ui/...." and always add ".js" at the end
+import { PastorDashboardComponent } from '/ui/PastorDashboardComponent.js'; // please follow the base path of "/ui/...." and always add ".js" at the end
+
+
 // [...] import the reamining page rotues and their component accordinf to the "tech requirements"
 
 const App = () => (
