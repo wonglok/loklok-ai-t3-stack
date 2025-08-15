@@ -4,7 +4,7 @@ window.NPM_GV_CACHE = window.NPM_GV_CACHE || {};
 // @ts-ignore
 const NPM_GV_CACHE = window.NPM_GV_CACHE;
 
-NPM_GV_CACHE['TJ-@react-three/fiber'] = NPM_GV_CACHE['TJ-@react-three/fiber'] || {};
+NPM_GV_CACHE['TJ-@react-three/fiber'] = NPM_GV_CACHE['TJ-@react-three/fiber'] || {}; 
 
 export const Canvas = NPM_GV_CACHE['TJ-@react-three/fiber']['Canvas'];
 

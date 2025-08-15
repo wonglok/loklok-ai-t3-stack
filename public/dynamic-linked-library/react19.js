@@ -4,7 +4,7 @@ window.NPM_GV_CACHE = window.NPM_GV_CACHE || {};
 // @ts-ignore
 const NPM_GV_CACHE = window.NPM_GV_CACHE;
 
-NPM_GV_CACHE['TJ-react19'] = NPM_GV_CACHE['TJ-react19'] || {};
+NPM_GV_CACHE['TJ-react19'] = NPM_GV_CACHE['TJ-react19'] || {}; 
 
 export const Children = NPM_GV_CACHE['TJ-react19']['Children'];
 

@@ -25,6 +25,8 @@ import {
     SidebarMenuItem,
     useSidebar,
 } from "@/components/ui/sidebar";
+import { signOut } from "@/server/auth";
+import Link from "next/link";
 
 export function NavUser({
     user,
@@ -116,10 +118,12 @@ export function NavUser({
                             </DropdownMenuItem>
                         </DropdownMenuGroup>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem>
-                            <LogOut />
-                            Log out
-                        </DropdownMenuItem>
+                        <Link href={`/api/auth/signout`}>
+                            <DropdownMenuItem>
+                                <LogOut />
+                                Log out
+                            </DropdownMenuItem>
+                        </Link>
                     </DropdownMenuContent>
                 </DropdownMenu>
             </SidebarMenuItem>
