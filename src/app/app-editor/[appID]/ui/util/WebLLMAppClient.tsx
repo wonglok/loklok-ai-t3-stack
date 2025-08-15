@@ -999,7 +999,6 @@ export { App };
         if (`${signature}` === (await executionCache.getItem(signature))) {
             return;
         }
-
         await executionCache.removeItem(signature);
 
         useGenAI.setState({ llmStatus: "writing" });
@@ -1025,11 +1024,15 @@ export { App };
                 });
 
                 await new Promise((resovle) => {
-                    requestAnimationFrame(() => {
-                        resovle(null);
-                    });
+                    resovle(null);
                 });
             }
+
+            await new Promise((resovle) => {
+                requestAnimationFrame(() => {
+                    resovle(null);
+                });
+            });
         }
 
         await WebLLMAppClient.writeToFile({
