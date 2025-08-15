@@ -29,7 +29,7 @@ export const useGenAI = create<{
 
     appID: string;
     prompt: string;
-    llmStatus: "writing" | "downloading" | "init";
+    llmStatus: "writing" | "downloading" | "init" | "pending";
     loadingSpec: boolean;
     welcome: boolean;
     spec: string;

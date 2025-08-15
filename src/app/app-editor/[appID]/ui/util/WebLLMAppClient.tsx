@@ -994,8 +994,7 @@ export { App };
         request: webllm.ChatCompletionRequestStreaming;
         engine: webllm.MLCEngineInterface;
     }) => {
-        let content = await WebLLMAppClient.readFileContent({ path });
-        let signature = `${md5(JSON.stringify({ request, content }))}`;
+        let signature = `${md5(JSON.stringify({ request }))}`;
         let key = `${useGenAI.getState().appID}${path}`;
 
         if (`${signature}` === (await executionCache.getItem(key))) {
@@ -1045,7 +1044,7 @@ export { App };
         });
 
         if (useGenAI.getState().llmStatus === "writing") {
-            signature = `${md5(JSON.stringify({ request, content: messageFragments }))}`;
+            signature = `${md5(JSON.stringify({ request }))}`;
             await executionCache.setItem(key, signature);
         }
     },
