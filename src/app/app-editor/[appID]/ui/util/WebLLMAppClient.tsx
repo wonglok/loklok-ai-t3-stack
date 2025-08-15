@@ -603,8 +603,8 @@ if needed, save all resutls to useFrontendStore.setState({key1:value1}) replace 
     }: {
         engine: webllm.MLCEngineInterface;
     }) => {
-        let files: any[] =
-            (await WebLLMAppClient.readFilesFromLocalDB()) as any[];
+        // let files: any[] =
+        //     (await WebLLMAppClient.readFilesFromLocalDB()) as any[];
 
         // let others = files.filter((r) => r.path.includes("/zustand/"));
 
@@ -680,14 +680,14 @@ Please make sure the components are unique.
         for (const eachObject of rootObjectComponents.components) {
             //
             {
-                let reactSystemPrompt = await import(
-                    // @ts-ignore
-                    "../prompts/reactSystemPrompt.md"
-                ).then((r) => r.default);
+                // let reactSystemPrompt = await import(
+                //     // @ts-ignore
+                //     "../prompts/reactSystemPrompt.md"
+                // ).then((r) => r.default);
 
                 let slug = eachObject?.slug;
 
-                let componentJSONString = JSON.stringify(eachObject);
+                // let componentJSONString = JSON.stringify(eachObject);
 
                 let messages: any = [
                     {
@@ -699,7 +699,8 @@ Please make sure the components are unique.
                     {
                         role: "user",
                         content: `Here's the "user requirement technical specification":
-${studyText}`,
+${studyText}
+`,
                     },
 
                     // ${reactSystemPrompt}
@@ -719,8 +720,6 @@ import { useFrontEnd } from '/ui/useFrontEnd.js'
 
 - Always use this way to export component:
 export { ${eachObject.componentName} };
-
-//
 `,
                     },
 

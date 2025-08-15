@@ -29,7 +29,8 @@ export default async function Home() {
                                 Tryout AI App Fullstack Engineer
                             </h3>
                             <div className="text-lg">
-                                Let AI write platforms for you!
+                                Let AI design software for u, code platform for
+                                you!
                             </div>
                         </Link>
                     </div>
