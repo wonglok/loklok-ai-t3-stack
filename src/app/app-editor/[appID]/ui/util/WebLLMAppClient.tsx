@@ -355,10 +355,11 @@ await import(${JSON.stringify(`/models/${slug}.js`)}).then(async ({ defineOneMod
 
         let finalContent = `
 
-async function loadModels() {
+async function loadModels({ bcrypt }) {
     const db = mongoose.connection.useDb(${JSON.stringify(`app_${useGenAI.getState().appID}`)}, { useCache: true });
     
     const output = {};
+
     ${content}
 
     return output;
@@ -1016,16 +1017,16 @@ export { App };
             for (let frag of arr) {
                 messageFragments += frag;
 
-                await WebLLMAppClient.writeToFile({
-                    content: messageFragments,
-                    path: path,
-                    persist: false,
-                });
-
-                await new Promise((resovle) => {
-                    resovle(null);
-                });
+                // await new Promise((resovle) => {
+                //     resovle(null);
+                // });
             }
+
+            await WebLLMAppClient.writeToFile({
+                content: messageFragments,
+                path: path,
+                persist: false,
+            });
 
             await new Promise((resovle) => {
                 requestAnimationFrame(() => {

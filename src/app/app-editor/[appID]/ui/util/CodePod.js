@@ -29,11 +29,16 @@ import { Canvas } from '@react-three/fiber'
 import { Sphere, MeshTransmissionMaterial, Environment, OrbitControls } from '@react-three/drei'
 import { useSDK } from '/ui/useSDK.js'
 
-import { App } from '/app-engine/App.js'
-
-console.log(App)
-
 export function MyApp () {
+
+    let [App, setApp] = React.useState(null)
+
+    React.useEffect(() => {
+        import('/app-engine/App.js').then(({ App }) =>{
+            setApp(App)
+        })
+    }, [])
+
     return <div className="w-full h-full relative">
         <Canvas className="w-full h-full ">
             <Sphere>
@@ -44,7 +49,7 @@ export function MyApp () {
         </Canvas>
 
         <div className=" absolute top-0 left-0 z-100">
-            <App></App>
+            {App && <App></App>}
         </div>
     </div>
 }
