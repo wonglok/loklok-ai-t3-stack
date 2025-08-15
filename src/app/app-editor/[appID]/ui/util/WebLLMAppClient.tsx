@@ -708,19 +708,19 @@ ${studyText}`,
                         role: "user",
                         content: `
 
-Implement "${slug}" react component (${eachObject.componentName}), only write code, no need comment or explain:
+- Implement "${slug}" react component (${eachObject.componentName}), only write code, no need comment or explain:
 
-include zustand store "useFrontEnd" in header like the following:
+- Include zustand store "useFrontEnd" in header like the following:
 import { useFrontEnd } from '/ui/useFrontEnd.js'
 
-React Requirements:
-- tailwind css to style the components
+- Tailwind css to style the components
 
-Zustand Store Requirements:
-    - always use zustand store "useFrontEnd" to call props and backend procedures
+- Always use zustand store "useFrontEnd" to call props and backend procedures
 
-Always use this way to export component:
+- Always use this way to export component:
 export { ${eachObject.componentName} };
+
+//
 `,
                     },
 
