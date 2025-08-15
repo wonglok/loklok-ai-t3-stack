@@ -994,9 +994,13 @@ export { App };
         request: webllm.ChatCompletionRequestStreaming;
         engine: webllm.MLCEngineInterface;
     }) => {
-        let signature = `${md5(JSON.stringify({ request }))}`;
+        //
+        let content = await WebLLMAppClient.readFileContent({ path });
+        let signature = `${md5(JSON.stringify({ request, content: content }))}`;
+        //
         let key = `${useGenAI.getState().appID}${path}`;
 
+        //
         if (`${signature}` === (await executionCache.getItem(key))) {
             return;
         }
@@ -1044,8 +1048,10 @@ export { App };
         });
 
         if (useGenAI.getState().llmStatus === "writing") {
-            signature = `${md5(JSON.stringify({ request }))}`;
+            signature = `${md5(JSON.stringify({ request, content: messageFragments }))}`;
             await executionCache.setItem(key, signature);
+        } else {
+            executionCache.removeItem(key);
         }
     },
 };
