@@ -792,23 +792,26 @@ ${JSON.stringify(rootObjectComponents.components)}
                         role: `user`,
                         content: `
 Your Instruction:
-Please build an reactjs app 
-
-- the app reuse all the components
-- the app uses "wouter" as a routing library
-- the app uses Hash mode of wouter like below:
+- Please build root "App" component for the reactjs app. 
+- The "App" component reuses all the components mentioend in above message.
+- The "App" component uses "wouter" as a routing library
+- The "App" component uses "Hash mode" of wouter like below:
 
 import { Router, Route } from "wouter";
 import { useHashLocation } from "wouter/use-hash-location";
+import PlatformAdminLoginComponent from '/ui/PlatformAdminLoginComponent'; // please follow the base path of "/ui/...." 
+import PastorDashboardComponent from '/ui/PastorDashboardComponent'; // please follow the base path of "/ui/...." 
 
 const App = () => (
     <Router hook={useHashLocation}>
-        <Route path="/about" component={About} />
-        [...]
+        <Route path="/login" component={PlatformAdminLoginComponent} />
+        <Route path="/pastor/dashboard" component={PastorDashboardComponent} />
+        <Route path="/public-web-app" component={() => <h1>Public Web App</h1>} />
+        <Route path="/user-profile" component={() => <h1>User Profile</h1>} />
     </Router>
 );
 
-export { App }
+export { App };
 `,
                     },
                 ],
