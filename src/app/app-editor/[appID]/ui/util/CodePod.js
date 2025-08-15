@@ -34,17 +34,17 @@ export function MyApp () {
     let [App, setApp] = React.useState(null)
 
     React.useEffect(() => {
-        try {
-            import('/app-engine/App.js').then(({ App }) =>{
+        import('/app-engine/App.js').then((props) =>{
+            if (props?.App) {
                 try {
-                    setApp(<App></App>)
+                    setApp(<props.App></props.App>)
                 } catch (e) {
 
                 }
-            })
-        } catch (e) {
-
-        }
+            }
+        }).catch((e) => {
+            console.log(e)
+        })
     }, [])
 
 
