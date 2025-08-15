@@ -4,7 +4,6 @@ import type * as webllm from "@mlc-ai/web-llm";
 export type MyFile = {
     filename: string;
     path: string;
-    hash: string;
     content: string;
     updatedAt: string;
     createdAt: string;

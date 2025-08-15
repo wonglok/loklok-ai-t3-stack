@@ -368,7 +368,7 @@ export { loadModels }
 
         `;
 
-        console.log(`${finalContent}`);
+        // console.log(`${finalContent}`);
 
         await WebLLMAppClient.writeToFile({
             content: `${finalContent}`,
@@ -848,24 +848,6 @@ export { App };
 
         return file?.content || "";
     },
-    readFileHash: async ({
-        path = "/manifest/mongoose.json",
-        throwError = false,
-    }: {
-        path: string;
-        throwError?: boolean;
-    }) => {
-        let files = JSON.parse(
-            JSON.stringify(useGenAI.getState().files),
-        ) as MyFile[];
-        let file = files.find((r) => r.path === path);
-
-        if (!file && throwError) {
-            throw "not found";
-        }
-
-        return file?.hash || `__${Math.random()}`;
-    },
 
     readFileParseJSONContent: async ({
         path = "/manifest/mongoose.json",
@@ -889,10 +871,8 @@ export { App };
     writeToFile: async ({
         content,
         path,
-        hash,
         persist = true,
     }: {
-        hash?: string;
         content: string;
         path: string;
         persist?: boolean;
@@ -901,17 +881,13 @@ export { App };
             JSON.stringify(useGenAI.getState().files),
         ) as MyFile[];
 
-        hash = hash || `${md5(`${Math.random()}`)}`;
-
         let file = files.find((r) => r.path === path);
         if (file) {
             file.content = `${content}`;
             file.updatedAt = new Date().toISOString();
-            file.hash = hash;
         } else {
             let newFile = {
                 path: path,
-                hash: hash,
                 filename: pathUtil.basename(path),
                 content: `${content}`,
                 updatedAt: new Date().toISOString(),
@@ -929,6 +905,9 @@ export { App };
             await appsCode.setItem(useGenAI.getState().appID, files);
         }
     },
+
+    //
+
     persistToDisk: async () => {
         let files = JSON.parse(
             JSON.stringify(useGenAI.getState().files),
@@ -1015,13 +994,13 @@ export { App };
         request: webllm.ChatCompletionRequestStreaming;
         engine: webllm.MLCEngineInterface;
     }) => {
-        let signature = `${md5(JSON.stringify({ request }))}`;
+        let signature = `${md5(JSON.stringify({ request, path }))}`;
 
-        let diskSignature = await WebLLMAppClient.readFileHash({ path: path });
-
-        if (`${diskSignature}` === (await executionCache.getItem(signature))) {
+        if (`${signature}` === (await executionCache.getItem(signature))) {
             return;
         }
+
+        await executionCache.removeItem(signature);
 
         useGenAI.setState({ llmStatus: "writing" });
         await engine.resetChat();
@@ -1041,7 +1020,6 @@ export { App };
 
                 await WebLLMAppClient.writeToFile({
                     content: messageFragments,
-                    hash: `${md5(`${Math.random()}`)}`, // make sure incomplete files dont cache
                     path: path,
                     persist: false,
                 });
@@ -1057,7 +1035,6 @@ export { App };
         await WebLLMAppClient.writeToFile({
             content: messageFragments,
             path: path,
-            hash: signature,
             persist: true,
         });
 
