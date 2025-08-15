@@ -672,11 +672,12 @@ Please make sure the components are unique.
             engine,
         });
 
-        const rootObject = await WebLLMAppClient.readFileParseJSONContent({
-            path: `/app/components.json`,
-        });
+        const rootObjectComponents =
+            await WebLLMAppClient.readFileParseJSONContent({
+                path: `/app/components.json`,
+            });
 
-        for (const eachObject of rootObject.components) {
+        for (const eachObject of rootObjectComponents.components) {
             //
             {
                 let reactSystemPrompt = await import(
@@ -776,17 +777,38 @@ ${aiPersonality}
 
                     {
                         role: "user",
-                        content: `Here's what the "app requirements" are:
+                        content: `Here's what the "tech requirements" are:
 ${studyText}`,
+                    },
+                    {
+                        role: "user",
+                        content: `
+Here are all the components created:
+${JSON.stringify(rootObjectComponents.components)}
+                    `,
                     },
 
                     {
                         role: `user`,
                         content: `
 Your Instruction:
-Please build a few page and suitable layout(s) that using all the components below:
+Please build an reactjs app 
 
-${JSON.stringify(rootObject.components)}
+- the app reuse all the components
+- the app uses "wouter" as a routing library
+- the app uses Hash mode of wouter like below:
+
+import { Router, Route } from "wouter";
+import { useHashLocation } from "wouter/use-hash-location";
+
+const App = () => (
+    <Router hook={useHashLocation}>
+        <Route path="/about" component={About} />
+        [...]
+    </Router>
+);
+
+export { App }
 `,
                     },
                 ],
@@ -794,9 +816,24 @@ ${JSON.stringify(rootObject.components)}
             };
 
             await WebLLMAppClient.llmRequestToFileStream({
-                path: `/app-engine/App.js`,
-                request: request,
                 engine,
+                request,
+                path: `/app-engine/App.js.temp.md`,
+            });
+
+            let modelCode = await WebLLMAppClient.extractFirstCodeBlockContent({
+                markdown: await WebLLMAppClient.readFileContent({
+                    path: `/app-engine/App.js.temp.md`,
+                }),
+            });
+
+            await WebLLMAppClient.removeFileByPath({
+                path: `/app-engine/App.js.temp.md`,
+            });
+
+            await WebLLMAppClient.writeToFile({
+                content: modelCode,
+                path: `/app-engine/App.js`,
             });
         }
     },
