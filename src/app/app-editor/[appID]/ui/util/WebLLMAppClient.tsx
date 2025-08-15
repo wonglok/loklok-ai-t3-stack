@@ -200,9 +200,7 @@ function yo () {
                 {
                     role: "user",
                     content: `
-
-i want to log "hahaha" instead of 123
-
+I want to log "hahaha" instead of 123
 `,
                 },
             ];
@@ -238,12 +236,25 @@ i want to log "hahaha" instead of 123
 
             let strategy = diffApply.newUnifiedDiffStrategy.create(0.95);
 
-            let result = (await strategy.applyDiff({
+            let { content: newContent } = (await strategy.applyDiff({
                 originalContent: existingCode,
-                diffContent: diffText,
+                diffContent: await WebLLMAppClient.extractFirstCodeBlockContent(
+                    {
+                        markdown: diffText,
+                    },
+                ),
             })) as any;
 
-            console.log(result.success, result.content);
+            console.log(newContent);
+
+            await WebLLMAppClient.writeToFile({
+                path: "existingCode.js",
+                content: `${existingCode}`,
+            });
+            await WebLLMAppClient.writeToFile({
+                path: "newContent.js",
+                content: `${newContent}`,
+            });
 
             // // const strategy = newUnifiedDiffStrategyService.create(0.95); // 95% confidence required
 

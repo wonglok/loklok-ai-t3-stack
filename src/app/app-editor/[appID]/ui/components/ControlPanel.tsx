@@ -317,9 +317,9 @@ export function ControlPanel() {
                     </>
                 )}
 
-                <div className="h-full w-[500px] shrink-0 bg-gray-200">
+                {/* <div className="h-full w-[500px] shrink-0 bg-gray-200">
                     <CodePod></CodePod>
-                </div>
+                </div> */}
 
                 {files && (
                     <>
