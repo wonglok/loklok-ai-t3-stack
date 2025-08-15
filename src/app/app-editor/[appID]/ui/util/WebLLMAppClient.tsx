@@ -317,26 +317,11 @@ Please only implement "${modelName}" (${eachObject.modelName}) collection only:
                 await WebLLMAppClient.llmRequestToFileStream({
                     engine,
                     request,
-                    path: `/models/${eachObject.modelName}.temp.md`,
-                });
-
-                let modelCode =
-                    await WebLLMAppClient.extractFirstCodeBlockContent({
-                        markdown: await WebLLMAppClient.readFileContent({
-                            path: `/models/${eachObject.modelName}.temp.md`,
-                        }),
-                    });
-
-                await WebLLMAppClient.removeFileByPath({
-                    path: `/models/${eachObject.modelName}.temp.md`,
-                });
-
-                await WebLLMAppClient.writeToFile({
-                    content: modelCode,
                     path: `/models/${eachObject.modelName}.js`,
+                    needsExtractCode: true,
                 });
 
-                console.log("modelName", modelName);
+                console.log("modelName", eachObject.modelName);
             }
         }
 
@@ -707,23 +692,8 @@ export { ${name} };
                 await WebLLMAppClient.llmRequestToFileStream({
                     engine,
                     request,
-                    path: `/ui/${name}.md`,
-                });
-
-                let modelCode =
-                    await WebLLMAppClient.extractFirstCodeBlockContent({
-                        markdown: await WebLLMAppClient.readFileContent({
-                            path: `/ui/${name}.md`,
-                        }),
-                    });
-
-                await WebLLMAppClient.removeFileByPath({
-                    path: `/ui/${name}.md`,
-                });
-
-                await WebLLMAppClient.writeToFile({
-                    content: modelCode,
                     path: `/ui/${name}.js`,
+                    needsExtractCode: true,
                 });
             }
         }
@@ -799,22 +769,8 @@ export { App };
             await WebLLMAppClient.llmRequestToFileStream({
                 engine,
                 request,
-                path: `/app-engine/App.md`,
-            });
-
-            let modelCode = await WebLLMAppClient.extractFirstCodeBlockContent({
-                markdown: await WebLLMAppClient.readFileContent({
-                    path: `/app-engine/App.md`,
-                }),
-            });
-
-            await WebLLMAppClient.removeFileByPath({
-                path: `/app-engine/App.md`,
-            });
-
-            await WebLLMAppClient.writeToFile({
-                content: modelCode,
                 path: `/app-engine/App.js`,
+                needsExtractCode: true,
             });
         }
     },
@@ -1014,8 +970,10 @@ export { App };
         path = "/manifest/mongoose.json",
         request,
         engine,
+        needsExtractCode = false,
     }: {
         path: string;
+        needsExtractCode?: boolean;
         request: webllm.ChatCompletionRequestStreaming;
         engine: webllm.MLCEngineInterface;
     }) => {
@@ -1054,6 +1012,13 @@ export { App };
             });
         }
 
+        if (needsExtractCode) {
+            messageFragments =
+                await WebLLMAppClient.extractFirstCodeBlockContent({
+                    markdown: messageFragments,
+                });
+        }
+
         await WebLLMAppClient.writeToFile({
             content: messageFragments,
             path: path,
@@ -1072,3 +1037,20 @@ export { App };
         });
     },
 };
+
+/*
+
+        if (request && path && fistblock) {
+            await WebLLMAppClient.writeToFile({
+                content: fistblock,
+                path: path,
+                inputSignature:
+                    useGenAI.getState().llmStatus === "writing"
+                        ? `${md5(JSON.stringify({ request, content: fistblock }))}`
+                        : `${Math.random()}`,
+
+                persist: true,
+            });
+        }
+            
+*/
