@@ -3,7 +3,7 @@
  * for Docker builds.
  */
 import "./src/env.js";
-import './dynamic-link-library.js'
+import './global-variables.js'
 
 const nextConfig = {
     eslint: { ignoreDuringBuilds: !!process.env.CI },

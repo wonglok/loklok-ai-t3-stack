@@ -1,15 +1,15 @@
 
 // @ts-ignore
-window.LokLokNpm = window.LokLokNpm || {};
+window.NPM_GV_CACHE = window.NPM_GV_CACHE || {};
 // @ts-ignore
-const LokLokNpm = window.LokLokNpm;
+const NPM_GV_CACHE = window.NPM_GV_CACHE;
 
-LokLokNpm['react-dom19'] = LokLokNpm['react-dom19'] || {}; 
+NPM_GV_CACHE['TJ-react-dom19'] = NPM_GV_CACHE['TJ-react-dom19'] || {};
 
-export const createRoot = LokLokNpm['react-dom19']['createRoot'];
+export const createRoot = NPM_GV_CACHE['TJ-react-dom19']['createRoot'];
 
-export default LokLokNpm['react-dom19']['default'];
+export default NPM_GV_CACHE['TJ-react-dom19']['default'];
 
-export const hydrateRoot = LokLokNpm['react-dom19']['hydrateRoot'];
+export const hydrateRoot = NPM_GV_CACHE['TJ-react-dom19']['hydrateRoot'];
 
-export const version = LokLokNpm['react-dom19']['version'];
+export const version = NPM_GV_CACHE['TJ-react-dom19']['version'];

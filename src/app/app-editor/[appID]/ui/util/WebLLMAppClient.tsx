@@ -10,13 +10,16 @@ import { z } from "zod";
 import * as markdownit from "markdown-it";
 import * as pathUtil from "path";
 import { createInstance } from "localforage";
-
+import md5 from "md5";
 // @ts-ignore
 // import { unified } from "unified";
 // import remarkParse from "remark-parse";
 // import remarkRehype from "remark-rehype";
 // import remarkMan from "remark-man";
 //
+const executionCache = createInstance({
+    name: "execution_cache",
+});
 
 const appsCode = createInstance({
     name: "apps_code",
@@ -31,15 +34,11 @@ You are an AI Coding Agent with following description:
 - You are Joyful and Wise. 
 - You love short and sweet sentences and clear and insightful code comments.`;
 
-//
-
 // if (process.env.NODE_ENV === "development") {
 //     if (typeof window !== "undefined") {
 //         appsCode.setItem(useGenAI.getState().appID, []);
 //     }
 // }
-
-//
 
 export const WebLLMAppClient = {
     ["resetApp"]: async () => {
@@ -98,10 +97,10 @@ export const WebLLMAppClient = {
             llmStatus: "writing",
         });
 
-        // await WebLLMAppClient.studyRequirements({
-        //     userPrompt: userPrompt,
-        //     engine,
-        // });
+        await WebLLMAppClient.studyRequirements({
+            userPrompt: userPrompt,
+            engine,
+        });
 
         // // // await WebLLMAppClient.createMongooseFromSpec({
         // // //     engine,
@@ -115,9 +114,9 @@ export const WebLLMAppClient = {
         // // //     engine,
         // // // });
 
-        // await WebLLMAppClient.createReactComponents({
-        //     engine,
-        // });
+        await WebLLMAppClient.createReactComponents({
+            engine,
+        });
 
         await WebLLMAppClient.createAppRootRouterComponents({
             engine,
@@ -140,13 +139,10 @@ export const WebLLMAppClient = {
         engine: webllm.MLCEngineInterface;
         userPrompt: string;
     }) => {
-        //
-
         {
             ///////////////////////////////////////////////////////////////////////////////////
             // manifest
             ///////////////////////////////////////////////////////////////////////////////////
-
             let messages: any = [
                 {
                     role: `system`,
@@ -451,23 +447,23 @@ Implement code inside the "example code" according to the "user requirement tech
                 await WebLLMAppClient.llmRequestToFileStream({
                     engine,
                     request,
-                    path: `/backend/${slug}.js.temp.md`,
+                    path: `/api/${slug}.js.temp.md`,
                 });
 
                 let modelCode =
                     await WebLLMAppClient.extractFirstCodeBlockContent({
                         markdown: await WebLLMAppClient.readFileContent({
-                            path: `/backend/${slug}.js.temp.md`,
+                            path: `/api/${slug}.js.temp.md`,
                         }),
                     });
 
                 await WebLLMAppClient.removeFileByPath({
-                    path: `/backend/${slug}.js.temp.md`,
+                    path: `/api/${slug}.js.temp.md`,
                 });
 
                 await WebLLMAppClient.writeToFile({
                     content: modelCode,
-                    path: `/backend/${slug}.js`,
+                    path: `/api/${slug}.js`,
                 });
 
                 //
@@ -810,18 +806,18 @@ Your Instruction:
 - The "App" component uses "wouter" as a routing library
 - The "App" component uses "Hash mode" of wouter like below:
 
-import { Router, Route, Redirect } from "wouter";
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
+import { Router, Route } from "wouter";
 import { useHashLocation } from "wouter/use-hash-location";
-import { PlatformAdminLoginComponent } from '/ui/PlatformAdminLoginComponent.js'; // please follow the base path of "/ui/...." and always add ".js" at the end
-import { PastorDashboardComponent } from '/ui/PastorDashboardComponent.js'; // please follow the base path of "/ui/...." and always add ".js" at the end
 
-
+import { [ComponenPlaceholdere] } from '/ui/[ComponentPlaceholder].js'; // Change "[ComponentPlaceholder]" to other component name
 // [...] import the reamining page rotues and their component accordinf to the "tech requirements"
 
 const App = () => (
     <Router hook={useHashLocation}>
-        <Route path="/login" component={PlatformAdminLoginComponent} />
-        <Route path="/pastor/dashboard" component={PastorDashboardComponent} />
+        <Route path="/page-route" component={"[ComponenPlaceholdere]"} /> // Change "[ComponentPlaceholder]" to other component name. "page-route" to right page route
+
         {/* [...] include more page routes and its components */}
     </Router>
 );
@@ -1030,6 +1026,13 @@ export { App };
         request: webllm.ChatCompletionRequestStreaming;
         engine: webllm.MLCEngineInterface;
     }) => {
+        if (
+            `${md5(JSON.stringify(request))}` ===
+            (await executionCache.getItem(`${md5(JSON.stringify(request))}`))
+        ) {
+            return;
+        }
+
         useGenAI.setState({ llmStatus: "writing" });
         await engine.resetChat();
         const asyncChunkGenerator = await engine.chatCompletion(request);
@@ -1065,5 +1068,10 @@ export { App };
             path: path,
             persist: true,
         });
+
+        await executionCache.setItem(
+            `${md5(JSON.stringify(request))}`,
+            `${md5(JSON.stringify(request))}`,
+        );
     },
 };

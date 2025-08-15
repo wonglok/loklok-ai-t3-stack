@@ -1,69 +1,69 @@
 
 // @ts-ignore
-window.LokLokNpm = window.LokLokNpm || {};
+window.NPM_GV_CACHE = window.NPM_GV_CACHE || {};
 // @ts-ignore
-const LokLokNpm = window.LokLokNpm;
+const NPM_GV_CACHE = window.NPM_GV_CACHE;
 
-LokLokNpm['@react-three/fiber'] = LokLokNpm['@react-three/fiber'] || {}; 
+NPM_GV_CACHE['TJ-@react-three/fiber'] = NPM_GV_CACHE['TJ-@react-three/fiber'] || {};
 
-export const Canvas = LokLokNpm['@react-three/fiber']['Canvas'];
+export const Canvas = NPM_GV_CACHE['TJ-@react-three/fiber']['Canvas'];
 
-export const ReactThreeFiber = LokLokNpm['@react-three/fiber']['ReactThreeFiber'];
+export const ReactThreeFiber = NPM_GV_CACHE['TJ-@react-three/fiber']['ReactThreeFiber'];
 
-export const __esModule = LokLokNpm['@react-three/fiber']['__esModule'];
+export const __esModule = NPM_GV_CACHE['TJ-@react-three/fiber']['__esModule'];
 
-export const _roots = LokLokNpm['@react-three/fiber']['_roots'];
+export const _roots = NPM_GV_CACHE['TJ-@react-three/fiber']['_roots'];
 
-export const act = LokLokNpm['@react-three/fiber']['act'];
+export const act = NPM_GV_CACHE['TJ-@react-three/fiber']['act'];
 
-export const addAfterEffect = LokLokNpm['@react-three/fiber']['addAfterEffect'];
+export const addAfterEffect = NPM_GV_CACHE['TJ-@react-three/fiber']['addAfterEffect'];
 
-export const addEffect = LokLokNpm['@react-three/fiber']['addEffect'];
+export const addEffect = NPM_GV_CACHE['TJ-@react-three/fiber']['addEffect'];
 
-export const addTail = LokLokNpm['@react-three/fiber']['addTail'];
+export const addTail = NPM_GV_CACHE['TJ-@react-three/fiber']['addTail'];
 
-export const advance = LokLokNpm['@react-three/fiber']['advance'];
+export const advance = NPM_GV_CACHE['TJ-@react-three/fiber']['advance'];
 
-export const applyProps = LokLokNpm['@react-three/fiber']['applyProps'];
+export const applyProps = NPM_GV_CACHE['TJ-@react-three/fiber']['applyProps'];
 
-export const buildGraph = LokLokNpm['@react-three/fiber']['buildGraph'];
+export const buildGraph = NPM_GV_CACHE['TJ-@react-three/fiber']['buildGraph'];
 
-export const context = LokLokNpm['@react-three/fiber']['context'];
+export const context = NPM_GV_CACHE['TJ-@react-three/fiber']['context'];
 
-export const createEvents = LokLokNpm['@react-three/fiber']['createEvents'];
+export const createEvents = NPM_GV_CACHE['TJ-@react-three/fiber']['createEvents'];
 
-export const createPortal = LokLokNpm['@react-three/fiber']['createPortal'];
+export const createPortal = NPM_GV_CACHE['TJ-@react-three/fiber']['createPortal'];
 
-export const createRoot = LokLokNpm['@react-three/fiber']['createRoot'];
+export const createRoot = NPM_GV_CACHE['TJ-@react-three/fiber']['createRoot'];
 
-export default LokLokNpm['@react-three/fiber']['default'];
+export default NPM_GV_CACHE['TJ-@react-three/fiber']['default'];
 
-export const dispose = LokLokNpm['@react-three/fiber']['dispose'];
+export const dispose = NPM_GV_CACHE['TJ-@react-three/fiber']['dispose'];
 
-export const events = LokLokNpm['@react-three/fiber']['events'];
+export const events = NPM_GV_CACHE['TJ-@react-three/fiber']['events'];
 
-export const extend = LokLokNpm['@react-three/fiber']['extend'];
+export const extend = NPM_GV_CACHE['TJ-@react-three/fiber']['extend'];
 
-export const flushGlobalEffects = LokLokNpm['@react-three/fiber']['flushGlobalEffects'];
+export const flushGlobalEffects = NPM_GV_CACHE['TJ-@react-three/fiber']['flushGlobalEffects'];
 
-export const flushSync = LokLokNpm['@react-three/fiber']['flushSync'];
+export const flushSync = NPM_GV_CACHE['TJ-@react-three/fiber']['flushSync'];
 
-export const getRootState = LokLokNpm['@react-three/fiber']['getRootState'];
+export const getRootState = NPM_GV_CACHE['TJ-@react-three/fiber']['getRootState'];
 
-export const invalidate = LokLokNpm['@react-three/fiber']['invalidate'];
+export const invalidate = NPM_GV_CACHE['TJ-@react-three/fiber']['invalidate'];
 
-export const reconciler = LokLokNpm['@react-three/fiber']['reconciler'];
+export const reconciler = NPM_GV_CACHE['TJ-@react-three/fiber']['reconciler'];
 
-export const unmountComponentAtNode = LokLokNpm['@react-three/fiber']['unmountComponentAtNode'];
+export const unmountComponentAtNode = NPM_GV_CACHE['TJ-@react-three/fiber']['unmountComponentAtNode'];
 
-export const useFrame = LokLokNpm['@react-three/fiber']['useFrame'];
+export const useFrame = NPM_GV_CACHE['TJ-@react-three/fiber']['useFrame'];
 
-export const useGraph = LokLokNpm['@react-three/fiber']['useGraph'];
+export const useGraph = NPM_GV_CACHE['TJ-@react-three/fiber']['useGraph'];
 
-export const useInstanceHandle = LokLokNpm['@react-three/fiber']['useInstanceHandle'];
+export const useInstanceHandle = NPM_GV_CACHE['TJ-@react-three/fiber']['useInstanceHandle'];
 
-export const useLoader = LokLokNpm['@react-three/fiber']['useLoader'];
+export const useLoader = NPM_GV_CACHE['TJ-@react-three/fiber']['useLoader'];
 
-export const useStore = LokLokNpm['@react-three/fiber']['useStore'];
+export const useStore = NPM_GV_CACHE['TJ-@react-three/fiber']['useStore'];
 
-export const useThree = LokLokNpm['@react-three/fiber']['useThree'];
+export const useThree = NPM_GV_CACHE['TJ-@react-three/fiber']['useThree'];

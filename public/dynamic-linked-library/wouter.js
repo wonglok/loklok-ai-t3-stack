@@ -1,31 +1,31 @@
 
 // @ts-ignore
-window.LokLokNpm = window.LokLokNpm || {};
+window.NPM_GV_CACHE = window.NPM_GV_CACHE || {};
 // @ts-ignore
-const LokLokNpm = window.LokLokNpm;
+const NPM_GV_CACHE = window.NPM_GV_CACHE;
 
-LokLokNpm['wouter'] = LokLokNpm['wouter'] || {}; 
+NPM_GV_CACHE['TJ-wouter'] = NPM_GV_CACHE['TJ-wouter'] || {};
 
-export const Link = LokLokNpm['wouter']['Link'];
+export const Link = NPM_GV_CACHE['TJ-wouter']['Link'];
 
-export const Redirect = LokLokNpm['wouter']['Redirect'];
+export const Redirect = NPM_GV_CACHE['TJ-wouter']['Redirect'];
 
-export const Route = LokLokNpm['wouter']['Route'];
+export const Route = NPM_GV_CACHE['TJ-wouter']['Route'];
 
-export const Router = LokLokNpm['wouter']['Router'];
+export const Router = NPM_GV_CACHE['TJ-wouter']['Router'];
 
-export const Switch = LokLokNpm['wouter']['Switch'];
+export const Switch = NPM_GV_CACHE['TJ-wouter']['Switch'];
 
-export const matchRoute = LokLokNpm['wouter']['matchRoute'];
+export const matchRoute = NPM_GV_CACHE['TJ-wouter']['matchRoute'];
 
-export const useLocation = LokLokNpm['wouter']['useLocation'];
+export const useLocation = NPM_GV_CACHE['TJ-wouter']['useLocation'];
 
-export const useParams = LokLokNpm['wouter']['useParams'];
+export const useParams = NPM_GV_CACHE['TJ-wouter']['useParams'];
 
-export const useRoute = LokLokNpm['wouter']['useRoute'];
+export const useRoute = NPM_GV_CACHE['TJ-wouter']['useRoute'];
 
-export const useRouter = LokLokNpm['wouter']['useRouter'];
+export const useRouter = NPM_GV_CACHE['TJ-wouter']['useRouter'];
 
-export const useSearch = LokLokNpm['wouter']['useSearch'];
+export const useSearch = NPM_GV_CACHE['TJ-wouter']['useSearch'];
 
-export const useSearchParams = LokLokNpm['wouter']['useSearchParams'];
+export const useSearchParams = NPM_GV_CACHE['TJ-wouter']['useSearchParams'];

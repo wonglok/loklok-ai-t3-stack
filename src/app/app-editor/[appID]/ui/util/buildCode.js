@@ -5,14 +5,6 @@ import path from 'path'
 
 
 export const buildCode = async ({ files = [] }) => {
-
-
-    const loaders = {
-        ['wouter']: () => import('wouter'),
-        ['wouter/use-hash-location']: () => import('wouter/use-hash-location'),
-    }
-    const libs = {}
-
     const CodePrefix = `dynamic-code:`
     const NPMPrefix = `dynamic-npm:`
     const NetworkPrefix = `${location.origin}`
@@ -41,19 +33,13 @@ export const buildCode = async ({ files = [] }) => {
                         return `${NetworkPrefix}/dynamic-linked-library/zustand.js`
                     }
                     if (moduleName === 'wouter') {
-                        if (loaders[moduleName]) {
-                            libs[moduleName] = await loaders[moduleName]()
-                        }
-                        return `${NPMPrefix}wouter`
+                        return `${NetworkPrefix}/dynamic-linked-library/wouter.js`
                     }
                     if (moduleName === 'wouter/use-hash-location') {
-                        if (loaders[moduleName]) {
-                            libs[moduleName] = await loaders[moduleName]()
-                        }
-                        return `${NPMPrefix}wouter/use-hash-location`
+                        return `${NetworkPrefix}/dynamic-linked-library/wouter-hash-location.js`
                     }
 
-                    /// NETWORK LOAD ///
+                    /// NETWORK DOWNLOAD_LOAD ///
                     if (moduleName === 'react-dom') {
                         return `${NetworkPrefix}/dynamic-linked-library/react-dom19.js`
                     }
@@ -77,37 +63,31 @@ export const buildCode = async ({ files = [] }) => {
                 },
 
                 async load(id) {
-                    if (id.indexOf(`${NPMPrefix}`) === 0) {
-                        let pureID = id.replace(`${NPMPrefix}`, '')
-                        console.log('dynamic-npm', pureID)
-
-                        let text
-
-                        let npmID = JSON.stringify(pureID)
-
-                        text = `
-                                // @ts-ignore
-                                window.LokLokNpm = window.LokLokNpm || {};
-                                // @ts-ignore
-                                const LokLokNpm = window.LokLokNpm;
-                                LokLokNpm[${npmID}] = LokLokNpm[${npmID}] || {}; 
-                            `
-
-                        for (let propertyName in libs[pureID]) {
-                            if (propertyName !== 'default') {
-                                text += `
-                        export const ${propertyName} = LokLokNpm[${npmID}]['${propertyName}'];
-                        `
-                            } else {
-                                text += `
-                        export default LokLokNpm[${npmID}]['${propertyName}'];
-                        `
-                            }
-                        }
-
-
-                        return `${text}`
-                    }
+                    // if (id.indexOf(`${NPMPrefix}`) === 0) {
+                    //     let pureID = id.replace(`${NPMPrefix}`, '')
+                    //     console.log('dynamic-npm', pureID)
+                    //     let text
+                    //     let npmID = JSON.stringify(pureID)
+                    //     text = `
+                    //             // @ts-ignore
+                    //             window.NPM_GV_CACHE = window.NPM_GV_CACHE || {};
+                    //             // @ts-ignore
+                    //             const NPM_GV_CACHE = window.NPM_GV_CACHE;
+                    //             NPM_GV_CACHE[${npmID}] = NPM_GV_CACHE[${npmID}] || {}; 
+                    //         `
+                    //     for (let propertyName in libs[pureID]) {
+                    //         if (propertyName !== 'default') {
+                    //             text += `
+                    //     export const ${propertyName} = NPM_GV_CACHE[${npmID}]['${propertyName}'];
+                    //     `
+                    //         } else {
+                    //             text += `
+                    //     export default NPM_GV_CACHE[${npmID}]['${propertyName}'];
+                    //     `
+                    //         }
+                    //     }
+                    //     return `${text}`
+                    // }
 
                     if (id.indexOf('http') === 0) {
                         return fetch(id, { mode: 'cors', method: 'GET' })
@@ -157,7 +137,7 @@ export const buildCode = async ({ files = [] }) => {
                             return javascript
                         } catch (e) {
                             console.log(e)
-                            console.log(file?.content)
+                            console.error('error', file.path, file?.content)
 
                             return file?.content
                         }

@@ -6,25 +6,25 @@ import { useFilesFrame } from "./useFilesFrame";
 export function CodePod() {
     let files = useGenAI(r => r.files) || []
 
-    let componentsManifest
+    // let componentsManifest
 
-    try {
-        componentsManifest = JSON.parse(files.find(r => r.path === '/app/components.json')?.content || '{}')
-    } catch (e) {
-        // console.log(e)
-    }
+    // try {
+    //     componentsManifest = JSON.parse(files.find(r => r.path === '/app/components.json')?.content || '{}')
+    // } catch (e) {
+    //     // console.log(e)
+    // }
 
     // console.log(componentsManifest?.components)
 
-    let importUIComponentSnippet = componentsManifest?.components?.reduce((acc, item, key) => {
+    // let importUIComponentSnippet = componentsManifest?.components?.reduce((acc, item, key) => {
 
-        // some file may not show upp because it's being written by ai
-        if (files.some(r => r.filename.includes(item.slug))) {
-            acc += `import { ${item.componentName} } from "/ui/${item.slug}.js"\n`
-        }
+    //     // some file may not show upp because it's being written by ai
+    //     if (files.some(r => r.filename.includes(item.slug))) {
+    //         acc += `import { ${item.componentName} } from "/ui/${item.slug}.js"\n`
+    //     }
 
-        return acc
-    }, '') || '';
+    //     return acc
+    // }, '') || '';
 
     // console.log(importUIComponentSnippet)
 
@@ -38,7 +38,6 @@ import { create } from 'zustand'
 
 export const useSDK = create((set, get) =>{
     return {
-        apple: '123123'
     }
 })
                 `,
@@ -53,15 +52,13 @@ import { Canvas } from '@react-three/fiber'
 import { Sphere, MeshTransmissionMaterial, Environment, OrbitControls } from '@react-three/drei'
 import { useSDK } from '/ui/useSDK.js'
 
-import componentsRoot from '/app/components.json'
+// import componentsRoot from '/app/components.json'
+
 import { App } from '/app-engine/App.js'
 
-
-${importUIComponentSnippet}
+console.log(App)
 
 export function MyApp () {
-    let apple = useSDK((r) => r.apple);
-
     return <div className="w-full h-full relative">
         <Canvas className="w-full h-full ">
             <Sphere>
@@ -72,7 +69,6 @@ export function MyApp () {
         </Canvas>
 
         <div className=" absolute top-0 left-0 z-100">
-            {apple}
             <App></App>
         </div>
     </div>

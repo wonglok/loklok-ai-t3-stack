@@ -1,13 +1,13 @@
 
 // @ts-ignore
-window.LokLokNpm = window.LokLokNpm || {};
+window.NPM_GV_CACHE = window.NPM_GV_CACHE || {};
 // @ts-ignore
-const LokLokNpm = window.LokLokNpm;
+const NPM_GV_CACHE = window.NPM_GV_CACHE;
 
-LokLokNpm['zustand'] = LokLokNpm['zustand'] || {}; 
+NPM_GV_CACHE['TJ-zustand'] = NPM_GV_CACHE['TJ-zustand'] || {};
 
-export const create = LokLokNpm['zustand']['create'];
+export const create = NPM_GV_CACHE['TJ-zustand']['create'];
 
-export const createStore = LokLokNpm['zustand']['createStore'];
+export const createStore = NPM_GV_CACHE['TJ-zustand']['createStore'];
 
-export const useStore = LokLokNpm['zustand']['useStore'];
+export const useStore = NPM_GV_CACHE['TJ-zustand']['useStore'];

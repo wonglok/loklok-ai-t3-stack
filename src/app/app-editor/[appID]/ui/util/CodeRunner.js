@@ -4,6 +4,8 @@ import * as React19 from 'react'
 import * as ReactThreeDrei from '@react-three/drei'
 import * as ReactThreeFiber from '@react-three/fiber'
 import * as Zustand from 'zustand'
+import * as WouterBase from 'wouter'
+import * as WouterHash from 'wouter/use-hash-location'
 
 export function CodeRunner() {
     React19.useEffect(() => {
@@ -15,16 +17,19 @@ export function CodeRunner() {
             let fileList = await fetch(blobURL).then((r) => r.json()) || []
 
             // @ts-ignore
-            window.LokLokNpm = window.LokLokNpm || {}
+            window.NPM_GV_CACHE = window.NPM_GV_CACHE || {}
 
             // @ts-ignore
-            const LokLokNpm = window.LokLokNpm
-            LokLokNpm['react-dom19'] = ReactDOM19
-            LokLokNpm['react19'] = React19
-            LokLokNpm.React = React19
-            LokLokNpm['@react-three/drei'] = ReactThreeDrei
-            LokLokNpm['@react-three/fiber'] = ReactThreeFiber
-            LokLokNpm['zustand'] = Zustand
+            const NPM_GV_CACHE = window.NPM_GV_CACHE
+            NPM_GV_CACHE['TJ-react-dom19'] = ReactDOM19
+            NPM_GV_CACHE['TJ-react19'] = React19
+            NPM_GV_CACHE['TJ-@react-three/drei'] = ReactThreeDrei
+            NPM_GV_CACHE['TJ-@react-three/fiber'] = ReactThreeFiber
+            NPM_GV_CACHE['TJ-zustand'] = Zustand
+            NPM_GV_CACHE['TJ-wouter'] = WouterBase
+            NPM_GV_CACHE['TJ-wouter/use-hash-location'] = WouterHash
+
+            window['React'] = React19
 
             // @ts-ignore
             window.esmsInitOptions = {

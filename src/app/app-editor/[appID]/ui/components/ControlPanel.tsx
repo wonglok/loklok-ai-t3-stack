@@ -92,11 +92,13 @@ let selectFile = ({
 //
 
 function MonacoEditor({
+    path,
     value,
     height,
     defaultLanguage,
     onChange = () => {},
 }: {
+    path: string;
     value: string;
     height: string;
     defaultLanguage?: string;
@@ -136,6 +138,7 @@ function MonacoEditor({
 
     return (
         <Editor
+            path={path}
             height={height}
             onMount={(editor, monaco) => {
                 setEditor(editor);
@@ -315,7 +318,7 @@ export function ControlPanel() {
                             style={{ width: `calc(100% - 350px)` }}
                         >
                             {/* file list */}
-                            <div className="h-full w-[250px] overflow-y-scroll border-r border-gray-300">
+                            <div className="h-full w-[350px] overflow-x-hidden overflow-y-scroll border-r border-gray-300">
                                 {/*  */}
                                 <button
                                     className="px-3 py-2"
@@ -366,7 +369,7 @@ export function ControlPanel() {
                             {/* 250 */}
                             <div
                                 className="h-full"
-                                style={{ width: `calc(100% - 250px)` }}
+                                style={{ width: `calc(100% - 350px)` }}
                             >
                                 {/*  */}
                                 <div
@@ -422,6 +425,9 @@ export function ControlPanel() {
 
                                                                     <MonacoEditor
                                                                         height="90vh"
+                                                                        path={
+                                                                            file.path
+                                                                        }
                                                                         defaultLanguage={getLang(
                                                                             file.filename,
                                                                         )}

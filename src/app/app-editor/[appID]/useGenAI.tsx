@@ -64,6 +64,10 @@ export const useGenAI = create<{
     return {
         files: [],
         expandID: "",
+
+        //
+        //
+
         // zustandStateTRPCMaanagerFinal: "",
         // zustandStateTRPCMaanagerDraft: "",
 
