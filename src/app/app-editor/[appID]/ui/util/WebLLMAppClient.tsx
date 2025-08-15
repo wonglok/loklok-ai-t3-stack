@@ -1003,6 +1003,7 @@ export { App };
         }
 
         useGenAI.setState({ llmStatus: "writing" });
+        executionCache.removeItem(key);
         await engine.resetChat();
 
         const asyncChunkGenerator = await engine.chatCompletion(request);
@@ -1035,8 +1036,6 @@ export { App };
                     resovle(null);
                 });
             });
-
-            executionCache.removeItem(key);
         }
 
         await WebLLMAppClient.writeToFile({
