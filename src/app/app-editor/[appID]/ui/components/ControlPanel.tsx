@@ -95,10 +95,12 @@ function MonacoEditor({
     value,
     height,
     defaultLanguage,
+    onChange = () => {},
 }: {
     value: string;
     height: string;
     defaultLanguage?: string;
+    onChange?: (v: string) => void;
 }) {
     let llmStatus = useGenAI((r) => r.llmStatus);
     let files = useGenAI((r) => r.files);
@@ -140,6 +142,7 @@ function MonacoEditor({
             }}
             defaultLanguage={defaultLanguage}
             value={value}
+            onChange={onChange}
         ></Editor>
     );
 }
@@ -424,6 +427,30 @@ export function ControlPanel() {
                                                                         value={
                                                                             file.content
                                                                         }
+                                                                        onChange={(
+                                                                            value,
+                                                                        ) => {
+                                                                            if (
+                                                                                llmStatus ===
+                                                                                "writing"
+                                                                            ) {
+                                                                            } else {
+                                                                                file.content =
+                                                                                    value;
+
+                                                                                useGenAI.setState(
+                                                                                    {
+                                                                                        files: JSON.parse(
+                                                                                            JSON.stringify(
+                                                                                                files,
+                                                                                            ),
+                                                                                        ),
+                                                                                    },
+                                                                                );
+
+                                                                                WebLLMAppClient.persistToDisk();
+                                                                            }
+                                                                        }}
                                                                     />
                                                                 </div>
                                                             </div>

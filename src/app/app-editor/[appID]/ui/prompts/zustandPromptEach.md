@@ -1,6 +1,6 @@
 ```javascript
 import { create } from "zustand";
-import { useFrontendStore } from './useFrontendStore';
+import { useSDK } from './useSDK';
 import { getTRPC } from "./getTRPC.js";
 
 

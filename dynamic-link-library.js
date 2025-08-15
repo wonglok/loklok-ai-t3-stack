@@ -4,6 +4,7 @@ import * as ReactDOM from 'react-dom/client'
 import * as Drei from '@react-three/drei'
 import * as Fiber from '@react-three/fiber'
 import * as Zustand from 'zustand'
+import * as Wouter from 'wouter'
 
 const here = import.meta.dirname
 
@@ -135,5 +136,31 @@ export default LokLokNpm['zustand']['${keyname}'];
     }
     fs.writeFileSync(`${here}/public/dynamic-linked-library/zustand.js`, text)
     console.log('dynamic-linked-library: zustand')
+}
+
+
+
+{
+    let text = `
+// @ts-ignore
+window.LokLokNpm = window.LokLokNpm || {};
+// @ts-ignore
+const LokLokNpm = window.LokLokNpm;
+
+LokLokNpm['wouter'] = LokLokNpm['wouter'] || {}; 
+`
+    for (let keyname in Wouter) {
+        if (keyname !== 'default') {
+            text += `
+export const ${keyname} = LokLokNpm['wouter']['${keyname}'];
+`
+        } else {
+            text += `
+export default LokLokNpm['wouter']['${keyname}'];
+`
+        }
+    }
+    fs.writeFileSync(`${here}/public/dynamic-linked-library/wouter.js`, text)
+    console.log('dynamic-linked-library: wouter')
 }
 

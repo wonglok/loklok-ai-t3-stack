@@ -4,7 +4,7 @@ Build a single‑page front‑end application (login, register, dashboard) using
 **Tech Stack**  
 - State: **Zustand** (ESM module, selector pattern – one state property per selector)  
   ```js
-  const username = useFrontendStore(state => state.username);
+  const username = useSDK(state => state.username);
   ```
 - Routing: `<HashRouter>` from `react‑router‑dom`; use `const location = useLocation();` and read `location.pathname`.  
 - UI: **shadcn** components + **Tailwind CSS** (no outer‑most `div` margin).  
@@ -17,13 +17,13 @@ Build a single‑page front‑end application (login, register, dashboard) using
 - Backend (not requested here): Mongoose + tRPC + Zod.
 
 **Requirements**  
-1. **Zustand store** – exported as `useFrontendStore`.  
+1. **Zustand store** – exported as `useSDK`.  
 2. React components: **Login**, **Register**, **Dashboard** + simple layout.  
 3. No explanatory comments or documentation inside files.  
 4. `getTRPC` must be reused; no redundant imports.  
 
 **Deliverables**  
-- `src/useFrontendStore.js` (Zustand store).  
+- `src/useSDK.js` (Zustand store).  
 - `src/getTRPC.js` (tRPC client factory).  
 - `src/components/Login.jsx`, `Register.jsx`, `Dashboard.jsx`.  
 - `src/App.jsx` (HashRouter, layout).  
@@ -38,7 +38,7 @@ Build front end Sing Page Application code.
 
 ----- Zustand ----- 
 
-- Zustand state management integration using selector method such as: let username = useFrontendStore((r) => r.username)
+- Zustand state management integration using selector method such as: let username = useSDK((r) => r.username)
 - for selector in zustand, only use 1 property of state at a time
 - have import and export using ESM for Zustand Module Code
 - keep this line: import { getTRPC } from './getTRPC.js';
@@ -50,7 +50,7 @@ React Components for HTML
 
 add following import for React Components:
 import { useState } from "react";
-import { useFrontendStore } from "./useFrontendStore";
+import { useSDK } from "./useSDK";
 
 - shadcn Library for User Interface Framework
 - Responsive UI components
@@ -119,7 +119,7 @@ You Build tRPC javascript according to the Full Technical Specification that i w
             - frontend trpc only use mutate, dont use query!!!
 
             - Zustand state management integration using selector method such as:
-                let username = useFrontendStore((r) => r.username)
+                let username = useSDK((r) => r.username)
             - for selector in zustand, only use 1 property of state at a time
             - have import and export using ESM for Zustand Module Code
             - keep this line: import { getTRPC } from './getTRPC.js';

@@ -2,9 +2,18 @@
 
 import { transform } from 'sucrase'
 import path from 'path'
+import * as WouterMain from 'wouter'
+import * as WouterHash from 'wouter/use-hash-location'
+
+
+const libs = {
+    ['wouter']: WouterMain,
+    ['wouter/use-hash-location']: WouterHash,
+}
+
 
 export const buildCode = async ({ files = [] }) => {
-    const URLPrefix = `loklok-protocol:`
+    const URLPrefix = `dynamic-npm:`
 
     let siteOrigin = `${location.origin}`
 
@@ -23,13 +32,19 @@ export const buildCode = async ({ files = [] }) => {
                 async resolveId(moduleName, parentBaseURL) {
                     //
 
-                    console.log('resolving module: ', moduleName, parentBaseURL)
+                    console.log('resolving module: ', moduleName, 'required by', parentBaseURL)
 
                     if (!parentBaseURL) {
                         return moduleName
                     }
                     if (moduleName === 'zustand') {
                         return `${siteOrigin}/dynamic-linked-library/zustand.js`
+                    }
+                    if (moduleName === 'wouter') {
+                        return `dynamic-npm://wouter`
+                    }
+                    if (moduleName === 'wouter/use-hash-location') {
+                        return `dynamic-npm://wouter/use-hash-location`
                     }
                     if (moduleName === 'react-dom') {
                         return `${siteOrigin}/dynamic-linked-library/react-dom19.js`
@@ -54,6 +69,38 @@ export const buildCode = async ({ files = [] }) => {
                 },
 
                 async load(id) {
+                    console.log(id)
+
+                    if (id.indexOf('dynamic-npm://') === 0) {
+                        let pureID = id.replace('dynamic-npm://', '')
+                        console.log('dynamic-npm', pureID)
+
+                        let text
+
+                        text = `
+                                // @ts-ignore
+                                window.LokLokNpm = window.LokLokNpm || {};
+                                // @ts-ignore
+                                const LokLokNpm = window.LokLokNpm;
+                                LokLokNpm[${JSON.stringify(pureID)}] = LokLokNpm[${JSON.stringify(pureID)}] || {}; 
+                            `
+
+                        for (let keyname in libs[pureID]) {
+                            if (keyname !== 'default') {
+                                text += `
+                        export const ${keyname} = LokLokNpm[${JSON.stringify(pureID)}]['${keyname}'];
+                        `
+                            } else {
+                                text += `
+                        export default LokLokNpm[${JSON.stringify(pureID)}]['${keyname}'];
+                        `
+                            }
+                        }
+
+
+                        return `${text}`
+                    }
+
                     if (id.indexOf('http') === 0) {
                         return fetch(id, { mode: 'cors', method: 'GET' })
                             .then((r) => r.text())
@@ -137,7 +184,8 @@ export const buildCode = async ({ files = [] }) => {
         return finalOutput
 
     } catch (e) {
-        console.log(e)
+        console.log('building:error')
+        console.error(e)
 
         return ''
     }

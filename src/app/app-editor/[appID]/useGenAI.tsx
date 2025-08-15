@@ -83,8 +83,7 @@ export const useGenAI = create<{
         models: models,
         currentModel: models[1].value,
         appID: "",
-        prompt: `
-I want to build a bible testimony app powered by ai embeddings and RAG Agents.
+        prompt: `I want to build a bible testimony app powered by ai embeddings and RAG Agents.
 
 ## PlatformAdmin:
 PlatformAdmin can login to Platform Portal. 
@@ -100,13 +99,12 @@ Pastor Portal can do a few things:
 4. approve and publish the testimony to their pastor account.
 
 ## Internet users:
-Internet Users can visit public web app.
+Internet Users can visit public web app at home page of the webiste. 
 In Public webapp, they can view testimonty preview, video and text.
 In Public webapp, they can search testimonty powered by ai.
 
 Internet Users can login to their user profile.
 In User Profile, they can write testimony and request pastor to approve for publishing to public.
-
 `.trim(),
         loadingSpec: false,
         welcome: true,

@@ -54,10 +54,12 @@ import { Sphere, MeshTransmissionMaterial, Environment, OrbitControls } from '@r
 import { useSDK } from '/ui/useSDK.js'
 
 import componentsRoot from '/app/components.json'
+import { App } from '/app-engine/App.js'
+
 
 ${importUIComponentSnippet}
 
-export function App () {
+export function MyApp () {
     let apple = useSDK((r) => r.apple);
 
     return <div className="w-full h-full relative">
@@ -71,6 +73,7 @@ export function App () {
 
         <div className=" absolute top-0 left-0 z-100">
             {apple}
+            <App></App>
         </div>
     </div>
 }
@@ -79,7 +82,7 @@ export function App () {
             {
                 path: `/src/main.js`,
                 content: /* javascript */ `
-import { App } from '../src/App.js'
+import { MyApp } from '../src/App.js'
 import * as ReactDOM from 'react-dom'
 import * as React from 'react'
 
@@ -88,7 +91,7 @@ let domElement = document.querySelector('#run_code_div')
 
 if (!domElement?.root) {
     domElement.root = ReactDOM.createRoot(domElement)
-    domElement.root.render(<App></App>)
+    domElement.root.render(<MyApp></MyApp>)
 }
 
 `,

@@ -103,19 +103,23 @@ export const WebLLMAppClient = {
             engine,
         });
 
-        // await WebLLMAppClient.createMongooseFromSpec({
-        //     engine,
-        // });
+        // // await WebLLMAppClient.createMongooseFromSpec({
+        // //     engine,
+        // // });
 
-        // await WebLLMAppClient.createBackendProcedures({
-        //     engine,
-        // });
+        // // await WebLLMAppClient.createBackendProcedures({
+        // //     engine,
+        // // });
 
-        // await WebLLMAppClient.createFrontEndSDK({
-        //     engine,
-        // });
+        // // await WebLLMAppClient.createFrontEndSDK({
+        // //     engine,
+        // // });
 
         await WebLLMAppClient.createReactComponents({
+            engine,
+        });
+
+        await WebLLMAppClient.createAppRootRouterComponents({
             engine,
         });
 
@@ -499,6 +503,7 @@ Implement code inside the "example code" according to the "user requirement tech
 
         let proceduresList = JSON.parse(proceduresText.trim()).procedures;
 
+        //
         console.log(proceduresList);
 
         //
@@ -556,7 +561,7 @@ let getMyAvatars = async () => {
 
 only use trpc client with mutation calls, like: let client = await getTRPC()
 
-if needed, save all resutls to useFrontendStore.setState({key1:value1}) replace "key1", replace "value1" accordingly
+if needed, save all resutls to useSDK.setState({key1:value1}) replace "key1", replace "value1" accordingly
         `.trim(),
                 },
             ];
@@ -685,7 +690,8 @@ Please make sure the components are unique.
                 //     "../prompts/reactSystemPrompt.md"
                 // ).then((r) => r.default);
 
-                let slug = eachObject?.slug;
+                // let slug = eachObject?.slug;
+                let componentName = eachObject.componentName;
 
                 // let componentJSONString = JSON.stringify(eachObject);
 
@@ -709,7 +715,7 @@ ${studyText}
                         role: "user",
                         content: `
 
-- Implement "${slug}" react component (${eachObject.componentName}), only write code, no need comment or explain:
+- Implement "${componentName}" react component (${componentName}), only write code, no need comment or explain:
 
 - Include zustand store "useSDK" in header like the following:
 import { useSDK } from '/ui/useSDK.js'
@@ -719,7 +725,7 @@ import { useSDK } from '/ui/useSDK.js'
 - Always use zustand store "useSDK" to call props and backend procedures
 
 - Always use this way to export component:
-export { ${eachObject.componentName} };
+export { ${componentName} };
 `,
                     },
 
@@ -741,28 +747,39 @@ export { ${eachObject.componentName} };
                 await WebLLMAppClient.llmRequestToFileStream({
                     engine,
                     request,
-                    path: `/ui/${slug}.js.temp.md`,
+                    path: `/ui/${componentName}.js.temp.md`,
                 });
 
                 let modelCode =
                     await WebLLMAppClient.extractFirstCodeBlockContent({
                         markdown: await WebLLMAppClient.readFileContent({
-                            path: `/ui/${slug}.js.temp.md`,
+                            path: `/ui/${componentName}.js.temp.md`,
                         }),
                     });
 
                 await WebLLMAppClient.removeFileByPath({
-                    path: `/ui/${slug}.js.temp.md`,
+                    path: `/ui/${componentName}.js.temp.md`,
                 });
 
                 await WebLLMAppClient.writeToFile({
                     content: modelCode,
-                    path: `/ui/${slug}.js`,
+                    path: `/ui/${componentName}.js`,
                 });
             }
         }
+    },
 
+    createAppRootRouterComponents: async ({ engine }) => {
         {
+            let studyText = await WebLLMAppClient.readFileContent({
+                path: `/app/study.md`,
+            });
+
+            const rootObjectComponents =
+                await WebLLMAppClient.readFileParseJSONContent({
+                    path: `/app/components.json`,
+                });
+
             const request: webllm.ChatCompletionRequest = {
                 stream: true,
                 stream_options: { include_usage: true },
@@ -796,17 +813,17 @@ Your Instruction:
 - The "App" component uses "wouter" as a routing library
 - The "App" component uses "Hash mode" of wouter like below:
 
-import { Router, Route } from "wouter";
+import { Router, Route, Redirect } from "wouter";
 import { useHashLocation } from "wouter/use-hash-location";
-import PlatformAdminLoginComponent from '/ui/PlatformAdminLoginComponent'; // please follow the base path of "/ui/...." 
-import PastorDashboardComponent from '/ui/PastorDashboardComponent'; // please follow the base path of "/ui/...." 
+import { PlatformAdminLoginComponent } from '/ui/PlatformAdminLoginComponent'; // please follow the base path of "/ui/...." 
+import { PastorDashboardComponent } from '/ui/PastorDashboardComponent'; // please follow the base path of "/ui/...." 
+// [...] import the reamining page rotues and their component accordinf to the "tech requirements"
 
 const App = () => (
     <Router hook={useHashLocation}>
         <Route path="/login" component={PlatformAdminLoginComponent} />
         <Route path="/pastor/dashboard" component={PastorDashboardComponent} />
-        <Route path="/public-web-app" component={() => <h1>Public Web App</h1>} />
-        <Route path="/user-profile" component={() => <h1>User Profile</h1>} />
+        {/* [...] include more page routes and its components */}
     </Router>
 );
 
@@ -927,6 +944,13 @@ export { App };
         if (persist) {
             await appsCode.setItem(useGenAI.getState().appID, files);
         }
+    },
+    persistToDisk: async () => {
+        let files = JSON.parse(
+            JSON.stringify(useGenAI.getState().files),
+        ) as MyFile[];
+
+        await appsCode.setItem(useGenAI.getState().appID, files);
     },
     extractAllCodeBlocks: async ({ markdown = "" }: { markdown: string }) => {
         //

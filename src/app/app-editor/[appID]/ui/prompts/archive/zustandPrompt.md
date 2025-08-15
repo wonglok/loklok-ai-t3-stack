@@ -4,7 +4,7 @@ import { getTRPC } from "./getTRPC.js";
 
 const GLOBAL_APP_ID = 123;
 
-const useFrontendStore = create((set, get) => ({
+const useSDK = create((set, get) => ({
     user: null,
     loading: false,
     error: null,
@@ -61,5 +61,5 @@ const useFrontendStore = create((set, get) => ({
     
 }));
 
-export { useFrontendStore };
+export { useSDK };
 ```
