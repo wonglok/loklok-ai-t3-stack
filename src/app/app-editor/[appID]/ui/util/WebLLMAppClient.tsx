@@ -995,7 +995,8 @@ export { App };
         request: webllm.ChatCompletionRequestStreaming;
         engine: webllm.MLCEngineInterface;
     }) => {
-        let signature = `${md5(JSON.stringify({ request, path }))}`;
+        let content = await WebLLMAppClient.readFileContent({ path });
+        let signature = `${md5(JSON.stringify({ request, path, content: content }))}`;
 
         if (`${signature}` === (await executionCache.getItem(signature))) {
             return;
@@ -1041,6 +1042,8 @@ export { App };
             path: path,
             persist: true,
         });
+
+        signature = `${md5(JSON.stringify({ request, path, content: messageFragments }))}`;
 
         await executionCache.setItem(signature, signature);
     },
