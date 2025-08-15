@@ -999,7 +999,6 @@ export { App };
         if (`${signature}` === (await executionCache.getItem(signature))) {
             return;
         }
-        await executionCache.removeItem(signature);
 
         useGenAI.setState({ llmStatus: "writing" });
         await engine.resetChat();
@@ -1033,6 +1032,7 @@ export { App };
                     resovle(null);
                 });
             });
+            executionCache.removeItem(signature);
         }
 
         await WebLLMAppClient.writeToFile({
