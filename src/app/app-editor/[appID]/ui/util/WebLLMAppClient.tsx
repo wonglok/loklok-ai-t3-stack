@@ -74,14 +74,13 @@ export const WebLLMAppClient = {
 
         useGenAI.setState({
             stopFunc: async () => {
+                useGenAI.setState({ llmStatus: "init" });
+
                 useGenAI.setState({
                     stopFunc: () => {},
                 });
 
                 engine?.interruptGenerate();
-
-                useGenAI.setState({ llmStatus: "init" });
-
                 aiWorker.terminate();
                 try {
                     engine?.unload();
@@ -316,18 +315,18 @@ Please only implement "${slug}" (${eachObject.table}) collection only:
                 await WebLLMAppClient.llmRequestToFileStream({
                     engine,
                     request,
-                    path: `/models/${slug}.js.temp.md`,
+                    path: `/models/${slug}.js`,
                 });
 
                 let modelCode =
                     await WebLLMAppClient.extractFirstCodeBlockContent({
                         markdown: await WebLLMAppClient.readFileContent({
-                            path: `/models/${slug}.js.temp.md`,
+                            path: `/models/${slug}.js`,
                         }),
                     });
 
                 await WebLLMAppClient.removeFileByPath({
-                    path: `/models/${slug}.js.temp.md`,
+                    path: `/models/${slug}.js`,
                 });
 
                 await WebLLMAppClient.writeToFile({
@@ -706,18 +705,18 @@ export { ${name} };
                 await WebLLMAppClient.llmRequestToFileStream({
                     engine,
                     request,
-                    path: `/ui/${name}.js.temp.md`,
+                    path: `/ui/${name}.js`,
                 });
 
                 let modelCode =
                     await WebLLMAppClient.extractFirstCodeBlockContent({
                         markdown: await WebLLMAppClient.readFileContent({
-                            path: `/ui/${name}.js.temp.md`,
+                            path: `/ui/${name}.js`,
                         }),
                     });
 
                 await WebLLMAppClient.removeFileByPath({
-                    path: `/ui/${name}.js.temp.md`,
+                    path: `/ui/${name}.js`,
                 });
 
                 await WebLLMAppClient.writeToFile({
@@ -996,14 +995,16 @@ export { App };
         engine: webllm.MLCEngineInterface;
     }) => {
         let content = await WebLLMAppClient.readFileContent({ path });
-        let signature = `${md5(JSON.stringify({ request, path, content: content }))}`;
+        let signature = `${md5(JSON.stringify({ request, content }))}`;
+        let key = `${useGenAI.getState().appID}${path}`;
 
-        if (`${signature}` === (await executionCache.getItem(signature))) {
+        if (`${signature}` === (await executionCache.getItem(key))) {
             return;
         }
 
         useGenAI.setState({ llmStatus: "writing" });
         await engine.resetChat();
+
         const asyncChunkGenerator = await engine.chatCompletion(request);
 
         let messageFragments = "";
@@ -1034,7 +1035,8 @@ export { App };
                     resovle(null);
                 });
             });
-            executionCache.removeItem(signature);
+
+            executionCache.removeItem(key);
         }
 
         await WebLLMAppClient.writeToFile({
@@ -1043,8 +1045,9 @@ export { App };
             persist: true,
         });
 
-        signature = `${md5(JSON.stringify({ request, path, content: messageFragments }))}`;
-
-        await executionCache.setItem(signature, signature);
+        if (useGenAI.getState().llmStatus === "writing") {
+            signature = `${md5(JSON.stringify({ request, content: messageFragments }))}`;
+            await executionCache.setItem(key, signature);
+        }
     },
 };
