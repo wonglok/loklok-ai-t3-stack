@@ -36,6 +36,42 @@ You are an AI Coding Agent with following description:
 - You love short and sweet sentences and clear and insightful code comments.`;
 
 export const WebLLMAppClient = {
+    ["checkSignature"]: async ({ path, request }) => {
+        let dir = `${path}`;
+        let key = `${md5(`${useGenAI.getState().appID}${dir}${JSON.stringify(`${md5(request)}`)}`)}`;
+        let lastSignature = await executionCache.getItem(key);
+        let nowSignature = `${md5(
+            `${await WebLLMAppClient.readFileContent({
+                path: `${dir}`,
+            })}`,
+        )}`;
+
+        useGenAI.setState({
+            onCancelSigature: () => {
+                executionCache.removeItem(key);
+                console.log("cancel signature key", key);
+            },
+        });
+
+        if (lastSignature !== null) {
+            if (nowSignature !== lastSignature) {
+                return true;
+            }
+        }
+    },
+    ["saveSignature"]: async ({ path, request }) => {
+        let dir = `${path}`;
+        let key = `${md5(`${useGenAI.getState().appID}${dir}${JSON.stringify(`${md5(request)}`)}`)}`;
+        // let lastSignature = await executionCache.getItem(key);
+        let nowSignature = `${md5(
+            `${await WebLLMAppClient.readFileContent({
+                path: `${dir}`,
+            })}`,
+        )}`;
+
+        executionCache.setItem(key, nowSignature);
+    },
+
     ["resetApp"]: async () => {
         await WebLLMAppClient.factoryReset();
         useGenAI.setState({
@@ -74,6 +110,12 @@ export const WebLLMAppClient = {
 
         useGenAI.setState({
             stopFunc: async () => {
+                try {
+                    useGenAI.getState().onCancelSigature();
+                } catch (e) {
+                    console.log(e);
+                }
+
                 useGenAI.setState({ llmStatus: "init" });
 
                 useGenAI.setState({
@@ -171,8 +213,10 @@ Your Instruction:
                 temperature: 0.0,
             };
 
+            let path = `/study/blueprint.md`;
+
             await WebLLMAppClient.llmRequestToFileStream({
-                path: `/study/blueprint.md`,
+                path: path,
                 request: request,
                 engine,
             });
@@ -994,19 +1038,18 @@ export { App };
         request: webllm.ChatCompletionRequestStreaming;
         engine: webllm.MLCEngineInterface;
     }) => {
-        //
-        let content = await WebLLMAppClient.readFileContent({ path });
-        let signature = `${md5(JSON.stringify({ request, content: content }))}`;
-        //
-        let key = `${useGenAI.getState().appID}${path}`;
-
-        //
-        if (`${signature}` === (await executionCache.getItem(key))) {
+        let sourceID = `${md5(JSON.stringify({ appID: useGenAI.getState().appID, request, path }))}`;
+        let saved = await executionCache.getItem(sourceID);
+        if (typeof saved === "string" && saved !== "null") {
+            await await WebLLMAppClient.writeToFile({
+                content: saved,
+                path: path,
+                persist: true,
+            });
             return;
         }
 
         useGenAI.setState({ llmStatus: "writing" });
-        executionCache.removeItem(key);
         await engine.resetChat();
 
         const asyncChunkGenerator = await engine.chatCompletion(request);
@@ -1022,7 +1065,6 @@ export { App };
 
             for (let frag of arr) {
                 messageFragments += frag;
-
                 // await new Promise((resovle) => {
                 //     resovle(null);
                 // });
@@ -1047,11 +1089,6 @@ export { App };
             persist: true,
         });
 
-        if (useGenAI.getState().llmStatus === "writing") {
-            signature = `${md5(JSON.stringify({ request, content: messageFragments }))}`;
-            await executionCache.setItem(key, signature);
-        } else {
-            executionCache.removeItem(key);
-        }
+        await executionCache.setItem(sourceID, messageFragments);
     },
 };

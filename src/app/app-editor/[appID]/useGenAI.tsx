@@ -37,7 +37,8 @@ export const useGenAI = create<{
     engine: webllm.MLCEngineInterface | null;
 
     brainworks: boolean;
-
+    //
+    onCancelSigature: () => void;
     //
 
     models: { key: string; value: string }[];
@@ -65,20 +66,7 @@ export const useGenAI = create<{
         files: [],
         expandID: "",
 
-        //
-        //
-
-        // zustandStateTRPCMaanagerFinal: "",
-        // zustandStateTRPCMaanagerDraft: "",
-
-        // createBackendProceduresDraft: "",
-        // createBackendProceduresFinal: "",
-
-        // mongooseCodeDraft: "",
-        // mongooseCodeFinal: "",
-
-        // technicalSpecificationDraft: "",
-        // technicalSpecificationFinal: "",
+        onCancelSigature: () => {},
 
         //
         llmStatus: "init",
