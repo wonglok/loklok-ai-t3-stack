@@ -11,6 +11,8 @@ import * as markdownit from "markdown-it";
 import * as pathUtil from "path";
 import { createInstance } from "localforage";
 import md5 from "md5";
+
+//
 // @ts-ignore
 // import { unified } from "unified";
 // import remarkParse from "remark-parse";
@@ -46,6 +48,10 @@ export const WebLLMAppClient = {
         useGenAI.setState({
             files: [],
         });
+        //
+        for await (let key of await executionCache.keys()) {
+            await executionCache.removeItem(key);
+        }
     },
     ///////////////////////////////////////////////////////////////////////////////////
     // buildApp
@@ -883,6 +889,24 @@ export { App };
 
         return file?.content || "";
     },
+    readFileHash: async ({
+        path = "/manifest/mongoose.json",
+        throwError = false,
+    }: {
+        path: string;
+        throwError?: boolean;
+    }) => {
+        let files = JSON.parse(
+            JSON.stringify(useGenAI.getState().files),
+        ) as MyFile[];
+        let file = files.find((r) => r.path === path);
+
+        if (!file && throwError) {
+            throw "not found";
+        }
+
+        return file?.hash || `__${Math.random()}`;
+    },
 
     readFileParseJSONContent: async ({
         path = "/manifest/mongoose.json",
@@ -906,8 +930,10 @@ export { App };
     writeToFile: async ({
         content,
         path,
+        hash,
         persist = true,
     }: {
+        hash?: string;
         content: string;
         path: string;
         persist?: boolean;
@@ -916,13 +942,17 @@ export { App };
             JSON.stringify(useGenAI.getState().files),
         ) as MyFile[];
 
+        hash = hash || `${md5(`${Math.random()}`)}`;
+
         let file = files.find((r) => r.path === path);
         if (file) {
             file.content = `${content}`;
             file.updatedAt = new Date().toISOString();
+            file.hash = hash;
         } else {
             let newFile = {
                 path: path,
+                hash: hash,
                 filename: pathUtil.basename(path),
                 content: `${content}`,
                 updatedAt: new Date().toISOString(),
@@ -1026,8 +1056,9 @@ export { App };
         request: webllm.ChatCompletionRequestStreaming;
         engine: webllm.MLCEngineInterface;
     }) => {
+        let hash = await WebLLMAppClient.readFileHash({ path: path });
         if (
-            `${md5(JSON.stringify(request))}` ===
+            `${hash}` ===
             (await executionCache.getItem(`${md5(JSON.stringify(request))}`))
         ) {
             return;
@@ -1051,21 +1082,23 @@ export { App };
 
                 await WebLLMAppClient.writeToFile({
                     content: messageFragments,
+                    hash: `${md5(`${Math.random()}`)}`,
                     path: path,
                     persist: false,
                 });
 
                 await new Promise((resovle) => {
-                    requestAnimationFrame(resovle);
+                    requestAnimationFrame(() => {
+                        resovle(null);
+                    });
                 });
             }
         }
 
-        //
-
         await WebLLMAppClient.writeToFile({
             content: messageFragments,
             path: path,
+            hash: `${md5(JSON.stringify(request))}`,
             persist: true,
         });
 

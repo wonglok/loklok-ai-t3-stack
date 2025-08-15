@@ -88,6 +88,7 @@ export const buildCode = async ({ files = [] }) => {
                     //     }
                     //     return `${text}`
                     // }
+                    //
 
                     if (id.indexOf('http') === 0) {
                         return fetch(id, { mode: 'cors', method: 'GET' })
