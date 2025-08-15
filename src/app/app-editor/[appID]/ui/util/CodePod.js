@@ -34,10 +34,20 @@ export function MyApp () {
     let [App, setApp] = React.useState(null)
 
     React.useEffect(() => {
-        import('/app-engine/App.js').then(({ App }) =>{
-            setApp(App)
-        })
+        try {
+            import('/app-engine/App.js').then(({ App }) =>{
+                try {
+                    setApp(<App></App>)
+                } catch (e) {
+
+                }
+            })
+        } catch (e) {
+
+        }
     }, [])
+
+
 
     return <div className="w-full h-full relative">
         <Canvas className="w-full h-full ">
@@ -49,7 +59,7 @@ export function MyApp () {
         </Canvas>
 
         <div className=" absolute top-0 left-0 z-100">
-            {App && <App></App>}
+            {App}
         </div>
     </div>
 }

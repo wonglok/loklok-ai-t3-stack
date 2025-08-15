@@ -36,51 +36,6 @@ You are an AI Coding Agent with following description:
 - You love short and sweet sentences and clear and insightful code comments.`;
 
 export const WebLLMAppClient = {
-    ["checkSignature"]: async ({ path, request }) => {
-        let dir = `${path}`;
-        let key = `${md5(`${useGenAI.getState().appID}${dir}${JSON.stringify(`${md5(request)}`)}`)}`;
-        let lastSignature = await executionCache.getItem(key);
-        let nowSignature = `${md5(
-            `${await WebLLMAppClient.readFileContent({
-                path: `${dir}`,
-            })}`,
-        )}`;
-
-        useGenAI.setState({
-            onCancelSigature: () => {
-                executionCache.removeItem(key);
-                console.log("cancel signature key", key);
-            },
-        });
-
-        if (lastSignature !== null) {
-            if (nowSignature !== lastSignature) {
-                return true;
-            }
-        }
-    },
-    ["saveSignature"]: async ({ path, request }) => {
-        let dir = `${path}`;
-        let key = `${md5(`${useGenAI.getState().appID}${dir}${JSON.stringify(`${md5(request)}`)}`)}`;
-        // let lastSignature = await executionCache.getItem(key);
-        let nowSignature = `${md5(
-            `${await WebLLMAppClient.readFileContent({
-                path: `${dir}`,
-            })}`,
-        )}`;
-
-        executionCache.setItem(key, nowSignature);
-    },
-
-    ["resetApp"]: async () => {
-        await WebLLMAppClient.factoryReset();
-        useGenAI.setState({
-            files: [],
-        });
-        for await (let key of await executionCache.keys()) {
-            await executionCache.removeItem(key);
-        }
-    },
     ///////////////////////////////////////////////////////////////////////////////////
     // buildApp
     ///////////////////////////////////////////////////////////////////////////////////
@@ -136,32 +91,38 @@ export const WebLLMAppClient = {
             llmStatus: "writing",
         });
 
-        await WebLLMAppClient.studyRequirements({
-            userPrompt: userPrompt,
-            engine,
-        });
+        try {
+            console.log("before studyRequirements");
+            await WebLLMAppClient.studyRequirements({
+                userPrompt: userPrompt,
+                engine,
+            });
 
-        await WebLLMAppClient.createMongooseFromSpec({
-            engine,
-        });
+            console.log("before createMongooseFromSpec");
+            await WebLLMAppClient.createMongooseFromSpec({
+                engine,
+            });
 
-        // // // await WebLLMAppClient.createBackendProcedures({
-        // // //     engine,
-        // // // });
+            // // // await WebLLMAppClient.createBackendProcedures({
+            // // //     engine,
+            // // // });
 
-        // // // await WebLLMAppClient.createFrontEndSDK({
-        // // //     engine,
-        // // // });
+            // // // await WebLLMAppClient.createFrontEndSDK({
+            // // //     engine,
+            // // // });
 
-        await WebLLMAppClient.createReactComponents({
-            engine,
-        });
+            console.log("before createReactComponents");
+            await WebLLMAppClient.createReactComponents({
+                engine,
+            });
 
-        await WebLLMAppClient.createAppRootRouterComponents({
-            engine,
-        });
-
-        useGenAI.getState().stopFunc();
+            console.log("before createAppRootRouterComponents");
+            await WebLLMAppClient.createAppRootRouterComponents({
+                engine,
+            });
+        } finally {
+            useGenAI.getState().stopFunc();
+        }
     },
     ///////////////////////////////////////////////////////////////////////////////////
     // buildApp
@@ -779,7 +740,7 @@ export { ${name} };
 
             const rootObjectComponents =
                 await WebLLMAppClient.readFileParseJSONContent({
-                    path: `/app/components.json`,
+                    path: `/study/ui.json`,
                 });
 
             const request: webllm.ChatCompletionRequest = {
@@ -841,17 +802,17 @@ export { App };
             await WebLLMAppClient.llmRequestToFileStream({
                 engine,
                 request,
-                path: `/app-engine/App.js.temp.md`,
+                path: `/app-engine/App.js`,
             });
 
             let modelCode = await WebLLMAppClient.extractFirstCodeBlockContent({
                 markdown: await WebLLMAppClient.readFileContent({
-                    path: `/app-engine/App.js.temp.md`,
+                    path: `/app-engine/App.js`,
                 }),
             });
 
             await WebLLMAppClient.removeFileByPath({
-                path: `/app-engine/App.js.temp.md`,
+                path: `/app-engine/App.js`,
             });
 
             await WebLLMAppClient.writeToFile({
@@ -1038,14 +999,18 @@ export { App };
         request: webllm.ChatCompletionRequestStreaming;
         engine: webllm.MLCEngineInterface;
     }) => {
+        useGenAI.setState({ llmStatus: "writing" });
+
         let sourceID = `${md5(JSON.stringify({ appID: useGenAI.getState().appID, request, path }))}`;
-        let saved = await executionCache.getItem(sourceID);
-        if (typeof saved === "string" && saved !== "null") {
-            await await WebLLMAppClient.writeToFile({
-                content: saved,
-                path: path,
-                persist: true,
-            });
+        let older = await executionCache.getItem(sourceID);
+
+        if (typeof older === "string" && older !== "null") {
+            // await await WebLLMAppClient.writeToFile({
+            //     content: older,
+            //     path: path,
+            //     persist: true,
+            // });
+            await WebLLMAppClient.persistToDisk();
             return;
         }
 
@@ -1090,5 +1055,14 @@ export { App };
         });
 
         await executionCache.setItem(sourceID, messageFragments);
+    },
+    ["resetApp"]: async () => {
+        await WebLLMAppClient.factoryReset();
+        useGenAI.setState({
+            files: [],
+        });
+        for await (let key of await executionCache.keys()) {
+            await executionCache.removeItem(key);
+        }
     },
 };
