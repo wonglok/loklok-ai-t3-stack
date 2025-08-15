@@ -7,6 +7,7 @@ export type MyFile = {
     content: string;
     updatedAt: string;
     createdAt: string;
+    inputSignature: string;
 };
 
 export const useGenAI = create<{

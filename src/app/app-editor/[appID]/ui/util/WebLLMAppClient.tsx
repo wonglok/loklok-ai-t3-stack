@@ -18,10 +18,6 @@ import md5 from "md5";
 // import remarkRehype from "remark-rehype";
 // import remarkMan from "remark-man";
 
-const executionCache = createInstance({
-    name: "execution_cache",
-});
-
 const appsCode = createInstance({
     name: "apps_code",
 });
@@ -245,8 +241,7 @@ Please generate the mongoose database collection information.
                                 .array(
                                     z
                                         .object({
-                                            slug: z.string(),
-                                            table: z.string(),
+                                            modelName: z.string(),
                                         })
                                         .describe(
                                             "each mongoose database collection",
@@ -269,10 +264,12 @@ Please generate the mongoose database collection information.
             path: `/study/database.json`,
         });
 
+        console.log(rootObject);
+
         for (let eachObject of rootObject.mongoose) {
             //
             {
-                let slug = eachObject.slug;
+                let modelName = eachObject.modelName;
 
                 let messages: any = [
                     {
@@ -301,7 +298,7 @@ ${mongoosePromptEach}
 Here's the overall and mongoose database definiton:
 ${studyText}
 
-Please only implement "${slug}" (${eachObject.table}) collection only:
+Please only implement "${modelName}" (${eachObject.modelName}) collection only:
 `.trim(),
                     },
                 ];
@@ -320,24 +317,26 @@ Please only implement "${slug}" (${eachObject.table}) collection only:
                 await WebLLMAppClient.llmRequestToFileStream({
                     engine,
                     request,
-                    path: `/models/${slug}.js`,
+                    path: `/models/${eachObject.modelName}.temp.md`,
                 });
 
                 let modelCode =
                     await WebLLMAppClient.extractFirstCodeBlockContent({
                         markdown: await WebLLMAppClient.readFileContent({
-                            path: `/models/${slug}.js`,
+                            path: `/models/${eachObject.modelName}.temp.md`,
                         }),
                     });
 
                 await WebLLMAppClient.removeFileByPath({
-                    path: `/models/${slug}.js`,
+                    path: `/models/${eachObject.modelName}.temp.md`,
                 });
 
                 await WebLLMAppClient.writeToFile({
                     content: modelCode,
-                    path: `/models/${slug}.js`,
+                    path: `/models/${eachObject.modelName}.js`,
                 });
+
+                console.log("modelName", modelName);
             }
         }
 
@@ -349,9 +348,9 @@ Please only implement "${slug}" (${eachObject.table}) collection only:
         let content = "";
 
         for (let eachObject of rootObject.mongoose) {
-            let slug = eachObject.slug;
+            let modelName = eachObject.modelName;
             content += `
-await import(${JSON.stringify(`/models/${slug}.js`)}).then(async ({ defineOneModel }) => {
+await import(${JSON.stringify(`/models/${modelName}.js`)}).then(async ({ defineOneModel }) => {
     return await defineOneModel({ db, output, bcrypt });
 })
 `;
@@ -372,8 +371,6 @@ async function loadModels({ bcrypt }) {
 export { loadModels }
 
         `;
-
-        // console.log(`${finalContent}`);
 
         await WebLLMAppClient.writeToFile({
             content: `${finalContent}`,
@@ -710,18 +707,18 @@ export { ${name} };
                 await WebLLMAppClient.llmRequestToFileStream({
                     engine,
                     request,
-                    path: `/ui/${name}.js`,
+                    path: `/ui/${name}.md`,
                 });
 
                 let modelCode =
                     await WebLLMAppClient.extractFirstCodeBlockContent({
                         markdown: await WebLLMAppClient.readFileContent({
-                            path: `/ui/${name}.js`,
+                            path: `/ui/${name}.md`,
                         }),
                     });
 
                 await WebLLMAppClient.removeFileByPath({
-                    path: `/ui/${name}.js`,
+                    path: `/ui/${name}.md`,
                 });
 
                 await WebLLMAppClient.writeToFile({
@@ -802,17 +799,17 @@ export { App };
             await WebLLMAppClient.llmRequestToFileStream({
                 engine,
                 request,
-                path: `/app-engine/App.js`,
+                path: `/app-engine/App.md`,
             });
 
             let modelCode = await WebLLMAppClient.extractFirstCodeBlockContent({
                 markdown: await WebLLMAppClient.readFileContent({
-                    path: `/app-engine/App.js`,
+                    path: `/app-engine/App.md`,
                 }),
             });
 
             await WebLLMAppClient.removeFileByPath({
-                path: `/app-engine/App.js`,
+                path: `/app-engine/App.md`,
             });
 
             await WebLLMAppClient.writeToFile({
@@ -834,6 +831,25 @@ export { App };
     },
 
     //
+
+    readFileObject: async ({
+        path = "/manifest/mongoose.json",
+        throwError = false,
+    }: {
+        path: string;
+        throwError?: boolean;
+    }) => {
+        let files = JSON.parse(
+            JSON.stringify(useGenAI.getState().files),
+        ) as MyFile[];
+        let file = files.find((r) => r.path === path);
+
+        if (!file && throwError) {
+            throw "not found";
+        }
+
+        return file;
+    },
 
     readFileContent: async ({
         path = "/manifest/mongoose.json",
@@ -877,10 +893,12 @@ export { App };
         content,
         path,
         persist = true,
+        inputSignature = "",
     }: {
         content: string;
         path: string;
         persist?: boolean;
+        inputSignature?: string;
     }) => {
         let files = JSON.parse(
             JSON.stringify(useGenAI.getState().files),
@@ -890,6 +908,7 @@ export { App };
         if (file) {
             file.content = `${content}`;
             file.updatedAt = new Date().toISOString();
+            file.inputSignature = inputSignature;
         } else {
             let newFile = {
                 path: path,
@@ -897,6 +916,7 @@ export { App };
                 content: `${content}`,
                 updatedAt: new Date().toISOString(),
                 createdAt: new Date().toISOString(),
+                inputSignature: inputSignature,
             };
             console.log(path);
             files.push(newFile);
@@ -1001,22 +1021,16 @@ export { App };
     }) => {
         useGenAI.setState({ llmStatus: "writing" });
 
-        let sourceID = `${md5(JSON.stringify({ appID: useGenAI.getState().appID, request, path }))}`;
-        let older = await executionCache.getItem(sourceID);
+        let fileObject = await WebLLMAppClient.readFileObject({ path });
 
-        if (typeof older === "string" && older !== "null") {
-            // await await WebLLMAppClient.writeToFile({
-            //     content: older,
-            //     path: path,
-            //     persist: true,
-            // });
-            await WebLLMAppClient.persistToDisk();
-            return;
+        if (fileObject) {
+            let nowHash = `${md5(JSON.stringify({ request, content: fileObject.content }))}`;
+            if (nowHash === fileObject.inputSignature) {
+                return;
+            }
         }
 
-        useGenAI.setState({ llmStatus: "writing" });
         await engine.resetChat();
-
         const asyncChunkGenerator = await engine.chatCompletion(request);
 
         let messageFragments = "";
@@ -1025,15 +1039,7 @@ export { App };
             i++;
 
             let str = chunk.choices[0]?.delta?.content || "";
-
-            let arr = str.split("");
-
-            for (let frag of arr) {
-                messageFragments += frag;
-                // await new Promise((resovle) => {
-                //     resovle(null);
-                // });
-            }
+            messageFragments += str;
 
             await WebLLMAppClient.writeToFile({
                 content: messageFragments,
@@ -1051,18 +1057,18 @@ export { App };
         await WebLLMAppClient.writeToFile({
             content: messageFragments,
             path: path,
+            inputSignature:
+                useGenAI.getState().llmStatus === "writing"
+                    ? `${md5(JSON.stringify({ request, content: messageFragments }))}`
+                    : `${Math.random()}`,
+
             persist: true,
         });
-
-        await executionCache.setItem(sourceID, messageFragments);
     },
     ["resetApp"]: async () => {
         await WebLLMAppClient.factoryReset();
         useGenAI.setState({
             files: [],
         });
-        for await (let key of await executionCache.keys()) {
-            await executionCache.removeItem(key);
-        }
     },
 };
