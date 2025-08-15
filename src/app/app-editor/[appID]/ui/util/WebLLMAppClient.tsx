@@ -713,10 +713,10 @@ include zustand store "useFrontEnd" in header like the following:
 import { useFrontEnd } from '/ui/useFrontEnd.js'
 
 React Requirements:
-- shadcn Library for User Interface Framework
+- tailwind css to style the components
 
 Zustand Store Requirements:
-    - always use zustand store "useFrontEnd" to call props and backend procedures like this: 
+    - always use zustand store "useFrontEnd" to call props and backend procedures
 
 Always use this way to export component:
 export { ${eachObject.componentName} };
@@ -760,6 +760,44 @@ export { ${eachObject.componentName} };
                     path: `/ui/${slug}.js`,
                 });
             }
+        }
+
+        {
+            const request: webllm.ChatCompletionRequest = {
+                stream: true,
+                stream_options: { include_usage: true },
+                messages: [
+                    {
+                        role: `system`,
+                        content: `
+${aiPersonality}
+`,
+                    },
+
+                    {
+                        role: "user",
+                        content: `Here's what the "app requirements" are:
+${studyText}`,
+                    },
+
+                    {
+                        role: `user`,
+                        content: `
+Your Instruction:
+Please build a few page and suitable layout(s) that using all the components below:
+
+${JSON.stringify(rootObject.components)}
+`,
+                    },
+                ],
+                temperature: 0.0,
+            };
+
+            await WebLLMAppClient.llmRequestToFileStream({
+                path: `/app-engine/App.js`,
+                request: request,
+                engine,
+            });
         }
     },
 
