@@ -524,7 +524,7 @@ ${technicalSpecificationFinal}`,
 
                 {
                     role: "user",
-                    content: `Here's the "example code useFrontEnd":
+                    content: `Here's the "example code useSDK":
 ${zustandPromptEach}`,
                 },
                 {
@@ -536,7 +536,7 @@ implement react js hooks using zustand store and refer to all the procedures in 
 
 create zustand store like this and change accordingly to the technical specfiication: 
 
-export const useFrontEnd = create((set,get) =>{
+export const useSDK = create((set,get) =>{
     return {
         currentUser: null,
         myAvatars: [],
@@ -549,7 +549,7 @@ let getMyAvatars = async () => {
     let myAvatars = client.getMyAvatars.mutate({
             userID: currentUser.userID
     });
-    useFrontEnd.setState({
+    useSDK.setState({
             myAvatars: myAvatars
     });
 }
@@ -711,12 +711,12 @@ ${studyText}
 
 - Implement "${slug}" react component (${eachObject.componentName}), only write code, no need comment or explain:
 
-- Include zustand store "useFrontEnd" in header like the following:
-import { useFrontEnd } from '/ui/useFrontEnd.js'
+- Include zustand store "useSDK" in header like the following:
+import { useSDK } from '/ui/useSDK.js'
 
 - Tailwind css to style the components
 
-- Always use zustand store "useFrontEnd" to call props and backend procedures
+- Always use zustand store "useSDK" to call props and backend procedures
 
 - Always use this way to export component:
 export { ${eachObject.componentName} };

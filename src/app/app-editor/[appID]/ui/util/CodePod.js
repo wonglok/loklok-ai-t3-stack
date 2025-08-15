@@ -32,11 +32,11 @@ export function CodePod() {
         files: [
             ...files,
             {
-                path: `/ui/useFrontEnd.js`,
+                path: `/ui/useSDK.js`,
                 content: /* javascript */ `
 import { create } from 'zustand'
 
-export const useFrontEnd = create((set, get) =>{
+export const useSDK = create((set, get) =>{
     return {
         apple: '123123'
     }
@@ -51,14 +51,14 @@ import * as ReactDOM from 'react-dom'
 import * as React from 'react'
 import { Canvas } from '@react-three/fiber'
 import { Sphere, MeshTransmissionMaterial, Environment, OrbitControls } from '@react-three/drei'
-import { useFrontEnd } from '/ui/useFrontEnd.js'
+import { useSDK } from '/ui/useSDK.js'
 
 import componentsRoot from '/app/components.json'
 
 ${importUIComponentSnippet}
 
 export function App () {
-    let apple = useFrontEnd((r) => r.apple);
+    let apple = useSDK((r) => r.apple);
 
     return <div className="w-full h-full relative">
         <Canvas className="w-full h-full ">
