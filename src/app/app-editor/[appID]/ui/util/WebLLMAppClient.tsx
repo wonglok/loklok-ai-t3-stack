@@ -11,6 +11,7 @@ import * as markdownit from "markdown-it";
 import * as pathUtil from "path";
 import { createInstance } from "localforage";
 import md5 from "md5";
+import * as diffApply from "diff-apply";
 
 // @ts-ignore
 // import { unified } from "unified";
@@ -88,34 +89,34 @@ export const WebLLMAppClient = {
         });
 
         try {
-            console.log("before studyRequirements");
-            await WebLLMAppClient.studyRequirements({
-                userPrompt: userPrompt,
+            await WebLLMAppClient.testDiff({
+                //
                 engine,
             });
 
-            console.log("before createMongooseFromSpec");
-            await WebLLMAppClient.createMongooseFromSpec({
-                engine,
-            });
-
-            // // // await WebLLMAppClient.createBackendProcedures({
-            // // //     engine,
-            // // // });
-
-            // // // await WebLLMAppClient.createFrontEndSDK({
-            // // //     engine,
-            // // // });
-
-            console.log("before createReactComponents");
-            await WebLLMAppClient.createReactComponents({
-                engine,
-            });
-
-            console.log("before createAppRootRouterComponents");
-            await WebLLMAppClient.createAppRootRouterComponents({
-                engine,
-            });
+            // console.log("before studyRequirements");
+            // await WebLLMAppClient.studyRequirements({
+            //     userPrompt: userPrompt,
+            //     engine,
+            // });
+            // console.log("before createMongooseFromSpec");
+            // await WebLLMAppClient.createMongooseFromSpec({
+            //     engine,
+            // });
+            // // // // await WebLLMAppClient.createBackendProcedures({
+            // // // //     engine,
+            // // // // });
+            // // // // await WebLLMAppClient.createFrontEndSDK({
+            // // // //     engine,
+            // // // // });
+            // console.log("before createReactComponents");
+            // await WebLLMAppClient.createReactComponents({
+            //     engine,
+            // });
+            // console.log("before createAppRootRouterComponents");
+            // await WebLLMAppClient.createAppRootRouterComponents({
+            //     engine,
+            // });
         } finally {
             useGenAI.getState().stopFunc();
         }
@@ -123,6 +124,134 @@ export const WebLLMAppClient = {
     ///////////////////////////////////////////////////////////////////////////////////
     // buildApp
     ///////////////////////////////////////////////////////////////////////////////////
+
+    [`testDiff`]: async ({ engine }) => {
+        {
+            const editRule = `# apply_diff Tool - Generate Precise Code Changes
+
+Generate a unified diff that can be cleanly applied to modify code files.
+
+## Step-by-Step Instructions:
+
+1. Start with file headers:
+    - First line: "--- {original_file_path}"
+    - Second line: "+++ {new_file_path}"
+
+2. For each change section:
+    - Begin with "@@ ... @@" separator line without line numbers
+    - Include 2-3 lines of context before and after changes
+    - Mark removed lines with "-"
+    - Mark added lines with "+"
+    - Preserve exact indentation
+
+3. Group related changes:
+    - Keep related modifications in the same hunk
+    - Start new hunks for logically separate changes
+    - When modifying functions/methods, include the entire block
+
+## Requirements:
+
+1. MUST include exact indentation
+2. MUST include sufficient context for unique matching
+3. MUST group related changes together
+4. MUST use proper unified diff format
+5. MUST NOT include timestamps in file headers
+6. MUST NOT include line numbers in the @@ header
+7. Only output mardkwon, no comments needed.
+
+## Examples:
+
+✅ Good diff (follows all requirements):
+\`\`\`diff
+--- src/utils.ts
++++ src/utils.ts
+@@ ... @@
+    def calculate_total(items):
+-      total = 0
+-      for item in items:
+-          total += item.price
++      return sum(item.price for item in items)
+\`\`\`
+            `;
+
+            ///////////////////////////////////////////////////////////////////////////////////
+            // manifest
+            ///////////////////////////////////////////////////////////////////////////////////
+            let existingCode = `// happy.js
+function yo () {
+    console.log(123)
+}
+`;
+            let messages: any = [
+                {
+                    role: `system`,
+                    content: `${editRule}`,
+                },
+
+                {
+                    role: `user`,
+                    content: `I will show you the original code in next message.`,
+                },
+
+                {
+                    role: `user`,
+                    content: `${existingCode}`,
+                },
+                {
+                    role: "user",
+                    content: `
+
+i want to log "hahaha" instead of 123
+
+`,
+                },
+            ];
+
+            //https://github.com/pylarco/diff-apply?tab=readme-ov-file#llm-integration-and-prompting-guide
+            //https://github.com/pylarco/diff-apply?tab=readme-ov-file#llm-integration-and-prompting-guide
+            //https://github.com/pylarco/diff-apply?tab=readme-ov-file#llm-integration-and-prompting-guide
+
+            const request: webllm.ChatCompletionRequest = {
+                stream: true,
+                stream_options: { include_usage: true },
+                messages: messages,
+                temperature: 0.0,
+            };
+
+            let path = `/ppap/diff_gen.md`;
+
+            await WebLLMAppClient.llmRequestToFileStream({
+                path: path,
+                request: request,
+                engine,
+            });
+
+            let diffText = await WebLLMAppClient.readFileContent({ path });
+
+            let diffObj = await import("parse-diff").then(async (par) => {
+                let results = await par.default(diffText);
+
+                return results;
+            });
+
+            console.log(diffObj);
+
+            let strategy = diffApply.newUnifiedDiffStrategy.create(0.95);
+
+            let result = (await strategy.applyDiff({
+                originalContent: existingCode,
+                diffContent: diffText,
+            })) as any;
+
+            console.log(result.success, result.content);
+
+            // // const strategy = newUnifiedDiffStrategyService.create(0.95); // 95% confidence required
+
+            ///////////////////////////////////////////////////////////////////////////////////
+            // usecase
+            ///////////////////////////////////////////////////////////////////////////////////
+        }
+    },
 
     ///////////////////////////////////////////////////////////////////////////////////
     // elaborateSpec

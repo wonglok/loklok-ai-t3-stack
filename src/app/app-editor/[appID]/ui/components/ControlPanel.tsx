@@ -38,6 +38,11 @@ import {
 // import * as webllm from "@mlc-ai/web-llm";
 // import { LoaderDisplay } from "@/game/GameCanvas";
 
+//https://github.com/Aider-AI/aider/blob/main/aider/coders/udiff_prompts.py#L17C1-L18C1
+//https://github.com/Aider-AI/aider/blob/main/aider/coders/udiff_prompts.py#L17C1-L18C1
+//https://github.com/Aider-AI/aider/blob/main/aider/coders/udiff_prompts.py#L17C1-L18C1
+//https://github.com/Aider-AI/aider/blob/main/aider/coders/udiff_prompts.py#L17C1-L18C1
+
 import Editor from "@monaco-editor/react";
 import { useEffect, useState } from "react";
 import * as pathUtil from "path";
