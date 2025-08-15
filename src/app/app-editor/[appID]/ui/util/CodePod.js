@@ -6,28 +6,6 @@ import { useFilesFrame } from "./useFilesFrame";
 export function CodePod() {
     let files = useGenAI(r => r.files) || []
 
-    // let componentsManifest
-
-    // try {
-    //     componentsManifest = JSON.parse(files.find(r => r.path === '/app/components.json')?.content || '{}')
-    // } catch (e) {
-    //     // console.log(e)
-    // }
-
-    // console.log(componentsManifest?.components)
-
-    // let importUIComponentSnippet = componentsManifest?.components?.reduce((acc, item, key) => {
-
-    //     // some file may not show upp because it's being written by ai
-    //     if (files.some(r => r.filename.includes(item.slug))) {
-    //         acc += `import { ${item.componentName} } from "/ui/${item.slug}.js"\n`
-    //     }
-
-    //     return acc
-    // }, '') || '';
-
-    // console.log(importUIComponentSnippet)
-
     let { show } = useFilesFrame({
         files: [
             ...files,
@@ -42,7 +20,6 @@ export const useSDK = create((set, get) =>{
 })
                 `,
             },
-
             {
                 path: `/src/App.js`,
                 content: /* javascript */ `
@@ -51,8 +28,6 @@ import * as React from 'react'
 import { Canvas } from '@react-three/fiber'
 import { Sphere, MeshTransmissionMaterial, Environment, OrbitControls } from '@react-three/drei'
 import { useSDK } from '/ui/useSDK.js'
-
-// import componentsRoot from '/app/components.json'
 
 import { App } from '/app-engine/App.js'
 

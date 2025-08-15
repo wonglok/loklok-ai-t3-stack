@@ -12,13 +12,12 @@ import * as pathUtil from "path";
 import { createInstance } from "localforage";
 import md5 from "md5";
 
-//
 // @ts-ignore
 // import { unified } from "unified";
 // import remarkParse from "remark-parse";
 // import remarkRehype from "remark-rehype";
 // import remarkMan from "remark-man";
-//
+
 const executionCache = createInstance({
     name: "execution_cache",
 });
@@ -36,19 +35,12 @@ You are an AI Coding Agent with following description:
 - You are Joyful and Wise. 
 - You love short and sweet sentences and clear and insightful code comments.`;
 
-// if (process.env.NODE_ENV === "development") {
-//     if (typeof window !== "undefined") {
-//         appsCode.setItem(useGenAI.getState().appID, []);
-//     }
-// }
-
 export const WebLLMAppClient = {
     ["resetApp"]: async () => {
         await WebLLMAppClient.factoryReset();
         useGenAI.setState({
             files: [],
         });
-        //
         for await (let key of await executionCache.keys()) {
             await executionCache.removeItem(key);
         }
@@ -108,9 +100,9 @@ export const WebLLMAppClient = {
             engine,
         });
 
-        // // // await WebLLMAppClient.createMongooseFromSpec({
-        // // //     engine,
-        // // // });
+        await WebLLMAppClient.createMongooseFromSpec({
+            engine,
+        });
 
         // // // await WebLLMAppClient.createBackendProcedures({
         // // //     engine,
@@ -139,7 +131,6 @@ export const WebLLMAppClient = {
     ///////////////////////////////////////////////////////////////////////////////////
     [`studyRequirements`]: async ({
         userPrompt,
-
         engine,
     }: {
         engine: webllm.MLCEngineInterface;
@@ -154,7 +145,6 @@ export const WebLLMAppClient = {
                     role: `system`,
                     content: `${aiPersonality}`,
                 },
-
                 {
                     role: "user",
                     content: `Here's what the user want to build for the latest features:
@@ -183,7 +173,7 @@ Your Instruction:
             };
 
             await WebLLMAppClient.llmRequestToFileStream({
-                path: `/blueprint/app-study.md`,
+                path: `/study/blueprint.md`,
                 request: request,
                 engine,
             });
@@ -212,7 +202,7 @@ Your Instruction:
         ).then((r) => r.default);
 
         let studyText = await WebLLMAppClient.readFileContent({
-            path: `/blueprint/app-study.md`,
+            path: `/study/blueprint.md`,
         });
 
         const request: webllm.ChatCompletionRequest = {
@@ -236,7 +226,7 @@ ${studyText}`,
                     role: `user`,
                     content: `
 Your Instruction:
-Please generate the database collection information.
+Please generate the mongoose database collection information.
 `,
                 },
             ],
@@ -249,27 +239,16 @@ Please generate the database collection information.
                             version: z.literal("2025-08-12---init"),
                             mongoose: z
                                 .array(
-                                    z.object({
-                                        slug: z.string(),
-                                        tableName: z.string(),
-                                        // tableDescription: z
-                                        //     .string()
-                                        //     .describe(
-                                        //         "full description of the table, including the data fields name and data field type",
-                                        //     ),
-                                        // dataFields: z.array(
-                                        //     z.object({
-                                        //         name: z.string(),
-                                        //         type: z
-                                        //             .string()
-                                        //             .describe(
-                                        //                 "mongoose data type compatible",
-                                        //             ),
-                                        //     }),
-                                        // ),
-                                    }),
+                                    z
+                                        .object({
+                                            slug: z.string(),
+                                            table: z.string(),
+                                        })
+                                        .describe(
+                                            "each mongoose database collection",
+                                        ),
                                 )
-                                .describe("mongoose database tables"),
+                                .describe("mongoose database collections"),
                         }),
                     ),
                 ),
@@ -277,20 +256,19 @@ Please generate the database collection information.
         };
 
         await WebLLMAppClient.llmRequestToFileStream({
-            path: `/app/database.json`,
+            path: `/study/database.json`,
             request: request,
             engine,
         });
 
         let rootObject = await WebLLMAppClient.readFileParseJSONContent({
-            path: `/app/database.json`,
+            path: `/study/database.json`,
         });
 
         for (let eachObject of rootObject.mongoose) {
             //
             {
                 let slug = eachObject.slug;
-                let eachText = JSON.stringify(eachObject);
 
                 let messages: any = [
                     {
@@ -316,10 +294,10 @@ ${mongoosePromptEach}
                     {
                         role: "user",
                         content: `
-Here's the mongoose database definiton:
+Here's the overall and mongoose database definiton:
 ${studyText}
 
-Please only implement "${slug}" collection (${eachObject.tableName}) only:
+Please only implement "${slug}" (${eachObject.table}) collection only:
 `.trim(),
                     },
                 ];
@@ -358,6 +336,44 @@ Please only implement "${slug}" collection (${eachObject.tableName}) only:
                 });
             }
         }
+
+        /////////
+        /////////
+        /////////
+        /////////
+
+        let content = "";
+
+        for (let eachObject of rootObject.mongoose) {
+            let slug = eachObject.slug;
+            content += `
+await import(${JSON.stringify(`/models/${slug}.js`)}).then(async ({ defineOneModel }) => {
+    return await defineOneModel({ db, output, bcrypt });
+})
+`;
+        }
+
+        let finalContent = `
+
+async function loadModels() {
+    const db = mongoose.connection.useDb(${JSON.stringify(`app_${useGenAI.getState().appID}`)}, { useCache: true });
+    
+    const output = {};
+    ${content}
+
+    return output;
+}
+
+export { loadModels }
+
+        `;
+
+        console.log(`${finalContent}`);
+
+        await WebLLMAppClient.writeToFile({
+            content: `${finalContent}`,
+            path: `/database/all.js`,
+        });
     },
 
     ///////////////////////////////////////////////////////////////////////////////////
@@ -368,113 +384,91 @@ Please only implement "${slug}" collection (${eachObject.tableName}) only:
     }: {
         engine: webllm.MLCEngineInterface;
     }) => {
-        let ns = {
-            draft: "createBackendProceduresDraft",
-            ok: "createBackendProceduresFinal",
-        };
-        useGenAI.setState({ [ns.draft]: " " });
-
-        // @ts-ignore
-        let trpcPromptEach = await import("../prompts/trpcPromptEach.md").then(
-            (r) => r.default,
-        );
-
-        let mongooseText = await WebLLMAppClient.readFileContent({
-            path: `/manifest/mongoose.json`,
-        });
-
-        let proceduresText = await WebLLMAppClient.readFileContent({
-            path: `/manifest/procedures.json`,
-        });
-
-        console.log(proceduresText);
-
-        let proceduresList = JSON.parse(proceduresText.trim()).procedures;
-
-        console.log(proceduresList);
-
-        for (let procedureDef of proceduresList) {
-            //
-            {
-                let slug = procedureDef?.slug;
-
-                let procedureJSONString = JSON.stringify(procedureDef);
-                console.log(procedureJSONString);
-
-                let technicalSpecificationFinal = `
-${mongooseText}
-${procedureJSONString}
-        `;
-
-                let messages: any = [
-                    {
-                        role: `system`,
-                        content: `
-${aiPersonality}
-`,
-                    },
-
-                    {
-                        role: "user",
-                        content: `Here's the "user requirement technical specification":
-${technicalSpecificationFinal}`,
-                    },
-
-                    {
-                        role: "user",
-                        content: `Here's the "example code":
-${trpcPromptEach}`.trim(),
-                    },
-
-                    {
-                        role: "user",
-                        content: `
-Instruction:
-
-Implement code inside the "example code" according to the "user requirement technical specification" that user has provided above.
-
-- only use mutation for procedure
-
-        `.trim(),
-                    },
-                ];
-
-                ///////////////////////////////////////////////////////////////////////////////////
-                // Generate Function Output
-                ///////////////////////////////////////////////////////////////////////////////////
-                const request: webllm.ChatCompletionRequest = {
-                    stream: true,
-                    stream_options: { include_usage: true },
-                    messages: messages,
-                    temperature: 0.0,
-                    max_tokens: 4096,
-                };
-
-                await WebLLMAppClient.llmRequestToFileStream({
-                    engine,
-                    request,
-                    path: `/api/${slug}.js.temp.md`,
-                });
-
-                let modelCode =
-                    await WebLLMAppClient.extractFirstCodeBlockContent({
-                        markdown: await WebLLMAppClient.readFileContent({
-                            path: `/api/${slug}.js.temp.md`,
-                        }),
-                    });
-
-                await WebLLMAppClient.removeFileByPath({
-                    path: `/api/${slug}.js.temp.md`,
-                });
-
-                await WebLLMAppClient.writeToFile({
-                    content: modelCode,
-                    path: `/api/${slug}.js`,
-                });
-
-                //
-            }
-        }
+        //         let ns = {
+        //             draft: "createBackendProceduresDraft",
+        //             ok: "createBackendProceduresFinal",
+        //         };
+        //         useGenAI.setState({ [ns.draft]: " " });
+        //         // @ts-ignore
+        //         let trpcPromptEach = await import("../prompts/trpcPromptEach.md").then(
+        //             (r) => r.default,
+        //         );
+        //         let mongooseText = await WebLLMAppClient.readFileContent({
+        //             path: `/study/mongoose.json`,
+        //         });
+        //         let proceduresText = await WebLLMAppClient.readFileContent({
+        //             path: `/study/procedures.json`,
+        //         });
+        //         console.log(proceduresText);
+        //         let proceduresList = JSON.parse(proceduresText.trim()).procedures;
+        //         console.log(proceduresList);
+        //         for (let procedureDef of proceduresList) {
+        //             //
+        //             {
+        //                 let slug = procedureDef?.slug;
+        //                 let procedureJSONString = JSON.stringify(procedureDef);
+        //                 console.log(procedureJSONString);
+        //                 let technicalSpecificationFinal = `
+        // ${mongooseText}
+        // ${procedureJSONString}
+        //         `;
+        //                 let messages: any = [
+        //                     {
+        //                         role: `system`,
+        //                         content: `
+        // ${aiPersonality}
+        // `,
+        //                     },
+        //                     {
+        //                         role: "user",
+        //                         content: `Here's the "user requirement technical specification":
+        // ${technicalSpecificationFinal}`,
+        //                     },
+        //                     {
+        //                         role: "user",
+        //                         content: `Here's the "example code":
+        // ${trpcPromptEach}`.trim(),
+        //                     },
+        //                     {
+        //                         role: "user",
+        //                         content: `
+        // Instruction:
+        // Implement code inside the "example code" according to the "user requirement technical specification" that user has provided above.
+        // - only use mutation for procedure
+        //         `.trim(),
+        //                     },
+        //                 ];
+        //                 ///////////////////////////////////////////////////////////////////////////////////
+        //                 // Generate Function Output
+        //                 ///////////////////////////////////////////////////////////////////////////////////
+        //                 const request: webllm.ChatCompletionRequest = {
+        //                     stream: true,
+        //                     stream_options: { include_usage: true },
+        //                     messages: messages,
+        //                     temperature: 0.0,
+        //                     max_tokens: 4096,
+        //                 };
+        //                 await WebLLMAppClient.llmRequestToFileStream({
+        //                     engine,
+        //                     request,
+        //                     path: `/api/${slug}.js.temp.md`,
+        //                 });
+        //                 let modelCode =
+        //                     await WebLLMAppClient.extractFirstCodeBlockContent({
+        //                         markdown: await WebLLMAppClient.readFileContent({
+        //                             path: `/api/${slug}.js.temp.md`,
+        //                         }),
+        //                     });
+        //                 await WebLLMAppClient.removeFileByPath({
+        //                     path: `/api/${slug}.js.temp.md`,
+        //                 });
+        //                 await WebLLMAppClient.writeToFile({
+        //                     content: modelCode,
+        //                     path: `/api/${slug}.js`,
+        //                 });
+        //                 //
+        //             }
+        //         }
     },
 
     ///////////////////////////////////////////////////////////////////////////////////
@@ -485,125 +479,99 @@ Implement code inside the "example code" according to the "user requirement tech
     }: {
         engine: webllm.MLCEngineInterface;
     }) => {
-        let ns = {
-            draft: "createFrontEndSDKDraft",
-            ok: "createFrontEndSDKFinal",
-        };
-        useGenAI.setState({ [ns.draft]: " " });
-
-        let zustandPromptEach = await import(
-            // @ts-ignore
-            "../prompts/zustandPromptEach.md"
-        ).then((r) => r.default);
-
-        let mongooseText = await WebLLMAppClient.readFileContent({
-            path: `/manifest/mongoose.json`,
-        });
-
-        let proceduresText = await WebLLMAppClient.readFileContent({
-            path: `/manifest/procedures.json`,
-        });
-
-        let proceduresList = JSON.parse(proceduresText.trim()).procedures;
-
-        //
-        console.log(proceduresList);
-
-        //
-        {
-            let technicalSpecificationFinal = `
-${mongooseText}
-${proceduresText}
-        `;
-
-            let messages: any = [
-                {
-                    role: `system`,
-                    content: `
-${aiPersonality}
-`,
-                },
-
-                {
-                    role: "user",
-                    content: `Here's the "user requirement technical specification":
-${technicalSpecificationFinal}`,
-                },
-
-                {
-                    role: "user",
-                    content: `Here's the "example code useSDK":
-${zustandPromptEach}`,
-                },
-                {
-                    role: "user",
-                    content: `
-Instruction:
-
-implement react js hooks using zustand store and refer to all the procedures in tech spec
-
-create zustand store like this and change accordingly to the technical specfiication: 
-
-export const useSDK = create((set,get) =>{
-    return {
-        currentUser: null,
-        myAvatars: [],
-        // [more properties....]
-    }
-})
-
-let getMyAvatars = async () => {
-    let client = await getTRPC();
-    let myAvatars = client.getMyAvatars.mutate({
-            userID: currentUser.userID
-    });
-    useSDK.setState({
-            myAvatars: myAvatars
-    });
-}
-
-only use trpc client with mutation calls, like: let client = await getTRPC()
-
-if needed, save all resutls to useSDK.setState({key1:value1}) replace "key1", replace "value1" accordingly
-        `.trim(),
-                },
-            ];
-
-            ///////////////////////////////////////////////////////////////////////////////////
-            // Generate Function Output
-            ///////////////////////////////////////////////////////////////////////////////////
-            const request: webllm.ChatCompletionRequest = {
-                stream: true,
-                stream_options: { include_usage: true },
-                messages: messages,
-                temperature: 0.0,
-                seed: 1,
-                max_tokens: 4096,
-            };
-
-            await WebLLMAppClient.llmRequestToFileStream({
-                engine,
-                request,
-                path: `/frontend/sdk.js.temp.md`,
-            });
-
-            let modelCode = await WebLLMAppClient.extractFirstCodeBlockContent({
-                markdown: await WebLLMAppClient.readFileContent({
-                    path: `/frontend/sdk.js.temp.md`,
-                }),
-            });
-
-            await WebLLMAppClient.removeFileByPath({
-                path: `/frontend/sdk.js.temp.md`,
-            });
-
-            await WebLLMAppClient.writeToFile({
-                content: modelCode,
-                path: `/frontend/sdk.js`,
-            });
-
-            //
-        }
+        //         let zustandPromptEach = await import(
+        //             // @ts-ignore
+        //             "../prompts/zustandPromptEach.md"
+        //         ).then((r) => r.default);
+        //         let mongooseText = await WebLLMAppClient.readFileContent({
+        //             path: `/manifest/mongoose.json`,
+        //         });
+        //         let proceduresText = await WebLLMAppClient.readFileContent({
+        //             path: `/manifest/procedures.json`,
+        //         });
+        //         let proceduresList = JSON.parse(proceduresText.trim()).procedures;
+        //         //
+        //         console.log(proceduresList);
+        //         //
+        //         {
+        //             let technicalSpecificationFinal = `
+        // ${mongooseText}
+        // ${proceduresText}
+        //         `;
+        //             let messages: any = [
+        //                 {
+        //                     role: `system`,
+        //                     content: `
+        // ${aiPersonality}
+        // `,
+        //                 },
+        //                 {
+        //                     role: "user",
+        //                     content: `Here's the "user requirement technical specification":
+        // ${technicalSpecificationFinal}`,
+        //                 },
+        //                 {
+        //                     role: "user",
+        //                     content: `Here's the "example code useSDK":
+        // ${zustandPromptEach}`,
+        //                 },
+        //                 {
+        //                     role: "user",
+        //                     content: `
+        // Instruction:
+        // implement react js hooks using zustand store and refer to all the procedures in tech spec
+        // create zustand store like this and change accordingly to the technical specfiication:
+        // export const useSDK = create((set,get) =>{
+        //     return {
+        //         currentUser: null,
+        //         myAvatars: [],
+        //         // [more properties....]
+        //     }
+        // })
+        // let getMyAvatars = async () => {
+        //     let client = await getTRPC();
+        //     let myAvatars = client.getMyAvatars.mutate({
+        //             userID: currentUser.userID
+        //     });
+        //     useSDK.setState({
+        //             myAvatars: myAvatars
+        //     });
+        // }
+        // only use trpc client with mutation calls, like: let client = await getTRPC()
+        // if needed, save all resutls to useSDK.setState({key1:value1}) replace "key1", replace "value1" accordingly
+        //         `.trim(),
+        //                 },
+        //             ];
+        //             ///////////////////////////////////////////////////////////////////////////////////
+        //             // Generate Function Output
+        //             ///////////////////////////////////////////////////////////////////////////////////
+        //             const request: webllm.ChatCompletionRequest = {
+        //                 stream: true,
+        //                 stream_options: { include_usage: true },
+        //                 messages: messages,
+        //                 temperature: 0.0,
+        //                 seed: 1,
+        //                 max_tokens: 4096,
+        //             };
+        //             await WebLLMAppClient.llmRequestToFileStream({
+        //                 engine,
+        //                 request,
+        //                 path: `/frontend/sdk.js.temp.md`,
+        //             });
+        //             let modelCode = await WebLLMAppClient.extractFirstCodeBlockContent({
+        //                 markdown: await WebLLMAppClient.readFileContent({
+        //                     path: `/frontend/sdk.js.temp.md`,
+        //                 }),
+        //             });
+        //             await WebLLMAppClient.removeFileByPath({
+        //                 path: `/frontend/sdk.js.temp.md`,
+        //             });
+        //             await WebLLMAppClient.writeToFile({
+        //                 content: modelCode,
+        //                 path: `/frontend/sdk.js`,
+        //             });
+        //             //
+        //         }
     },
 
     createReactComponents: async ({
@@ -611,13 +579,8 @@ if needed, save all resutls to useSDK.setState({key1:value1}) replace "key1", re
     }: {
         engine: webllm.MLCEngineInterface;
     }) => {
-        // let files: any[] =
-        //     (await WebLLMAppClient.readFilesFromLocalDB()) as any[];
-
-        // let others = files.filter((r) => r.path.includes("/zustand/"));
-
         let studyText = await WebLLMAppClient.readFileContent({
-            path: `/blueprint/app-study.md`,
+            path: `/study/blueprint.md`,
         });
 
         const request: webllm.ChatCompletionRequest = {
@@ -657,8 +620,12 @@ Please make sure the components are unique.
                             components: z
                                 .array(
                                     z.object({
-                                        slug: z.string(),
-                                        componentName: z.string(),
+                                        slug: z
+                                            .string()
+                                            .describe("Component name in slug"),
+                                        componentName: z
+                                            .string()
+                                            .describe("ComponentName"),
 
                                         // componentDescription: z
                                         //     .string()
@@ -675,28 +642,20 @@ Please make sure the components are unique.
         };
 
         await WebLLMAppClient.llmRequestToFileStream({
-            path: `/app/components.json`,
+            path: `/study/ui.json`,
             request: request,
             engine,
         });
 
         const rootObjectComponents =
             await WebLLMAppClient.readFileParseJSONContent({
-                path: `/app/components.json`,
+                path: `/study/ui.json`,
             });
 
         for (const eachObject of rootObjectComponents.components) {
             //
             {
-                // let reactSystemPrompt = await import(
-                //     // @ts-ignore
-                //     "../prompts/reactSystemPrompt.md"
-                // ).then((r) => r.default);
-
-                // let slug = eachObject?.slug;
-                let componentName = eachObject.componentName;
-
-                // let componentJSONString = JSON.stringify(eachObject);
+                let name = eachObject.componentName;
 
                 let messages: any = [
                     {
@@ -714,7 +673,7 @@ ${studyText}
                         role: "user",
                         content: `
 
-- Implement "${componentName}" react component (${componentName}), only write code, no need comment or explain:
+- Implement "${name}" react component (${name}), only write code, no need comment or explain:
 
 - Include zustand store "useSDK" in header like the following:
 import { useSDK } from '/ui/useSDK.js'
@@ -724,7 +683,7 @@ import { useSDK } from '/ui/useSDK.js'
 - Always use zustand store "useSDK" to call props and backend procedures
 
 - Always use this way to export component:
-export { ${componentName} };
+export { ${name} };
 `,
                     },
 
@@ -746,23 +705,23 @@ export { ${componentName} };
                 await WebLLMAppClient.llmRequestToFileStream({
                     engine,
                     request,
-                    path: `/ui/${componentName}.js.temp.md`,
+                    path: `/ui/${name}.js.temp.md`,
                 });
 
                 let modelCode =
                     await WebLLMAppClient.extractFirstCodeBlockContent({
                         markdown: await WebLLMAppClient.readFileContent({
-                            path: `/ui/${componentName}.js.temp.md`,
+                            path: `/ui/${name}.js.temp.md`,
                         }),
                     });
 
                 await WebLLMAppClient.removeFileByPath({
-                    path: `/ui/${componentName}.js.temp.md`,
+                    path: `/ui/${name}.js.temp.md`,
                 });
 
                 await WebLLMAppClient.writeToFile({
                     content: modelCode,
-                    path: `/ui/${componentName}.js`,
+                    path: `/ui/${name}.js`,
                 });
             }
         }
@@ -771,7 +730,7 @@ export { ${componentName} };
     createAppRootRouterComponents: async ({ engine }) => {
         {
             let studyText = await WebLLMAppClient.readFileContent({
-                path: `/blueprint/app-study.md`,
+                path: `/study/blueprint.md`,
             });
 
             const rootObjectComponents =
@@ -817,12 +776,12 @@ import * as ReactDOM from 'react-dom';
 import { Router, Route } from "wouter";
 import { useHashLocation } from "wouter/use-hash-location";
 
-import { [ComponenPlaceholdere] } from '/ui/[ComponentPlaceholder].js'; // Change "[ComponentPlaceholder]" to other component name
+import { [ComponentPlaceHolder] } from '/ui/[ComponentPlaceHolder].js'; // Change "[ComponentPlaceHolder]" to other component name
 // [...] import the reamining page rotues and their component accordinf to the "tech requirements"
 
 const App = () => (
     <Router hook={useHashLocation}>
-        <Route path="/page-route" component={"[ComponenPlaceholdere]"} /> // Change "[ComponentPlaceholder]" to other component name. "page-route" to right page route
+        <Route path="/page-route" component={"[ComponentPlaceHolder]"} /> // Change "[ComponentPlaceHolder]" to other component name. "page-route" to right page route
 
         {/* [...] include more page routes and its components */}
     </Router>
@@ -1056,11 +1015,11 @@ export { App };
         request: webllm.ChatCompletionRequestStreaming;
         engine: webllm.MLCEngineInterface;
     }) => {
-        let hash = await WebLLMAppClient.readFileHash({ path: path });
-        if (
-            `${hash}` ===
-            (await executionCache.getItem(`${md5(JSON.stringify(request))}`))
-        ) {
+        let signature = `${md5(JSON.stringify({ request }))}`;
+
+        let diskSignature = await WebLLMAppClient.readFileHash({ path: path });
+
+        if (`${diskSignature}` === (await executionCache.getItem(signature))) {
             return;
         }
 
@@ -1082,7 +1041,7 @@ export { App };
 
                 await WebLLMAppClient.writeToFile({
                     content: messageFragments,
-                    hash: `${md5(`${Math.random()}`)}`,
+                    hash: `${md5(`${Math.random()}`)}`, // make sure incomplete files dont cache
                     path: path,
                     persist: false,
                 });
@@ -1098,13 +1057,10 @@ export { App };
         await WebLLMAppClient.writeToFile({
             content: messageFragments,
             path: path,
-            hash: `${md5(JSON.stringify(request))}`,
+            hash: signature,
             persist: true,
         });
 
-        await executionCache.setItem(
-            `${md5(JSON.stringify(request))}`,
-            `${md5(JSON.stringify(request))}`,
-        );
+        await executionCache.setItem(signature, signature);
     },
 };

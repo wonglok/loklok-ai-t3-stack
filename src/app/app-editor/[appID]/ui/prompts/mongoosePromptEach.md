@@ -1,6 +1,6 @@
 ```js
 
-export function defineOneModel(db, output) {
+export function defineOneModel({ db, output, bcrypt }) {
     // 
     // // USER SCHEMA (registration & authentication) - Example Code below:
     // Remove Example Code in when you generate code.
