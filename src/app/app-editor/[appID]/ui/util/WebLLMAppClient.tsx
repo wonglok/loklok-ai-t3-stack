@@ -177,7 +177,7 @@ Generate a unified diff that can be cleanly applied to modify code files.
             ///////////////////////////////////////////////////////////////////////////////////
             // manifest
             ///////////////////////////////////////////////////////////////////////////////////
-            let existingCode = `// happy.js
+            let existingCode = `// existingCode.js
 function yo () {
     console.log(123)
 }
