@@ -106,6 +106,7 @@ function MonacoEditor({
     let llmStatus = useGenAI((r) => r.llmStatus);
     let files = useGenAI((r) => r.files);
     let sortedFiles = files?.slice().sort(sortDate).reverse();
+    let track = sortedFiles[0]?.content === value;
 
     let [editor, setEditor] = useState<any>();
 
@@ -115,8 +116,9 @@ function MonacoEditor({
         }
     }, [editor]);
 
+    //
+
     useEffect(() => {
-        let track = sortedFiles[0]?.content === value;
         if (llmStatus !== "writing") {
         } else {
             if (track) {
@@ -142,7 +144,11 @@ function MonacoEditor({
             onMount={(editor, monaco) => {
                 setEditor(editor);
             }}
-            defaultLanguage={defaultLanguage}
+            language={
+                llmStatus === "writing" && track && path.includes(".js")
+                    ? "markdown"
+                    : defaultLanguage
+            }
             value={value}
             onChange={onChange}
         ></Editor>
