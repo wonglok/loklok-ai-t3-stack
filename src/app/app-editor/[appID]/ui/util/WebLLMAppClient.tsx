@@ -1012,6 +1012,9 @@ export { App };
             });
         }
 
+        if (pathUtil.extname(path) === ".js" && !needsExtractCode) {
+            console.log("did you forget to set needsExtractCode to true ??");
+        }
         if (needsExtractCode) {
             messageFragments =
                 await WebLLMAppClient.extractFirstCodeBlockContent({
