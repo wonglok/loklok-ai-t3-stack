@@ -157,14 +157,14 @@ Generate a unified diff that can be cleanly applied to modify code files.
 4. MUST use proper unified diff format
 5. MUST NOT include timestamps in file headers
 6. MUST NOT include line numbers in the @@ header
-7. Only output mardkwon, no comments needed.
+7. MUST Only output mardkwon, MUST NOT output comments.
 
 ## Examples:
 
 ✅ Good diff (follows all requirements):
 \`\`\`diff
---- src/utils.ts
-+++ src/utils.ts
+--- myCode.js
++++ myCode.js
 @@ ... @@
     def calculate_total(items):
 -      total = 0
@@ -177,7 +177,7 @@ Generate a unified diff that can be cleanly applied to modify code files.
             ///////////////////////////////////////////////////////////////////////////////////
             // manifest
             ///////////////////////////////////////////////////////////////////////////////////
-            let existingCode = `// existingCode.js
+            let existingCode = `
 function yo () {
     console.log(123)
 }
@@ -187,7 +187,6 @@ function yo () {
                     role: `system`,
                     content: `${editRule}`,
                 },
-
                 {
                     role: `user`,
                     content: `I will show you the original code in next message.`,
