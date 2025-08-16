@@ -179,11 +179,6 @@ export const WebLLMAppClient = {
 
             await (async () => {
                 let loop = 0;
-                let tryMore = async () => {
-                    if (tasks.length > 0) {
-                        await doTask();
-                    }
-                };
                 let doTask = async () => {
                     console.log(loop++);
 
@@ -191,40 +186,40 @@ export const WebLLMAppClient = {
                         .getState()
                         .engines.filter((r) => r.enabled && r.lockedBy === "");
 
-                    let freeCount = engines.length;
+                    await new Promise((resolve) => {
+                        let ss = setInterval(() => {
+                            let freeCount = engines.length;
+                            if (freeCount >= 1) {
+                                let first = tasks[0];
 
-                    if (freeCount > 0) {
-                        let top = tasks.shift();
-                        if (top) {
-                            await new Promise((resolve) => {
-                                let tt = setInterval(() => {
+                                if (first) {
                                     if (
-                                        tasks.some(
-                                            (r) => !top.deps.includes(r.name),
-                                        )
+                                        !tasks.some((tsk) => {
+                                            return first.deps.includes(
+                                                tsk.name,
+                                            );
+                                        })
                                     ) {
-                                        clearInterval(tt);
                                         resolve(null);
+                                        clearInterval(ss);
+                                        let top = tasks.shift();
+                                        top.func();
                                     }
-                                });
-                            });
-
-                            let lockInWorkers =
-                                useGlobalAI.getState().lockInWorkers;
-
-                            if (top && lockInWorkers) {
-                                return top.func().then(tryMore);
-                            } else {
-                                return tryMore();
+                                }
                             }
-                        } else {
-                            return tryMore();
-                        }
-                    } else {
-                        return tryMore();
-                    }
 
-                    //
+                            if (tasks.length === 0) {
+                                resolve(null);
+                                clearInterval(ss);
+                            }
+                        });
+                    });
+
+                    if (tasks.length > 0) {
+                        setTimeout(async () => {
+                            doTask();
+                        });
+                    }
                 };
 
                 await doTask();
