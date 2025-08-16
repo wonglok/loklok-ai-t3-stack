@@ -10,6 +10,7 @@ export type MyFile = {
     updatedAt: string;
     createdAt: string;
     inputSignature: string;
+    author: string;
 };
 
 export type EngineData = {

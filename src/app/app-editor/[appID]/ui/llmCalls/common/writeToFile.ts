@@ -7,7 +7,9 @@ export const writeToFile = async ({
     path,
     persist = true,
     inputSignature = "",
+    author = "",
 }: {
+    author?: string;
     content: string;
     path: string;
     persist?: boolean;
@@ -19,11 +21,13 @@ export const writeToFile = async ({
 
     let file = files.find((r) => r.path === path);
     if (file) {
+        file.author = author;
         file.content = `${content}`;
         file.updatedAt = new Date().toISOString();
         file.inputSignature = inputSignature;
     } else {
         let newFile = {
+            author: author,
             writing: !persist,
             path: path,
             filename: pathUtil.basename(path),

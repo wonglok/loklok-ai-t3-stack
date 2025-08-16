@@ -52,6 +52,7 @@ export const llmRequestToFileStream = async ({
         messageFragments += str;
 
         await writeToFile({
+            author: slot.name,
             content: messageFragments,
             path: path,
             persist: false,
@@ -79,6 +80,7 @@ export const llmRequestToFileStream = async ({
     }
 
     await writeToFile({
+        author: slot.name,
         content: messageFragments,
         path: path,
         inputSignature:

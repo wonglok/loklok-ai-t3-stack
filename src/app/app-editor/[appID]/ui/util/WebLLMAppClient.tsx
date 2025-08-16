@@ -112,6 +112,7 @@ export const WebLLMAppClient = {
             let tasks = [
                 {
                     name: "genFeatrues",
+                    deps: [],
                     func: async () => {
                         let slot = await provideFreeEngineSlot({
                             name: "genFeatrues",
@@ -127,6 +128,7 @@ export const WebLLMAppClient = {
                 },
                 {
                     name: "genReactComponentTree",
+                    deps: [],
                     func: async () => {
                         let slot = await provideFreeEngineSlot({
                             name: "genReactComponentTree",
@@ -142,6 +144,7 @@ export const WebLLMAppClient = {
                 },
                 {
                     name: "genMongoDB",
+                    deps: [],
                     func: async () => {
                         let slot = await provideFreeEngineSlot({
                             name: "genMongoDB",
@@ -155,8 +158,10 @@ export const WebLLMAppClient = {
                         await returnFreeEngineSlot({ slot: slot });
                     },
                 },
+
                 {
                     name: "genTRPCProcedure",
+                    deps: ["genReactComponentTree"],
                     func: async () => {
                         let slot = await provideFreeEngineSlot({
                             name: "genTRPCProcedure",
@@ -178,16 +183,38 @@ export const WebLLMAppClient = {
                         .getState()
                         .engines.filter((r) => r.enabled && r.lockedBy === "");
 
+                    //
                     // parallel
-                    await Promise.all(
+                    await Promise.any(
                         engines.map(() => {
-                            return new Promise((resolve) => {
+                            return new Promise(async (resolve) => {
                                 let top = tasks.shift();
-                                let lockInWorkers =
-                                    useGlobalAI.getState().lockInWorkers;
 
-                                if (top && lockInWorkers) {
-                                    top.func().then(resolve);
+                                if (top) {
+                                    await new Promise((resolve) => {
+                                        let tt = setInterval(() => {
+                                            if (
+                                                tasks.some(
+                                                    (r) =>
+                                                        !top.deps.includes(
+                                                            r.name,
+                                                        ),
+                                                )
+                                            ) {
+                                                clearInterval(tt);
+                                                resolve(null);
+                                            }
+                                        });
+                                    });
+
+                                    let lockInWorkers =
+                                        useGlobalAI.getState().lockInWorkers;
+
+                                    if (top && lockInWorkers) {
+                                        top.func().then(resolve);
+                                    } else {
+                                        resolve(null);
+                                    }
                                 } else {
                                     resolve(null);
                                 }
