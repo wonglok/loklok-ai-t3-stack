@@ -189,49 +189,40 @@ export const WebLLMAppClient = {
             ];
 
             await (async () => {
-                let loop = 0;
                 let doTask = async () => {
-                    console.log(loop++);
-
                     let engines = useGlobalAI
                         .getState()
                         .engines.filter((r) => r.enabled && r.lockedBy === "");
 
-                    await new Promise((resolve) => {
-                        let ss = setInterval(() => {
-                            let freeCount = engines.length;
-                            if (freeCount >= 1) {
-                                let first = tasks[0];
+                    if (engines.length > 0) {
+                        let first = tasks[0];
+                        let foundInTask = false;
 
-                                if (first) {
-                                    if (
-                                        !tasks.some((tsk) => {
-                                            return first.deps.includes(
-                                                tsk.name,
-                                            );
-                                        })
-                                    ) {
-                                        resolve(null);
-                                        clearInterval(ss);
-                                        let top = tasks.shift();
-                                        if (top) {
-                                            top.func();
-                                        }
-                                    }
+                        first.deps.forEach((dep) => {
+                            if (
+                                tasks.some((t) => {
+                                    return dep === t.name;
+                                })
+                            ) {
+                                if (!foundInTask) {
+                                    foundInTask = true;
                                 }
                             }
-
-                            if (tasks.length === 0) {
-                                resolve(null);
-                                clearInterval(ss);
-                            }
                         });
-                    });
+
+                        let allDone = !foundInTask;
+                        if (first && allDone) {
+                            let top = tasks.shift();
+                            if (top) {
+                                top.func();
+                            }
+                        }
+                    }
 
                     if (tasks.length > 0) {
                         setTimeout(async () => {
                             doTask();
-                        });
+                        }, 500);
                     }
                 };
 
