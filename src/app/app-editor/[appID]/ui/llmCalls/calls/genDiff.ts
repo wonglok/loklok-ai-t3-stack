@@ -5,8 +5,17 @@ import { systemPromptDiffCode } from "../persona/systemPromptDiffCode";
 import { writeToFile } from "../common/writeToFile";
 import { llmRequestToFileStream } from "../common/llmRequestToFileStream";
 import { readFileContent } from "../common/readFileContent";
+import { EngineData } from "../../../useGlobalAI";
 
-export const genDiff = async ({ userPrompt, engine }) => {
+export const genDiff = async ({
+    userPrompt,
+    engine,
+    slot,
+}: {
+    userPrompt: string;
+    engine: webllm.MLCEngineInterface;
+    slot: EngineData;
+}) => {
     ///////////////////////////////////////////////////////////////////////////////////
     // manifest
     ///////////////////////////////////////////////////////////////////////////////////
@@ -93,6 +102,7 @@ In User Profile, they can write testimony and request pastor to approve for publ
         path: path,
         request: request,
         engine,
+        slot: slot,
     });
 
     let diffText = await readFileContent({ path });
