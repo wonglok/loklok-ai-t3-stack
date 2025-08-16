@@ -113,6 +113,7 @@ function MonacoEditor({
     defaultLanguage?: string;
     onChange?: (v: string) => void;
 }) {
+    let lockInWorkers = useGlobalAI((r) => r.lockInWorkers);
     let files = useGlobalAI((r) => r.files);
     let engines = useGlobalAI((r) => r.engines);
     let sortedFiles = files?.slice().sort(sortDate).reverse();
@@ -128,24 +129,23 @@ function MonacoEditor({
         }
     }, [editor]);
 
-    // useEffect(() => {
-    //     if (llmStatus !== "writing") {
-    //     } else {
-    //         if (track) {
-    //             if (editor) {
-    //                 editor.revealLine(editor.getModel().getLineCount());
+    useEffect(() => {
+        if (!lockInWorkers) {
+            if (track) {
+                if (editor) {
+                    editor.revealLine(editor.getModel().getLineCount());
 
-    //                 return () => {};
-    //             }
-    //         } else {
-    //             if (editor) {
-    //                 editor.revealLine(0);
+                    return () => {};
+                }
+            } else {
+                if (editor) {
+                    editor.revealLine(0);
 
-    //                 return () => {};
-    //             }
-    //         }
-    //     }
-    // }, [llmStatus, editor, value]);
+                    return () => {};
+                }
+            }
+        }
+    }, [files.length]);
 
     return (
         <Editor
@@ -155,9 +155,10 @@ function MonacoEditor({
                 setEditor(editor);
             }}
             language={
-                llmStatus === "writing" && track && path.includes(".js")
-                    ? "markdown"
-                    : defaultLanguage
+                defaultLanguage
+                // llmStatus === "writing" && track && path.includes(".js")
+                //     ? "markdown"
+                //     : defaultLanguage
             }
             value={value}
             onChange={onChange}

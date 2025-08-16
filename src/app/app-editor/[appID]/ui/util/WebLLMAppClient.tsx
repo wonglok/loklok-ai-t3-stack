@@ -25,20 +25,29 @@ import { toast } from "sonner";
 // import remarkRehype from "remark-rehype";
 // import remarkMan from "remark-man";
 
+let apiMap: Map<
+    string,
+    { destroy: () => void; engine: webllm.MLCEngineInterface }
+> = new Map();
+
 export const WebLLMAppClient = {
+    [`abortProcess`]: async () => {
+        //
+
+        useGlobalAI.getState().stopFunc();
+
+        //
+    },
     ///////////////////////////////////////////////////////////////////////////////////
     // buildApp
     ///////////////////////////////////////////////////////////////////////////////////
     [`buildApp`]: async ({ userPrompt }: { userPrompt: string }) => {
         useGlobalAI.setState({ lockInWorkers: true });
 
-        let apiMap: Map<
-            string,
-            { destroy: (v: any) => void; engine: webllm.MLCEngineInterface }
-        > = new Map();
         let enabledEngines = useGlobalAI
-            .getState()
-            .engines.filter((r) => r.enabled);
+            .getState() //
+            .engines //
+            .filter((r) => r.enabled);
 
         console.log(enabledEngines.map((r) => r.name));
 
@@ -68,6 +77,24 @@ export const WebLLMAppClient = {
             }),
         );
 
+        useGlobalAI.setState({
+            stopFunc: async () => {
+                try {
+                    useGlobalAI.setState({
+                        stopFunc: () => {},
+                    });
+                    for await (let [key, val] of apiMap.entries()) {
+                        console.log("destroy", key, val);
+                        val.destroy();
+                    }
+                } finally {
+                    useGlobalAI.setState({
+                        lockInWorkers: false,
+                    });
+                }
+            },
+        });
+
         //
         try {
             let slot = await provideFreeEngineSlot({ name: "genFeature" });
@@ -76,6 +103,7 @@ export const WebLLMAppClient = {
                 userPrompt,
                 engine: apiMap.get(slot.name).engine,
             });
+
             await returnFreeEngineSlot({ slot });
 
             // await WebLLMAppClient.testDiff({

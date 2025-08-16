@@ -69,30 +69,24 @@ Review the current "user requirements" and write a new "product requirement defi
                 - PageRoute & Params: [...]
                 - PageDescription: [...]
                 
-                - ComponentName: [UIComponentName...]
-                - UI Description: [...]
+                - UI Section: [UI Section PlaceHolder]
+                - UI Description: [UI description]
                 - Children UIComponents:
                     * Each UIComponent 
-                        - ComponentName: [UIComponentName...]
-                        - Description: [...]
+                        - UI ComponentName: [UI ComponentName PlaceHolder]
+                        - Description: [UI description]
                         - Children UIComponents:
                             * Each UIComponent 
-                                - ComponentName: [UIComponentName...]
-                                - Description: [...]
+                                - UI ComponentName: [UI ComponentName PlaceHolder]
+                                - Description: [UI description]
                                 - Children UIComponents:  
                                     * Each UIComponent 
-                                        - ComponentName: [UIComponentName...]
-                                        - Description: [...]
+                                        - UI ComponentName: [UI ComponentName PlaceHolder]
+                                        - Description: [UI description]
                                         - Children UIComponents:  
                                             * Each UIComponent 
-                                                - ComponentName: [UIComponentName...]
-                                                - Description: [...]
-                                                - Children UIComponents:  
-                                                    * Each UIComponent 
-                                                        - ComponentName: [UIComponentName...]
-                                                        - Description: [...]
-                                                        
-                                        [... andd more sub tree if needed ...]
+                                                - UI ComponentName: [UI ComponentName PlaceHolder]
+                                                - Description: [UI description]
 
     ## Backend Database:
 

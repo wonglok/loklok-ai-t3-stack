@@ -44,7 +44,12 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { WebLLMAppClient } from "../util/WebLLMAppClient";
-import { LoaderIcon } from "lucide-react";
+import {
+    HammerIcon,
+    LoaderIcon,
+    SquareIcon,
+    StopCircleIcon,
+} from "lucide-react";
 
 function AIMatcher({ name }: { name: string }) {
     let models = useGlobalAI((r) => r.models);
@@ -115,6 +120,7 @@ export function Launcher() {
     let prompt = useGlobalAI((r) => r.prompt);
     let engines = useGlobalAI((r) => r.engines);
     let names = engines.map((r) => r.name);
+    let lockInWorkers = useGlobalAI((r) => r.lockInWorkers);
 
     function onSubmit(ev) {
         ev.preventDefault();
@@ -161,16 +167,34 @@ export function Launcher() {
                 />
             </div>
 
-            <Button
-                onClick={async () => {
-                    await WebLLMAppClient.buildApp({
-                        userPrompt: prompt,
-                    });
-                }}
-                className="cursor-pointer"
-            >
-                Build
-            </Button>
+            {!lockInWorkers && (
+                <div className="text-right">
+                    <Button
+                        onClick={async () => {
+                            await WebLLMAppClient.buildApp({
+                                userPrompt: prompt,
+                            });
+                        }}
+                        className="cursor-pointer"
+                    >
+                        Start Coding <HammerIcon></HammerIcon>
+                    </Button>
+                </div>
+            )}
+
+            {lockInWorkers && (
+                <div className="text-right">
+                    <Button
+                        onClick={async () => {
+                            await WebLLMAppClient.abortProcess();
+                        }}
+                        className="cursor-pointer"
+                    >
+                        Stop
+                        <StopCircleIcon className="ml-1 animate-spin"></StopCircleIcon>
+                    </Button>
+                </div>
+            )}
         </form>
     );
 }
