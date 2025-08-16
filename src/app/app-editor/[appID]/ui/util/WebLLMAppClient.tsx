@@ -18,7 +18,8 @@ import {
 import { toast } from "sonner";
 import { genTRPCProcedure } from "../llmCalls/calls/genTRPCProcedure";
 import { genReactComponentTree } from "../llmCalls/calls/genReactComponentTree";
-import { genMongoDB } from "../llmCalls/calls/genMongoDB";
+import { genMongoDatabase } from "../llmCalls/calls/genMongoDatabase";
+import { readFileContent } from "../llmCalls/common/readFileContent";
 // import { systemPromptPureText } from "../llmCalls/persona/systemPromptPureText";
 // import { appsCode } from "../llmCalls/common/appsCode";
 
@@ -143,14 +144,14 @@ export const WebLLMAppClient = {
                     },
                 },
                 {
-                    name: "genMongoDB",
+                    name: "genMongoDatabase",
                     deps: [],
                     func: async () => {
                         let slot = await provideFreeEngineSlot({
-                            name: "genMongoDB",
+                            name: "genMongoDatabase",
                         });
 
-                        await genMongoDB({
+                        await genMongoDatabase({
                             slot: slot,
                             userPrompt,
                             engine: apiMap.get(slot.name).engine,
@@ -169,7 +170,9 @@ export const WebLLMAppClient = {
 
                         await genTRPCProcedure({
                             slot: slot,
-                            userPrompt,
+                            userPrompt: await readFileContent({
+                                path: `/study/genReactComponentTree.md`,
+                            }),
                             engine: apiMap.get(slot.name).engine,
                         });
                         await returnFreeEngineSlot({ slot: slot });

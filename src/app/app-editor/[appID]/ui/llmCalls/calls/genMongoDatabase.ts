@@ -4,7 +4,7 @@ import type * as webllm from "@mlc-ai/web-llm";
 import { systemPromptPureText } from "../persona/systemPromptPureText";
 import { llmRequestToFileStream } from "../common/llmRequestToFileStream";
 
-export const genMongoDB = async ({ slot, userPrompt, engine }) => {
+export const genMongoDatabase = async ({ slot, userPrompt, engine }) => {
     ///////////////////////////////////////////////////////////////////////////////////
     // manifest
     ///////////////////////////////////////////////////////////////////////////////////
