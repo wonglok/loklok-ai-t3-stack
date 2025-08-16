@@ -55,8 +55,9 @@ export const WebLLMAppClient = {
             description: (
                 <pre className="mt-2 w-[320px] rounded-md bg-neutral-950 p-4">
                     <code className="text-white">
+                        {`\n`}
                         {enabledEngines
-                            .map((r) => `AI Developer ${r.name} \n`)
+                            .map((r) => `${r.displayName} \n`)
                             .join("\n")}
                     </code>
                 </pre>

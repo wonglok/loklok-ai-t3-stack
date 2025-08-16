@@ -13,6 +13,7 @@ export type MyFile = {
 };
 
 export type EngineData = {
+    displayName: string;
     lockedBy: string;
 
     enabled: boolean;
@@ -94,6 +95,7 @@ export const useGlobalAI = create<{
                 lockedBy: "",
                 enabled: true,
                 name: "e01",
+                displayName: "AI Developer 01",
 
                 currentModel: models[1].value,
                 llmStatus: "empty",
@@ -104,6 +106,7 @@ export const useGlobalAI = create<{
                 lockedBy: "",
                 enabled: true,
                 name: "e02",
+                displayName: "AI Developer 01",
 
                 currentModel: models[1].value,
                 llmStatus: "empty",
@@ -114,6 +117,7 @@ export const useGlobalAI = create<{
                 lockedBy: "",
                 enabled: false,
                 name: "e03",
+                displayName: "AI Developer 01",
 
                 currentModel: models[1].value,
                 llmStatus: "empty",

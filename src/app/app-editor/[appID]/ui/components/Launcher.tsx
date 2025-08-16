@@ -124,8 +124,6 @@ export function Launcher() {
 
     function onSubmit(ev) {
         ev.preventDefault();
-
-        let data = {};
     }
 
     return (

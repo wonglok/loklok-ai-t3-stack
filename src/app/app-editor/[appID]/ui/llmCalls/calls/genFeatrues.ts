@@ -20,8 +20,9 @@ export const genFeatrues = async ({ slot, userPrompt, engine }) => {
         },
 
         {
-            role: `user`,
+            role: "user",
             content: `
+
 # Instruction
 You are a senior product manager:
 Review the current "user requirements" and write a new "product requirement definition"
@@ -44,57 +45,115 @@ Review the current "user requirements" and write a new "product requirement defi
     8. use * as a new item
     9. use - as a property of that new item
 
-# Output in Pure Text Format
+`,
+        },
 
+        {
+            role: "user",
+            content: `
+
+# Output in Pure Text Format
+    
     ## UserRoles and Features Section
 
         UserRoles:
             * UserRole
                 - name: [...]
                 - access_level: [internet | member-login | staff-login | system-admin]
+                
                 - Features:
                     * Feature
                         - Title: [...]
                         - Description: [...]
-                        - Steps: 
-                            * Step [number]
+                        - Overall Steps: 
+                            * Overall Step [number]
                                 - PageRoute & Params: [...]
                                 - Interactions: 
-                                    * Step [number]: [...]
+                                    * Action Step [number]: [...]
+
+                     * Feature
+                        - Title: [...]
+                        - Description: [...]
+                        - Overall Steps: 
+                            * Overall Step [number]
+                                - PageRoute & Params: [...]
+                                - Interactions: 
+                                    * Action Step [number]: [...]
+
+            * UserRole
+                - name: [...]
+                - access_level: [internet | member-login | staff-login | system-admin]
+                
+                - Features:
+                    * Feature
+                        - Title: [...]
+                        - Description: [...]
+                        - Overall Steps: 
+                            * Overall Step [number]
+                                - PageRoute & Params: [...]
+                                - Interactions: 
+                                    * Action Step [number]: [...]
+
+                     * Feature
+                        - Title: [...]
+                        - Description: [...]
+                        - Overall Steps: 
+                            * Overall Step [number]
+                                - PageRoute & Params: [...]
+                                - Interactions: 
+                                    * Action Step [number]: [...]
+`,
+        },
+
+        {
+            role: `user`,
+            content: `
+    `,
+
+            /*
+
 
     ## Front End Pages and UI Components:
 
         Pages:
-            * Each Page 
+            * Each Web Page 
                 - PageRoute & Params: [...]
                 - PageDescription: [...]
 
-                - UI Section: [UI Section PlaceHolder]
-                - UI Description: [UI description]
-                - Children UIComponents:
+                * Each ReactJS Component 
+                    - Name : [Name]
+                    - description: [description]
+                    - Sub-Components: 
+                        ...
+                        * Each ReactJS Component 
+                            - Name : [Name]
+                            - description: [description]
+                            - Sub-Components:  
+                                ...
+                                * Each ReactJS Component 
+                                    - Name : [Name]
+                                    - description: [description]
+                        ...
+                        * Each ReactJS Component 
+                            - Name : [Name]
+                            - description: [description]
+                            - Sub-Components:  
+                                ...
+                                * Each ReactJS Component 
+                                    - Name : [Name]
+                                    - description: [description]
 
-                    * Each ReactJS Component 
-                        - ReactJS ComponentName: [name]
-                        - Description: [description]
-                        - Children Components:
 
-                            * Each ReactJS Component 
-                                - ReactJS ComponentName: [name]
-                                - Description: [description]
-                                - Children Components:  
-
-                                    * Each ReactJS Component 
-                                        - ReactJS ComponentName: [name]
-                                        - Description: [description]
-                                        - Children Components:  
-
-                                            * Each ReactJS Component 
-                                                - ReactJS ComponentName: [name]
-                                                - Description: [description]
-
-    ## Backend Database:
+## Backend Database:
 
         Mongoise Database:
+            * Each Collection
+                - CollectionTitle: [...]
+                - Description: [...]
+                - DataFields: 
+                    * DataField 
+                        - Name: [...]
+                        - DataType: [mongoose compatible data type]
             * Each Collection
                 - CollectionTitle: [...]
                 - Description: [...]
@@ -106,20 +165,26 @@ Review the current "user requirements" and write a new "product requirement defi
     ## Backend tRPC Procedures (Similar to REST Endpoints): 
 
         Procedures:
+        
             * Each Procedure
                 - Title: [...]
                 - Description: [...]
                 - Input Parameters: [...]
                 - Output Parameters: [...]
 
-    ## Front End tRPC SDK
-    [...]
+            * Each Procedure
+                - Title: [...]
+                - Description: [...]
+                - Input Parameters: [...]
+                - Output Parameters: [...]
 
-    ## Zustand State Management
-    [...]
-    `,
+## Front End tRPC SDK
+[...]
 
-            /*
+## Zustand State Management
+[...]
+
+
              */
         },
     ];
