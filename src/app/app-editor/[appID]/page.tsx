@@ -1,10 +1,10 @@
 "use client";
 
 import { MyFile, useGlobalAI } from "./useGlobalAI";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { ControlPanel } from "./ui/components/ControlPanel";
 import { WebGPUGate } from "./ui/components/WebGPUGate";
-import { WebLLMAppClient } from "./ui/util/WebLLMAppClient";
+// import { WebLLMAppClient } from "./ui/util/WebLLMAppClient";
 import { appsCode } from "./ui/llmCalls/common/appsCode";
 
 export default function Page({ params }: { params: any }) {

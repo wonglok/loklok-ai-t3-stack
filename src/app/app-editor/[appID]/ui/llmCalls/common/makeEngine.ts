@@ -12,7 +12,7 @@ import * as markdownit from "markdown-it";
 import * as pathUtil from "path";
 // import { createInstance } from "localforage";
 import md5 from "md5";
-import { useGlobalAI } from "../../../useGlobalAI.js";
+import { useGlobalAI } from "../../../useGlobalAI";
 import { create } from "zustand";
 
 type EngineProps = {
@@ -75,6 +75,7 @@ export const makeEngine = async ({ currentModel }) => {
     });
 
     return {
+        uuid: `_${md5(`${Math.random()}`)}`,
         engine,
         useEngine,
     };

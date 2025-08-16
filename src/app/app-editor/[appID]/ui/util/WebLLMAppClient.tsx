@@ -26,40 +26,37 @@ import { makeEngine } from "../llmCalls/common/makeEngine";
 // import remarkMan from "remark-man";
 
 export const WebLLMAppClient = {
+    [`systemSetup`]: async ({ currentModel }) => {
+        // let ctx1 = await makeEngine({ currentModel });
+        // useGlobalAI.setState({
+        //     engines: [ctx1],
+        // });
+        // let ctx2 = await makeEngine({ currentModel });
+        // useGlobalAI.setState({
+        //     engines: [ctx1, ctx2],
+        // });
+        // let ctx3 = await makeEngine({ currentModel });
+        // useGlobalAI.setState({
+        //     engines: [ctx1, ctx2, ctx3],
+        // });
+    },
     ///////////////////////////////////////////////////////////////////////////////////
     // buildApp
     ///////////////////////////////////////////////////////////////////////////////////
-    [`buildApp`]: async ({
-        userPrompt,
-        currentModel,
-    }: {
-        userPrompt: string;
-        currentModel: string;
-    }) => {
+    [`buildApp`]: async ({ userPrompt }: { userPrompt: string }) => {
+        //
+
+        //
         try {
-            let engineCtx1 = await makeEngine({ currentModel });
-            let engineCtx2 = await makeEngine({ currentModel });
-
-            useGlobalAI.setState({
-                engines: [engineCtx1, engineCtx2],
-            });
-
-            await genFeatrues({
-                userPrompt,
-                engine: engineCtx1.engine,
-            });
-
-            await genFeatrues({
-                userPrompt,
-                engine: engineCtx1.engine,
-            });
-
+            // await genFeatrues({
+            //     userPrompt,
+            //     engine: engineCtx1.engine,
+            // });
             // await WebLLMAppClient.testDiff({
             //     //
             //     userPrompt,
             //     engine,
             // });
-
             // console.log("before studyRequirements");
             // await WebLLMAppClient.studyRequirements({
             //     userPrompt: userPrompt,

@@ -47,11 +47,12 @@ import Editor from "@monaco-editor/react";
 import { useEffect, useState } from "react";
 import * as pathUtil from "path";
 import { format } from "date-fns";
-import { CodePod } from "../util/CodePod";
+// import { CodePod } from "../util/CodePod";
 import { factoryResetThisApp } from "../llmCalls/common/factoryResetThisApp";
 import { persistToDisk } from "../llmCalls/common/persistToDisk";
-import { UseBoundStore } from "zustand";
-import { useEngineType } from "../llmCalls/common/makeEngine";
+import { Launcher } from "./Launcher";
+// import { UseBoundStore } from "zustand";
+// import { useEngineType } from "../llmCalls/common/makeEngine";
 
 let getLang = (filename: string) => {
     if (pathUtil.extname(filename) === ".json") {
@@ -61,6 +62,12 @@ let getLang = (filename: string) => {
     } else {
         return "markdown";
     }
+};
+
+let anyLlmStatusIs = (engines, status) => {
+    return engines
+        .map((r) => r.useEngine.getState())
+        .some((r) => r.llmStatus === status);
 };
 
 let selectFile = ({
@@ -179,11 +186,36 @@ let sortDate = (a: any, b: any) => {
     }
 };
 
+// function EngineInternal({ useEngine, func }: any) {
+//     // let llmStatus = useEngine((r) => r.llmStatus);
+//     // let setupProgress = useEngine((r) => r.setupProgress);
+//     let engine = useEngine((r) => r.engine);
+//     let uuid = useEngine((r) => r.uuid);
+//     return <>{func({ engine, uuid, useEngine })}</>;
+// }
+// function EachEngine({ children }) {
+//     let engines = useGlobalAI((r) => r.engines);
+
+//     return (
+//         <>
+//             {engines.map((engine) => {
+//                 return (
+//                     <EngineInternal
+//                         key={engine.uuid}
+//                         useEngine={engine.useEngine}
+//                         func={children}
+//                     ></EngineInternal>
+//                 );
+//             })}
+//         </>
+//     );
+// }
+
 export function ControlPanel() {
     //
     let appID = useGlobalAI((r) => r.appID);
+    let engines = useGlobalAI((r) => r.engines);
 
-    //
     let currentModel = useGlobalAI((r) => r.currentModel);
     let prompt = useGlobalAI((r) => r.prompt);
     let models = useGlobalAI((r) => r.models);
@@ -200,114 +232,10 @@ export function ControlPanel() {
         <>
             <div className="relative flex h-full w-full text-sm">
                 <div className="h-full w-[350px] shrink-0 bg-gray-300 p-3">
-                    <form
-                        onSubmit={(ev) => {
-                            ev.preventDefault();
-                        }}
-                        onKeyUpCapture={(ev) => {
-                            ev.stopPropagation();
-                        }}
-                        className="h-full w-full"
-                    >
-                        <textarea
-                            style={{ height: `calc(100% - 35px - 10px)` }}
-                            className="mb-[5px] w-full resize-none rounded-xl bg-white p-3 text-sm"
-                            onChange={(e) => {
-                                //
-                                useGlobalAI.setState({
-                                    prompt: e.target.value,
-                                });
-                                //
-                            }}
-                            value={prompt}
-                        />
-                        <div className="flex h-[35px] justify-end">
-                            {llmStatus === "writing" && (
-                                <>
-                                    <Button
-                                        onClick={() => {
-                                            stopFunc();
-                                        }}
-                                        className="h-[35px] cursor-pointer bg-gray-800"
-                                    >
-                                        {`Stop Building`}
-                                        <StopCircleIcon className="animate-spin"></StopCircleIcon>
-                                    </Button>
-                                </>
-                            )}
-
-                            {llmStatus === "downloading" && (
-                                <>
-                                    <Button className="h-[35px] bg-gray-500">
-                                        {`Loading AI Engine...`}
-                                        <LoaderIcon className="animate-spin"></LoaderIcon>
-                                    </Button>
-                                </>
-                            )}
-
-                            {llmStatus === "idle" && (
-                                <>
-                                    <div className="mr-2 rounded-lg bg-white">
-                                        <PromptInputModelSelect
-                                            onValueChange={(value) => {
-                                                useGlobalAI.setState({
-                                                    currentModel: value,
-                                                });
-                                            }}
-                                            value={currentModel}
-                                        >
-                                            <PromptInputModelSelectTrigger>
-                                                <PromptInputModelSelectValue />
-                                            </PromptInputModelSelectTrigger>
-                                            <PromptInputModelSelectContent>
-                                                {models.map((model) => (
-                                                    <PromptInputModelSelectItem
-                                                        key={model.value}
-                                                        value={model.value}
-                                                    >
-                                                        {model.key}
-                                                    </PromptInputModelSelectItem>
-                                                ))}
-                                            </PromptInputModelSelectContent>
-                                        </PromptInputModelSelect>
-                                    </div>
-                                    <Button
-                                        onClick={() => {
-                                            WebLLMAppClient.buildApp({
-                                                userPrompt: prompt,
-                                                currentModel: currentModel,
-                                            });
-                                        }}
-                                        //
-                                        //
-                                        className="h-[35px] cursor-pointer bg-gray-800"
-                                    >
-                                        {`Build`}
-                                        <HammerIcon color="white"></HammerIcon>
-                                    </Button>
-                                </>
-                            )}
-                        </div>
-                    </form>
+                    <div className="mb-3 flex h-full w-full resize-none flex-col justify-around rounded-xl bg-white p-3 text-sm">
+                        <Launcher></Launcher>
+                    </div>
                 </div>
-
-                {llmStatus === "downloading" && (
-                    <>
-                        <div
-                            className="flex h-full w-full shrink-0 items-center justify-center text-center text-sm"
-                            style={{ width: `calc(100% - 350px)` }}
-                        >
-                            <div className="text-center">
-                                <div className="my-4">{setupLLMProgress}</div>
-                                <LoaderIcon className="mr-3 inline-block animate-spin"></LoaderIcon>
-                            </div>
-                        </div>
-                    </>
-                )}
-
-                {/* <div className="h-full w-[500px] shrink-0 bg-gray-200">
-                    <CodePod></CodePod>
-                </div> */}
 
                 {files && (
                     <>

@@ -10,6 +10,13 @@ export type MyFile = {
     inputSignature: string;
 };
 
+type EngineProps = {
+    llmStatus: "idle" | "downloading" | "writing";
+    stopFunc: () => void;
+    engine: webllm.MLCEngineInterface;
+    setupProgress: string;
+};
+
 export const useGlobalAI = create<{
     files: MyFile[];
     expandID: string;
@@ -24,7 +31,10 @@ export const useGlobalAI = create<{
     welcome: boolean;
     spec: string;
     setupLLMProgress: string;
-    engines: any[];
+    engines: {
+        name: string;
+        useEngine: any;
+    }[];
 
     brainworks: boolean;
     //
@@ -53,8 +63,56 @@ export const useGlobalAI = create<{
     ];
 
     return {
+        engines: [
+            {
+                name: "e01",
+                useEngine: create<EngineProps>((set, get) => {
+                    return {
+                        enabled: true,
+                        models,
+                        currentModel: models[1].value,
+                        name: "e01",
+                        llmStatus: "idle",
+                        stopFunc: () => {},
+                        engine: null,
+                        setupProgress: "",
+                    };
+                }),
+            },
+            {
+                name: "e02",
+                useEngine: create<EngineProps>((set, get) => {
+                    return {
+                        enabled: false,
+                        models,
+                        currentModel: models[1].value,
+                        name: "e02",
+                        llmStatus: "idle",
+                        stopFunc: () => {},
+                        engine: null,
+                        setupProgress: "",
+                    };
+                }),
+            },
+            {
+                name: "e03",
+                useEngine: create<EngineProps>((set, get) => {
+                    return {
+                        enabled: false,
+                        models,
+                        currentModel: models[1].value,
+                        name: "e03",
+                        llmStatus: "idle",
+                        stopFunc: () => {},
+                        engine: null,
+                        setupProgress: "",
+                    };
+                }),
+            },
+        ],
+
         llmStatus: "idle",
-        engines: [],
+
         files: [],
         expandID: "",
 
@@ -62,7 +120,7 @@ export const useGlobalAI = create<{
 
         stopFunc: () => {},
         models: models,
-        currentModel: models[1].value,
+        currentModel: models[0].value,
         appID: "",
         prompt: `I want to build a bible testimony app powered by ai embeddings and RAG Agents.
 
