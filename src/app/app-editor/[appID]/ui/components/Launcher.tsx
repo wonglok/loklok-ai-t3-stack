@@ -44,34 +44,39 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { WebLLMAppClient } from "../util/WebLLMAppClient";
+import { LoaderIcon } from "lucide-react";
 
 function AIMatcher({ name }: { name: string }) {
     let models = useGlobalAI((r) => r.models);
     let engines = useGlobalAI((r) => r.engines);
     let item = engines.find((r) => r.name === name);
+    let lockInWorkers = useGlobalAI((r) => r.lockInWorkers);
 
     return (
         <>
-            <Select
-                value={item.currentModel}
-                onValueChange={(v) => {
-                    item.currentModel = v;
-                    useGlobalAI.setState({
-                        engines: JSON.parse(JSON.stringify(engines)),
-                    });
-                }}
-            >
-                <SelectTrigger className="mt-2 w-[100%]">
-                    <SelectValue placeholder="Theme" />
-                </SelectTrigger>
-                <SelectContent className="">
-                    {models.map((model) => (
-                        <SelectItem key={model.value} value={model.value}>
-                            {model.key}
-                        </SelectItem>
-                    ))}
-                </SelectContent>
-            </Select>
+            {item.enabled && (
+                <Select
+                    disabled={lockInWorkers}
+                    value={item.currentModel}
+                    onValueChange={(v) => {
+                        item.currentModel = v;
+                        useGlobalAI.setState({
+                            engines: JSON.parse(JSON.stringify(engines)),
+                        });
+                    }}
+                >
+                    <SelectTrigger className="mt-2 w-[100%]">
+                        <SelectValue placeholder="Theme" />
+                    </SelectTrigger>
+                    <SelectContent className="">
+                        {models.map((model) => (
+                            <SelectItem key={model.value} value={model.value}>
+                                {model.key}
+                            </SelectItem>
+                        ))}
+                    </SelectContent>
+                </Select>
+            )}
             {item.bannerText && (
                 <div className="mt-2 rounded-lg border p-2">
                     {item.bannerText}
@@ -87,6 +92,11 @@ function EnableSwitch({ name }: { name: string }) {
     let lockInWorkers = useGlobalAI((r) => r.lockInWorkers);
     return (
         <>
+            {item.llmStatus === "writing" && (
+                <div className="pr-3">
+                    <LoaderIcon className="animate-spin"></LoaderIcon>
+                </div>
+            )}
             <Switch
                 disabled={lockInWorkers}
                 checked={item.enabled}
@@ -123,7 +133,9 @@ export function Launcher() {
                         <div className="space-y-0.5">
                             <div className="flex justify-between px-2">
                                 <div>{`AI Developer ${name}`}</div>
-                                <EnableSwitch name={name}></EnableSwitch>
+                                <div className="flex items-center">
+                                    <EnableSwitch name={name}></EnableSwitch>
+                                </div>
                             </div>
                             <div>
                                 <AIMatcher name={name}></AIMatcher>

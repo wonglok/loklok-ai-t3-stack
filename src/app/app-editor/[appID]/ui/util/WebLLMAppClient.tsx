@@ -76,10 +76,7 @@ export const WebLLMAppClient = {
                 userPrompt,
                 engine: apiMap.get(slot.name).engine,
             });
-
             await returnFreeEngineSlot({ slot });
-
-            useGlobalAI.setState({});
 
             // await WebLLMAppClient.testDiff({
             //     //

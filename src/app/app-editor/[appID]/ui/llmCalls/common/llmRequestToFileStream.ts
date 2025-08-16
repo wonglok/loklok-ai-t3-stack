@@ -83,4 +83,6 @@ export const llmRequestToFileStream = async ({
 
         persist: true,
     });
+    slot.llmStatus = "idle";
+    useGlobalAI.getState().refreshSlot(slot);
 };
