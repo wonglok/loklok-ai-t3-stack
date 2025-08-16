@@ -11,13 +11,14 @@ import * as markdownit from "markdown-it";
 import * as pathUtil from "path";
 import { createInstance } from "localforage";
 import md5 from "md5";
-import * as diffApply from "diff-apply";
+import { newUnifiedDiffStrategyService } from "diff-apply";
 
 // @ts-ignore
 // import { unified } from "unified";
 // import remarkParse from "remark-parse";
 // import remarkRehype from "remark-rehype";
 // import remarkMan from "remark-man";
+
 const systemPromptDiffCode = `# Generate Precise Code Changes
 
 Generate a unified diff that can be cleanly applied to modify code files.
@@ -65,11 +66,7 @@ def calculate_total(items):
 
 `;
 
-const appsCode = createInstance({
-    name: "apps_code",
-});
-
-const aiPersonality = `AI Role: 
+const pureTextSystemPrompt = `AI Role: 
 
 You are an AI Coding Agent with following description:
 
@@ -77,6 +74,10 @@ You are an AI Coding Agent with following description:
 - You love helping user to code things.
 - You are Joyful and Wise. 
 - You love short and sweet sentences and clear and insightful code comments.`;
+
+const appsCode = createInstance({
+    name: "apps_code",
+});
 
 export const WebLLMAppClient = {
     ///////////////////////////////////////////////////////////////////////////////////
@@ -180,7 +181,7 @@ export const WebLLMAppClient = {
             let messages: any = [
                 {
                     role: `system`,
-                    content: `${aiPersonality}`,
+                    content: `${pureTextSystemPrompt}`,
                 },
                 {
                     role: "user",
@@ -192,60 +193,73 @@ ${userPrompt}`,
                     role: `user`,
                     content: `
 # Instruction
+You are a senior product manager:
 Review the current "user requirements" and write a new "product requirement definition"
 
-## Instructional Considerations:
+## Requirements:
     1. Oragnise the text in a neat and tidy way
     2. rewrite wordings to better english
     3. refer bible proverbs scriptures for wisidom when designing the system, 
     4. glean from the wisdom of single source of truth, constant values, pure functions
     5. Use markdown
-    6. Only use pure text
-    7. Use emoji, use indentation.
-    8. Dont use "**" or "bold" text 
+    6. Use emoji
+    7. Use indentation
+    8. Don't use "**" or "bold text" 
 
-# Output format:
 
-## Produce Requirement Definition
-    ### UserRole Section
-        * UserRole:
+Output format:
+
+## UserRoles and Features Section
+    UserRoles:
+        * UserRole
             - name: [...]
-            - access_level: [internet | member-login | platform-admin]
-    
-    ### Use Case and Features:
-        * Feature:
-            - Title: [...]
+            - access_level: [internet | member-login | staff-login | system-admin]
+            - Features:
+                * Feature
+                    - Title: [...]
+                    - Description: [...]
+                    - Steps: 
+                        * Step [number]
+                            - PageRoute: [...]
+                            - Interactions: 
+                                * Step [number]: [...]
+
+## Front End Pages and UI Components:
+    Pages:
+        * Each Page 
+            - PageRoute: [...]
+            - PageDescription: [...]
+            
+
+            - UIComponentName: [...]
             - Description: [...]
-            - UserRole: [...]
-            - Steps: 
-                * Step [number]
-                    - Page Route: [...]
-                    - Interactions: 
-                        * Action [number]: [...]
+            - Children UIComponents:
+                * UIComponent 
+                    - UIComponentName: [...]
+                    - Description: [...]
+                    - Children UIComponents:
+                        * UIComponent 
+                            - UIComponentName: [...]
+                            - Description: [...]
+                            - Children UIComponents:  
+                                * UIComponent 
+                                    - UIComponentName: [...]
+                                    - Description: [...]
+                                    [... andd more sub tree if needed ...]
 
-    ### Frontend ReactJS Components needed:
-        * Component:
-            - Component: [...]
-            - Slug: [...]
-            - Purpose: [...]
-            - Children Component Slugs: [...]
-
-    ### Backend Database:
-        * Table:
-            - Table: [...]
+## Backend Database:
+    Mongoise Database:
+        * Each Collection
+            - CollectionTitle: [...]
             - Description: [...]
             - DataFields: 
-                * DataField:
-                    - Name: [name]
+                * DataField 
+                    - Name: [...]
                     - DataType: [mongoose compatible data type]
 
-    ### Backend tRPC Procedures needed:
-        * Procedure:
-            - Title: [...]
-            - Description: [...]
-            
-    ### Backend tRPC Procedures needed:
-        * Procedure:
+## Backend tRPC Procedures (Similar to REST Endpoints): 
+    Procedures:
+        * Each Procedure
             - Title: [...]
             - Description: [...]
 `,
@@ -431,7 +445,7 @@ In User Profile, they can write testimony and request pastor to approve for publ
             let messages: any = [
                 {
                     role: `system`,
-                    content: `${aiPersonality}`,
+                    content: `${pureTextSystemPrompt}`,
                 },
                 {
                     role: "user",
@@ -504,7 +518,7 @@ Your Instruction:
                 {
                     role: `system`,
                     content: `
-${aiPersonality}
+${pureTextSystemPrompt}
 `,
                 },
 
@@ -566,7 +580,7 @@ Please generate the mongoose database collection information.
                 let messages: any = [
                     {
                         role: `system`,
-                        content: `${aiPersonality}`,
+                        content: `${pureTextSystemPrompt}`,
                     },
                     {
                         role: `user`,
@@ -696,7 +710,7 @@ export { loadModels }
         //                     {
         //                         role: `system`,
         //                         content: `
-        // ${aiPersonality}
+        // ${pureTextSystemPrompt}
         // `,
         //                     },
         //                     {
@@ -783,7 +797,7 @@ export { loadModels }
         //                 {
         //                     role: `system`,
         //                     content: `
-        // ${aiPersonality}
+        // ${pureTextSystemPrompt}
         // `,
         //                 },
         //                 {
@@ -873,7 +887,7 @@ export { loadModels }
                 {
                     role: `system`,
                     content: `
-${aiPersonality}
+${pureTextSystemPrompt}
 `,
                 },
 
@@ -943,7 +957,7 @@ Please make sure the components are unique.
                 let messages: any = [
                     {
                         role: `system`,
-                        content: `${aiPersonality}
+                        content: `${pureTextSystemPrompt}
 `,
                     },
                     {
@@ -1013,7 +1027,7 @@ export { ${name} };
                     {
                         role: `system`,
                         content: `
-${aiPersonality}
+${pureTextSystemPrompt}
 `,
                     },
 
