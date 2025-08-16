@@ -18,6 +18,52 @@ import * as diffApply from "diff-apply";
 // import remarkParse from "remark-parse";
 // import remarkRehype from "remark-rehype";
 // import remarkMan from "remark-man";
+const systemPromptDiffCode = `# Generate Precise Code Changes
+
+Generate a unified diff that can be cleanly applied to modify code files.
+
+## Step-by-Step Instructions:
+
+1. Start with file headers:
+    - First line: "--- {original_file_path}"
+    - Second line: "+++ {new_file_path}"
+
+2. For each change section:
+    - Begin with "@@ ... @@" separator line without line numbers
+    - Include 2-3 lines of context before and after changes
+    - Mark removed lines with "-"
+    - Mark added lines with "+"
+    - Preserve exact indentation
+
+3. Group related changes:
+    - Keep related modifications in the same hunk
+    - Start new hunks for logically separate changes
+    - When modifying functions/methods, include the entire block
+
+## Requirements:
+
+1. MUST include exact indentation
+2. MUST include sufficient context for unique matching
+3. MUST group related changes together
+4. MUST use proper unified diff format
+5. MUST NOT include timestamps in file headers
+6. MUST NOT include line numbers in the @@ header
+
+## Example
+
+Good diff (follows all requirements):
+\`\`\`diff
+--- existing-code.js
++++ existing-code.js
+@@ ... @@
+def calculate_total(items):
+-      total = 0
+-      for item in items:
+-          total += item.price
++      return sum(item.price for item in items)
+\`\`\`diff
+
+`;
 
 const appsCode = createInstance({
     name: "apps_code",
@@ -91,6 +137,7 @@ export const WebLLMAppClient = {
         try {
             await WebLLMAppClient.testDiff({
                 //
+                userPrompt,
                 engine,
             });
 
@@ -125,82 +172,172 @@ export const WebLLMAppClient = {
     // buildApp
     ///////////////////////////////////////////////////////////////////////////////////
 
-    [`testDiff`]: async ({ engine }) => {
+    [`testDiff`]: async ({ engine, userPrompt }) => {
         {
-            const editRule = `# apply_diff Tool - Generate Precise Code Changes
+            ///////////////////////////////////////////////////////////////////////////////////
+            // manifest
+            ///////////////////////////////////////////////////////////////////////////////////
+            let messages: any = [
+                {
+                    role: `system`,
+                    content: `${aiPersonality}`,
+                },
+                {
+                    role: "user",
+                    content: `here's the "user-requirements.txt"
+${userPrompt}`,
+                },
 
-Generate a unified diff that can be cleanly applied to modify code files.
+                {
+                    role: `user`,
+                    content: `
+# Instruction
+Review the current "user requirements" and write a new "product requirement definition"
 
-## Step-by-Step Instructions:
+## Instructional Considerations:
+    1. Oragnise the text in a neat and tidy way
+    2. rewrite wordings to better english
+    3. refer bible proverbs scriptures for wisidom when designing the system, 
+    4. glean from the wisdom of single source of truth, constant values, pure functions
+    5. Use markdown
+    6. Only use pure text
+    7. Use emoji, use indentation.
+    8. Dont use "**" or "bold" text 
 
-1. Start with file headers:
-    - First line: "--- {original_file_path}"
-    - Second line: "+++ {new_file_path}"
+# Output format:
 
-2. For each change section:
-    - Begin with "@@ ... @@" separator line without line numbers
-    - Include 2-3 lines of context before and after changes
-    - Mark removed lines with "-"
-    - Mark added lines with "+"
-    - Preserve exact indentation
+## Produce Requirement Definition
+    ### UserRole Section
+        * UserRole:
+            - name: [...]
+            - access_level: [internet | member-login | platform-admin]
+    
+    ### Use Case and Features:
+        * Feature:
+            - Title: [...]
+            - Description: [...]
+            - UserRole: [...]
+            - Steps: 
+                * Step [number]
+                    - Page Route: [...]
+                    - Interactions: 
+                        * Action [number]: [...]
 
-3. Group related changes:
-    - Keep related modifications in the same hunk
-    - Start new hunks for logically separate changes
-    - When modifying functions/methods, include the entire block
+    ### Frontend ReactJS Components needed:
+        * Component:
+            - Component: [...]
+            - Slug: [...]
+            - Purpose: [...]
+            - Children Component Slugs: [...]
 
-## Requirements:
+    ### Backend Database:
+        * Table:
+            - Table: [...]
+            - Description: [...]
+            - DataFields: 
+                * DataField:
+                    - Name: [name]
+                    - DataType: [mongoose compatible data type]
 
-1. MUST include exact indentation
-2. MUST include sufficient context for unique matching
-3. MUST group related changes together
-4. MUST use proper unified diff format
-5. MUST NOT include timestamps in file headers
-6. MUST NOT include line numbers in the @@ header
-7. MUST Only output mardkwon, MUST NOT output comments.
+    ### Backend tRPC Procedures needed:
+        * Procedure:
+            - Title: [...]
+            - Description: [...]
+            
+    ### Backend tRPC Procedures needed:
+        * Procedure:
+            - Title: [...]
+            - Description: [...]
+`,
 
-## Examples:
+                    /*
+                     */
+                },
+            ];
 
-✅ Good diff (follows all requirements):
-\`\`\`diff
---- myCode.js
-+++ myCode.js
-@@ ... @@
-    def calculate_total(items):
--      total = 0
--      for item in items:
--          total += item.price
-+      return sum(item.price for item in items)
-\`\`\`
-            `;
+            const request: webllm.ChatCompletionRequestStreaming = {
+                seed: 0,
+                stream: true,
+                stream_options: { include_usage: true },
+                messages: messages,
+                temperature: 0.0,
+            };
+
+            let path = `/study/blueprint.md`;
+
+            await WebLLMAppClient.llmRequestToFileStream({
+                path: path,
+                request: request,
+                engine,
+            });
+
+            ///////////////////////////////////////////////////////////////////////////////////
+            // usecase
+            ///////////////////////////////////////////////////////////////////////////////////
+        }
+
+        {
+            /*
+
+            */
 
             ///////////////////////////////////////////////////////////////////////////////////
             // manifest
             ///////////////////////////////////////////////////////////////////////////////////
             let existingCode = `
-function yo () {
-    console.log(123)
-}
 `;
+
             let messages: any = [
                 {
                     role: `system`,
-                    content: `${editRule}`,
+                    content: `${systemPromptDiffCode}`,
                 },
+                // {
+                //     role: `user`,
+                //     content: `I will show you the existing code in next message.`,
+                // },
+                // {
+                //     role: `user`,
+                //     content: `${existingCode}`,
+                // },
                 {
                     role: `user`,
-                    content: `I will show you the original code in next message.`,
-                },
-
-                {
-                    role: `user`,
-                    content: `${existingCode}`,
+                    content: `I will show you the "Product Requirement Definition" in next message.`,
                 },
                 {
                     role: "user",
                     content: `
-I want to log "hahaha" instead of 123
+I want to build a bible testimony app powered by ai embedding.
+
+## PlatformAdmin:
+PlatformAdmin can login to Platform Portal. 
+PlatformAdmin can create Pastor's Login Accounts and help Pastors reset password.
+
+## Pastor:
+Pastors can login to Pastor Portal.
+
+Pastor Portal can do a few things:
+1. upload testimony text and youtube video link 
+2. edit testimony and set it to be hidden or visible.
+3. generate embeddings data for the testimony.
+4. approve and publish the testimony to their pastor account.
+
+## Internet users:
+Internet Users can visit public web app at home page of the webiste. 
+In Public webapp, they can view testimonty preview, video and text.
+In Public webapp, they can search testimonty powered by ai.
+
+Internet Users can login to their user profile.
+In User Profile, they can write testimony and request pastor to approve for publishing to public.
 `,
+                },
+                {
+                    role: `user`,
+                    content: `implement the mongoose database models in javascript es6 modules according to "Product Requirement Definition". organise each model in their own file.`,
+                },
+                {
+                    role: `user`,
+                    content: `output diffcode only`,
                 },
             ];
 
@@ -208,12 +345,18 @@ I want to log "hahaha" instead of 123
             //https://github.com/pylarco/diff-apply?tab=readme-ov-file#llm-integration-and-prompting-guide
             //https://github.com/pylarco/diff-apply?tab=readme-ov-file#llm-integration-and-prompting-guide
 
-            const request: webllm.ChatCompletionRequest = {
+            const request: webllm.ChatCompletionRequestStreaming = {
+                seed: 0,
                 stream: true,
                 stream_options: { include_usage: true },
                 messages: messages,
                 temperature: 0.0,
             };
+
+            await WebLLMAppClient.writeToFile({
+                path: "existingCode.js",
+                content: `${existingCode}`,
+            });
 
             let path = `/ppap/diff_gen.md`;
 
@@ -225,35 +368,43 @@ I want to log "hahaha" instead of 123
 
             let diffText = await WebLLMAppClient.readFileContent({ path });
 
-            let diffObj = await import("parse-diff").then(async (par) => {
-                let results = await par.default(diffText);
+            console.log(diffText);
 
-                return results;
-            });
+            let parseDiff = await import("parse-diff").then(
+                async ({ default: parseDiff }) => {
+                    return parseDiff;
+                },
+            );
 
-            console.log(diffObj);
+            let item = await parseDiff(diffText);
+            console.log(item);
 
-            let strategy = diffApply.newUnifiedDiffStrategy.create(0.95);
-
-            let { content: newContent } = (await strategy.applyDiff({
-                originalContent: existingCode,
-                diffContent: await WebLLMAppClient.extractFirstCodeBlockContent(
-                    {
-                        markdown: diffText,
-                    },
-                ),
-            })) as any;
-
-            console.log(newContent);
-
-            await WebLLMAppClient.writeToFile({
-                path: "existingCode.js",
-                content: `${existingCode}`,
-            });
-            await WebLLMAppClient.writeToFile({
-                path: "newContent.js",
-                content: `${newContent}`,
-            });
+            /*
+// let diffList = await parseDiff(diffText);
+// console.log(diffList);
+// for (let block of diffList) {
+//     console.log(JSON.stringify(block, null, "\t"));
+// }
+// let strategy = diffApply.newUnifiedDiffStrategy.create(0.6);
+// let allResults = (await strategy.applyDiff({
+//     //
+//     originalContent: `${existingCode}`,
+//     diffContent: `\`\`\`diff\n${eachBlock.code}\n\`\`\``,
+// })) as any;
+// console.log(allResults);
+// for (let eachResult of allResults) {
+//     console.log(eachResult, eachResult.content);
+//     await WebLLMAppClient.writeToFile({
+//         path: eachResult.to,
+//         content: eachResult.content,
+//     });
+// }
+// let blocks = await WebLLMAppClient.extractAllCodeBlocks({
+//     markdown: diffText,
+// });
+// for (let eachBlock of blocks) {
+// }
+            */
 
             // // const strategy = newUnifiedDiffStrategyService.create(0.95); // 95% confidence required
 
@@ -302,7 +453,8 @@ Your Instruction:
                 },
             ];
 
-            const request: webllm.ChatCompletionRequest = {
+            const request: webllm.ChatCompletionRequestStreaming = {
+                seed: 0,
                 stream: true,
                 stream_options: { include_usage: true },
                 messages: messages,
@@ -344,7 +496,8 @@ Your Instruction:
             path: `/study/blueprint.md`,
         });
 
-        const request: webllm.ChatCompletionRequest = {
+        const request: webllm.ChatCompletionRequestStreaming = {
+            seed: 0,
             stream: true,
             stream_options: { include_usage: true },
             messages: [
@@ -445,7 +598,8 @@ Please only implement "${modelName}" (${eachObject.modelName}) collection only:
                 ///////////////////////////////////////////////////////////////////////////////////
                 // Generate Function Output
                 ///////////////////////////////////////////////////////////////////////////////////
-                const request: webllm.ChatCompletionRequest = {
+                const request: webllm.ChatCompletionRequestStreaming = {
+                    seed: 0,
                     stream: true,
                     stream_options: { include_usage: true },
                     messages: messages,
@@ -567,8 +721,9 @@ export { loadModels }
         //                 ///////////////////////////////////////////////////////////////////////////////////
         //                 // Generate Function Output
         //                 ///////////////////////////////////////////////////////////////////////////////////
-        //                 const request: webllm.ChatCompletionRequest = {
-        //                     stream: true,
+        // const request: webllm.ChatCompletionRequestStreaming = {
+        // seed: 0,
+        // stream: true,
         //                     stream_options: { include_usage: true },
         //                     messages: messages,
         //                     temperature: 0.0,
@@ -671,7 +826,8 @@ export { loadModels }
         //             ///////////////////////////////////////////////////////////////////////////////////
         //             // Generate Function Output
         //             ///////////////////////////////////////////////////////////////////////////////////
-        //             const request: webllm.ChatCompletionRequest = {
+        // const request: webllm.ChatCompletionRequestStreaming = {
+        //     seed: 0,
         //                 stream: true,
         //                 stream_options: { include_usage: true },
         //                 messages: messages,
@@ -710,6 +866,7 @@ export { loadModels }
         });
 
         const request: webllm.ChatCompletionRequest = {
+            seed: 0,
             stream: true,
             stream_options: { include_usage: true },
             messages: [
@@ -1037,7 +1194,7 @@ export { App };
     },
     extractAllCodeBlocks: async ({ markdown = "" }: { markdown: string }) => {
         //
-        let codeblocks = await new Promise((resolve) => {
+        let codeblocks = (await new Promise((resolve) => {
             let array: { code: string; language: string }[] = [];
             const md = markdownit.default({
                 langPrefix: "language-",
@@ -1049,6 +1206,7 @@ export { App };
                         code: str,
                         language: lang,
                     });
+
                     return "";
                 },
             });
@@ -1056,7 +1214,7 @@ export { App };
             md.render(`${markdown}`);
 
             resolve(array);
-        });
+        })) as { code: string; language: string }[];
 
         return codeblocks;
         //

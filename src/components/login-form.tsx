@@ -21,17 +21,17 @@ export function LoginForm({
                         <div className="flex flex-col gap-6 py-24">
                             <div className="flex flex-col items-center text-center">
                                 <h1 className="text-2xl font-bold">
-                                    Welcome Back!
+                                    {`Welcome Back!`}
                                 </h1>
                                 <p className="text-muted-foreground text-balance">
-                                    {`Your AI Stack`}
+                                    {`AI Coding Stack`}
                                 </p>
                             </div>
 
                             <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
                                 <span className="bg-card text-muted-foreground relative z-10 px-2">
                                     {/*  */}
-                                    {`OpenSource For The Win !!`}
+                                    {`Open Source For The Win`}
                                     {/*  */}
                                 </span>
                             </div>
@@ -46,7 +46,7 @@ export function LoginForm({
                                             fill="currentColor"
                                         />
                                     </svg>
-                                    <span className="">Login with Google</span>
+                                    <span className="">{`Login with Google`}</span>
                                 </Button>
                             </Link>
                         </div>
