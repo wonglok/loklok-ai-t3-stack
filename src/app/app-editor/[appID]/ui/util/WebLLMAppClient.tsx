@@ -18,7 +18,7 @@ import {
 import { toast } from "sonner";
 import { genTRPCProcedure } from "../llmCalls/calls/genTRPCProcedure";
 import { genReactComponentTree } from "../llmCalls/calls/genReactComponentTree";
-import { genMongoDB } from "../llmCalls/calls/genMongodb";
+import { genMongoDB } from "../llmCalls/calls/genMongoDB";
 // import { systemPromptPureText } from "../llmCalls/persona/systemPromptPureText";
 // import { appsCode } from "../llmCalls/common/appsCode";
 
