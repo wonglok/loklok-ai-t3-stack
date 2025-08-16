@@ -4,7 +4,12 @@ import type * as webllm from "@mlc-ai/web-llm";
 import { systemPromptPureText } from "../persona/systemPromptPureText";
 import { llmRequestToFileStream } from "../common/llmRequestToFileStream";
 
-export const genTRPCProcedure = async ({ slot, userPrompt, engine }) => {
+export const genTRPCProcedure = async ({
+    slot,
+    userPrompt,
+    reactComponentsText,
+    engine,
+}) => {
     ///////////////////////////////////////////////////////////////////////////////////
     // manifest
     ///////////////////////////////////////////////////////////////////////////////////
@@ -17,6 +22,12 @@ export const genTRPCProcedure = async ({ slot, userPrompt, engine }) => {
             role: "user",
             content: `here's the "user-requirements.txt"
     ${userPrompt}`,
+        },
+
+        {
+            role: "user",
+            content: `here's the "React UI Components" Document:
+    ${reactComponentsText}`,
         },
 
         {

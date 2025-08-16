@@ -127,7 +127,10 @@ export function Launcher() {
     }
 
     return (
-        <form onSubmit={onSubmit} className="h-full w-full space-y-4">
+        <form
+            onSubmit={onSubmit}
+            className="h-full w-full space-y-4 overflow-y-auto"
+        >
             {engines.map(({ name, displayName }) => {
                 return (
                     <div

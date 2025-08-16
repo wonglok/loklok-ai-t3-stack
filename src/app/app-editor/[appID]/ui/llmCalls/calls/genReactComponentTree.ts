@@ -4,7 +4,12 @@ import type * as webllm from "@mlc-ai/web-llm";
 import { systemPromptPureText } from "../persona/systemPromptPureText";
 import { llmRequestToFileStream } from "../common/llmRequestToFileStream";
 
-export const genReactComponentTree = async ({ slot, userPrompt, engine }) => {
+export const genReactComponentTree = async ({
+    slot,
+    userPrompt,
+    reactComponentsText = "",
+    engine,
+}) => {
     ///////////////////////////////////////////////////////////////////////////////////
     // manifest
     ///////////////////////////////////////////////////////////////////////////////////
@@ -19,6 +24,7 @@ export const genReactComponentTree = async ({ slot, userPrompt, engine }) => {
             content: `here's the "user-requirements.txt"
     ${userPrompt}`,
         },
+
         {
             role: "assistant",
             content: `
@@ -62,57 +68,24 @@ Review the current "user requirements" and write a new "product requirement defi
             * Each ReactJS Component 
                 - Name : [Name]
                 - description: [description]
-                - Sub-Components: 
-                    ...
+                - Childrens: 
+                    
                     * Each ReactJS Component 
                         - Name : [Name]
                         - description: [description]
-                        - Sub-Components:  
-                            ...
+                    
+                    * Each ReactJS Component 
+                        - Name : [Name]
+                        - description: [description]
+                        - Childrens:  
                             * Each ReactJS Component 
                                 - Name : [Name]
                                 - description: [description]
-                    ...
+                    
                     * Each ReactJS Component 
                         - Name : [Name]
                         - description: [description]
-                        - Sub-Components:  
-                            ...
-                            * Each ReactJS Component 
-                                - Name : [Name]
-                                - description: [description]
-
-                                * Each ReactJS Component 
-                                        - Name : [Name]
-                                        - description: [description]
-
-                                        * Each ReactJS Component 
-                                            - Name : [Name]
-                                            - description: [description]
-
-        * Each Web Page 
-            - PageRoute & Params: [...]
-            - PageDescription: [...]
-
-            * Each ReactJS Component 
-                - Name : [Name]
-                - description: [description]
-                - Sub-Components: 
-                    ...
-                    * Each ReactJS Component 
-                        - Name : [Name]
-                        - description: [description]
-                        - Sub-Components:  
-                            ...
-                            * Each ReactJS Component 
-                                - Name : [Name]
-                                - description: [description]
-                    ...
-                    * Each ReactJS Component 
-                        - Name : [Name]
-                        - description: [description]
-                        - Sub-Components:  
-                            ...
+                        - Childrens:  
                             * Each ReactJS Component 
                                 - Name : [Name]
                                 - description: [description]

@@ -4,7 +4,12 @@ import type * as webllm from "@mlc-ai/web-llm";
 import { systemPromptPureText } from "../persona/systemPromptPureText";
 import { llmRequestToFileStream } from "../common/llmRequestToFileStream";
 
-export const genMongoDatabase = async ({ slot, userPrompt, engine }) => {
+export const genMongoDatabase = async ({
+    slot,
+    userPrompt,
+    featuresText = "",
+    engine,
+}) => {
     ///////////////////////////////////////////////////////////////////////////////////
     // manifest
     ///////////////////////////////////////////////////////////////////////////////////
@@ -15,10 +20,14 @@ export const genMongoDatabase = async ({ slot, userPrompt, engine }) => {
         },
         {
             role: "user",
-            content: `here's the "user-requirements"
-    ${userPrompt}`,
+            content: `Here's the "user-requirements" Document:
+${userPrompt}`,
         },
-
+        {
+            role: "user",
+            content: `Here's the "Use case and Features" Document:
+${featuresText}`,
+        },
         {
             role: "user",
             content: `

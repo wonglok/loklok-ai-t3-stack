@@ -129,7 +129,7 @@ export const WebLLMAppClient = {
                 },
                 {
                     name: "genReactComponentTree",
-                    deps: [],
+                    deps: ["genFeatrues"],
                     func: async () => {
                         let slot = await provideFreeEngineSlot({
                             name: "genReactComponentTree",
@@ -137,7 +137,9 @@ export const WebLLMAppClient = {
 
                         await genReactComponentTree({
                             slot: slot,
-                            userPrompt,
+                            userPrompt: await readFileContent({
+                                path: `/study/genFeatrues.md`,
+                            }),
                             engine: apiMap.get(slot.name).engine,
                         });
                         await returnFreeEngineSlot({ slot: slot });
@@ -145,7 +147,7 @@ export const WebLLMAppClient = {
                 },
                 {
                     name: "genMongoDatabase",
-                    deps: [],
+                    deps: ["genFeatrues"],
                     func: async () => {
                         let slot = await provideFreeEngineSlot({
                             name: "genMongoDatabase",
@@ -154,6 +156,9 @@ export const WebLLMAppClient = {
                         await genMongoDatabase({
                             slot: slot,
                             userPrompt,
+                            featuresText: await readFileContent({
+                                path: `/study/genFeatrues.md`,
+                            }),
                             engine: apiMap.get(slot.name).engine,
                         });
                         await returnFreeEngineSlot({ slot: slot });
@@ -170,9 +175,10 @@ export const WebLLMAppClient = {
 
                         await genTRPCProcedure({
                             slot: slot,
-                            userPrompt: await readFileContent({
+                            reactComponentsText: await readFileContent({
                                 path: `/study/genReactComponentTree.md`,
                             }),
+                            userPrompt: userPrompt,
                             engine: apiMap.get(slot.name).engine,
                         });
                         await returnFreeEngineSlot({ slot: slot });

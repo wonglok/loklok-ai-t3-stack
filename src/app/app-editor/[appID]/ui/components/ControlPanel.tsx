@@ -128,22 +128,20 @@ function MonacoEditor({
     }, [editor]);
 
     useEffect(() => {
-        if (!lockInWorkers) {
+        if (lockInWorkers) {
             if (track) {
                 if (editor) {
                     editor.revealLine(editor.getModel().getLineCount());
-
                     return () => {};
                 }
             } else {
-                if (editor) {
-                    editor.revealLine(0);
-
-                    return () => {};
-                }
+                // if (editor) {
+                //     editor.revealLine(0);
+                //     return () => {};
+                // }
             }
         }
-    }, [files.length]);
+    }, [files]);
 
     return (
         <Editor
@@ -315,11 +313,13 @@ export function ControlPanel() {
                                                                     <div className="flex justify-between rounded-t-2xl bg-gray-100 px-3 py-3">
                                                                         <span>
                                                                             {
-                                                                                file.path
+                                                                                " ⭐️ "
                                                                             }
                                                                             {
-                                                                                " ✍🏻 "
+                                                                                file.path
                                                                             }
+                                                                        </span>
+                                                                        <span>
                                                                             {
                                                                                 updatedAt
                                                                             }
