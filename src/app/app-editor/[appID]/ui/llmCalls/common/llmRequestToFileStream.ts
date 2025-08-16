@@ -52,7 +52,6 @@ export const llmRequestToFileStream = async ({
         messageFragments += str;
 
         await writeToFile({
-            author: slot.name,
             content: messageFragments,
             path: path,
             persist: false,
@@ -63,6 +62,9 @@ export const llmRequestToFileStream = async ({
                 resovle(null);
             });
         });
+
+        slot.bannerText = `✍🏻 ${path}`;
+        useGlobalAI.getState().refreshSlot(slot);
 
         let lockInWorkers = useGlobalAI.getState().lockInWorkers;
         if (!lockInWorkers) {
@@ -80,7 +82,6 @@ export const llmRequestToFileStream = async ({
     }
 
     await writeToFile({
-        author: slot.name,
         content: messageFragments,
         path: path,
         inputSignature:
