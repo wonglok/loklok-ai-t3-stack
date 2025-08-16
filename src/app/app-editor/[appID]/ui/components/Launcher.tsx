@@ -15,6 +15,7 @@ import {
     // PromptInputButton,
 } from "@/components/ai-elements/prompt-input";
 import { useEffect } from "react";
+
 import { useGlobalAI } from "../../useGlobalAI";
 
 import { Label } from "@/components/ui/label";
@@ -25,6 +26,7 @@ import { toast } from "sonner";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
+
 import {
     Form,
     FormControl,
@@ -131,30 +133,9 @@ export function Launcher() {
             onSubmit={onSubmit}
             className="h-full w-full space-y-4 overflow-y-auto"
         >
-            {engines.map(({ name, displayName }) => {
-                return (
-                    <div
-                        key={name + "onoff"}
-                        className="rounded-lg border p-3 shadow-sm"
-                    >
-                        <div className="space-y-0.5">
-                            <div className="flex justify-between px-2">
-                                <div>{`${displayName}`}</div>
-                                <div className="flex items-center">
-                                    <EnableSwitch name={name}></EnableSwitch>
-                                </div>
-                            </div>
-                            <div>
-                                <AIMatcher name={name}></AIMatcher>
-                            </div>
-                        </div>
-                    </div>
-                );
-            })}
-
             <div className="flex flex-row items-center justify-between rounded-lg border shadow-sm">
                 <textarea
-                    className="h-[220px] w-full resize-none rounded-xl bg-white p-3 text-sm"
+                    className="h-[350px] w-full resize-none rounded-xl bg-white p-3 text-sm"
                     onChange={(e) => {
                         //
 
@@ -196,6 +177,27 @@ export function Launcher() {
                     </Button>
                 </div>
             )}
+
+            {engines.map(({ name, displayName }) => {
+                return (
+                    <div
+                        key={name + "onoff"}
+                        className="rounded-lg border p-3 shadow-sm"
+                    >
+                        <div className="space-y-0.5">
+                            <div className="flex justify-between px-2">
+                                <div>{`${displayName}`}</div>
+                                <div className="flex items-center">
+                                    <EnableSwitch name={name}></EnableSwitch>
+                                </div>
+                            </div>
+                            <div>
+                                <AIMatcher name={name}></AIMatcher>
+                            </div>
+                        </div>
+                    </div>
+                );
+            })}
         </form>
     );
 }

@@ -193,7 +193,7 @@ export function ControlPanel() {
     // lockInWorkers
     return (
         <>
-            <div className="relative flex h-full w-full text-sm">
+            <div className="relative flex h-full w-full overflow-hidden text-sm">
                 <div className="h-full w-[350px] shrink-0 bg-gray-300 p-3">
                     <div className="mb-3 flex h-full w-full resize-none flex-col justify-around rounded-xl bg-white p-3 text-sm">
                         <Launcher></Launcher>
