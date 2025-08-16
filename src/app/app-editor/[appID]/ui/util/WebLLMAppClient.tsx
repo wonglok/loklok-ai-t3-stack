@@ -178,53 +178,53 @@ export const WebLLMAppClient = {
             ];
 
             await (async () => {
+                let loop = 0;
+                let tryMore = async () => {
+                    if (tasks.length > 0) {
+                        await doTask();
+                    }
+                };
                 let doTask = async () => {
+                    console.log(loop++);
+
                     let engines = useGlobalAI
                         .getState()
                         .engines.filter((r) => r.enabled && r.lockedBy === "");
 
-                    //
-                    // parallel
-                    await Promise.any(
-                        engines.map(() => {
-                            return new Promise(async (resolve) => {
-                                let top = tasks.shift();
+                    let freeCount = engines.length;
 
-                                if (top) {
-                                    await new Promise((resolve) => {
-                                        let tt = setInterval(() => {
-                                            if (
-                                                tasks.some(
-                                                    (r) =>
-                                                        !top.deps.includes(
-                                                            r.name,
-                                                        ),
-                                                )
-                                            ) {
-                                                clearInterval(tt);
-                                                resolve(null);
-                                            }
-                                        });
-                                    });
-
-                                    let lockInWorkers =
-                                        useGlobalAI.getState().lockInWorkers;
-
-                                    if (top && lockInWorkers) {
-                                        top.func().then(resolve);
-                                    } else {
+                    if (freeCount > 0) {
+                        let top = tasks.shift();
+                        if (top) {
+                            await new Promise((resolve) => {
+                                let tt = setInterval(() => {
+                                    if (
+                                        tasks.some(
+                                            (r) => !top.deps.includes(r.name),
+                                        )
+                                    ) {
+                                        clearInterval(tt);
                                         resolve(null);
                                     }
-                                } else {
-                                    resolve(null);
-                                }
+                                });
                             });
-                        }),
-                    );
 
-                    if (tasks.length > 0) {
-                        await doTask();
+                            let lockInWorkers =
+                                useGlobalAI.getState().lockInWorkers;
+
+                            if (top && lockInWorkers) {
+                                return top.func().then(tryMore);
+                            } else {
+                                return tryMore();
+                            }
+                        } else {
+                            return tryMore();
+                        }
+                    } else {
+                        return tryMore();
                     }
+
+                    //
                 };
 
                 await doTask();

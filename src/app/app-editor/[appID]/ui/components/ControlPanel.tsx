@@ -113,6 +113,7 @@ function MonacoEditor({
     defaultLanguage?: string;
     onChange?: (v: string) => void;
 }) {
+    //
     let lockInWorkers = useGlobalAI((r) => r.lockInWorkers);
     let files = useGlobalAI((r) => r.files);
     let sortedFiles = files?.slice().sort(sortDate).reverse();
@@ -182,12 +183,12 @@ export function ControlPanel() {
     let engines = useGlobalAI((r) => r.engines);
 
     // let currentModel = useGlobalAI((r) => r.currentModel);
-    let prompt = useGlobalAI((r) => r.prompt);
-    let models = useGlobalAI((r) => r.models);
-    let setupLLMProgress = useGlobalAI((r) => r.setupLLMProgress);
+    // let prompt = useGlobalAI((r) => r.prompt);
+    // let models = useGlobalAI((r) => r.models);
+    // let setupLLMProgress = useGlobalAI((r) => r.setupLLMProgress);
     let expandID = useGlobalAI((r) => r.expandID);
 
-    let stopFunc = useGlobalAI((r) => r.stopFunc);
+    // let stopFunc = useGlobalAI((r) => r.stopFunc);
     let files = useGlobalAI((r) => r.files);
 
     let sortedFiles = files?.slice().sort(sortDate).reverse();
@@ -240,7 +241,7 @@ export function ControlPanel() {
                                                 }
                                             >
                                                 <div
-                                                    className="h-full w-full cursor-pointer px-3 py-2"
+                                                    className="flex h-full w-full cursor-pointer justify-between px-3 py-2"
                                                     onClick={() => {
                                                         selectFile({
                                                             index: i,
@@ -249,7 +250,16 @@ export function ControlPanel() {
                                                         });
                                                     }}
                                                 >
-                                                    {it.path}
+                                                    <div>{it.path}</div>
+                                                    <div>
+                                                        {engines.find(
+                                                            (r) =>
+                                                                r.name ===
+                                                                it.author,
+                                                        )?.llmStatus ===
+                                                            "writing" &&
+                                                            `🤖 ${it.author}`}
+                                                    </div>
                                                 </div>
                                             </div>
                                         );
@@ -280,6 +290,7 @@ export function ControlPanel() {
                                                 new Date(file.updatedAt),
                                                 `yyyy-mm-dd h:m:s a`,
                                             );
+
                                             return (
                                                 <div
                                                     key={file.path}
@@ -329,6 +340,8 @@ export function ControlPanel() {
                                                                         onChange={(
                                                                             value,
                                                                         ) => {
+                                                                            //
+
                                                                             file.content =
                                                                                 value;
 

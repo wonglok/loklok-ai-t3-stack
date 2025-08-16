@@ -13,27 +13,26 @@ export const genReactComponentTree = async ({ slot, userPrompt, engine }) => {
             role: `system`,
             content: `${systemPromptPureText}`,
         },
+
         {
             role: "user",
             content: `here's the "user-requirements.txt"
     ${userPrompt}`,
         },
-
         {
-            role: "user",
+            role: "assistant",
             content: `
-
-# Instruction (Dont output this section)
+# Instructio
 You are a senior product manager:
 Review the current "user requirements" and write a new "product requirement definition"
 
-## Design Thinking Requirements:  (Dont output this section)
+## Design Thinking Requirements:
     1. Oragnise the text in a neat and tidy way
     2. rewrite wordings to better english
     3. ponder bible proverbs scriptures for wisidom when designing the system, 
     4. learn from the wisdom of single source of truth, constant values, pure functions
     
-## Format Requirements  (Dont output this section)
+## Format Requirements
     1. Use markdown
     2. Use emoji
     3. Use indentation

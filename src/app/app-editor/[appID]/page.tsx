@@ -4,8 +4,8 @@ import { MyFile, useGlobalAI } from "./useGlobalAI";
 import { useEffect } from "react";
 import { ControlPanel } from "./ui/components/ControlPanel";
 import { WebGPUGate } from "./ui/components/WebGPUGate";
-// import { WebLLMAppClient } from "./ui/util/WebLLMAppClient";
 import { appsCode } from "./ui/llmCalls/common/appsCode";
+// import { WebLLMAppClient } from "./ui/util/WebLLMAppClient";
 
 export default function Page({ params }: { params: any }) {
     let appID = useGlobalAI((r) => r.appID);
