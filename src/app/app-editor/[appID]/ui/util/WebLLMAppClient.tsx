@@ -213,7 +213,9 @@ export const WebLLMAppClient = {
                                         resolve(null);
                                         clearInterval(ss);
                                         let top = tasks.shift();
-                                        top.func();
+                                        if (top) {
+                                            top.func();
+                                        }
                                     }
                                 }
                             }
