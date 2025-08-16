@@ -41,8 +41,10 @@ Review the current "user requirements" and write a new "product requirement defi
     5. NEVER Bold Text in markdown
     6. Always add a new line for each new item (better spacing...)
     7. Must follow the Output format below:
+    8. use * as a new item
+    9. use - as a property of that new item
 
-# Output Format
+# Output in Pure Text Format
 
     ## UserRoles and Features Section
 
@@ -125,11 +127,11 @@ Review the current "user requirements" and write a new "product requirement defi
     ];
 
     const request: webllm.ChatCompletionRequestStreaming = {
-        seed: 0,
+        seed: 19900831,
         stream: true,
         stream_options: { include_usage: true },
         messages: messages,
-        temperature: 0.5,
+        temperature: 0,
     };
 
     let path = `/study/blueprint.md`;

@@ -1,10 +1,10 @@
 "use client";
 
-import { useGenAI } from "../../useGenAI";
+import { useGlobalAI } from "../../useGlobalAI";
 import { useFilesFrame } from "./useFilesFrame";
 
 export function CodePod() {
-    let files = useGenAI(r => r.files) || []
+    let files = useGlobalAI(r => r.files) || []
 
     let { show } = useFilesFrame({
         files: [

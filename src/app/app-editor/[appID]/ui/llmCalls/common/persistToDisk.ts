@@ -1,10 +1,10 @@
-import { MyFile, useGenAI } from "../../../useGenAI";
+import { MyFile, useGlobalAI } from "../../../useGlobalAI";
 import { appsCode } from "./appsCode";
 
 export const persistToDisk = async () => {
     let files = JSON.parse(
-        JSON.stringify(useGenAI.getState().files),
+        JSON.stringify(useGlobalAI.getState().files),
     ) as MyFile[];
 
-    await appsCode.setItem(useGenAI.getState().appID, files);
+    await appsCode.setItem(useGlobalAI.getState().appID, files);
 };

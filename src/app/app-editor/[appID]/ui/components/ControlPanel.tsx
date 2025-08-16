@@ -1,4 +1,4 @@
-import { useGenAI } from "../../useGenAI";
+import { useGlobalAI } from "../../useGlobalAI";
 import { Button } from "@/components/ui/button";
 import {
     // DownloadCloudIcon,
@@ -50,6 +50,8 @@ import { format } from "date-fns";
 import { CodePod } from "../util/CodePod";
 import { factoryResetThisApp } from "../llmCalls/common/factoryResetThisApp";
 import { persistToDisk } from "../llmCalls/common/persistToDisk";
+import { UseBoundStore } from "zustand";
+import { useEngineType } from "../llmCalls/common/makeEngine";
 
 let getLang = (filename: string) => {
     if (pathUtil.extname(filename) === ".json") {
@@ -70,7 +72,7 @@ let selectFile = ({
     total: number;
     index: number;
 }) => {
-    useGenAI.setState({
+    useGlobalAI.setState({
         expandID: `${file.path}`,
     });
 
@@ -87,7 +89,7 @@ let selectFile = ({
 
     // if (expandID === `${file.path}` || (expandID === "" && index === 0)) {
     //     if (expandID === `${file.path}`) {
-    //         useGenAI.setState({
+    //         useGlobalAI.setState({
     //             expandID: ``,
     //         });
     //     }
@@ -110,8 +112,10 @@ function MonacoEditor({
     defaultLanguage?: string;
     onChange?: (v: string) => void;
 }) {
-    let llmStatus = useGenAI((r) => r.llmStatus);
-    let files = useGenAI((r) => r.files);
+    let files = useGlobalAI((r) => r.files);
+    let engines = useGlobalAI((r) => r.engines);
+    let useEngine = engines[0]?.useEngine;
+    let llmStatus = useEngine((r) => r.llmStatus);
     let sortedFiles = files?.slice().sort(sortDate).reverse();
     let track = sortedFiles[0]?.content === value;
 
@@ -177,38 +181,20 @@ let sortDate = (a: any, b: any) => {
 
 export function ControlPanel() {
     //
-    let appID = useGenAI((r) => r.appID);
+    let appID = useGlobalAI((r) => r.appID);
 
     //
-    let currentModel = useGenAI((r) => r.currentModel);
-    let prompt = useGenAI((r) => r.prompt);
-    let models = useGenAI((r) => r.models);
-    let llmStatus = useGenAI((r) => r.llmStatus);
-    let setupLLMProgress = useGenAI((r) => r.setupLLMProgress);
-    let expandID = useGenAI((r) => r.expandID);
+    let currentModel = useGlobalAI((r) => r.currentModel);
+    let prompt = useGlobalAI((r) => r.prompt);
+    let models = useGlobalAI((r) => r.models);
+    let llmStatus = useGlobalAI((r) => r.llmStatus);
+    let setupLLMProgress = useGlobalAI((r) => r.setupLLMProgress);
+    let expandID = useGlobalAI((r) => r.expandID);
 
-    let stopFunc = useGenAI((r) => r.stopFunc);
-    let files = useGenAI((r) => r.files);
+    let stopFunc = useGlobalAI((r) => r.stopFunc);
+    let files = useGlobalAI((r) => r.files);
 
-    useEffect(() => {
-        if (!files) {
-            return;
-        }
-        let sortedFiles = files?.slice().sort(sortDate).reverse();
-        if (llmStatus === "writing") {
-            if (sortedFiles?.length === 1) {
-                useGenAI.setState({
-                    expandID: sortedFiles[0]?.path,
-                });
-            } else {
-                if (sortedFiles[0]) {
-                    useGenAI.setState({
-                        expandID: sortedFiles[0]?.path,
-                    });
-                }
-            }
-        }
-    }, [llmStatus, files?.length]);
+    let sortedFiles = files?.slice().sort(sortDate).reverse();
 
     return (
         <>
@@ -228,7 +214,7 @@ export function ControlPanel() {
                             className="mb-[5px] w-full resize-none rounded-xl bg-white p-3 text-sm"
                             onChange={(e) => {
                                 //
-                                useGenAI.setState({
+                                useGlobalAI.setState({
                                     prompt: e.target.value,
                                 });
                                 //
@@ -264,7 +250,7 @@ export function ControlPanel() {
                                     <div className="mr-2 rounded-lg bg-white">
                                         <PromptInputModelSelect
                                             onValueChange={(value) => {
-                                                useGenAI.setState({
+                                                useGlobalAI.setState({
                                                     currentModel: value,
                                                 });
                                             }}
@@ -457,7 +443,7 @@ export function ControlPanel() {
                                                                                 file.content =
                                                                                     value;
 
-                                                                                useGenAI.setState(
+                                                                                useGlobalAI.setState(
                                                                                     {
                                                                                         files: JSON.parse(
                                                                                             JSON.stringify(

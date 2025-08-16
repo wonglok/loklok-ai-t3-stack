@@ -1,7 +1,7 @@
-import { useGenAI } from "../../../useGenAI";
+import { useGlobalAI } from "../../../useGlobalAI";
 import { appsCode } from "./appsCode";
 
 export const readFilesFromLocalDB = async () => {
-    let files = await appsCode.getItem(useGenAI.getState().appID);
+    let files = await appsCode.getItem(useGlobalAI.getState().appID);
     return files;
 };

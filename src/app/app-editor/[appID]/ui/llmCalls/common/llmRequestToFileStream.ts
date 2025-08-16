@@ -2,7 +2,7 @@
 
 import type * as webllm from "@mlc-ai/web-llm";
 import { CreateWebWorkerMLCEngine } from "@mlc-ai/web-llm";
-import { MyFile, useGenAI } from "../../../useGenAI";
+import { MyFile, useGlobalAI } from "../../../useGlobalAI";
 // @ts-ignore
 import Worker from "./webllm.worker.ts";
 import { z } from "zod";
@@ -27,7 +27,7 @@ export const llmRequestToFileStream = async ({
     request: webllm.ChatCompletionRequestStreaming;
     engine: webllm.MLCEngineInterface;
 }) => {
-    useGenAI.setState({ llmStatus: "writing" });
+    useGlobalAI.setState({ llmStatus: "writing" });
 
     let fileObject = await readFileObject({ path });
 
@@ -75,7 +75,7 @@ export const llmRequestToFileStream = async ({
         content: messageFragments,
         path: path,
         inputSignature:
-            useGenAI.getState().llmStatus === "writing"
+            useGlobalAI.getState().llmStatus === "writing"
                 ? `${md5(JSON.stringify({ request, content: messageFragments }))}`
                 : `${Math.random()}`,
 

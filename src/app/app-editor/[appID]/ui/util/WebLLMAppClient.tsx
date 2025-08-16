@@ -2,9 +2,11 @@
 
 import type * as webllm from "@mlc-ai/web-llm";
 import { CreateWebWorkerMLCEngine } from "@mlc-ai/web-llm";
-import { MyFile, useGenAI } from "../../useGenAI";
+import { MyFile, useGlobalAI } from "../../useGlobalAI";
 // @ts-ignore
 import Worker from "./webllm.worker.ts";
+
+//
 import { z } from "zod";
 
 import * as markdownit from "markdown-it";
@@ -13,8 +15,9 @@ import * as pathUtil from "path";
 import md5 from "md5";
 // import { newUnifiedDiffStrategyService } from "diff-apply";
 import { genFeatrues } from "../llmCalls/calls/genFeatrues";
-import { systemPromptPureText } from "../llmCalls/persona/systemPromptPureText";
-import { appsCode } from "../llmCalls/common/appsCode";
+import { makeEngine } from "../llmCalls/common/makeEngine";
+// import { systemPromptPureText } from "../llmCalls/persona/systemPromptPureText";
+// import { appsCode } from "../llmCalls/common/appsCode";
 
 // @ts-ignore
 // import { unified } from "unified";
@@ -33,55 +36,22 @@ export const WebLLMAppClient = {
         userPrompt: string;
         currentModel: string;
     }) => {
-        const initProgressCallback = (report: webllm.InitProgressReport) => {
-            console.log(report.text);
-            useGenAI.setState({
-                setupLLMProgress: report.text,
-            });
-        };
-
-        useGenAI.setState({
-            llmStatus: "downloading",
-        });
-
-        let aiWorker = new Worker();
-        let engine = (await CreateWebWorkerMLCEngine(aiWorker, currentModel, {
-            initProgressCallback: initProgressCallback,
-            logLevel: "DEBUG",
-        })) as webllm.MLCEngineInterface;
-
-        useGenAI.setState({
-            llmStatus: "idle",
-        });
-
-        useGenAI.setState({
-            stopFunc: async () => {
-                try {
-                    useGenAI.getState().onCancelSigature();
-                } catch (e) {
-                    console.log(e);
-                }
-
-                useGenAI.setState({ llmStatus: "idle" });
-
-                useGenAI.setState({
-                    stopFunc: () => {},
-                });
-
-                engine?.interruptGenerate();
-                aiWorker.terminate();
-                try {
-                    engine?.unload();
-                } catch (e) {
-                    console.log(e);
-                }
-            },
-        });
-
         try {
+            let engineCtx1 = await makeEngine({ currentModel });
+            let engineCtx2 = await makeEngine({ currentModel });
+
+            useGlobalAI.setState({
+                engines: [engineCtx1, engineCtx2],
+            });
+
             await genFeatrues({
                 userPrompt,
-                engine,
+                engine: engineCtx1.engine,
+            });
+
+            await genFeatrues({
+                userPrompt,
+                engine: engineCtx1.engine,
             });
 
             // await WebLLMAppClient.testDiff({
@@ -114,7 +84,7 @@ export const WebLLMAppClient = {
             //     engine,
             // });
         } finally {
-            useGenAI.getState().stopFunc();
+            useGlobalAI.getState().stopFunc();
         }
     },
     ///////////////////////////////////////////////////////////////////////////////////
@@ -344,7 +314,7 @@ export const WebLLMAppClient = {
     //         let finalContent = `
 
     // async function loadModels({ bcrypt }) {
-    //     const db = mongoose.connection.useDb(${JSON.stringify(`app_${useGenAI.getState().appID}`)}, { useCache: true });
+    //     const db = mongoose.connection.useDb(${JSON.stringify(`app_${useGlobalAI.getState().appID}`)}, { useCache: true });
 
     //     const output = {};
 
@@ -375,7 +345,7 @@ export const WebLLMAppClient = {
     //         //             draft: "createBackendProceduresDraft",
     //         //             ok: "createBackendProceduresFinal",
     //         //         };
-    //         //         useGenAI.setState({ [ns.draft]: " " });
+    //         //         useGlobalAI.setState({ [ns.draft]: " " });
     //         //         // @ts-ignore
     //         //         let trpcPromptEach = await import("../prompts/trpcPromptEach.md").then(
     //         //             (r) => r.default,
@@ -783,7 +753,7 @@ export const WebLLMAppClient = {
     //     //
 
     //     factoryReset: async () => {
-    //         await appsCode.setItem(useGenAI.getState().appID, []);
+    //         await appsCode.setItem(useGlobalAI.getState().appID, []);
     //     },
 
     //     //
@@ -796,7 +766,7 @@ export const WebLLMAppClient = {
     //         throwError?: boolean;
     //     }) => {
     //         let files = JSON.parse(
-    //             JSON.stringify(useGenAI.getState().files),
+    //             JSON.stringify(useGlobalAI.getState().files),
     //         ) as MyFile[];
     //         let file = files.find((r) => r.path === path);
 
@@ -815,7 +785,7 @@ export const WebLLMAppClient = {
     //         throwError?: boolean;
     //     }) => {
     //         let files = JSON.parse(
-    //             JSON.stringify(useGenAI.getState().files),
+    //             JSON.stringify(useGlobalAI.getState().files),
     //         ) as MyFile[];
     //         let file = files.find((r) => r.path === path);
 
@@ -834,7 +804,7 @@ export const WebLLMAppClient = {
     //         throwError?: boolean;
     //     }) => {
     //         let files = JSON.parse(
-    //             JSON.stringify(useGenAI.getState().files),
+    //             JSON.stringify(useGlobalAI.getState().files),
     //         ) as MyFile[];
     //         let file = files.find((r) => r.path === path);
 
@@ -857,7 +827,7 @@ export const WebLLMAppClient = {
     //         inputSignature?: string;
     //     }) => {
     //         let files = JSON.parse(
-    //             JSON.stringify(useGenAI.getState().files),
+    //             JSON.stringify(useGlobalAI.getState().files),
     //         ) as MyFile[];
 
     //         let file = files.find((r) => r.path === path);
@@ -878,12 +848,12 @@ export const WebLLMAppClient = {
     //             files.push(newFile);
     //         }
 
-    //         useGenAI.setState({
+    //         useGlobalAI.setState({
     //             files: JSON.parse(JSON.stringify(files)) as MyFile[],
     //         });
 
     //         if (persist) {
-    //             await appsCode.setItem(useGenAI.getState().appID, files);
+    //             await appsCode.setItem(useGlobalAI.getState().appID, files);
     //         }
     //     },
 
@@ -891,10 +861,10 @@ export const WebLLMAppClient = {
 
     //     persistToDisk: async () => {
     //         let files = JSON.parse(
-    //             JSON.stringify(useGenAI.getState().files),
+    //             JSON.stringify(useGlobalAI.getState().files),
     //         ) as MyFile[];
 
-    //         await appsCode.setItem(useGenAI.getState().appID, files);
+    //         await appsCode.setItem(useGlobalAI.getState().appID, files);
     //     },
     //     extractAllCodeBlocks: async ({ markdown = "" }: { markdown: string }) => {
     //         //
@@ -952,18 +922,18 @@ export const WebLLMAppClient = {
     //     removeFileByPath: async ({ path }: { path: string }) => {
     //         if (path) {
     //             let files = JSON.parse(
-    //                 JSON.stringify(useGenAI.getState().files),
+    //                 JSON.stringify(useGlobalAI.getState().files),
     //             ) as MyFile[];
 
     //             files = files.filter((r) => {
     //                 return r.path !== path;
     //             });
 
-    //             useGenAI.setState({
+    //             useGlobalAI.setState({
     //                 files: JSON.parse(JSON.stringify(files)) as MyFile[],
     //             });
 
-    //             await appsCode.setItem(useGenAI.getState().appID, files);
+    //             await appsCode.setItem(useGlobalAI.getState().appID, files);
     //         }
     //     },
 
@@ -978,7 +948,7 @@ export const WebLLMAppClient = {
     //         request: webllm.ChatCompletionRequestStreaming;
     //         engine: webllm.MLCEngineInterface;
     //     }) => {
-    //         useGenAI.setState({ llmStatus: "writing" });
+    //         useGlobalAI.setState({ llmStatus: "writing" });
 
     //         let fileObject = await WebLLMAppClient.readFileObject({ path });
 
@@ -1027,7 +997,7 @@ export const WebLLMAppClient = {
     //             content: messageFragments,
     //             path: path,
     //             inputSignature:
-    //                 useGenAI.getState().llmStatus === "writing"
+    //                 useGlobalAI.getState().llmStatus === "writing"
     //                     ? `${md5(JSON.stringify({ request, content: messageFragments }))}`
     //                     : `${Math.random()}`,
 
@@ -1044,7 +1014,7 @@ export const WebLLMAppClient = {
                 content: fistblock,
                 path: path,
                 inputSignature:
-                    useGenAI.getState().llmStatus === "writing"
+                    useGlobalAI.getState().llmStatus === "writing"
                         ? `${md5(JSON.stringify({ request, content: fistblock }))}`
                         : `${Math.random()}`,
 

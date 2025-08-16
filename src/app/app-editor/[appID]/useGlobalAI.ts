@@ -10,32 +10,21 @@ export type MyFile = {
     inputSignature: string;
 };
 
-export const useGenAI = create<{
+export const useGlobalAI = create<{
     files: MyFile[];
     expandID: string;
 
-    // mongooseCodeFinal: string;
-    // mongooseCodeDraft: string;
-
-    // technicalSpecificationFinal: string;
-    // technicalSpecificationDraft: string;
-
-    // createBackendProceduresFinal: string;
-    // createBackendProceduresDraft: string;
-
-    // zustandStateTRPCMaanagerFinal: string;
-    // zustandStateTRPCMaanagerDraft: string;
+    llmStatus: "downloading" | "idle" | "writing";
 
     currentModel: string;
 
     appID: string;
     prompt: string;
-    llmStatus: "writing" | "downloading" | "idle";
     loadingSpec: boolean;
     welcome: boolean;
     spec: string;
     setupLLMProgress: string;
-    engine: webllm.MLCEngineInterface | null;
+    engines: any[];
 
     brainworks: boolean;
     //
@@ -64,13 +53,12 @@ export const useGenAI = create<{
     ];
 
     return {
+        llmStatus: "idle",
+        engines: [],
         files: [],
         expandID: "",
 
         onCancelSigature: () => {},
-
-        //
-        llmStatus: "idle",
 
         stopFunc: () => {},
         models: models,
@@ -92,9 +80,9 @@ Pastor Portal can do a few things:
 4. approve and publish the testimony to their pastor account.
 
 ## Internet users:
-Internet Users can visit public web app at home page of the webiste. 
-In Public webapp, they can view testimonty preview, video and text.
-In Public webapp, they can search testimonty powered by ai.
+Internet Users can visit public web app at home page of the website. 
+In Public WebApp, they can view testimony preview, video and text.
+In Public WebApp, they can search testimony powered by ai.
 
 Internet Users can login to their user profile.
 In User Profile, they can write testimony and request pastor to approve for publishing to public.
@@ -103,7 +91,6 @@ In User Profile, they can write testimony and request pastor to approve for publ
         welcome: true,
         spec: "",
         setupLLMProgress: "",
-        engine: null,
         brainworks: false,
     };
 });

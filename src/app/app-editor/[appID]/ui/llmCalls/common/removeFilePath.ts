@@ -1,20 +1,20 @@
-import { MyFile, useGenAI } from "../../../useGenAI";
+import { MyFile, useGlobalAI } from "../../../useGlobalAI";
 import { appsCode } from "./appsCode";
 
 export const removeFileByPath = async ({ path }: { path: string }) => {
     if (path) {
         let files = JSON.parse(
-            JSON.stringify(useGenAI.getState().files),
+            JSON.stringify(useGlobalAI.getState().files),
         ) as MyFile[];
 
         files = files.filter((r) => {
             return r.path !== path;
         });
 
-        useGenAI.setState({
+        useGlobalAI.setState({
             files: JSON.parse(JSON.stringify(files)) as MyFile[],
         });
 
-        await appsCode.setItem(useGenAI.getState().appID, files);
+        await appsCode.setItem(useGlobalAI.getState().appID, files);
     }
 };
