@@ -10,12 +10,7 @@ export type MyFile = {
     inputSignature: string;
 };
 
-type EngineProps = {
-    llmStatus: "idle" | "downloading" | "writing";
-    stopFunc: () => void;
-    engine: webllm.MLCEngineInterface;
-    setupProgress: string;
-};
+type EngineProps = {};
 
 export const useGlobalAI = create<{
     files: MyFile[];
@@ -32,8 +27,12 @@ export const useGlobalAI = create<{
     spec: string;
     setupLLMProgress: string;
     engines: {
+        enabled: boolean;
         name: string;
-        useEngine: any;
+        currentModel: string;
+        llmStatus: "idle" | "downloading" | "writing";
+        engine: webllm.MLCEngineInterface;
+        setupProgress: string;
     }[];
 
     brainworks: boolean;
@@ -42,8 +41,6 @@ export const useGlobalAI = create<{
     //
 
     models: { key: string; value: string }[];
-
-    //
 
     stopFunc: () => void;
 }>(() => {
@@ -65,49 +62,31 @@ export const useGlobalAI = create<{
     return {
         engines: [
             {
+                enabled: true,
                 name: "e01",
-                useEngine: create<EngineProps>((set, get) => {
-                    return {
-                        enabled: true,
-                        models,
-                        currentModel: models[1].value,
-                        name: "e01",
-                        llmStatus: "idle",
-                        stopFunc: () => {},
-                        engine: null,
-                        setupProgress: "",
-                    };
-                }),
+
+                currentModel: models[1].value,
+                llmStatus: "idle",
+                engine: null,
+                setupProgress: "",
             },
             {
+                enabled: false,
                 name: "e02",
-                useEngine: create<EngineProps>((set, get) => {
-                    return {
-                        enabled: false,
-                        models,
-                        currentModel: models[1].value,
-                        name: "e02",
-                        llmStatus: "idle",
-                        stopFunc: () => {},
-                        engine: null,
-                        setupProgress: "",
-                    };
-                }),
+
+                currentModel: models[1].value,
+                llmStatus: "idle",
+                engine: null,
+                setupProgress: "",
             },
             {
+                enabled: false,
                 name: "e03",
-                useEngine: create<EngineProps>((set, get) => {
-                    return {
-                        enabled: false,
-                        models,
-                        currentModel: models[1].value,
-                        name: "e03",
-                        llmStatus: "idle",
-                        stopFunc: () => {},
-                        engine: null,
-                        setupProgress: "",
-                    };
-                }),
+
+                currentModel: models[1].value,
+                llmStatus: "idle",
+                engine: null,
+                setupProgress: "",
             },
         ],
 

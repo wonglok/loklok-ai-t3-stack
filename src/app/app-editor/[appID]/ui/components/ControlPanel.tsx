@@ -121,12 +121,12 @@ function MonacoEditor({
 }) {
     let files = useGlobalAI((r) => r.files);
     let engines = useGlobalAI((r) => r.engines);
-    let useEngine = engines[0]?.useEngine;
-    let llmStatus = useEngine((r) => r.llmStatus);
     let sortedFiles = files?.slice().sort(sortDate).reverse();
     let track = sortedFiles[0]?.content === value;
 
     let [editor, setEditor] = useState<any>();
+
+    let llmStatus = "writing";
 
     useEffect(() => {
         if (editor) {
@@ -134,26 +134,24 @@ function MonacoEditor({
         }
     }, [editor]);
 
-    //
+    // useEffect(() => {
+    //     if (llmStatus !== "writing") {
+    //     } else {
+    //         if (track) {
+    //             if (editor) {
+    //                 editor.revealLine(editor.getModel().getLineCount());
 
-    useEffect(() => {
-        if (llmStatus !== "writing") {
-        } else {
-            if (track) {
-                if (editor) {
-                    editor.revealLine(editor.getModel().getLineCount());
+    //                 return () => {};
+    //             }
+    //         } else {
+    //             if (editor) {
+    //                 editor.revealLine(0);
 
-                    return () => {};
-                }
-            } else {
-                if (editor) {
-                    editor.revealLine(0);
-
-                    return () => {};
-                }
-            }
-        }
-    }, [llmStatus, editor, value]);
+    //                 return () => {};
+    //             }
+    //         }
+    //     }
+    // }, [llmStatus, editor, value]);
 
     return (
         <Editor

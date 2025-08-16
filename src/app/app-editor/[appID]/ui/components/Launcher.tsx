@@ -45,18 +45,18 @@ import {
 import { WebLLMAppClient } from "../util/WebLLMAppClient";
 
 function AIMatcher({ name }: { name: string }) {
+    let models = useGlobalAI((r) => r.models);
     let engines = useGlobalAI((r) => r.engines);
-    let useEngine = engines.find((r) => r.name === name)?.useEngine;
-    let currentModel = useEngine((r) => r.currentModel);
-    let models = useEngine((r) => r.models);
+    let item = engines.find((r) => r.name === name);
 
     return (
         <>
             <Select
-                value={currentModel}
+                value={item.currentModel}
                 onValueChange={(v) => {
-                    useEngine.setState({
-                        currentModel: v,
+                    item.currentModel = v;
+                    useGlobalAI.setState({
+                        engines: JSON.parse(JSON.stringify(engines)),
                     });
                 }}
             >
@@ -73,19 +73,22 @@ function AIMatcher({ name }: { name: string }) {
             </Select>
         </>
     );
+
+    return <></>;
 }
 
 function EnableSwitch({ name }: { name: string }) {
     let engines = useGlobalAI((r) => r.engines);
-    let useEngine = engines.find((r) => r.name === name)?.useEngine;
-    let enabled = useEngine((r) => r.enabled);
+    let item = engines.find((r) => r.name === name);
+    // let enabled =
     return (
         <>
             <Switch
-                checked={enabled}
+                checked={item.enabled}
                 onCheckedChange={(v) => {
-                    useEngine.setState({
-                        enabled: v,
+                    item.enabled = v;
+                    useGlobalAI.setState({
+                        engines: JSON.parse(JSON.stringify(engines)),
                     });
                 }}
             />
@@ -155,7 +158,19 @@ export function Launcher() {
                 />
             </div>
 
-            <Button type="submit">Build</Button>
+            <Button
+                onClick={() => {
+                    //
+                    //
+                    WebLLMAppClient.buildApp({
+                        userPrompt: prompt,
+                    });
+                }}
+                type="submit"
+                className="cursor-pointer"
+            >
+                Build
+            </Button>
         </form>
     );
 }

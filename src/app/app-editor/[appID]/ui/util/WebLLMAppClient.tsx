@@ -25,6 +25,8 @@ import { makeEngine } from "../llmCalls/common/makeEngine";
 // import remarkRehype from "remark-rehype";
 // import remarkMan from "remark-man";
 
+const Engines = [];
+
 export const WebLLMAppClient = {
     [`systemSetup`]: async ({ currentModel }) => {
         // let ctx1 = await makeEngine({ currentModel });
@@ -50,7 +52,7 @@ export const WebLLMAppClient = {
         try {
             // await genFeatrues({
             //     userPrompt,
-            //     engine: engineCtx1.engine,
+            //     engine: engine,
             // });
             // await WebLLMAppClient.testDiff({
             //     //
