@@ -9,75 +9,18 @@ import { z } from "zod";
 
 import * as markdownit from "markdown-it";
 import * as pathUtil from "path";
-import { createInstance } from "localforage";
+// import { createInstance } from "localforage";
 import md5 from "md5";
-import { newUnifiedDiffStrategyService } from "diff-apply";
+// import { newUnifiedDiffStrategyService } from "diff-apply";
+import { genFeatrues } from "../llmCalls/calls/genFeatrues";
+import { systemPromptPureText } from "../llmCalls/persona/systemPromptPureText";
+import { appsCode } from "../llmCalls/common/appsCode";
 
 // @ts-ignore
 // import { unified } from "unified";
 // import remarkParse from "remark-parse";
 // import remarkRehype from "remark-rehype";
 // import remarkMan from "remark-man";
-
-const systemPromptDiffCode = `# Generate Precise Code Changes
-
-Generate a unified diff that can be cleanly applied to modify code files.
-
-## Step-by-Step Instructions:
-
-1. Start with file headers:
-    - First line: "--- {original_file_path}"
-    - Second line: "+++ {new_file_path}"
-
-2. For each change section:
-    - Begin with "@@ ... @@" separator line without line numbers
-    - Include 2-3 lines of context before and after changes
-    - Mark removed lines with "-"
-    - Mark added lines with "+"
-    - Preserve exact indentation
-
-3. Group related changes:
-    - Keep related modifications in the same hunk
-    - Start new hunks for logically separate changes
-    - When modifying functions/methods, include the entire block
-
-## Requirements:
-
-1. MUST include exact indentation
-2. MUST include sufficient context for unique matching
-3. MUST group related changes together
-4. MUST use proper unified diff format
-5. MUST NOT include timestamps in file headers
-6. MUST NOT include line numbers in the @@ header
-
-## Example
-
-Good diff (follows all requirements):
-\`\`\`diff
---- existing-code.js
-+++ existing-code.js
-@@ ... @@
-def calculate_total(items):
--      total = 0
--      for item in items:
--          total += item.price
-+      return sum(item.price for item in items)
-\`\`\`diff
-
-`;
-
-const pureTextSystemPrompt = `AI Role: 
-
-You are an AI Coding Agent with following description:
-
-- You are a senior fullstack developer. 
-- You love helping user to code things.
-- You are Joyful and Wise. 
-- You love short and sweet sentences and clear and insightful code comments.`;
-
-const appsCode = createInstance({
-    name: "apps_code",
-});
 
 export const WebLLMAppClient = {
     ///////////////////////////////////////////////////////////////////////////////////
@@ -108,6 +51,10 @@ export const WebLLMAppClient = {
         })) as webllm.MLCEngineInterface;
 
         useGenAI.setState({
+            llmStatus: "idle",
+        });
+
+        useGenAI.setState({
             stopFunc: async () => {
                 try {
                     useGenAI.getState().onCancelSigature();
@@ -115,7 +62,7 @@ export const WebLLMAppClient = {
                     console.log(e);
                 }
 
-                useGenAI.setState({ llmStatus: "init" });
+                useGenAI.setState({ llmStatus: "idle" });
 
                 useGenAI.setState({
                     stopFunc: () => {},
@@ -131,16 +78,17 @@ export const WebLLMAppClient = {
             },
         });
 
-        useGenAI.setState({
-            llmStatus: "writing",
-        });
-
         try {
-            await WebLLMAppClient.testDiff({
-                //
+            await genFeatrues({
                 userPrompt,
                 engine,
             });
+
+            // await WebLLMAppClient.testDiff({
+            //     //
+            //     userPrompt,
+            //     engine,
+            // });
 
             // console.log("before studyRequirements");
             // await WebLLMAppClient.studyRequirements({
@@ -173,1183 +121,920 @@ export const WebLLMAppClient = {
     // buildApp
     ///////////////////////////////////////////////////////////////////////////////////
 
-    [`testDiff`]: async ({ engine, userPrompt }) => {
-        {
-            ///////////////////////////////////////////////////////////////////////////////////
-            // manifest
-            ///////////////////////////////////////////////////////////////////////////////////
-            let messages: any = [
-                {
-                    role: `system`,
-                    content: `${pureTextSystemPrompt}`,
-                },
-                {
-                    role: "user",
-                    content: `here's the "user-requirements.txt"
-${userPrompt}`,
-                },
-
-                {
-                    role: `user`,
-                    content: `
-# Instruction
-You are a senior product manager:
-Review the current "user requirements" and write a new "product requirement definition"
-
-## Requirements:
-    1. Oragnise the text in a neat and tidy way
-    2. rewrite wordings to better english
-    3. refer bible proverbs scriptures for wisidom when designing the system, 
-    4. glean from the wisdom of single source of truth, constant values, pure functions
-    5. Use markdown
-    6. Use emoji
-    7. Use indentation
-    8. Don't use "**" or "bold text" 
-
-
-Output format:
-
-## UserRoles and Features Section
-    UserRoles:
-        * UserRole
-            - name: [...]
-            - access_level: [internet | member-login | staff-login | system-admin]
-            - Features:
-                * Feature
-                    - Title: [...]
-                    - Description: [...]
-                    - Steps: 
-                        * Step [number]
-                            - PageRoute: [...]
-                            - Interactions: 
-                                * Step [number]: [...]
-
-## Front End Pages and UI Components:
-    Pages:
-        * Each Page 
-            - PageRoute: [...]
-            - PageDescription: [...]
-            
-
-            - UIComponentName: [...]
-            - Description: [...]
-            - Children UIComponents:
-                * UIComponent 
-                    - UIComponentName: [...]
-                    - Description: [...]
-                    - Children UIComponents:
-                        * UIComponent 
-                            - UIComponentName: [...]
-                            - Description: [...]
-                            - Children UIComponents:  
-                                * UIComponent 
-                                    - UIComponentName: [...]
-                                    - Description: [...]
-                                    [... andd more sub tree if needed ...]
-
-## Backend Database:
-    Mongoise Database:
-        * Each Collection
-            - CollectionTitle: [...]
-            - Description: [...]
-            - DataFields: 
-                * DataField 
-                    - Name: [...]
-                    - DataType: [mongoose compatible data type]
-
-## Backend tRPC Procedures (Similar to REST Endpoints): 
-    Procedures:
-        * Each Procedure
-            - Title: [...]
-            - Description: [...]
-`,
-
-                    /*
-                     */
-                },
-            ];
-
-            const request: webllm.ChatCompletionRequestStreaming = {
-                seed: 0,
-                stream: true,
-                stream_options: { include_usage: true },
-                messages: messages,
-                temperature: 0.0,
-            };
-
-            let path = `/study/blueprint.md`;
-
-            await WebLLMAppClient.llmRequestToFileStream({
-                path: path,
-                request: request,
-                engine,
-            });
-
-            ///////////////////////////////////////////////////////////////////////////////////
-            // usecase
-            ///////////////////////////////////////////////////////////////////////////////////
-        }
-
-        {
-            /*
-
-            */
-
-            ///////////////////////////////////////////////////////////////////////////////////
-            // manifest
-            ///////////////////////////////////////////////////////////////////////////////////
-            let existingCode = `
-`;
-
-            let messages: any = [
-                {
-                    role: `system`,
-                    content: `${systemPromptDiffCode}`,
-                },
-                // {
-                //     role: `user`,
-                //     content: `I will show you the existing code in next message.`,
-                // },
-                // {
-                //     role: `user`,
-                //     content: `${existingCode}`,
-                // },
-                {
-                    role: `user`,
-                    content: `I will show you the "Product Requirement Definition" in next message.`,
-                },
-                {
-                    role: "user",
-                    content: `
-I want to build a bible testimony app powered by ai embedding.
-
-## PlatformAdmin:
-PlatformAdmin can login to Platform Portal. 
-PlatformAdmin can create Pastor's Login Accounts and help Pastors reset password.
-
-## Pastor:
-Pastors can login to Pastor Portal.
-
-Pastor Portal can do a few things:
-1. upload testimony text and youtube video link 
-2. edit testimony and set it to be hidden or visible.
-3. generate embeddings data for the testimony.
-4. approve and publish the testimony to their pastor account.
-
-## Internet users:
-Internet Users can visit public web app at home page of the webiste. 
-In Public webapp, they can view testimonty preview, video and text.
-In Public webapp, they can search testimonty powered by ai.
-
-Internet Users can login to their user profile.
-In User Profile, they can write testimony and request pastor to approve for publishing to public.
-`,
-                },
-                {
-                    role: `user`,
-                    content: `implement the mongoose database models in javascript es6 modules according to "Product Requirement Definition". organise each model in their own file.`,
-                },
-                {
-                    role: `user`,
-                    content: `output diffcode only`,
-                },
-            ];
-
-            //https://github.com/pylarco/diff-apply?tab=readme-ov-file#llm-integration-and-prompting-guide
-            //https://github.com/pylarco/diff-apply?tab=readme-ov-file#llm-integration-and-prompting-guide
-            //https://github.com/pylarco/diff-apply?tab=readme-ov-file#llm-integration-and-prompting-guide
-
-            const request: webllm.ChatCompletionRequestStreaming = {
-                seed: 0,
-                stream: true,
-                stream_options: { include_usage: true },
-                messages: messages,
-                temperature: 0.0,
-            };
-
-            await WebLLMAppClient.writeToFile({
-                path: "existingCode.js",
-                content: `${existingCode}`,
-            });
-
-            let path = `/ppap/diff_gen.md`;
-
-            await WebLLMAppClient.llmRequestToFileStream({
-                path: path,
-                request: request,
-                engine,
-            });
-
-            let diffText = await WebLLMAppClient.readFileContent({ path });
-
-            console.log(diffText);
-
-            let parseDiff = await import("parse-diff").then(
-                async ({ default: parseDiff }) => {
-                    return parseDiff;
-                },
-            );
-
-            let item = await parseDiff(diffText);
-            console.log(item);
-
-            /*
-// let diffList = await parseDiff(diffText);
-// console.log(diffList);
-// for (let block of diffList) {
-//     console.log(JSON.stringify(block, null, "\t"));
-// }
-// let strategy = diffApply.newUnifiedDiffStrategy.create(0.6);
-// let allResults = (await strategy.applyDiff({
-//     //
-//     originalContent: `${existingCode}`,
-//     diffContent: `\`\`\`diff\n${eachBlock.code}\n\`\`\``,
-// })) as any;
-// console.log(allResults);
-// for (let eachResult of allResults) {
-//     console.log(eachResult, eachResult.content);
-//     await WebLLMAppClient.writeToFile({
-//         path: eachResult.to,
-//         content: eachResult.content,
-//     });
-// }
-// let blocks = await WebLLMAppClient.extractAllCodeBlocks({
-//     markdown: diffText,
-// });
-// for (let eachBlock of blocks) {
-// }
-            */
-
-            // // const strategy = newUnifiedDiffStrategyService.create(0.95); // 95% confidence required
-
-            ///////////////////////////////////////////////////////////////////////////////////
-            // usecase
-            ///////////////////////////////////////////////////////////////////////////////////
-        }
-    },
-
-    ///////////////////////////////////////////////////////////////////////////////////
-    // elaborateSpec
-    ///////////////////////////////////////////////////////////////////////////////////
-    [`studyRequirements`]: async ({
-        userPrompt,
-        engine,
-    }: {
-        engine: webllm.MLCEngineInterface;
-        userPrompt: string;
-    }) => {
-        {
-            ///////////////////////////////////////////////////////////////////////////////////
-            // manifest
-            ///////////////////////////////////////////////////////////////////////////////////
-            let messages: any = [
-                {
-                    role: `system`,
-                    content: `${pureTextSystemPrompt}`,
-                },
-                {
-                    role: "user",
-                    content: `Here's what the user want to build for the latest features:
-${userPrompt}`,
-                },
-
-                {
-                    role: `user`,
-                    content: `
-Your Instruction:
-
-- Please improve the user requirements using markdown foramt
-- List out all the database table and data field needed
-- List out all the screen names needed by the app and their page route (pathname with params) 
-- List out all the backend procedure needed by the screens
-
-`,
-                },
-            ];
-
-            const request: webllm.ChatCompletionRequestStreaming = {
-                seed: 0,
-                stream: true,
-                stream_options: { include_usage: true },
-                messages: messages,
-                temperature: 0.0,
-            };
-
-            let path = `/study/blueprint.md`;
-
-            await WebLLMAppClient.llmRequestToFileStream({
-                path: path,
-                request: request,
-                engine,
-            });
-
-            ///////////////////////////////////////////////////////////////////////////////////
-            // usecase
-            ///////////////////////////////////////////////////////////////////////////////////
-        }
-
-        ///////////////////////////////////////////////////////////////////////////////////
-        // Generate Function Output
-        ///////////////////////////////////////////////////////////////////////////////////
-    },
-
-    ///////////////////////////////////////////////////////////////////////////////////
-    // createMongooseFromSpec
-    ///////////////////////////////////////////////////////////////////////////////////
-    [`createMongooseFromSpec`]: async ({
-        engine,
-    }: {
-        engine: webllm.MLCEngineInterface;
-    }) => {
-        let mongoosePromptEach = await import(
-            // @ts-ignore
-            "../prompts/mongoosePromptEach.md"
-        ).then((r) => r.default);
-
-        let studyText = await WebLLMAppClient.readFileContent({
-            path: `/study/blueprint.md`,
-        });
-
-        const request: webllm.ChatCompletionRequestStreaming = {
-            seed: 0,
-            stream: true,
-            stream_options: { include_usage: true },
-            messages: [
-                {
-                    role: `system`,
-                    content: `
-${pureTextSystemPrompt}
-`,
-                },
-
-                {
-                    role: "user",
-                    content: `Here's what the requirements are:
-${studyText}`,
-                },
-
-                {
-                    role: `user`,
-                    content: `
-Your Instruction:
-Please generate the mongoose database collection information.
-`,
-                },
-            ],
-            temperature: 0.0,
-            response_format: {
-                type: "json_object",
-                schema: JSON.stringify(
-                    z.toJSONSchema(
-                        z.object({
-                            version: z.literal("2025-08-12---init"),
-                            mongoose: z
-                                .array(
-                                    z
-                                        .object({
-                                            modelName: z.string(),
-                                        })
-                                        .describe(
-                                            "each mongoose database collection",
-                                        ),
-                                )
-                                .describe("mongoose database collections"),
-                        }),
-                    ),
-                ),
-            },
-        };
-
-        await WebLLMAppClient.llmRequestToFileStream({
-            path: `/study/database.json`,
-            request: request,
-            engine,
-        });
-
-        let rootObject = await WebLLMAppClient.readFileParseJSONContent({
-            path: `/study/database.json`,
-        });
-
-        console.log(rootObject);
-
-        for (let eachObject of rootObject.mongoose) {
-            //
-            {
-                let modelName = eachObject.modelName;
-
-                let messages: any = [
-                    {
-                        role: `system`,
-                        content: `${pureTextSystemPrompt}`,
-                    },
-                    {
-                        role: `user`,
-                        content: `
-Your Instruction:
-
-1. Implement to fullfill the full user requirements.
-2. Avoid Using Preserved Keyworads in Javascript as Model names. such as Map, WeakMap, Proxy, etc...
-3. only need 1 function
-`,
-                    },
-                    {
-                        role: "user",
-                        content: `Here's the existing code as reference:
-${mongoosePromptEach}
-                    `,
-                    },
-                    {
-                        role: "user",
-                        content: `
-Here's the overall and mongoose database definiton:
-${studyText}
-
-Please only implement "${modelName}" (${eachObject.modelName}) collection only:
-`.trim(),
-                    },
-                ];
-
-                ///////////////////////////////////////////////////////////////////////////////////
-                // Generate Function Output
-                ///////////////////////////////////////////////////////////////////////////////////
-                const request: webllm.ChatCompletionRequestStreaming = {
-                    seed: 0,
-                    stream: true,
-                    stream_options: { include_usage: true },
-                    messages: messages,
-                    temperature: 0.0,
-                    max_tokens: 4096,
-                };
-
-                await WebLLMAppClient.llmRequestToFileStream({
-                    engine,
-                    request,
-                    path: `/models/${eachObject.modelName}.js`,
-                    needsExtractCode: true,
-                });
-
-                console.log("modelName", eachObject.modelName);
-            }
-        }
-
-        /////////
-        /////////
-        /////////
-        /////////
-
-        let content = "";
-
-        for (let eachObject of rootObject.mongoose) {
-            let modelName = eachObject.modelName;
-            content += `
-await import(${JSON.stringify(`/models/${modelName}.js`)}).then(async ({ defineOneModel }) => {
-    return await defineOneModel({ db, output, bcrypt });
-})
-`;
-        }
-
-        let finalContent = `
-
-async function loadModels({ bcrypt }) {
-    const db = mongoose.connection.useDb(${JSON.stringify(`app_${useGenAI.getState().appID}`)}, { useCache: true });
-    
-    const output = {};
-
-    ${content}
-
-    return output;
-}
-
-export { loadModels }
-
-        `;
-
-        await WebLLMAppClient.writeToFile({
-            content: `${finalContent}`,
-            path: `/database/all.js`,
-        });
-    },
-
-    ///////////////////////////////////////////////////////////////////////////////////
-    // createBackendProcedures
-    ///////////////////////////////////////////////////////////////////////////////////
-    [`createBackendProcedures`]: async ({
-        engine,
-    }: {
-        engine: webllm.MLCEngineInterface;
-    }) => {
-        //         let ns = {
-        //             draft: "createBackendProceduresDraft",
-        //             ok: "createBackendProceduresFinal",
-        //         };
-        //         useGenAI.setState({ [ns.draft]: " " });
-        //         // @ts-ignore
-        //         let trpcPromptEach = await import("../prompts/trpcPromptEach.md").then(
-        //             (r) => r.default,
-        //         );
-        //         let mongooseText = await WebLLMAppClient.readFileContent({
-        //             path: `/study/mongoose.json`,
-        //         });
-        //         let proceduresText = await WebLLMAppClient.readFileContent({
-        //             path: `/study/procedures.json`,
-        //         });
-        //         console.log(proceduresText);
-        //         let proceduresList = JSON.parse(proceduresText.trim()).procedures;
-        //         console.log(proceduresList);
-        //         for (let procedureDef of proceduresList) {
-        //             //
-        //             {
-        //                 let slug = procedureDef?.slug;
-        //                 let procedureJSONString = JSON.stringify(procedureDef);
-        //                 console.log(procedureJSONString);
-        //                 let technicalSpecificationFinal = `
-        // ${mongooseText}
-        // ${procedureJSONString}
-        //         `;
-        //                 let messages: any = [
-        //                     {
-        //                         role: `system`,
-        //                         content: `
-        // ${pureTextSystemPrompt}
-        // `,
-        //                     },
-        //                     {
-        //                         role: "user",
-        //                         content: `Here's the "user requirement technical specification":
-        // ${technicalSpecificationFinal}`,
-        //                     },
-        //                     {
-        //                         role: "user",
-        //                         content: `Here's the "example code":
-        // ${trpcPromptEach}`.trim(),
-        //                     },
-        //                     {
-        //                         role: "user",
-        //                         content: `
-        // Instruction:
-        // Implement code inside the "example code" according to the "user requirement technical specification" that user has provided above.
-        // - only use mutation for procedure
-        //         `.trim(),
-        //                     },
-        //                 ];
-        //                 ///////////////////////////////////////////////////////////////////////////////////
-        //                 // Generate Function Output
-        //                 ///////////////////////////////////////////////////////////////////////////////////
-        // const request: webllm.ChatCompletionRequestStreaming = {
-        // seed: 0,
-        // stream: true,
-        //                     stream_options: { include_usage: true },
-        //                     messages: messages,
-        //                     temperature: 0.0,
-        //                     max_tokens: 4096,
-        //                 };
-        //                 await WebLLMAppClient.llmRequestToFileStream({
-        //                     engine,
-        //                     request,
-        //                     path: `/api/${slug}.js.temp.md`,
-        //                 });
-        //                 let modelCode =
-        //                     await WebLLMAppClient.extractFirstCodeBlockContent({
-        //                         markdown: await WebLLMAppClient.readFileContent({
-        //                             path: `/api/${slug}.js.temp.md`,
-        //                         }),
-        //                     });
-        //                 await WebLLMAppClient.removeFileByPath({
-        //                     path: `/api/${slug}.js.temp.md`,
-        //                 });
-        //                 await WebLLMAppClient.writeToFile({
-        //                     content: modelCode,
-        //                     path: `/api/${slug}.js`,
-        //                 });
-        //                 //
-        //             }
-        //         }
-    },
-
-    ///////////////////////////////////////////////////////////////////////////////////
-    // createFrontEndSDK
-    ///////////////////////////////////////////////////////////////////////////////////
-    [`createFrontEndSDK`]: async ({
-        engine,
-    }: {
-        engine: webllm.MLCEngineInterface;
-    }) => {
-        //         let zustandPromptEach = await import(
-        //             // @ts-ignore
-        //             "../prompts/zustandPromptEach.md"
-        //         ).then((r) => r.default);
-        //         let mongooseText = await WebLLMAppClient.readFileContent({
-        //             path: `/manifest/mongoose.json`,
-        //         });
-        //         let proceduresText = await WebLLMAppClient.readFileContent({
-        //             path: `/manifest/procedures.json`,
-        //         });
-        //         let proceduresList = JSON.parse(proceduresText.trim()).procedures;
-        //         //
-        //         console.log(proceduresList);
-        //         //
-        //         {
-        //             let technicalSpecificationFinal = `
-        // ${mongooseText}
-        // ${proceduresText}
-        //         `;
-        //             let messages: any = [
-        //                 {
-        //                     role: `system`,
-        //                     content: `
-        // ${pureTextSystemPrompt}
-        // `,
-        //                 },
-        //                 {
-        //                     role: "user",
-        //                     content: `Here's the "user requirement technical specification":
-        // ${technicalSpecificationFinal}`,
-        //                 },
-        //                 {
-        //                     role: "user",
-        //                     content: `Here's the "example code useSDK":
-        // ${zustandPromptEach}`,
-        //                 },
-        //                 {
-        //                     role: "user",
-        //                     content: `
-        // Instruction:
-        // implement react js hooks using zustand store and refer to all the procedures in tech spec
-        // create zustand store like this and change accordingly to the technical specfiication:
-        // export const useSDK = create((set,get) =>{
-        //     return {
-        //         currentUser: null,
-        //         myAvatars: [],
-        //         // [more properties....]
-        //     }
-        // })
-        // let getMyAvatars = async () => {
-        //     let client = await getTRPC();
-        //     let myAvatars = client.getMyAvatars.mutate({
-        //             userID: currentUser.userID
-        //     });
-        //     useSDK.setState({
-        //             myAvatars: myAvatars
-        //     });
-        // }
-        // only use trpc client with mutation calls, like: let client = await getTRPC()
-        // if needed, save all resutls to useSDK.setState({key1:value1}) replace "key1", replace "value1" accordingly
-        //         `.trim(),
-        //                 },
-        //             ];
-        //             ///////////////////////////////////////////////////////////////////////////////////
-        //             // Generate Function Output
-        //             ///////////////////////////////////////////////////////////////////////////////////
-        // const request: webllm.ChatCompletionRequestStreaming = {
-        //     seed: 0,
-        //                 stream: true,
-        //                 stream_options: { include_usage: true },
-        //                 messages: messages,
-        //                 temperature: 0.0,
-        //                 seed: 1,
-        //                 max_tokens: 4096,
-        //             };
-        //             await WebLLMAppClient.llmRequestToFileStream({
-        //                 engine,
-        //                 request,
-        //                 path: `/frontend/sdk.js.temp.md`,
-        //             });
-        //             let modelCode = await WebLLMAppClient.extractFirstCodeBlockContent({
-        //                 markdown: await WebLLMAppClient.readFileContent({
-        //                     path: `/frontend/sdk.js.temp.md`,
-        //                 }),
-        //             });
-        //             await WebLLMAppClient.removeFileByPath({
-        //                 path: `/frontend/sdk.js.temp.md`,
-        //             });
-        //             await WebLLMAppClient.writeToFile({
-        //                 content: modelCode,
-        //                 path: `/frontend/sdk.js`,
-        //             });
-        //             //
-        //         }
-    },
-
-    createReactComponents: async ({
-        engine,
-    }: {
-        engine: webllm.MLCEngineInterface;
-    }) => {
-        let studyText = await WebLLMAppClient.readFileContent({
-            path: `/study/blueprint.md`,
-        });
-
-        const request: webllm.ChatCompletionRequest = {
-            seed: 0,
-            stream: true,
-            stream_options: { include_usage: true },
-            messages: [
-                {
-                    role: `system`,
-                    content: `
-${pureTextSystemPrompt}
-`,
-                },
-
-                {
-                    role: "user",
-                    content: `Here's what the requirements are:
-${studyText}`,
-                },
-
-                {
-                    role: `user`,
-                    content: `
-Your Instruction:
-Please generate the json according to json schema.
-
-Please make sure the components are unique.
-`,
-                },
-            ],
-            temperature: 0.0,
-            response_format: {
-                type: "json_object",
-                schema: JSON.stringify(
-                    z.toJSONSchema(
-                        z.object({
-                            version: z.literal("2025-08-12---init"),
-                            components: z
-                                .array(
-                                    z.object({
-                                        slug: z
-                                            .string()
-                                            .describe("Component name in slug"),
-                                        componentName: z
-                                            .string()
-                                            .describe("ComponentName"),
-
-                                        // componentDescription: z
-                                        //     .string()
-                                        //     .describe(
-                                        //         "full description of the compon, including the data fields name and data field type",
-                                        //     ),
-                                    }),
-                                )
-                                .describe("unique react ui components"),
-                        }),
-                    ),
-                ),
-            },
-        };
-
-        await WebLLMAppClient.llmRequestToFileStream({
-            path: `/study/ui.json`,
-            request: request,
-            engine,
-        });
-
-        const rootObjectComponents =
-            await WebLLMAppClient.readFileParseJSONContent({
-                path: `/study/ui.json`,
-            });
-
-        for (const eachObject of rootObjectComponents.components) {
-            //
-            {
-                let name = eachObject.componentName;
-
-                let messages: any = [
-                    {
-                        role: `system`,
-                        content: `${pureTextSystemPrompt}
-`,
-                    },
-                    {
-                        role: "user",
-                        content: `Here's the "user requirement technical specification":
-${studyText}
-`,
-                    },
-                    {
-                        role: "user",
-                        content: `
-
-- Implement "${name}" react component (${name}), only write code, no need comment or explain:
-
-- Include zustand store "useSDK" in header like the following:
-import { useSDK } from '/ui/useSDK.js'
-
-- Tailwind css to style the components
-
-- Always use zustand store "useSDK" to call props and backend procedures
-
-- Always use this way to export component:
-export { ${name} };
-`,
-                    },
-
-                    //
-                ];
-
-                ///////////////////////////////////////////////////////////////////////////////////
-                // Generate Function Output
-                ///////////////////////////////////////////////////////////////////////////////////
-                const request: webllm.ChatCompletionRequest = {
-                    stream: true,
-                    stream_options: { include_usage: true },
-                    messages: messages,
-                    temperature: 0.0,
-                    seed: 1,
-                    max_tokens: 4096,
-                };
-
-                await WebLLMAppClient.llmRequestToFileStream({
-                    engine,
-                    request,
-                    path: `/ui/${name}.js`,
-                    needsExtractCode: true,
-                });
-            }
-        }
-    },
-
-    createAppRootRouterComponents: async ({ engine }) => {
-        {
-            let studyText = await WebLLMAppClient.readFileContent({
-                path: `/study/blueprint.md`,
-            });
-
-            const rootObjectComponents =
-                await WebLLMAppClient.readFileParseJSONContent({
-                    path: `/study/ui.json`,
-                });
-
-            const request: webllm.ChatCompletionRequest = {
-                stream: true,
-                stream_options: { include_usage: true },
-                messages: [
-                    {
-                        role: `system`,
-                        content: `
-${pureTextSystemPrompt}
-`,
-                    },
-
-                    {
-                        role: "user",
-                        content: `Here's what the "tech requirements" are:
-${studyText}`,
-                    },
-                    {
-                        role: "user",
-                        content: `
-Here are all the components created:
-${JSON.stringify(rootObjectComponents.components)}
-                    `,
-                    },
-
-                    {
-                        role: `user`,
-                        content: `
-Your Instruction:
-- Please build root "App" component for the reactjs app. 
-- The "App" component reuses all the components mentioend in above message.
-- The "App" component uses "wouter" as a routing library
-- The "App" component uses "Hash mode" of wouter like below:
-
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
-import { Router, Route } from "wouter";
-import { useHashLocation } from "wouter/use-hash-location";
-
-import { [ComponentPlaceHolder] } from '/ui/[ComponentPlaceHolder].js'; // Change "[ComponentPlaceHolder]" to other component name
-// [...] import the reamining page rotues and their component accordinf to the "tech requirements"
-
-const App = () => (
-    <Router hook={useHashLocation}>
-        <Route path="/page-route" component={"[ComponentPlaceHolder]"} /> // Change "[ComponentPlaceHolder]" to other component name. "page-route" to right page route
-
-        {/* [...] include more page routes and its components */}
-    </Router>
-);
-
-export { App };
-`,
-                    },
-                ],
-                temperature: 0.0,
-            };
-
-            await WebLLMAppClient.llmRequestToFileStream({
-                engine,
-                request,
-                path: `/app-engine/App.js`,
-                needsExtractCode: true,
-            });
-        }
-    },
-
-    readFilesFromLocalDB: async () => {
-        let files = await appsCode.getItem(useGenAI.getState().appID);
-        return files;
-    },
+    //     ///////////////////////////////////////////////////////////////////////////////////
+    //     // elaborateSpec
+    //     ///////////////////////////////////////////////////////////////////////////////////
+    //     [`studyRequirements`]: async ({
+    //         userPrompt,
+    //         engine,
+    //     }: {
+    //         engine: webllm.MLCEngineInterface;
+    //         userPrompt: string;
+    //     }) => {
+    //         {
+    //             ///////////////////////////////////////////////////////////////////////////////////
+    //             // manifest
+    //             ///////////////////////////////////////////////////////////////////////////////////
+    //             let messages: any = [
+    //                 {
+    //                     role: `system`,
+    //                     content: `${systemPromptPureText}`,
+    //                 },
+    //                 {
+    //                     role: "user",
+    //                     content: `Here's what the user want to build for the latest features:
+    // ${userPrompt}`,
+    //                 },
+
+    //                 {
+    //                     role: `user`,
+    //                     content: `
+    // Your Instruction:
+
+    // - Please improve the user requirements using markdown foramt
+    // - List out all the database table and data field needed
+    // - List out all the screen names needed by the app and their page route (pathname with params)
+    // - List out all the backend procedure needed by the screens
+
+    // `,
+    //                 },
+    //             ];
+
+    //             const request: webllm.ChatCompletionRequestStreaming = {
+    //                 seed: 0,
+    //                 stream: true,
+    //                 stream_options: { include_usage: true },
+    //                 messages: messages,
+    //                 temperature: 0.0,
+    //             };
+
+    //             let path = `/study/blueprint.md`;
+
+    //             await WebLLMAppClient.llmRequestToFileStream({
+    //                 path: path,
+    //                 request: request,
+    //                 engine,
+    //             });
+
+    //             ///////////////////////////////////////////////////////////////////////////////////
+    //             // usecase
+    //             ///////////////////////////////////////////////////////////////////////////////////
+    //         }
+
+    //         ///////////////////////////////////////////////////////////////////////////////////
+    //         // Generate Function Output
+    //         ///////////////////////////////////////////////////////////////////////////////////
+    //     },
+
+    //     ///////////////////////////////////////////////////////////////////////////////////
+    //     // createMongooseFromSpec
+    //     ///////////////////////////////////////////////////////////////////////////////////
+    //     [`createMongooseFromSpec`]: async ({
+    //         engine,
+    //     }: {
+    //         engine: webllm.MLCEngineInterface;
+    //     }) => {
+    //         let mongoosePromptEach = await import(
+    //             // @ts-ignore
+    //             "../prompts/mongoosePromptEach.md"
+    //         ).then((r) => r.default);
+
+    //         let studyText = await WebLLMAppClient.readFileContent({
+    //             path: `/study/blueprint.md`,
+    //         });
+
+    //         const request: webllm.ChatCompletionRequestStreaming = {
+    //             seed: 0,
+    //             stream: true,
+    //             stream_options: { include_usage: true },
+    //             messages: [
+    //                 {
+    //                     role: `system`,
+    //                     content: `
+    // ${systemPromptPureText}
+    // `,
+    //                 },
+
+    //                 {
+    //                     role: "user",
+    //                     content: `Here's what the requirements are:
+    // ${studyText}`,
+    //                 },
+
+    //                 {
+    //                     role: `user`,
+    //                     content: `
+    // Your Instruction:
+    // Please generate the mongoose database collection information.
+    // `,
+    //                 },
+    //             ],
+    //             temperature: 0.0,
+    //             response_format: {
+    //                 type: "json_object",
+    //                 schema: JSON.stringify(
+    //                     z.toJSONSchema(
+    //                         z.object({
+    //                             version: z.literal("2025-08-12---init"),
+    //                             mongoose: z
+    //                                 .array(
+    //                                     z
+    //                                         .object({
+    //                                             modelName: z.string(),
+    //                                         })
+    //                                         .describe(
+    //                                             "each mongoose database collection",
+    //                                         ),
+    //                                 )
+    //                                 .describe("mongoose database collections"),
+    //                         }),
+    //                     ),
+    //                 ),
+    //             },
+    //         };
+
+    //         await WebLLMAppClient.llmRequestToFileStream({
+    //             path: `/study/database.json`,
+    //             request: request,
+    //             engine,
+    //         });
+
+    //         let rootObject = await WebLLMAppClient.readFileParseJSONContent({
+    //             path: `/study/database.json`,
+    //         });
+
+    //         console.log(rootObject);
+
+    //         for (let eachObject of rootObject.mongoose) {
+    //             //
+    //             {
+    //                 let modelName = eachObject.modelName;
+
+    //                 let messages: any = [
+    //                     {
+    //                         role: `system`,
+    //                         content: `${systemPromptPureText}`,
+    //                     },
+    //                     {
+    //                         role: `user`,
+    //                         content: `
+    // Your Instruction:
+
+    // 1. Implement to fullfill the full user requirements.
+    // 2. Avoid Using Preserved Keyworads in Javascript as Model names. such as Map, WeakMap, Proxy, etc...
+    // 3. only need 1 function
+    // `,
+    //                     },
+    //                     {
+    //                         role: "user",
+    //                         content: `Here's the existing code as reference:
+    // ${mongoosePromptEach}
+    //                     `,
+    //                     },
+    //                     {
+    //                         role: "user",
+    //                         content: `
+    // Here's the overall and mongoose database definiton:
+    // ${studyText}
+
+    // Please only implement "${modelName}" (${eachObject.modelName}) collection only:
+    // `.trim(),
+    //                     },
+    //                 ];
+
+    //                 ///////////////////////////////////////////////////////////////////////////////////
+    //                 // Generate Function Output
+    //                 ///////////////////////////////////////////////////////////////////////////////////
+    //                 const request: webllm.ChatCompletionRequestStreaming = {
+    //                     seed: 0,
+    //                     stream: true,
+    //                     stream_options: { include_usage: true },
+    //                     messages: messages,
+    //                     temperature: 0.0,
+    //                     max_tokens: 4096,
+    //                 };
+
+    //                 await WebLLMAppClient.llmRequestToFileStream({
+    //                     engine,
+    //                     request,
+    //                     path: `/models/${eachObject.modelName}.js`,
+    //                     needsExtractCode: true,
+    //                 });
+
+    //                 console.log("modelName", eachObject.modelName);
+    //             }
+    //         }
+
+    //         /////////
+    //         /////////
+    //         /////////
+    //         /////////
+
+    //         let content = "";
+
+    //         for (let eachObject of rootObject.mongoose) {
+    //             let modelName = eachObject.modelName;
+    //             content += `
+    // await import(${JSON.stringify(`/models/${modelName}.js`)}).then(async ({ defineOneModel }) => {
+    //     return await defineOneModel({ db, output, bcrypt });
+    // })
+    // `;
+    //         }
+
+    //         let finalContent = `
+
+    // async function loadModels({ bcrypt }) {
+    //     const db = mongoose.connection.useDb(${JSON.stringify(`app_${useGenAI.getState().appID}`)}, { useCache: true });
+
+    //     const output = {};
+
+    //     ${content}
+
+    //     return output;
+    // }
+
+    // export { loadModels }
+
+    //         `;
+
+    //         await WebLLMAppClient.writeToFile({
+    //             content: `${finalContent}`,
+    //             path: `/database/all.js`,
+    //         });
+    //     },
+
+    //     ///////////////////////////////////////////////////////////////////////////////////
+    //     // createBackendProcedures
+    //     ///////////////////////////////////////////////////////////////////////////////////
+    //     [`createBackendProcedures`]: async ({
+    //         engine,
+    //     }: {
+    //         engine: webllm.MLCEngineInterface;
+    //     }) => {
+    //         //         let ns = {
+    //         //             draft: "createBackendProceduresDraft",
+    //         //             ok: "createBackendProceduresFinal",
+    //         //         };
+    //         //         useGenAI.setState({ [ns.draft]: " " });
+    //         //         // @ts-ignore
+    //         //         let trpcPromptEach = await import("../prompts/trpcPromptEach.md").then(
+    //         //             (r) => r.default,
+    //         //         );
+    //         //         let mongooseText = await WebLLMAppClient.readFileContent({
+    //         //             path: `/study/mongoose.json`,
+    //         //         });
+    //         //         let proceduresText = await WebLLMAppClient.readFileContent({
+    //         //             path: `/study/procedures.json`,
+    //         //         });
+    //         //         console.log(proceduresText);
+    //         //         let proceduresList = JSON.parse(proceduresText.trim()).procedures;
+    //         //         console.log(proceduresList);
+    //         //         for (let procedureDef of proceduresList) {
+    //         //             //
+    //         //             {
+    //         //                 let slug = procedureDef?.slug;
+    //         //                 let procedureJSONString = JSON.stringify(procedureDef);
+    //         //                 console.log(procedureJSONString);
+    //         //                 let technicalSpecificationFinal = `
+    //         // ${mongooseText}
+    //         // ${procedureJSONString}
+    //         //         `;
+    //         //                 let messages: any = [
+    //         //                     {
+    //         //                         role: `system`,
+    //         //                         content: `
+    //         // ${systemPromptPureText}
+    //         // `,
+    //         //                     },
+    //         //                     {
+    //         //                         role: "user",
+    //         //                         content: `Here's the "user requirement technical specification":
+    //         // ${technicalSpecificationFinal}`,
+    //         //                     },
+    //         //                     {
+    //         //                         role: "user",
+    //         //                         content: `Here's the "example code":
+    //         // ${trpcPromptEach}`.trim(),
+    //         //                     },
+    //         //                     {
+    //         //                         role: "user",
+    //         //                         content: `
+    //         // Instruction:
+    //         // Implement code inside the "example code" according to the "user requirement technical specification" that user has provided above.
+    //         // - only use mutation for procedure
+    //         //         `.trim(),
+    //         //                     },
+    //         //                 ];
+    //         //                 ///////////////////////////////////////////////////////////////////////////////////
+    //         //                 // Generate Function Output
+    //         //                 ///////////////////////////////////////////////////////////////////////////////////
+    //         // const request: webllm.ChatCompletionRequestStreaming = {
+    //         // seed: 0,
+    //         // stream: true,
+    //         //                     stream_options: { include_usage: true },
+    //         //                     messages: messages,
+    //         //                     temperature: 0.0,
+    //         //                     max_tokens: 4096,
+    //         //                 };
+    //         //                 await WebLLMAppClient.llmRequestToFileStream({
+    //         //                     engine,
+    //         //                     request,
+    //         //                     path: `/api/${slug}.js.temp.md`,
+    //         //                 });
+    //         //                 let modelCode =
+    //         //                     await WebLLMAppClient.extractFirstCodeBlockContent({
+    //         //                         markdown: await WebLLMAppClient.readFileContent({
+    //         //                             path: `/api/${slug}.js.temp.md`,
+    //         //                         }),
+    //         //                     });
+    //         //                 await WebLLMAppClient.removeFileByPath({
+    //         //                     path: `/api/${slug}.js.temp.md`,
+    //         //                 });
+    //         //                 await WebLLMAppClient.writeToFile({
+    //         //                     content: modelCode,
+    //         //                     path: `/api/${slug}.js`,
+    //         //                 });
+    //         //                 //
+    //         //             }
+    //         //         }
+    //     },
+
+    //     ///////////////////////////////////////////////////////////////////////////////////
+    //     // createFrontEndSDK
+    //     ///////////////////////////////////////////////////////////////////////////////////
+    //     [`createFrontEndSDK`]: async ({
+    //         engine,
+    //     }: {
+    //         engine: webllm.MLCEngineInterface;
+    //     }) => {
+    //         //         let zustandPromptEach = await import(
+    //         //             // @ts-ignore
+    //         //             "../prompts/zustandPromptEach.md"
+    //         //         ).then((r) => r.default);
+    //         //         let mongooseText = await WebLLMAppClient.readFileContent({
+    //         //             path: `/manifest/mongoose.json`,
+    //         //         });
+    //         //         let proceduresText = await WebLLMAppClient.readFileContent({
+    //         //             path: `/manifest/procedures.json`,
+    //         //         });
+    //         //         let proceduresList = JSON.parse(proceduresText.trim()).procedures;
+    //         //         //
+    //         //         console.log(proceduresList);
+    //         //         //
+    //         //         {
+    //         //             let technicalSpecificationFinal = `
+    //         // ${mongooseText}
+    //         // ${proceduresText}
+    //         //         `;
+    //         //             let messages: any = [
+    //         //                 {
+    //         //                     role: `system`,
+    //         //                     content: `
+    //         // ${systemPromptPureText}
+    //         // `,
+    //         //                 },
+    //         //                 {
+    //         //                     role: "user",
+    //         //                     content: `Here's the "user requirement technical specification":
+    //         // ${technicalSpecificationFinal}`,
+    //         //                 },
+    //         //                 {
+    //         //                     role: "user",
+    //         //                     content: `Here's the "example code useSDK":
+    //         // ${zustandPromptEach}`,
+    //         //                 },
+    //         //                 {
+    //         //                     role: "user",
+    //         //                     content: `
+    //         // Instruction:
+    //         // implement react js hooks using zustand store and refer to all the procedures in tech spec
+    //         // create zustand store like this and change accordingly to the technical specfiication:
+    //         // export const useSDK = create((set,get) =>{
+    //         //     return {
+    //         //         currentUser: null,
+    //         //         myAvatars: [],
+    //         //         // [more properties....]
+    //         //     }
+    //         // })
+    //         // let getMyAvatars = async () => {
+    //         //     let client = await getTRPC();
+    //         //     let myAvatars = client.getMyAvatars.mutate({
+    //         //             userID: currentUser.userID
+    //         //     });
+    //         //     useSDK.setState({
+    //         //             myAvatars: myAvatars
+    //         //     });
+    //         // }
+    //         // only use trpc client with mutation calls, like: let client = await getTRPC()
+    //         // if needed, save all resutls to useSDK.setState({key1:value1}) replace "key1", replace "value1" accordingly
+    //         //         `.trim(),
+    //         //                 },
+    //         //             ];
+    //         //             ///////////////////////////////////////////////////////////////////////////////////
+    //         //             // Generate Function Output
+    //         //             ///////////////////////////////////////////////////////////////////////////////////
+    //         // const request: webllm.ChatCompletionRequestStreaming = {
+    //         //     seed: 0,
+    //         //                 stream: true,
+    //         //                 stream_options: { include_usage: true },
+    //         //                 messages: messages,
+    //         //                 temperature: 0.0,
+    //         //                 seed: 1,
+    //         //                 max_tokens: 4096,
+    //         //             };
+    //         //             await WebLLMAppClient.llmRequestToFileStream({
+    //         //                 engine,
+    //         //                 request,
+    //         //                 path: `/frontend/sdk.js.temp.md`,
+    //         //             });
+    //         //             let modelCode = await WebLLMAppClient.extractFirstCodeBlockContent({
+    //         //                 markdown: await WebLLMAppClient.readFileContent({
+    //         //                     path: `/frontend/sdk.js.temp.md`,
+    //         //                 }),
+    //         //             });
+    //         //             await WebLLMAppClient.removeFileByPath({
+    //         //                 path: `/frontend/sdk.js.temp.md`,
+    //         //             });
+    //         //             await WebLLMAppClient.writeToFile({
+    //         //                 content: modelCode,
+    //         //                 path: `/frontend/sdk.js`,
+    //         //             });
+    //         //             //
+    //         //         }
+    //     },
+
+    //     createReactComponents: async ({
+    //         engine,
+    //     }: {
+    //         engine: webllm.MLCEngineInterface;
+    //     }) => {
+    //         let studyText = await WebLLMAppClient.readFileContent({
+    //             path: `/study/blueprint.md`,
+    //         });
+
+    //         const request: webllm.ChatCompletionRequest = {
+    //             seed: 0,
+    //             stream: true,
+    //             stream_options: { include_usage: true },
+    //             messages: [
+    //                 {
+    //                     role: `system`,
+    //                     content: `
+    // ${systemPromptPureText}
+    // `,
+    //                 },
+
+    //                 {
+    //                     role: "user",
+    //                     content: `Here's what the requirements are:
+    // ${studyText}`,
+    //                 },
+
+    //                 {
+    //                     role: `user`,
+    //                     content: `
+    // Your Instruction:
+    // Please generate the json according to json schema.
+
+    // Please make sure the components are unique.
+    // `,
+    //                 },
+    //             ],
+    //             temperature: 0.0,
+    //             response_format: {
+    //                 type: "json_object",
+    //                 schema: JSON.stringify(
+    //                     z.toJSONSchema(
+    //                         z.object({
+    //                             version: z.literal("2025-08-12---init"),
+    //                             components: z
+    //                                 .array(
+    //                                     z.object({
+    //                                         slug: z
+    //                                             .string()
+    //                                             .describe("Component name in slug"),
+    //                                         componentName: z
+    //                                             .string()
+    //                                             .describe("ComponentName"),
+
+    //                                         // componentDescription: z
+    //                                         //     .string()
+    //                                         //     .describe(
+    //                                         //         "full description of the compon, including the data fields name and data field type",
+    //                                         //     ),
+    //                                     }),
+    //                                 )
+    //                                 .describe("unique react ui components"),
+    //                         }),
+    //                     ),
+    //                 ),
+    //             },
+    //         };
+
+    //         await WebLLMAppClient.llmRequestToFileStream({
+    //             path: `/study/ui.json`,
+    //             request: request,
+    //             engine,
+    //         });
+
+    //         const rootObjectComponents =
+    //             await WebLLMAppClient.readFileParseJSONContent({
+    //                 path: `/study/ui.json`,
+    //             });
+
+    //         for (const eachObject of rootObjectComponents.components) {
+    //             //
+    //             {
+    //                 let name = eachObject.componentName;
+
+    //                 let messages: any = [
+    //                     {
+    //                         role: `system`,
+    //                         content: `${systemPromptPureText}
+    // `,
+    //                     },
+    //                     {
+    //                         role: "user",
+    //                         content: `Here's the "user requirement technical specification":
+    // ${studyText}
+    // `,
+    //                     },
+    //                     {
+    //                         role: "user",
+    //                         content: `
+
+    // - Implement "${name}" react component (${name}), only write code, no need comment or explain:
+
+    // - Include zustand store "useSDK" in header like the following:
+    // import { useSDK } from '/ui/useSDK.js'
+
+    // - Tailwind css to style the components
+
+    // - Always use zustand store "useSDK" to call props and backend procedures
+
+    // - Always use this way to export component:
+    // export { ${name} };
+    // `,
+    //                     },
+
+    //                     //
+    //                 ];
+
+    //                 ///////////////////////////////////////////////////////////////////////////////////
+    //                 // Generate Function Output
+    //                 ///////////////////////////////////////////////////////////////////////////////////
+    //                 const request: webllm.ChatCompletionRequest = {
+    //                     stream: true,
+    //                     stream_options: { include_usage: true },
+    //                     messages: messages,
+    //                     temperature: 0.0,
+    //                     seed: 1,
+    //                     max_tokens: 4096,
+    //                 };
+
+    //                 await WebLLMAppClient.llmRequestToFileStream({
+    //                     engine,
+    //                     request,
+    //                     path: `/ui/${name}.js`,
+    //                     needsExtractCode: true,
+    //                 });
+    //             }
+    //         }
+    //     },
+
+    //     createAppRootRouterComponents: async ({ engine }) => {
+    //         {
+    //             let studyText = await WebLLMAppClient.readFileContent({
+    //                 path: `/study/blueprint.md`,
+    //             });
+
+    //             const rootObjectComponents =
+    //                 await WebLLMAppClient.readFileParseJSONContent({
+    //                     path: `/study/ui.json`,
+    //                 });
+
+    //             const request: webllm.ChatCompletionRequest = {
+    //                 stream: true,
+    //                 stream_options: { include_usage: true },
+    //                 messages: [
+    //                     {
+    //                         role: `system`,
+    //                         content: `
+    // ${systemPromptPureText}
+    // `,
+    //                     },
+
+    //                     {
+    //                         role: "user",
+    //                         content: `Here's what the "tech requirements" are:
+    // ${studyText}`,
+    //                     },
+    //                     {
+    //                         role: "user",
+    //                         content: `
+    // Here are all the components created:
+    // ${JSON.stringify(rootObjectComponents.components)}
+    //                     `,
+    //                     },
+
+    //                     {
+    //                         role: `user`,
+    //                         content: `
+    // Your Instruction:
+    // - Please build root "App" component for the reactjs app.
+    // - The "App" component reuses all the components mentioend in above message.
+    // - The "App" component uses "wouter" as a routing library
+    // - The "App" component uses "Hash mode" of wouter like below:
+
+    // import * as React from 'react';
+    // import * as ReactDOM from 'react-dom';
+    // import { Router, Route } from "wouter";
+    // import { useHashLocation } from "wouter/use-hash-location";
+
+    // import { [ComponentPlaceHolder] } from '/ui/[ComponentPlaceHolder].js'; // Change "[ComponentPlaceHolder]" to other component name
+    // // [...] import the reamining page rotues and their component accordinf to the "tech requirements"
+
+    // const App = () => (
+    //     <Router hook={useHashLocation}>
+    //         <Route path="/page-route" component={"[ComponentPlaceHolder]"} /> // Change "[ComponentPlaceHolder]" to other component name. "page-route" to right page route
+
+    //         {/* [...] include more page routes and its components */}
+    //     </Router>
+    // );
+
+    // export { App };
+    // `,
+    //                     },
+    //                 ],
+    //                 temperature: 0.0,
+    //             };
+
+    //             await WebLLMAppClient.llmRequestToFileStream({
+    //                 engine,
+    //                 request,
+    //                 path: `/app-engine/App.js`,
+    //                 needsExtractCode: true,
+    //             });
+    //         }
+    //     },
 
     //
 
-    factoryReset: async () => {
-        await appsCode.setItem(useGenAI.getState().appID, []);
-    },
+    //     //
 
-    //
+    //     factoryReset: async () => {
+    //         await appsCode.setItem(useGenAI.getState().appID, []);
+    //     },
 
-    readFileObject: async ({
-        path = "/manifest/mongoose.json",
-        throwError = false,
-    }: {
-        path: string;
-        throwError?: boolean;
-    }) => {
-        let files = JSON.parse(
-            JSON.stringify(useGenAI.getState().files),
-        ) as MyFile[];
-        let file = files.find((r) => r.path === path);
+    //     //
 
-        if (!file && throwError) {
-            throw "not found";
-        }
+    //     readFileObject: async ({
+    //         path = "/manifest/mongoose.json",
+    //         throwError = false,
+    //     }: {
+    //         path: string;
+    //         throwError?: boolean;
+    //     }) => {
+    //         let files = JSON.parse(
+    //             JSON.stringify(useGenAI.getState().files),
+    //         ) as MyFile[];
+    //         let file = files.find((r) => r.path === path);
 
-        return file;
-    },
+    //         if (!file && throwError) {
+    //             throw "not found";
+    //         }
 
-    readFileContent: async ({
-        path = "/manifest/mongoose.json",
-        throwError = false,
-    }: {
-        path: string;
-        throwError?: boolean;
-    }) => {
-        let files = JSON.parse(
-            JSON.stringify(useGenAI.getState().files),
-        ) as MyFile[];
-        let file = files.find((r) => r.path === path);
+    //         return file;
+    //     },
 
-        if (!file && throwError) {
-            throw "not found";
-        }
+    //     readFileContent: async ({
+    //         path = "/manifest/mongoose.json",
+    //         throwError = false,
+    //     }: {
+    //         path: string;
+    //         throwError?: boolean;
+    //     }) => {
+    //         let files = JSON.parse(
+    //             JSON.stringify(useGenAI.getState().files),
+    //         ) as MyFile[];
+    //         let file = files.find((r) => r.path === path);
 
-        return file?.content || "";
-    },
+    //         if (!file && throwError) {
+    //             throw "not found";
+    //         }
 
-    readFileParseJSONContent: async ({
-        path = "/manifest/mongoose.json",
-        throwError = false,
-    }: {
-        path: string;
-        throwError?: boolean;
-    }) => {
-        let files = JSON.parse(
-            JSON.stringify(useGenAI.getState().files),
-        ) as MyFile[];
-        let file = files.find((r) => r.path === path);
+    //         return file?.content || "";
+    //     },
 
-        if (!file && throwError) {
-            throw "not found";
-        }
+    //     readFileParseJSONContent: async ({
+    //         path = "/manifest/mongoose.json",
+    //         throwError = false,
+    //     }: {
+    //         path: string;
+    //         throwError?: boolean;
+    //     }) => {
+    //         let files = JSON.parse(
+    //             JSON.stringify(useGenAI.getState().files),
+    //         ) as MyFile[];
+    //         let file = files.find((r) => r.path === path);
 
-        return JSON.parse(file?.content);
-    },
+    //         if (!file && throwError) {
+    //             throw "not found";
+    //         }
 
-    writeToFile: async ({
-        content,
-        path,
-        persist = true,
-        inputSignature = "",
-    }: {
-        content: string;
-        path: string;
-        persist?: boolean;
-        inputSignature?: string;
-    }) => {
-        let files = JSON.parse(
-            JSON.stringify(useGenAI.getState().files),
-        ) as MyFile[];
+    //         return JSON.parse(file?.content);
+    //     },
 
-        let file = files.find((r) => r.path === path);
-        if (file) {
-            file.content = `${content}`;
-            file.updatedAt = new Date().toISOString();
-            file.inputSignature = inputSignature;
-        } else {
-            let newFile = {
-                path: path,
-                filename: pathUtil.basename(path),
-                content: `${content}`,
-                updatedAt: new Date().toISOString(),
-                createdAt: new Date().toISOString(),
-                inputSignature: inputSignature,
-            };
-            console.log(path);
-            files.push(newFile);
-        }
+    //     writeToFile: async ({
+    //         content,
+    //         path,
+    //         persist = true,
+    //         inputSignature = "",
+    //     }: {
+    //         content: string;
+    //         path: string;
+    //         persist?: boolean;
+    //         inputSignature?: string;
+    //     }) => {
+    //         let files = JSON.parse(
+    //             JSON.stringify(useGenAI.getState().files),
+    //         ) as MyFile[];
 
-        useGenAI.setState({
-            files: JSON.parse(JSON.stringify(files)) as MyFile[],
-        });
+    //         let file = files.find((r) => r.path === path);
+    //         if (file) {
+    //             file.content = `${content}`;
+    //             file.updatedAt = new Date().toISOString();
+    //             file.inputSignature = inputSignature;
+    //         } else {
+    //             let newFile = {
+    //                 path: path,
+    //                 filename: pathUtil.basename(path),
+    //                 content: `${content}`,
+    //                 updatedAt: new Date().toISOString(),
+    //                 createdAt: new Date().toISOString(),
+    //                 inputSignature: inputSignature,
+    //             };
+    //             console.log(path);
+    //             files.push(newFile);
+    //         }
 
-        if (persist) {
-            await appsCode.setItem(useGenAI.getState().appID, files);
-        }
-    },
+    //         useGenAI.setState({
+    //             files: JSON.parse(JSON.stringify(files)) as MyFile[],
+    //         });
 
-    //
+    //         if (persist) {
+    //             await appsCode.setItem(useGenAI.getState().appID, files);
+    //         }
+    //     },
 
-    persistToDisk: async () => {
-        let files = JSON.parse(
-            JSON.stringify(useGenAI.getState().files),
-        ) as MyFile[];
+    //     //
 
-        await appsCode.setItem(useGenAI.getState().appID, files);
-    },
-    extractAllCodeBlocks: async ({ markdown = "" }: { markdown: string }) => {
-        //
-        let codeblocks = (await new Promise((resolve) => {
-            let array: { code: string; language: string }[] = [];
-            const md = markdownit.default({
-                langPrefix: "language-",
-                highlight: (str: string, lang: string) => {
-                    console.log("code", str);
-                    console.log("lang", lang);
+    //     persistToDisk: async () => {
+    //         let files = JSON.parse(
+    //             JSON.stringify(useGenAI.getState().files),
+    //         ) as MyFile[];
 
-                    array.push({
-                        code: str,
-                        language: lang,
-                    });
+    //         await appsCode.setItem(useGenAI.getState().appID, files);
+    //     },
+    //     extractAllCodeBlocks: async ({ markdown = "" }: { markdown: string }) => {
+    //         //
+    //         let codeblocks = (await new Promise((resolve) => {
+    //             let array: { code: string; language: string }[] = [];
+    //             const md = markdownit.default({
+    //                 langPrefix: "language-",
+    //                 highlight: (str: string, lang: string) => {
+    //                     console.log("code", str);
+    //                     console.log("lang", lang);
 
-                    return "";
-                },
-            });
+    //                     array.push({
+    //                         code: str,
+    //                         language: lang,
+    //                     });
 
-            md.render(`${markdown}`);
+    //                     return "";
+    //                 },
+    //             });
 
-            resolve(array);
-        })) as { code: string; language: string }[];
+    //             md.render(`${markdown}`);
 
-        return codeblocks;
-        //
-    },
+    //             resolve(array);
+    //         })) as { code: string; language: string }[];
 
-    extractFirstCodeBlockContent: async ({
-        markdown = "",
-    }: {
-        markdown: string;
-        removeFilePathAfterReading?: string;
-    }): Promise<string> => {
-        //
-        let fistblock = (await new Promise((resolve) => {
-            const md = markdownit.default({
-                langPrefix: "language-",
-                highlight: (str: string, lang: string) => {
-                    console.log("code", str);
-                    console.log("lang", lang);
-                    resolve(str);
+    //         return codeblocks;
+    //         //
+    //     },
 
-                    return "";
-                },
-            });
+    //     extractFirstCodeBlockContent: async ({
+    //         markdown = "",
+    //     }: {
+    //         markdown: string;
+    //         removeFilePathAfterReading?: string;
+    //     }): Promise<string> => {
+    //         //
+    //         let fistblock = (await new Promise((resolve) => {
+    //             const md = markdownit.default({
+    //                 langPrefix: "language-",
+    //                 highlight: (str: string, lang: string) => {
+    //                     console.log("code", str);
+    //                     console.log("lang", lang);
+    //                     resolve(str);
 
-            md.render(`${markdown}`);
-        })) as string;
+    //                     return "";
+    //                 },
+    //             });
 
-        return fistblock;
-    },
+    //             md.render(`${markdown}`);
+    //         })) as string;
 
-    removeFileByPath: async ({ path }: { path: string }) => {
-        if (path) {
-            let files = JSON.parse(
-                JSON.stringify(useGenAI.getState().files),
-            ) as MyFile[];
+    //         return fistblock;
+    //     },
 
-            files = files.filter((r) => {
-                return r.path !== path;
-            });
+    //     removeFileByPath: async ({ path }: { path: string }) => {
+    //         if (path) {
+    //             let files = JSON.parse(
+    //                 JSON.stringify(useGenAI.getState().files),
+    //             ) as MyFile[];
 
-            useGenAI.setState({
-                files: JSON.parse(JSON.stringify(files)) as MyFile[],
-            });
+    //             files = files.filter((r) => {
+    //                 return r.path !== path;
+    //             });
 
-            await appsCode.setItem(useGenAI.getState().appID, files);
-        }
-    },
+    //             useGenAI.setState({
+    //                 files: JSON.parse(JSON.stringify(files)) as MyFile[],
+    //             });
 
-    llmRequestToFileStream: async ({
-        path = "/manifest/mongoose.json",
-        request,
-        engine,
-        needsExtractCode = false,
-    }: {
-        path: string;
-        needsExtractCode?: boolean;
-        request: webllm.ChatCompletionRequestStreaming;
-        engine: webllm.MLCEngineInterface;
-    }) => {
-        useGenAI.setState({ llmStatus: "writing" });
+    //             await appsCode.setItem(useGenAI.getState().appID, files);
+    //         }
+    //     },
 
-        let fileObject = await WebLLMAppClient.readFileObject({ path });
+    //     llmRequestToFileStream: async ({
+    //         path = "/manifest/mongoose.json",
+    //         request,
+    //         engine,
+    //         needsExtractCode = false,
+    //     }: {
+    //         path: string;
+    //         needsExtractCode?: boolean;
+    //         request: webllm.ChatCompletionRequestStreaming;
+    //         engine: webllm.MLCEngineInterface;
+    //     }) => {
+    //         useGenAI.setState({ llmStatus: "writing" });
 
-        if (fileObject) {
-            let nowHash = `${md5(JSON.stringify({ request, content: fileObject.content }))}`;
-            if (nowHash === fileObject.inputSignature) {
-                return;
-            }
-        }
+    //         let fileObject = await WebLLMAppClient.readFileObject({ path });
 
-        await engine.resetChat();
-        const asyncChunkGenerator = await engine.chatCompletion(request);
+    //         if (fileObject) {
+    //             let nowHash = `${md5(JSON.stringify({ request, content: fileObject.content }))}`;
+    //             if (nowHash === fileObject.inputSignature) {
+    //                 return;
+    //             }
+    //         }
 
-        let messageFragments = "";
-        let i = 0;
-        for await (const chunk of asyncChunkGenerator) {
-            i++;
+    //         await engine.resetChat();
+    //         const asyncChunkGenerator = await engine.chatCompletion(request);
 
-            let str = chunk.choices[0]?.delta?.content || "";
-            messageFragments += str;
+    //         let messageFragments = "";
+    //         let i = 0;
+    //         for await (const chunk of asyncChunkGenerator) {
+    //             i++;
 
-            await WebLLMAppClient.writeToFile({
-                content: messageFragments,
-                path: path,
-                persist: false,
-            });
+    //             let str = chunk.choices[0]?.delta?.content || "";
+    //             messageFragments += str;
 
-            await new Promise((resovle) => {
-                requestAnimationFrame(() => {
-                    resovle(null);
-                });
-            });
-        }
+    //             await WebLLMAppClient.writeToFile({
+    //                 content: messageFragments,
+    //                 path: path,
+    //                 persist: false,
+    //             });
 
-        if (pathUtil.extname(path) === ".js" && !needsExtractCode) {
-            console.log("did you forget to set needsExtractCode to true ??");
-        }
-        if (needsExtractCode) {
-            messageFragments =
-                await WebLLMAppClient.extractFirstCodeBlockContent({
-                    markdown: messageFragments,
-                });
-        }
+    //             await new Promise((resovle) => {
+    //                 requestAnimationFrame(() => {
+    //                     resovle(null);
+    //                 });
+    //             });
+    //         }
 
-        await WebLLMAppClient.writeToFile({
-            content: messageFragments,
-            path: path,
-            inputSignature:
-                useGenAI.getState().llmStatus === "writing"
-                    ? `${md5(JSON.stringify({ request, content: messageFragments }))}`
-                    : `${Math.random()}`,
+    //         if (pathUtil.extname(path) === ".js" && !needsExtractCode) {
+    //             console.log("did you forget to set needsExtractCode to true ??");
+    //         }
+    //         if (needsExtractCode) {
+    //             messageFragments =
+    //                 await WebLLMAppClient.extractFirstCodeBlockContent({
+    //                     markdown: messageFragments,
+    //                 });
+    //         }
 
-            persist: true,
-        });
-    },
-    ["resetApp"]: async () => {
-        await WebLLMAppClient.factoryReset();
-        useGenAI.setState({
-            files: [],
-        });
-    },
+    //         await WebLLMAppClient.writeToFile({
+    //             content: messageFragments,
+    //             path: path,
+    //             inputSignature:
+    //                 useGenAI.getState().llmStatus === "writing"
+    //                     ? `${md5(JSON.stringify({ request, content: messageFragments }))}`
+    //                     : `${Math.random()}`,
+
+    //             persist: true,
+    //         });
+    //     },
+    // ["factoryResetThisApp"]: async () => {},
 };
 
 /*

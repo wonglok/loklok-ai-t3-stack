@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { ControlPanel } from "./ui/components/ControlPanel";
 import { WebGPUGate } from "./ui/components/WebGPUGate";
 import { WebLLMAppClient } from "./ui/util/WebLLMAppClient";
+import { appsCode } from "./ui/llmCalls/common/appsCode";
 
 export default function Page({ params }: { params: any }) {
     let appID = useGenAI((r) => r.appID);
@@ -17,8 +18,7 @@ export default function Page({ params }: { params: any }) {
             });
 
             if (typeof window !== "undefined") {
-                let files =
-                    (await WebLLMAppClient.readFilesFromLocalDB()) as MyFile[];
+                let files = (await appsCode.getItem(appID)) as MyFile[];
 
                 if (files instanceof Array) {
                     useGenAI.setState({
@@ -27,8 +27,6 @@ export default function Page({ params }: { params: any }) {
                 }
             }
         });
-
-        //
     }, [params]);
 
     return (

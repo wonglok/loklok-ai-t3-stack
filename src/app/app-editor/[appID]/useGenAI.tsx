@@ -30,7 +30,7 @@ export const useGenAI = create<{
 
     appID: string;
     prompt: string;
-    llmStatus: "writing" | "downloading" | "init" | "pending";
+    llmStatus: "writing" | "downloading" | "idle";
     loadingSpec: boolean;
     welcome: boolean;
     spec: string;
@@ -70,7 +70,7 @@ export const useGenAI = create<{
         onCancelSigature: () => {},
 
         //
-        llmStatus: "init",
+        llmStatus: "idle",
 
         stopFunc: () => {},
         models: models,

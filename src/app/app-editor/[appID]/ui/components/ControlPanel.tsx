@@ -48,6 +48,8 @@ import { useEffect, useState } from "react";
 import * as pathUtil from "path";
 import { format } from "date-fns";
 import { CodePod } from "../util/CodePod";
+import { factoryResetThisApp } from "../llmCalls/common/factoryResetThisApp";
+import { persistToDisk } from "../llmCalls/common/persistToDisk";
 
 let getLang = (filename: string) => {
     if (pathUtil.extname(filename) === ".json") {
@@ -257,7 +259,7 @@ export function ControlPanel() {
                                 </>
                             )}
 
-                            {llmStatus === "init" && (
+                            {llmStatus === "idle" && (
                                 <>
                                     <div className="mr-2 rounded-lg bg-white">
                                         <PromptInputModelSelect
@@ -334,7 +336,7 @@ export function ControlPanel() {
                                     className="px-3 py-2"
                                     onClick={() => {
                                         if (window.confirm("remove all?")) {
-                                            WebLLMAppClient.resetApp();
+                                            factoryResetThisApp();
                                         }
                                     }}
                                 >
@@ -465,7 +467,7 @@ export function ControlPanel() {
                                                                                     },
                                                                                 );
 
-                                                                                WebLLMAppClient.persistToDisk();
+                                                                                persistToDisk();
                                                                             }
                                                                         }}
                                                                     />

@@ -1,0 +1,20 @@
+import { MyFile, useGenAI } from "../../../useGenAI";
+
+export const readFileParseJSON = async ({
+    path = "/manifest/mongoose.json",
+    throwError = false,
+}: {
+    path: string;
+    throwError?: boolean;
+}) => {
+    let files = JSON.parse(
+        JSON.stringify(useGenAI.getState().files),
+    ) as MyFile[];
+    let file = files.find((r) => r.path === path);
+
+    if (!file && throwError) {
+        throw "not found";
+    }
+
+    return JSON.parse(file?.content);
+};

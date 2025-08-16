@@ -527,7 +527,7 @@ class Component {
         }
       }
 
-      if ( props !== undefined) {
+      if (props !== undefined) {
         this.checkUndefinedAttributes(props);
       }
     }
@@ -603,7 +603,7 @@ Component.getName = function () {
   return this.displayName || this.name;
 };
 
-class SystemStateComponent extends Component {}
+class SystemStateComponent extends Component { }
 
 SystemStateComponent.isSystemStateComponent = true;
 
@@ -1049,14 +1049,14 @@ class Entity {
       component = this._componentsToRemove[Component._typeId];
     }
 
-    return  wrapImmutableComponent(Component, component)
+    return wrapImmutableComponent(Component, component)
       ;
   }
 
   getRemovedComponent(Component) {
     const component = this._componentsToRemove[Component._typeId];
 
-    return  wrapImmutableComponent(Component, component)
+    return wrapImmutableComponent(Component, component)
       ;
   }
 
@@ -1307,8 +1307,7 @@ class System {
 
         if (unregisteredComponents.length > 0) {
           throw new Error(
-            `Tried to create a query '${
-              this.constructor.name
+            `Tried to create a query '${this.constructor.name
             }.${queryName}' with unregistered components: [${unregisteredComponents
               .map((c) => c.getName())
               .join(", ")}]`
