@@ -51,6 +51,29 @@ export const WebLLMAppClient = {
     // buildApp
     ///////////////////////////////////////////////////////////////////////////////////
     [`buildApp`]: async ({ userPrompt }: { userPrompt: string }) => {
+        useGlobalAI.setState({
+            stopFunc: async () => {
+                try {
+                    for await (let [key, val] of apiMap.entries()) {
+                        console.log("destroy", key);
+                        await val.destroy();
+                        val.slot.lockedBy = "";
+                        val.slot.llmStatus = "idle";
+                        val.slot.bannerText = "";
+                    }
+
+                    useGlobalAI.setState({
+                        engines: JSON.parse(
+                            JSON.stringify(useGlobalAI.getState().engines),
+                        ),
+                        lockInWorkers: false,
+                        stopFunc: () => {},
+                    });
+                } finally {
+                }
+            },
+        });
+
         useGlobalAI.setState({ lockInWorkers: true });
 
         let enabledEngines = useGlobalAI
@@ -85,28 +108,6 @@ export const WebLLMAppClient = {
                 });
             }),
         );
-
-        useGlobalAI.setState({
-            stopFunc: async () => {
-                try {
-                    for await (let [key, val] of apiMap.entries()) {
-                        console.log("destroy", key);
-                        await val.destroy();
-                        val.slot.lockedBy = "";
-                        val.slot.llmStatus = "idle";
-                    }
-
-                    useGlobalAI.setState({
-                        engines: JSON.parse(
-                            JSON.stringify(useGlobalAI.getState().engines),
-                        ),
-                        lockInWorkers: false,
-                        stopFunc: () => {},
-                    });
-                } finally {
-                }
-            },
-        });
 
         //
         try {
