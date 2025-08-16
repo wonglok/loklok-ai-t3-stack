@@ -77,7 +77,7 @@ export const llmRequestToFileStream = async ({
         content: messageFragments,
         path: path,
         inputSignature:
-            useGlobalAI.getState().llmStatus === "writing"
+            slot.llmStatus === "writing"
                 ? `${md5(JSON.stringify({ request, content: messageFragments }))}`
                 : `${Math.random()}`,
 

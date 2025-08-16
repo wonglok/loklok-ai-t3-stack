@@ -19,6 +19,7 @@ import Worker from "./webllm.worker.ts";
 // import { createInstance } from "localforage";
 // import md5 from "md5";
 
+//
 export const makeEngineAPI = async ({ name }: { name: string }) => {
     let engines = useGlobalAI.getState().engines;
 
@@ -29,7 +30,7 @@ export const makeEngineAPI = async ({ name }: { name: string }) => {
     const initProgressCallback = (report: webllm.InitProgressReport) => {
         console.log(report);
 
-        slot.setupProgress = report.text;
+        slot.bannerText = report.text;
 
         slot.llmStatus = "downloading";
         refresh(slot);
@@ -47,9 +48,8 @@ export const makeEngineAPI = async ({ name }: { name: string }) => {
     })) as webllm.MLCEngineInterface;
 
     // console.log("build", name);
-
+    slot.bannerText = "";
     slot.llmStatus = "idle";
-
     refresh(slot);
 
     useGlobalAI.setState({
@@ -57,7 +57,8 @@ export const makeEngineAPI = async ({ name }: { name: string }) => {
     });
 
     let destroy = async () => {
-        slot.llmStatus = "idle";
+        slot.llmStatus = "empty";
+        slot.bannerText = "";
         refresh(slot);
 
         await engine?.interruptGenerate();

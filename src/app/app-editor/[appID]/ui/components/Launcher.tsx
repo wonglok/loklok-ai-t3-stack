@@ -64,7 +64,7 @@ function AIMatcher({ name }: { name: string }) {
                 <SelectTrigger className="mt-2 w-[100%]">
                     <SelectValue placeholder="Theme" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="">
                     {models.map((model) => (
                         <SelectItem key={model.value} value={model.value}>
                             {model.key}
@@ -72,7 +72,11 @@ function AIMatcher({ name }: { name: string }) {
                     ))}
                 </SelectContent>
             </Select>
-            <div>{item.setupProgress}</div>
+            {item.bannerText && (
+                <div className="mt-2 rounded-lg border p-2">
+                    {item.bannerText}
+                </div>
+            )}
         </>
     );
 }
@@ -80,10 +84,11 @@ function AIMatcher({ name }: { name: string }) {
 function EnableSwitch({ name }: { name: string }) {
     let engines = useGlobalAI((r) => r.engines);
     let item = engines.find((r) => r.name === name);
-    // let enabled =
+    let lockInWorkers = useGlobalAI((r) => r.lockInWorkers);
     return (
         <>
             <Switch
+                disabled={lockInWorkers}
                 checked={item.enabled}
                 onCheckedChange={(v) => {
                     item.enabled = v;

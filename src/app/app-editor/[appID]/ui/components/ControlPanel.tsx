@@ -64,12 +64,6 @@ let getLang = (filename: string) => {
     }
 };
 
-let anyLlmStatusIs = (engines, status) => {
-    return engines
-        .map((r) => r.useEngine.getState())
-        .some((r) => r.llmStatus === status);
-};
-
 let selectFile = ({
     file,
     total,
@@ -184,40 +178,14 @@ let sortDate = (a: any, b: any) => {
     }
 };
 
-// function EngineInternal({ useEngine, func }: any) {
-//     // let llmStatus = useEngine((r) => r.llmStatus);
-//     // let setupProgress = useEngine((r) => r.setupProgress);
-//     let engine = useEngine((r) => r.engine);
-//     let uuid = useEngine((r) => r.uuid);
-//     return <>{func({ engine, uuid, useEngine })}</>;
-// }
-// function EachEngine({ children }) {
-//     let engines = useGlobalAI((r) => r.engines);
-
-//     return (
-//         <>
-//             {engines.map((engine) => {
-//                 return (
-//                     <EngineInternal
-//                         key={engine.uuid}
-//                         useEngine={engine.useEngine}
-//                         func={children}
-//                     ></EngineInternal>
-//                 );
-//             })}
-//         </>
-//     );
-// }
-
 export function ControlPanel() {
     //
     let appID = useGlobalAI((r) => r.appID);
     let engines = useGlobalAI((r) => r.engines);
 
-    let currentModel = useGlobalAI((r) => r.currentModel);
+    // let currentModel = useGlobalAI((r) => r.currentModel);
     let prompt = useGlobalAI((r) => r.prompt);
     let models = useGlobalAI((r) => r.models);
-    let llmStatus = useGlobalAI((r) => r.llmStatus);
     let setupLLMProgress = useGlobalAI((r) => r.setupLLMProgress);
     let expandID = useGlobalAI((r) => r.expandID);
 
@@ -225,7 +193,7 @@ export function ControlPanel() {
     let files = useGlobalAI((r) => r.files);
 
     let sortedFiles = files?.slice().sort(sortDate).reverse();
-
+    // lockInWorkers
     return (
         <>
             <div className="relative flex h-full w-full text-sm">
@@ -361,26 +329,20 @@ export function ControlPanel() {
                                                                         onChange={(
                                                                             value,
                                                                         ) => {
-                                                                            if (
-                                                                                llmStatus ===
-                                                                                "writing"
-                                                                            ) {
-                                                                            } else {
-                                                                                file.content =
-                                                                                    value;
+                                                                            file.content =
+                                                                                value;
 
-                                                                                useGlobalAI.setState(
-                                                                                    {
-                                                                                        files: JSON.parse(
-                                                                                            JSON.stringify(
-                                                                                                files,
-                                                                                            ),
+                                                                            useGlobalAI.setState(
+                                                                                {
+                                                                                    files: JSON.parse(
+                                                                                        JSON.stringify(
+                                                                                            files,
                                                                                         ),
-                                                                                    },
-                                                                                );
+                                                                                    ),
+                                                                                },
+                                                                            );
 
-                                                                                persistToDisk();
-                                                                            }
+                                                                            persistToDisk();
                                                                         }}
                                                                     />
                                                                 </div>

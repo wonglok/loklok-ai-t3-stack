@@ -22,16 +22,17 @@ export type EngineData = {
     //
     llmStatus: "empty" | "downloading" | "idle" | "writing";
     // engine: webllm.MLCEngineInterface;
-    setupProgress: string;
+    bannerText: string;
 };
 
 export const useGlobalAI = create<{
+    lockInWorkers: boolean;
     files: MyFile[];
     expandID: string;
 
-    llmStatus: "empty" | "downloading" | "idle" | "writing";
+    // llmStatus: "empty" | "downloading" | "idle" | "writing";
 
-    currentModel: string;
+    // currentModel: string;
 
     appID: string;
     prompt: string;
@@ -83,6 +84,7 @@ export const useGlobalAI = create<{
     };
 
     return {
+        lockInWorkers: false,
         refreshSlot: refreshSlot,
         loading: false,
 
@@ -96,7 +98,7 @@ export const useGlobalAI = create<{
                 currentModel: models[1].value,
                 llmStatus: "empty",
                 // engine: null,
-                setupProgress: "",
+                bannerText: "",
             },
             {
                 lockedBy: "",
@@ -106,7 +108,7 @@ export const useGlobalAI = create<{
                 currentModel: models[1].value,
                 llmStatus: "empty",
                 // engine: null,
-                setupProgress: "",
+                bannerText: "",
             },
             {
                 lockedBy: "",
@@ -116,7 +118,7 @@ export const useGlobalAI = create<{
                 currentModel: models[1].value,
                 llmStatus: "empty",
                 // engine: null,
-                setupProgress: "",
+                bannerText: "",
             },
         ],
 
@@ -129,7 +131,8 @@ export const useGlobalAI = create<{
 
         stopFunc: () => {},
         models: models,
-        currentModel: models[0].value,
+
+        // currentModel: models[0].value,
         appID: "",
         prompt: `I want to build a bible testimony app powered by ai embeddings and RAG Agents.
 

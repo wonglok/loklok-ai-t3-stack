@@ -30,6 +30,8 @@ export const WebLLMAppClient = {
     // buildApp
     ///////////////////////////////////////////////////////////////////////////////////
     [`buildApp`]: async ({ userPrompt }: { userPrompt: string }) => {
+        useGlobalAI.setState({ lockInWorkers: true });
+
         let apiMap: Map<
             string,
             { destroy: (v: any) => void; engine: webllm.MLCEngineInterface }
@@ -74,7 +76,10 @@ export const WebLLMAppClient = {
                 userPrompt,
                 engine: apiMap.get(slot.name).engine,
             });
+
             await returnFreeEngineSlot({ slot });
+
+            useGlobalAI.setState({});
 
             // await WebLLMAppClient.testDiff({
             //     //
@@ -105,6 +110,7 @@ export const WebLLMAppClient = {
             //     engine,
             // });
         } finally {
+            useGlobalAI.setState({ lockInWorkers: false });
         }
     },
     ///////////////////////////////////////////////////////////////////////////////////
