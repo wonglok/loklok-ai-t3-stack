@@ -24,6 +24,7 @@ export const writeToFile = async ({
         file.inputSignature = inputSignature;
     } else {
         let newFile = {
+            writing: !persist,
             path: path,
             filename: pathUtil.basename(path),
             content: `${content}`,

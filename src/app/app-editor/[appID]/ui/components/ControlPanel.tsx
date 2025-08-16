@@ -115,13 +115,10 @@ function MonacoEditor({
 }) {
     let lockInWorkers = useGlobalAI((r) => r.lockInWorkers);
     let files = useGlobalAI((r) => r.files);
-    let engines = useGlobalAI((r) => r.engines);
     let sortedFiles = files?.slice().sort(sortDate).reverse();
     let track = sortedFiles[0]?.content === value;
 
     let [editor, setEditor] = useState<any>();
-
-    let llmStatus = "writing";
 
     useEffect(() => {
         if (editor) {
@@ -167,8 +164,8 @@ function MonacoEditor({
 }
 
 let sortDate = (a: any, b: any) => {
-    let dateA = new Date(a.updatedAt).getTime();
-    let dateB = new Date(b.updatedAt).getTime();
+    let dateA = new Date(a.createdAt).getTime();
+    let dateB = new Date(b.createdAt).getTime();
 
     if (dateA > dateB) {
         return 1;
@@ -289,6 +286,7 @@ export function ControlPanel() {
                                                     className="absolute top-0 left-0 flex w-[100%] shrink-0 items-center justify-center border-l border-gray-300 bg-gray-200 p-3 transition-transform duration-700 ease-in-out"
                                                     style={{
                                                         height: `calc(100%)`,
+                                                        //
                                                         // display:
                                                         //     expandID ===
                                                         //         `${file.path}` ||
@@ -296,6 +294,7 @@ export function ControlPanel() {
                                                         //     !expandID
                                                         //         ? "flex"
                                                         //         : "none",
+                                                        //
                                                     }}
                                                 >
                                                     <div className="h-full w-full rounded-xl bg-white">

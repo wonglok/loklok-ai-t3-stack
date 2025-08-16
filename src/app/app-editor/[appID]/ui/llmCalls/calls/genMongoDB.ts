@@ -1,0 +1,129 @@
+"use client";
+
+import type * as webllm from "@mlc-ai/web-llm";
+import { systemPromptPureText } from "../persona/systemPromptPureText";
+import { llmRequestToFileStream } from "../common/llmRequestToFileStream";
+
+export const genMongoDB = async ({ slot, userPrompt, engine }) => {
+    ///////////////////////////////////////////////////////////////////////////////////
+    // manifest
+    ///////////////////////////////////////////////////////////////////////////////////
+    let messages: any = [
+        {
+            role: `system`,
+            content: `${systemPromptPureText}`,
+        },
+        {
+            role: "user",
+            content: `here's the "user-requirements"
+    ${userPrompt}`,
+        },
+
+        {
+            role: "user",
+            content: `
+
+# Instruction
+You are a senior product manager:
+Review the current "user requirements" and write a new "product requirement definition"
+
+## Design Thinking Requirements:
+    1. Oragnise the text in a neat and tidy way
+    2. rewrite wordings to better english
+    3. ponder bible proverbs scriptures for wisidom when designing the system, 
+    4. learn from the wisdom of single source of truth, constant values, pure functions
+    
+## Format Requirements
+    1. Use markdown
+    2. Use emoji
+    3. Use indentation
+    4. NEVER Wrap text with ** in markdown
+    5. NEVER USE ** in markdown
+    5. NEVER Bold Text in markdown
+    6. Always add a new line for each new item (better spacing...)
+    7. Must follow the Output format below:
+    8. use * as a new item
+    9. use - as a property of that new item
+`,
+        },
+
+        {
+            role: "user",
+            content: `
+
+# Output in Pure Text Format
+    
+    ## Backend Database:
+
+        Mongoise Database:
+            * Each Collection
+                - CollectionTitle: [...]
+                - Description: [...]
+                - DataFields: 
+                    * DataField 
+                        - Name: [...]
+                        - DataType: [mongoose compatible data type]
+            * Each Collection
+                - CollectionTitle: [...]
+                - Description: [...]
+                - DataFields: 
+                    * DataField 
+                        - Name: [...]
+                        - DataType: [mongoose compatible data type]
+
+`,
+        },
+
+        /*
+
+
+
+
+
+    ## Backend tRPC Procedures (Similar to REST Endpoints): 
+
+        Procedures:
+        
+            * Each Procedure
+                - Title: [...]
+                - Description: [...]
+                - Input Parameters: [...]
+                - Output Parameters: [...]
+
+            * Each Procedure
+                - Title: [...]
+                - Description: [...]
+                - Input Parameters: [...]
+                - Output Parameters: [...]
+
+## Front End tRPC SDK
+[...]
+
+## Zustand State Management
+[...]
+
+
+             */
+    ];
+
+    const request: webllm.ChatCompletionRequestStreaming = {
+        seed: 19900831,
+        stream: true,
+        stream_options: { include_usage: true },
+        messages: messages,
+        temperature: 0,
+    };
+
+    let path = `/study/genMongoDB.md`;
+
+    await llmRequestToFileStream({
+        path: path,
+        request: request,
+        engine,
+        slot: slot,
+    });
+
+    ///////////////////////////////////////////////////////////////////////////////////
+    // usecase
+    ///////////////////////////////////////////////////////////////////////////////////
+};

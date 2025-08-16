@@ -1,7 +1,7 @@
 "use client";
 
 import type * as webllm from "@mlc-ai/web-llm";
-import { useGlobalAI } from "../../useGlobalAI";
+import { EngineData, useGlobalAI } from "../../useGlobalAI";
 // import { z } from "zod";
 
 // import * as markdownit from "markdown-it";
@@ -16,6 +16,9 @@ import {
     returnFreeEngineSlot,
 } from "../llmCalls/common/provideFreeEngineSlot";
 import { toast } from "sonner";
+import { genMongoDB } from "../llmCalls/calls/genMongodb";
+import { genTRPCProcedure } from "../llmCalls/calls/genTRPCProcedure";
+import { genReactComponentTree } from "../llmCalls/calls/genReactComponentTree";
 // import { systemPromptPureText } from "../llmCalls/persona/systemPromptPureText";
 // import { appsCode } from "../llmCalls/common/appsCode";
 
@@ -27,7 +30,12 @@ import { toast } from "sonner";
 
 let apiMap: Map<
     string,
-    { destroy: () => void; engine: webllm.MLCEngineInterface }
+    {
+        //
+        destroy: () => void;
+        slot: EngineData;
+        engine: webllm.MLCEngineInterface;
+    }
 > = new Map();
 
 export const WebLLMAppClient = {
@@ -55,9 +63,8 @@ export const WebLLMAppClient = {
             description: (
                 <pre className="mt-2 w-[320px] rounded-md bg-neutral-950 p-4">
                     <code className="text-white">
-                        {`\n`}
                         {enabledEngines
-                            .map((r) => `${r.displayName} \n`)
+                            .map((r) => `${r.displayName}`)
                             .join("\n")}
                     </code>
                 </pre>
@@ -81,31 +88,120 @@ export const WebLLMAppClient = {
         useGlobalAI.setState({
             stopFunc: async () => {
                 try {
+                    for await (let [key, val] of apiMap.entries()) {
+                        console.log("destroy", key);
+                        await val.destroy();
+                        val.slot.lockedBy = "";
+                        val.slot.llmStatus = "idle";
+                    }
+
                     useGlobalAI.setState({
+                        engines: JSON.parse(
+                            JSON.stringify(useGlobalAI.getState().engines),
+                        ),
+                        lockInWorkers: false,
                         stopFunc: () => {},
                     });
-                    for await (let [key, val] of apiMap.entries()) {
-                        console.log("destroy", key, val);
-                        val.destroy();
-                    }
                 } finally {
-                    useGlobalAI.setState({
-                        lockInWorkers: false,
-                    });
                 }
             },
         });
 
         //
         try {
-            let slot = await provideFreeEngineSlot({ name: "genFeature" });
-            await genFeatrues({
-                slot,
-                userPrompt,
-                engine: apiMap.get(slot.name).engine,
-            });
+            let tasks = [
+                {
+                    name: "genFeatrues",
+                    func: async () => {
+                        let slot = await provideFreeEngineSlot({
+                            name: "genFeatrues",
+                        });
 
-            await returnFreeEngineSlot({ slot });
+                        await genFeatrues({
+                            slot: slot,
+                            userPrompt,
+                            engine: apiMap.get(slot.name).engine,
+                        });
+                        await returnFreeEngineSlot({ slot: slot });
+                    },
+                },
+                {
+                    name: "genReactComponentTree",
+                    func: async () => {
+                        let slot = await provideFreeEngineSlot({
+                            name: "genReactComponentTree",
+                        });
+
+                        await genReactComponentTree({
+                            slot: slot,
+                            userPrompt,
+                            engine: apiMap.get(slot.name).engine,
+                        });
+                        await returnFreeEngineSlot({ slot: slot });
+                    },
+                },
+                {
+                    name: "genMongoDB",
+                    func: async () => {
+                        let slot = await provideFreeEngineSlot({
+                            name: "genMongoDB",
+                        });
+
+                        await genMongoDB({
+                            slot: slot,
+                            userPrompt,
+                            engine: apiMap.get(slot.name).engine,
+                        });
+                        await returnFreeEngineSlot({ slot: slot });
+                    },
+                },
+                {
+                    name: "genTRPCProcedure",
+                    func: async () => {
+                        let slot = await provideFreeEngineSlot({
+                            name: "genTRPCProcedure",
+                        });
+
+                        await genTRPCProcedure({
+                            slot: slot,
+                            userPrompt,
+                            engine: apiMap.get(slot.name).engine,
+                        });
+                        await returnFreeEngineSlot({ slot: slot });
+                    },
+                },
+            ];
+
+            await (async () => {
+                let doTask = async () => {
+                    let engines = useGlobalAI
+                        .getState()
+                        .engines.filter((r) => r.enabled && r.lockedBy === "");
+
+                    // parallel
+                    await Promise.all(
+                        engines.map(() => {
+                            return new Promise((resolve) => {
+                                let top = tasks.shift();
+                                let lockInWorkers =
+                                    useGlobalAI.getState().lockInWorkers;
+
+                                if (top && lockInWorkers) {
+                                    top.func().then(resolve);
+                                } else {
+                                    resolve(null);
+                                }
+                            });
+                        }),
+                    );
+
+                    if (tasks.length > 0) {
+                        await doTask();
+                    }
+                };
+
+                await doTask();
+            })();
 
             // await WebLLMAppClient.testDiff({
             //     //
@@ -136,7 +232,6 @@ export const WebLLMAppClient = {
             //     engine,
             // });
         } finally {
-            useGlobalAI.setState({ lockInWorkers: false });
         }
     },
     ///////////////////////////////////////////////////////////////////////////////////

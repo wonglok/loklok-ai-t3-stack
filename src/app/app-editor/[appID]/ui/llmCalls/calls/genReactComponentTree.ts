@@ -4,7 +4,7 @@ import type * as webllm from "@mlc-ai/web-llm";
 import { systemPromptPureText } from "../persona/systemPromptPureText";
 import { llmRequestToFileStream } from "../common/llmRequestToFileStream";
 
-export const genFeatrues = async ({ slot, userPrompt, engine }) => {
+export const genReactComponentTree = async ({ slot, userPrompt, engine }) => {
     ///////////////////////////////////////////////////////////////////////////////////
     // manifest
     ///////////////////////////////////////////////////////////////////////////////////
@@ -53,89 +53,78 @@ Review the current "user requirements" and write a new "product requirement defi
 
 # Output in Pure Text Format
     
-    ## UserRoles and Features Section
+    ## Front End Pages and UI Components:
 
-        UserRoles:
-            * UserRole
-                - name: [...]
-                - access_level: [internet | member-login | staff-login | system-admin]
-                
-                - Features:
-                    * Feature
-                        - Title: [...]
-                        - Description: [...]
-                        - Overall Steps: 
-                            * Overall Step [number]
-                                - PageRoute & Params: [...]
-                                - Interactions: 
-                                    * Action Step [number]: [...]
+    Pages:
+        * Each Web Page 
+            - PageRoute & Params: [...]
+            - PageDescription: [...]
 
-                     * Feature
-                        - Title: [...]
-                        - Description: [...]
-                        - Overall Steps: 
-                            * Overall Step [number]
-                                - PageRoute & Params: [...]
-                                - Interactions: 
-                                    * Action Step [number]: [...]
+            * Each ReactJS Component 
+                - Name : [Name]
+                - description: [description]
+                - Sub-Components: 
+                    ...
+                    * Each ReactJS Component 
+                        - Name : [Name]
+                        - description: [description]
+                        - Sub-Components:  
+                            ...
+                            * Each ReactJS Component 
+                                - Name : [Name]
+                                - description: [description]
+                    ...
+                    * Each ReactJS Component 
+                        - Name : [Name]
+                        - description: [description]
+                        - Sub-Components:  
+                            ...
+                            * Each ReactJS Component 
+                                - Name : [Name]
+                                - description: [description]
 
-            * UserRole
-                - name: [...]
-                - access_level: [internet | member-login | staff-login | system-admin]
-                
-                - Features:
-                    * Feature
-                        - Title: [...]
-                        - Description: [...]
-                        - Overall Steps: 
-                            * Overall Step [number]
-                                - PageRoute & Params: [...]
-                                - Interactions: 
-                                    * Action Step [number]: [...]
+                                * Each ReactJS Component 
+                                        - Name : [Name]
+                                        - description: [description]
 
-                     * Feature
-                        - Title: [...]
-                        - Description: [...]
-                        - Overall Steps: 
-                            * Overall Step [number]
-                                - PageRoute & Params: [...]
-                                - Interactions: 
-                                    * Action Step [number]: [...]
+                                        * Each ReactJS Component 
+                                            - Name : [Name]
+                                            - description: [description]
+
+        * Each Web Page 
+            - PageRoute & Params: [...]
+            - PageDescription: [...]
+
+            * Each ReactJS Component 
+                - Name : [Name]
+                - description: [description]
+                - Sub-Components: 
+                    ...
+                    * Each ReactJS Component 
+                        - Name : [Name]
+                        - description: [description]
+                        - Sub-Components:  
+                            ...
+                            * Each ReactJS Component 
+                                - Name : [Name]
+                                - description: [description]
+                    ...
+                    * Each ReactJS Component 
+                        - Name : [Name]
+                        - description: [description]
+                        - Sub-Components:  
+                            ...
+                            * Each ReactJS Component 
+                                - Name : [Name]
+                                - description: [description]
+
 `,
         },
 
         /*
 
 
-    ## Front End Pages and UI Components:
 
-        Pages:
-            * Each Web Page 
-                - PageRoute & Params: [...]
-                - PageDescription: [...]
-
-                * Each ReactJS Component 
-                    - Name : [Name]
-                    - description: [description]
-                    - Sub-Components: 
-                        ...
-                        * Each ReactJS Component 
-                            - Name : [Name]
-                            - description: [description]
-                            - Sub-Components:  
-                                ...
-                                * Each ReactJS Component 
-                                    - Name : [Name]
-                                    - description: [description]
-                        ...
-                        * Each ReactJS Component 
-                            - Name : [Name]
-                            - description: [description]
-                            - Sub-Components:  
-                                ...
-                                * Each ReactJS Component 
-                                    - Name : [Name]
-                                    - description: [description]
 
 
 ## Backend Database:
@@ -190,7 +179,7 @@ Review the current "user requirements" and write a new "product requirement defi
         temperature: 0,
     };
 
-    let path = `/study/genFeatrues.md`;
+    let path = `/study/genReactComponentTree.md`;
 
     await llmRequestToFileStream({
         path: path,

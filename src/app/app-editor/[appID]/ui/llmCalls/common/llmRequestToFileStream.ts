@@ -62,6 +62,11 @@ export const llmRequestToFileStream = async ({
                 resovle(null);
             });
         });
+
+        let lockInWorkers = useGlobalAI.getState().lockInWorkers;
+        if (!lockInWorkers) {
+            break;
+        }
     }
 
     if (pathUtil.extname(path) === ".js" && !needsExtractCode) {

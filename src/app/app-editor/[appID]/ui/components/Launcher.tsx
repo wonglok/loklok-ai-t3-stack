@@ -128,7 +128,7 @@ export function Launcher() {
 
     return (
         <form onSubmit={onSubmit} className="h-full w-full space-y-4">
-            {names.map((name) => {
+            {engines.map(({ name, displayName }) => {
                 return (
                     <div
                         key={name + "onoff"}
@@ -136,7 +136,7 @@ export function Launcher() {
                     >
                         <div className="space-y-0.5">
                             <div className="flex justify-between px-2">
-                                <div>{`AI Developer ${name}`}</div>
+                                <div>{`${displayName}`}</div>
                                 <div className="flex items-center">
                                     <EnableSwitch name={name}></EnableSwitch>
                                 </div>

@@ -55,10 +55,10 @@ export const useGlobalAI = create<{
     refreshSlot: (v: any) => void;
 }>((set, get) => {
     let models = [
-        {
-            key: "Qwen Coder 1.5B (~750MB)",
-            value: `Qwen2.5-Coder-1.5B-Instruct-q4f16_1-MLC`,
-        },
+        // {
+        //     key: "Qwen Coder 1.5B (~750MB)",
+        //     value: `Qwen2.5-Coder-1.5B-Instruct-q4f16_1-MLC`,
+        // },
         {
             key: "Qwen Coder 3B (~1.5GB)",
             value: `Qwen2.5-Coder-3B-Instruct-q4f16_1-MLC`,
@@ -97,7 +97,7 @@ export const useGlobalAI = create<{
                 name: "e01",
                 displayName: "AI Developer 01",
 
-                currentModel: models[1].value,
+                currentModel: models[0].value,
                 llmStatus: "empty",
                 // engine: null,
                 bannerText: "",
@@ -106,9 +106,9 @@ export const useGlobalAI = create<{
                 lockedBy: "",
                 enabled: true,
                 name: "e02",
-                displayName: "AI Developer 01",
+                displayName: "AI Developer 02",
 
-                currentModel: models[1].value,
+                currentModel: models[0].value,
                 llmStatus: "empty",
                 // engine: null,
                 bannerText: "",
@@ -117,9 +117,9 @@ export const useGlobalAI = create<{
                 lockedBy: "",
                 enabled: false,
                 name: "e03",
-                displayName: "AI Developer 01",
+                displayName: "AI Developer 03",
 
-                currentModel: models[1].value,
+                currentModel: models[0].value,
                 llmStatus: "empty",
                 // engine: null,
                 bannerText: "",

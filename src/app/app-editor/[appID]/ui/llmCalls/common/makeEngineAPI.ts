@@ -74,6 +74,7 @@ export const makeEngineAPI = async ({ name }: { name: string }) => {
 
     return {
         engine,
+        slot,
         destroy,
     };
 };
