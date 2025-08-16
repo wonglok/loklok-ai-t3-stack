@@ -7,7 +7,7 @@ import { llmRequestToFileStream } from "../common/llmRequestToFileStream";
 export const genReactComponentTree = async ({
     slot,
     userPrompt,
-    reactComponentsText = "",
+    featuresText = "",
     engine,
 }) => {
     ///////////////////////////////////////////////////////////////////////////////////
@@ -23,6 +23,12 @@ export const genReactComponentTree = async ({
             role: "user",
             content: `here's the "user-requirements.txt"
     ${userPrompt}`,
+        },
+
+        {
+            role: "assistant",
+            content: `here's the "features and tutorials.txt"
+    ${featuresText}`,
         },
 
         {

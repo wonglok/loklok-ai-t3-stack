@@ -137,7 +137,8 @@ export const WebLLMAppClient = {
 
                         await genReactComponentTree({
                             slot: slot,
-                            userPrompt: await readFileContent({
+                            userPrompt: userPrompt,
+                            featuresText: await readFileContent({
                                 path: `/study/genFeatrues.md`,
                             }),
                             engine: apiMap.get(slot.name).engine,
@@ -155,7 +156,7 @@ export const WebLLMAppClient = {
 
                         await genMongoDatabase({
                             slot: slot,
-                            userPrompt,
+                            userPrompt: userPrompt,
                             featuresText: await readFileContent({
                                 path: `/study/genFeatrues.md`,
                             }),
@@ -175,10 +176,10 @@ export const WebLLMAppClient = {
 
                         await genTRPCProcedure({
                             slot: slot,
+                            userPrompt: userPrompt,
                             reactComponentsText: await readFileContent({
                                 path: `/study/genReactComponentTree.md`,
                             }),
-                            userPrompt: userPrompt,
                             engine: apiMap.get(slot.name).engine,
                         });
                         await returnFreeEngineSlot({ slot: slot });
