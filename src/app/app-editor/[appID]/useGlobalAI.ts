@@ -1,5 +1,7 @@
 import { create } from "zustand";
 import type * as webllm from "@mlc-ai/web-llm";
+import { object, set } from "zod";
+import md5 from "md5";
 
 export type MyFile = {
     filename: string;
@@ -10,13 +12,24 @@ export type MyFile = {
     inputSignature: string;
 };
 
-type EngineProps = {};
+export type EngineData = {
+    lockedBy: string;
+
+    enabled: boolean;
+    name: string;
+    currentModel: string;
+
+    //
+    llmStatus: "empty" | "downloading" | "idle" | "writing";
+    // engine: webllm.MLCEngineInterface;
+    setupProgress: string;
+};
 
 export const useGlobalAI = create<{
     files: MyFile[];
     expandID: string;
 
-    llmStatus: "downloading" | "idle" | "writing";
+    llmStatus: "empty" | "downloading" | "idle" | "writing";
 
     currentModel: string;
 
@@ -26,14 +39,8 @@ export const useGlobalAI = create<{
     welcome: boolean;
     spec: string;
     setupLLMProgress: string;
-    engines: {
-        enabled: boolean;
-        name: string;
-        currentModel: string;
-        llmStatus: "idle" | "downloading" | "writing";
-        engine: webllm.MLCEngineInterface;
-        setupProgress: string;
-    }[];
+    loading: false;
+    engines: EngineData[];
 
     brainworks: boolean;
     //
@@ -43,7 +50,8 @@ export const useGlobalAI = create<{
     models: { key: string; value: string }[];
 
     stopFunc: () => void;
-}>(() => {
+    refreshSlot: (v: any) => void;
+}>((set, get) => {
     let models = [
         {
             key: "Qwen Coder 1.5B (~750MB)",
@@ -59,33 +67,55 @@ export const useGlobalAI = create<{
         },
     ];
 
+    let refreshSlot = (slot) => {
+        set({
+            engines: JSON.parse(
+                JSON.stringify(
+                    get().engines.map((r: any) => {
+                        if (r.name === slot.name) {
+                            return slot;
+                        }
+                        return r;
+                    }),
+                ),
+            ),
+        });
+    };
+
     return {
+        refreshSlot: refreshSlot,
+        loading: false,
+
+        //
         engines: [
             {
+                lockedBy: "",
                 enabled: true,
                 name: "e01",
 
                 currentModel: models[1].value,
-                llmStatus: "idle",
-                engine: null,
+                llmStatus: "empty",
+                // engine: null,
                 setupProgress: "",
             },
             {
-                enabled: false,
+                lockedBy: "",
+                enabled: true,
                 name: "e02",
 
                 currentModel: models[1].value,
-                llmStatus: "idle",
-                engine: null,
+                llmStatus: "empty",
+                // engine: null,
                 setupProgress: "",
             },
             {
+                lockedBy: "",
                 enabled: false,
                 name: "e03",
 
                 currentModel: models[1].value,
-                llmStatus: "idle",
-                engine: null,
+                llmStatus: "empty",
+                // engine: null,
                 setupProgress: "",
             },
         ],

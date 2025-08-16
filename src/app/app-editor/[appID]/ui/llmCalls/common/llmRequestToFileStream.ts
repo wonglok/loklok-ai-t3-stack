@@ -1,10 +1,9 @@
 "use client";
 
 import type * as webllm from "@mlc-ai/web-llm";
-import { CreateWebWorkerMLCEngine } from "@mlc-ai/web-llm";
-import { MyFile, useGlobalAI } from "../../../useGlobalAI";
+// import { CreateWebWorkerMLCEngine } from "@mlc-ai/web-llm";
+import { EngineData, MyFile, useGlobalAI } from "../../../useGlobalAI";
 // @ts-ignore
-import Worker from "./webllm.worker.ts";
 import { z } from "zod";
 
 import * as markdownit from "markdown-it";
@@ -21,13 +20,16 @@ export const llmRequestToFileStream = async ({
     request,
     engine,
     needsExtractCode = false,
+    slot = null,
 }: {
     path: string;
     needsExtractCode?: boolean;
     request: webllm.ChatCompletionRequestStreaming;
     engine: webllm.MLCEngineInterface;
+    slot: EngineData | null;
 }) => {
-    useGlobalAI.setState({ llmStatus: "writing" });
+    slot.llmStatus = "writing";
+    useGlobalAI.getState().refreshSlot(slot);
 
     let fileObject = await readFileObject({ path });
 

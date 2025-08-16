@@ -1,21 +1,21 @@
 "use client";
 
 import type * as webllm from "@mlc-ai/web-llm";
-import { CreateWebWorkerMLCEngine } from "@mlc-ai/web-llm";
-import { MyFile, useGlobalAI } from "../../useGlobalAI";
-// @ts-ignore
-import Worker from "./webllm.worker.ts";
+import { useGlobalAI } from "../../useGlobalAI";
+// import { z } from "zod";
 
-//
-import { z } from "zod";
-
-import * as markdownit from "markdown-it";
-import * as pathUtil from "path";
+// import * as markdownit from "markdown-it";
+// import * as pathUtil from "path";
 // import { createInstance } from "localforage";
-import md5 from "md5";
+// import md5 from "md5";
 // import { newUnifiedDiffStrategyService } from "diff-apply";
 import { genFeatrues } from "../llmCalls/calls/genFeatrues";
-import { makeEngine } from "../llmCalls/common/makeEngine";
+import { makeEngineAPI } from "../llmCalls/common/makeEngineAPI";
+import {
+    provideFreeEngineSlot,
+    returnFreeEngineSlot,
+} from "../llmCalls/common/provideFreeEngineSlot";
+import { toast } from "sonner";
 // import { systemPromptPureText } from "../llmCalls/persona/systemPromptPureText";
 // import { appsCode } from "../llmCalls/common/appsCode";
 
@@ -25,35 +25,57 @@ import { makeEngine } from "../llmCalls/common/makeEngine";
 // import remarkRehype from "remark-rehype";
 // import remarkMan from "remark-man";
 
-const Engines = [];
-
 export const WebLLMAppClient = {
-    [`systemSetup`]: async ({ currentModel }) => {
-        // let ctx1 = await makeEngine({ currentModel });
-        // useGlobalAI.setState({
-        //     engines: [ctx1],
-        // });
-        // let ctx2 = await makeEngine({ currentModel });
-        // useGlobalAI.setState({
-        //     engines: [ctx1, ctx2],
-        // });
-        // let ctx3 = await makeEngine({ currentModel });
-        // useGlobalAI.setState({
-        //     engines: [ctx1, ctx2, ctx3],
-        // });
-    },
     ///////////////////////////////////////////////////////////////////////////////////
     // buildApp
     ///////////////////////////////////////////////////////////////////////////////////
     [`buildApp`]: async ({ userPrompt }: { userPrompt: string }) => {
-        //
+        let apiMap: Map<
+            string,
+            { destroy: (v: any) => void; engine: webllm.MLCEngineInterface }
+        > = new Map();
+        let enabledEngines = useGlobalAI
+            .getState()
+            .engines.filter((r) => r.enabled);
+
+        console.log(enabledEngines.map((r) => r.name));
+
+        toast("Starting Engine", {
+            description: (
+                <pre className="mt-2 w-[320px] rounded-md bg-neutral-950 p-4">
+                    <code className="text-white">
+                        {enabledEngines
+                            .map((r) => `AI Developer ${r.name} \n`)
+                            .join("\n")}
+                    </code>
+                </pre>
+            ),
+        });
+
+        await Promise.all(
+            enabledEngines.map((slot) => {
+                return new Promise(async (resolve) => {
+                    try {
+                        let api = await makeEngineAPI({ name: slot.name });
+                        apiMap.set(slot.name, api);
+                        resolve(api);
+                    } catch (e) {
+                        console.log(e);
+                    }
+                });
+            }),
+        );
 
         //
         try {
-            // await genFeatrues({
-            //     userPrompt,
-            //     engine: engine,
-            // });
+            let slot = await provideFreeEngineSlot({ name: "genFeature" });
+            await genFeatrues({
+                slot,
+                userPrompt,
+                engine: apiMap.get(slot.name).engine,
+            });
+            await returnFreeEngineSlot({ slot });
+
             // await WebLLMAppClient.testDiff({
             //     //
             //     userPrompt,
@@ -83,7 +105,6 @@ export const WebLLMAppClient = {
             //     engine,
             // });
         } finally {
-            useGlobalAI.getState().stopFunc();
         }
     },
     ///////////////////////////////////////////////////////////////////////////////////

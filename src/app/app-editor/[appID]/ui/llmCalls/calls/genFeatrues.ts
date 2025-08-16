@@ -4,7 +4,7 @@ import type * as webllm from "@mlc-ai/web-llm";
 import { systemPromptPureText } from "../persona/systemPromptPureText";
 import { llmRequestToFileStream } from "../common/llmRequestToFileStream";
 
-export const genFeatrues = async ({ userPrompt, engine }) => {
+export const genFeatrues = async ({ slot, userPrompt, engine }) => {
     ///////////////////////////////////////////////////////////////////////////////////
     // manifest
     ///////////////////////////////////////////////////////////////////////////////////
@@ -140,6 +140,7 @@ Review the current "user requirements" and write a new "product requirement defi
         path: path,
         request: request,
         engine,
+        slot: slot,
     });
 
     ///////////////////////////////////////////////////////////////////////////////////

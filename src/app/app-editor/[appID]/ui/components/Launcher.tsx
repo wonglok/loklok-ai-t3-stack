@@ -15,7 +15,6 @@ import {
     // PromptInputButton,
 } from "@/components/ai-elements/prompt-input";
 import { useEffect } from "react";
-import { makeEngine } from "../llmCalls/common/makeEngine";
 import { useGlobalAI } from "../../useGlobalAI";
 
 import { Label } from "@/components/ui/label";
@@ -34,7 +33,9 @@ import {
     FormItem,
     FormLabel,
 } from "@/components/ui/form";
+
 import { Switch } from "@/components/ui/switch";
+
 import {
     Select,
     SelectContent,
@@ -71,10 +72,9 @@ function AIMatcher({ name }: { name: string }) {
                     ))}
                 </SelectContent>
             </Select>
+            <div>{item.setupProgress}</div>
         </>
     );
-
-    return <></>;
 }
 
 function EnableSwitch({ name }: { name: string }) {
@@ -105,20 +105,6 @@ export function Launcher() {
         ev.preventDefault();
 
         let data = {};
-
-        WebLLMAppClient.buildApp({
-            userPrompt: prompt,
-        });
-
-        toast("You submitted the following values", {
-            description: (
-                <pre className="mt-2 w-[320px] rounded-md bg-neutral-950 p-4">
-                    <code className="text-white">
-                        {JSON.stringify(data, null, 2)}
-                    </code>
-                </pre>
-            ),
-        });
     }
 
     return (
@@ -159,14 +145,11 @@ export function Launcher() {
             </div>
 
             <Button
-                onClick={() => {
-                    //
-                    //
-                    WebLLMAppClient.buildApp({
+                onClick={async () => {
+                    await WebLLMAppClient.buildApp({
                         userPrompt: prompt,
                     });
                 }}
-                type="submit"
                 className="cursor-pointer"
             >
                 Build
