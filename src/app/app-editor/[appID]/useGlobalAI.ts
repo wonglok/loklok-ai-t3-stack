@@ -116,7 +116,7 @@ export const useGlobalAI = create<{
                 name: "_01",
                 displayName: "AI Developer 01",
 
-                currentModel: models[0].value,
+                currentModel: models[1].value,
                 llmStatus: "empty",
                 bannerText: "",
                 bannerData: null,
@@ -127,7 +127,7 @@ export const useGlobalAI = create<{
                 name: "_02",
                 displayName: "AI Developer 02",
 
-                currentModel: models[0].value,
+                currentModel: models[1].value,
                 llmStatus: "empty",
                 bannerText: "",
                 bannerData: null,
@@ -138,7 +138,7 @@ export const useGlobalAI = create<{
                 name: "_03",
                 displayName: "AI Developer 03",
 
-                currentModel: models[0].value,
+                currentModel: models[1].value,
                 llmStatus: "empty",
                 bannerText: "",
                 bannerData: null,
@@ -149,7 +149,7 @@ export const useGlobalAI = create<{
                 name: "_04",
                 displayName: "AI Developer 04",
 
-                currentModel: models[0].value,
+                currentModel: models[1].value,
                 llmStatus: "empty",
                 bannerText: "",
                 bannerData: null,
@@ -160,7 +160,7 @@ export const useGlobalAI = create<{
                 name: "_05",
                 displayName: "AI Developer 05",
 
-                currentModel: models[0].value,
+                currentModel: models[1].value,
                 llmStatus: "empty",
                 bannerText: "",
                 bannerData: null,
@@ -179,16 +179,18 @@ export const useGlobalAI = create<{
 
         // currentModel: models[0].value,
         appID: "",
-        prompt: `I want to build an eClass School multipurpose Metaverse using threejs. 
+        prompt: `I want to build an eClass School multipurpose Metaverse using ThreeJS and React Three Fiber Framework and nextJS and React JS Library. 
 
-i want to have a teacher account that can create student account for student to login/
+I want to have a system portal for me to login.
 
-I want to be able to add 3d map to it.
+System portal can generate teacher login and student login.
 
-i want to be able to add avatar NPC to the the 3d map.
+Teacher portal can 
+1. generate student login.
+2. Upload 3d room
+3. Create avatar and some embed code to it or iframe URL to it
 
-i want to be able to program the behaviour of avatar using three.js custom code.
-
+Student can login to the metaverse.
 
         `.trim(),
         loadingSpec: false,

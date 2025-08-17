@@ -57,13 +57,13 @@ export const genReactComponentTree = async ({
                 },
                 {
                     role: "assistant",
-                    content: `Here's the "Use case and Features" Document:
+                    content: `Here's the "product requirement document" Document:
     ${featuresText}`,
                 },
 
                 {
                     role: "user",
-                    content: `Please generate a list of reactComponent model`,
+                    content: `Please extract all reactComponent needed from the "product requirement document".`,
                 },
             ] as webllm.ChatCompletionMessageParam[],
             temperature: 0.0,
@@ -116,7 +116,7 @@ ${featuresText}
 Please write the latest reactComponent component javascript code for "${reactComponent.itemName}" component.
 
 - only write the javascript code block 
-- please use esm javascript and es6
+- please use esm modules javascript and ecma script ES6 javascript
 
 export const ${`${JSON.stringify(reactComponent.itemName)}ReactComponent`} = () => {
 

@@ -6,4 +6,6 @@ export const factoryResetThisApp = async () => {
         files: [],
     });
     await appsCode.setItem(useGlobalAI.getState().appID, []);
+
+    location.reload();
 };

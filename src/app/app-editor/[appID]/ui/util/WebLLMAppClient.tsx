@@ -19,7 +19,7 @@ import {
     returnFreeEngineSlot,
 } from "../llmCalls/common/provideFreeEngineSlot";
 import { toast } from "sonner";
-import { genTRPCProcedure } from "../llmCalls/calls/genTRPCProcedure";
+// import { genTRPCProcedure } from "../llmCalls/calls/genTRPCProcedure";
 import { genReactComponentTree } from "../llmCalls/calls/genReactComponentTree";
 import { genMongoDatabase } from "../llmCalls/calls/genMongoDatabase";
 import { readFileContent } from "../llmCalls/common/readFileContent";

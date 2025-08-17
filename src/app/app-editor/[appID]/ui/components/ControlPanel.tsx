@@ -217,7 +217,7 @@ export function ControlPanel() {
                                         }
                                     }}
                                 >
-                                    Reset all
+                                    Delete all & Reboot?
                                 </button>
                                 {files
                                     .slice()

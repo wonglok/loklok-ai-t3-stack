@@ -3,109 +3,148 @@
 import type * as webllm from "@mlc-ai/web-llm";
 import { systemPromptPureText } from "../persona/systemPromptPureText";
 import { llmRequestToFileStream } from "../common/llmRequestToFileStream";
+import z from "zod";
+import { readFileParseJSON } from "../common/readFileParseJSON";
+import { readFileContent } from "../common/readFileContent";
+// import { useGlobalAI } from "../../../useGlobalAI";
 
-export const genTRPCProcedure = async ({
+export const getTRPCProcedure = async ({
     slot,
     userPrompt,
-    reactComponentsText,
+    featuresText = "",
     engine,
+    manager,
 }) => {
     ///////////////////////////////////////////////////////////////////////////////////
     // manifest
     ///////////////////////////////////////////////////////////////////////////////////
-    let messages: webllm.ChatCompletionMessageParam[] = [
-        {
-            role: `system`,
-            content: `${systemPromptPureText}`,
-        },
-        {
-            role: "assistant",
-            content: `here's the "user-requirements" Document:
-${userPrompt}`,
-        },
+    let reactComponentSpecPath = `/docs/genReactComponentTree.json`;
 
-        {
-            role: "assistant",
-            content: `here's the "React UI Components" Document:
-${reactComponentsText}`,
-        },
+    // let existingCode = await readFileContent({ path: reactComponentSpecPath });\
 
-        {
-            role: "assistant",
-            content: `
-
-# Output in Pure Text Format
-    
-    ## Backend tRPC Procedures: 
-
-        Procedures:
-            * Each Procedure
-                - CallName: [api.post.procedureName]
-            * Each Procedure
-                - CallName: [api.post.procedureName]
-            [...]
-`,
-        },
-
-        {
-            role: "user",
-            content: `
-Please write procedures needed by the React Components:
-`,
-        },
-
-        /*
-
-
-
-
-
-## Backend Database:
-
-        Mongoise Database:
-            * Each Collection
-                - CollectionTitle: [...]
-                - Description: [...]
-                - DataFields: 
-                    * DataField 
-                        - Name: [...]
-                        - DataType: [mongoose compatible data type]
-            * Each Collection
-                - CollectionTitle: [...]
-                - Description: [...]
-                - DataFields: 
-                    * DataField 
-                        - Name: [...]
-                        - DataType: [mongoose compatible data type]
-
-## Front End tRPC SDK
-[...]
-
-## Zustand State Management
-[...]
-
-
-             */
-    ];
-
-    const request: webllm.ChatCompletionRequestStreaming = {
-        seed: 19900831,
-        stream: true,
-        stream_options: { include_usage: true },
-        messages: messages,
-        temperature: 0,
-    };
-
-    let path = `/docs/genTRPCProcedure.md`;
-
+    let schema = z.object({
+        reactComponentModels: z
+            .array(
+                z
+                    .object({
+                        itemName: z.string().describe("ReactJS Components"),
+                        codeFilePath: z.string().describe(
+                            `example:  
+                                "/react/"itemName".js"
+                                Change "itemName" to the React JS Component name accrodingly 
+                            `,
+                        ),
+                    })
+                    .describe("each reactComponent item"),
+            )
+            .describe("reactComponent list"),
+    });
     await llmRequestToFileStream({
-        path: path,
-        request: request,
+        path: reactComponentSpecPath,
+        request: {
+            seed: 19900831,
+            stream: true,
+            stream_options: { include_usage: true },
+            messages: [
+                {
+                    role: `system`,
+                    content: `${systemPromptPureText}`,
+                },
+                {
+                    role: "assistant",
+                    content: `Here's the "user-requirements" Document:
+    ${userPrompt}`,
+                },
+                {
+                    role: "assistant",
+                    content: `Here's the "product requirement document" Document:
+    ${featuresText}`,
+                },
+
+                {
+                    role: "user",
+                    content: `Please extract all reactComponent needed from the "product requirement document".`,
+                },
+            ] as webllm.ChatCompletionMessageParam[],
+            temperature: 0.0,
+            // top_p: 0.05,
+            response_format: {
+                type: "json_object",
+                schema: JSON.stringify(z.toJSONSchema(schema)),
+            },
+        } as webllm.ChatCompletionRequestStreaming,
         engine,
         slot: slot,
     });
 
-    ///////////////////////////////////////////////////////////////////////////////////
-    // usecase
-    ///////////////////////////////////////////////////////////////////////////////////
+    let lateSpec = (await readFileParseJSON({
+        path: reactComponentSpecPath,
+    })) as z.infer<typeof schema>;
+
+    for (let reactComponent of lateSpec.reactComponentModels) {
+        if (!reactComponent.codeFilePath.startsWith("/")) {
+            reactComponent.codeFilePath = `/${reactComponent.codeFilePath}`;
+        }
+        console.log("manager.addTask", reactComponent.codeFilePath);
+
+        manager?.addTask({
+            name: reactComponent.codeFilePath,
+            deps: [],
+            func: async ({ slot, engine }) => {
+                console.log("begin-task", reactComponent.codeFilePath);
+
+                let outputPath = `${reactComponent.codeFilePath}`;
+
+                await llmRequestToFileStream({
+                    path: reactComponent.codeFilePath,
+                    needsExtractCode: true,
+                    request: {
+                        seed: 19900831,
+                        stream: true,
+                        stream_options: { include_usage: true },
+                        messages: [
+                            {
+                                role: "assistant",
+                                content:
+                                    `Here's the latest Product Requirement Document:
+${featuresText}
+                                `.trim(),
+                            },
+                            {
+                                role: `user`,
+                                content: `
+Please write the latest reactComponent component javascript code for "${reactComponent.itemName}" component.
+
+- only write the javascript code block 
+- please use esm modules javascript and ecma script ES6 javascript
+
+export const ${`${JSON.stringify(reactComponent.itemName)}ReactComponent`} = () => {
+
+    return ...
+};
+
+    `.trim(),
+                            },
+                        ] as webllm.ChatCompletionMessageParam[],
+                        temperature: 0.0,
+                        // top_p: 0.05,
+                    } as webllm.ChatCompletionRequestStreaming,
+                    engine,
+                    slot: slot,
+                });
+
+                let latestCodeWritten = await readFileContent({
+                    path: `${outputPath}`,
+                });
+
+                console.log(latestCodeWritten);
+            },
+        });
+
+        //
+    }
+
+    //     ///////////////////////////////////////////////////////////////////////////////////
+    //     // usecase
+    //     ///////////////////////////////////////////////////////////////////////////////////
 };
