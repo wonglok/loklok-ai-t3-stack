@@ -114,6 +114,7 @@ export const WebLLMAppClient = {
             let tasks = [
                 {
                     name: "genFeatrues",
+                    done: false,
                     deps: [],
                     func: async () => {
                         let slot = await provideFreeEngineSlot({
@@ -130,6 +131,7 @@ export const WebLLMAppClient = {
                 },
                 {
                     name: "genReactComponentTree",
+                    done: false,
                     deps: ["genFeatrues"],
                     func: async () => {
                         let slot = await provideFreeEngineSlot({
@@ -149,6 +151,7 @@ export const WebLLMAppClient = {
                 },
                 {
                     name: "genMongoDatabase",
+                    done: false,
                     deps: ["genFeatrues"],
                     func: async () => {
                         let slot = await provideFreeEngineSlot({
@@ -169,6 +172,7 @@ export const WebLLMAppClient = {
 
                 {
                     name: "genTRPCProcedure",
+                    done: false,
                     deps: ["genReactComponentTree"],
                     func: async () => {
                         let slot = await provideFreeEngineSlot({
@@ -200,8 +204,8 @@ export const WebLLMAppClient = {
 
                         first.deps.forEach((dep) => {
                             if (
-                                tasks.some((t) => {
-                                    return dep === t.name;
+                                tasks.some((tsk) => {
+                                    return dep === tsk.name && tsk.done;
                                 })
                             ) {
                                 if (!foundInTask) {
@@ -210,11 +214,13 @@ export const WebLLMAppClient = {
                             }
                         });
 
-                        let allDone = !foundInTask;
-                        if (first && allDone) {
+                        let allCompleted = !foundInTask;
+                        if (first && allCompleted) {
                             let top = tasks.shift();
                             if (top) {
-                                top.func();
+                                await top.func().then(() => {
+                                    top.done = true;
+                                });
                             }
                         }
                     }
@@ -222,7 +228,7 @@ export const WebLLMAppClient = {
                     if (tasks.length > 0) {
                         setTimeout(async () => {
                             doTask();
-                        }, 500);
+                        }, 100);
                     }
                 };
 

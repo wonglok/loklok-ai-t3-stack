@@ -136,6 +136,17 @@ export const useGlobalAI = create<{
                 // engine: null,
                 bannerText: "",
             },
+            {
+                lockedBy: "",
+                enabled: false,
+                name: "e05",
+                displayName: "AI Developer 05",
+
+                currentModel: models[0].value,
+                llmStatus: "empty",
+                // engine: null,
+                bannerText: "",
+            },
         ],
 
         llmStatus: "idle",
