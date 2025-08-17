@@ -189,10 +189,19 @@ Teacher portal can
 1. generate student login.
 2. Upload 3d room
 3. Create avatar and some embed code to it or iframe URL to it
+4. Upload Videos 
+5. Upload Quiz and Questions
+6. Add Video to Avatar
+7. Add Quiz to Avatar
+8. Dashboard 
 
-Student can login to the metaverse.
+Student can login to the metaverse and have fun.
+1. Do Quiz
+2. Watch Video in NPC Avatar
+3. View Learning Progress of Video Watching and Quiz Doing
 
-        `.trim(),
+
+`.trim(),
         loadingSpec: false,
         welcome: true,
         spec: "",

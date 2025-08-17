@@ -210,7 +210,7 @@ export function ControlPanel() {
                             <div className="h-full w-[350px] overflow-x-hidden overflow-y-scroll border-r border-gray-300">
                                 {/*  */}
                                 <button
-                                    className="px-3 py-2"
+                                    className="bg-red-100 px-3 py-2 text-red-900"
                                     onClick={() => {
                                         if (window.confirm("remove all?")) {
                                             factoryResetThisApp();
