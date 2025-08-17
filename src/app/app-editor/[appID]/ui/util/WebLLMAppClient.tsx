@@ -116,17 +116,24 @@ export const WebLLMAppClient = {
         //
         try {
             let manager = {
-                addTask: (name = "name", func = async ({ slot }) => {}) => {
+                addTask: ({
+                    name = "name",
+                    deps = null,
+                    func = async ({ slot, engine }) => {},
+                }) => {
                     tasks.push({
-                        name: name,
+                        name: `${name}`,
                         status: "waiting",
-                        deps: [],
+                        deps: deps || [],
                         func: async () => {
                             let slot = await provideFreeEngineSlot({
-                                name: name,
+                                name: `${name}`,
                             });
 
-                            await func({ slot });
+                            await func({
+                                slot,
+                                engine: apiMap.get(slot.name).engine,
+                            });
 
                             await returnFreeEngineSlot({ slot: slot });
                         },
@@ -218,7 +225,7 @@ export const WebLLMAppClient = {
             ];
 
             await (async () => {
-                let doTask = async () => {
+                let tryTrigger = async () => {
                     let engines = useGlobalAI
                         .getState()
                         .engines.filter((r) => r.enabled && r.lockedBy === "");
@@ -240,7 +247,7 @@ export const WebLLMAppClient = {
                                     let thisTask = tasks.find((tsk) => {
                                         return tsk.name === eachDep;
                                     });
-                                    return thisTask.status === "done";
+                                    return thisTask?.status === "done";
                                 })
                                 .filter((r) => r).length === dependenciesCount;
 
@@ -249,22 +256,19 @@ export const WebLLMAppClient = {
                                 first.status = "working";
                                 first.func().then(() => {
                                     first.status = "done";
-                                    doTask();
                                 });
-
-                                return;
                             }
                         }
                     }
-
-                    if (tasks.length > 0) {
-                        setTimeout(async () => {
-                            doTask();
-                        }, 100);
-                    }
                 };
 
-                await doTask();
+                let tt = setInterval(() => {
+                    if (tasks.filter((r) => r.status !== "done").length === 0) {
+                        clearInterval(tt);
+                        return;
+                    }
+                    tryTrigger();
+                }, 250);
 
                 await new Promise((resolve) => {
                     let ts = setInterval(() => {

@@ -88,67 +88,71 @@ ${featuresText}`,
         }
         console.log("manager.addTask", mongoose.codeFilePath);
 
-        manager?.addTask(mongoose.codeFilePath, async ({ slot }) => {
-            console.log("begin-task", mongoose.codeFilePath);
-            //
+        manager?.addTask({
+            name: mongoose.codeFilePath,
+            deps: [],
+            func: async ({ slot, engine }) => {
+                console.log("begin-task", mongoose.codeFilePath);
+                //
 
-            // let existingCodePath = `${mongoose.codeFilePath}`;
-            // let existingModelCode = await readFileContent({
-            //     path: `${existingCodePath}`,
-            // });
+                // let existingCodePath = `${mongoose.codeFilePath}`;
+                // let existingModelCode = await readFileContent({
+                //     path: `${existingCodePath}`,
+                // });
 
-            // console.log("existingModelCode", existingModelCode);
-            // let hasExistingCode = existingModelCode !== "";
+                // console.log("existingModelCode", existingModelCode);
+                // let hasExistingCode = existingModelCode !== "";
 
-            let outputPath = `${mongoose.codeFilePath}`;
+                let outputPath = `${mongoose.codeFilePath}`;
 
-            await llmRequestToFileStream({
-                path: mongoose.codeFilePath,
-                needsExtractCode: true,
-                request: {
-                    seed: 19900831,
-                    stream: true,
-                    stream_options: { include_usage: true },
-                    messages: [
-                        // {
-                        //     role: `system`,
-                        //     content: `${hasExistingCode ? systemPromptDiffCode : systemPromptPureText}`,
-                        // },
-                        //                         {
-                        //                             role: "assistant",
-                        //                             content: `Here's the "old-mongoose-model" Document:
-                        // ${existingModelCode}`,
-                        //                         },
-                        // {
-                        //     role: `system`,
-                        //     content: `${systemPromptPureText}`,
-                        // },
-                        {
-                            role: "assistant",
-                            content:
-                                `Here's the latest Product Requirement Document:
+                await llmRequestToFileStream({
+                    path: mongoose.codeFilePath,
+                    needsExtractCode: true,
+                    request: {
+                        seed: 19900831,
+                        stream: true,
+                        stream_options: { include_usage: true },
+                        messages: [
+                            // {
+                            //     role: `system`,
+                            //     content: `${hasExistingCode ? systemPromptDiffCode : systemPromptPureText}`,
+                            // },
+                            //                         {
+                            //                             role: "assistant",
+                            //                             content: `Here's the "old-mongoose-model" Document:
+                            // ${existingModelCode}`,
+                            //                         },
+                            // {
+                            //     role: `system`,
+                            //     content: `${systemPromptPureText}`,
+                            // },
+                            {
+                                role: "assistant",
+                                content:
+                                    `Here's the latest Product Requirement Document:
 ${featuresText}
                             `.trim(),
-                        },
-                        {
-                            role: `user`,
-                            content: `
+                            },
+                            {
+                                role: `user`,
+                                content: `
 Please write the latest mongoose model javascript code for "${mongoose.collectionName}" model
 `.trim(),
-                        },
-                    ] as webllm.ChatCompletionMessageParam[],
-                    temperature: 0.0,
-                    top_p: 0.05,
-                } as webllm.ChatCompletionRequestStreaming,
-                engine,
-                slot: slot,
-            });
+                            },
+                        ] as webllm.ChatCompletionMessageParam[],
+                        temperature: 0.0,
+                        top_p: 0.05,
+                    } as webllm.ChatCompletionRequestStreaming,
+                    engine,
+                    slot: slot,
+                });
 
-            let latestCodeWritten = await readFileContent({
-                path: `${outputPath}`,
-            });
+                let latestCodeWritten = await readFileContent({
+                    path: `${outputPath}`,
+                });
 
-            console.log(latestCodeWritten);
+                console.log(latestCodeWritten);
+            },
         });
 
         //
