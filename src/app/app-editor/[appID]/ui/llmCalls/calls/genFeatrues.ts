@@ -29,8 +29,7 @@ Review the current "user requirements" and write a new "product requirement defi
 ## Design Thinking Requirements:
     1. Oragnise the text in a neat and tidy way
     2. rewrite wordings to better english
-    3. ponder bible proverbs scriptures for wisidom when designing the system, 
-    4. learn from the wisdom of single source of truth, constant values, pure functions
+    3. learn from bible proverbs scriptures for wisidom when designing the system features 
 
 ## Format Requirements
     1. Use markdown
@@ -55,23 +54,23 @@ Review the current "user requirements" and write a new "product requirement defi
             * UserRole
                 name: [...]
                 Features:
-                    - [number]
+                    * [number]
                         Title: [...]
                         Description: [...]
                         Navigation Steps: 
-                            - [number]
+                            * [number]
                                 PageRoute & Params: [...]
                                 Interaction Steps: 
                                     - [number]: [...]
                                     - [number]: [...]
                                     - [number]: [...]
-                            - [number]
+                            * [number]
                                 PageRoute & Params: [...]
                                 InterInteraction Steps: 
                                     - [number]: [...]
                                     - [number]: [...]
                                     - [number]: [...]
-                            - [number]
+                            * [number]
                                 PageRoute & Params: [...]
                                 InterInteraction Steps: 
                                     - [number]: [...]
@@ -80,23 +79,17 @@ Review the current "user requirements" and write a new "product requirement defi
             * UserRole
                 name: [...]
                 Features:
-                    - [number]
+                    * [number]
                         Title: [...]
                         Description: [...]
                         Navigation Steps: 
-                            - [number]
+                            * [number]
                                 PageRoute & Params: [...]
                                 Interaction Steps: 
                                     - [number]: [...]
                                     - [number]: [...]
                                     - [number]: [...]
-                            - [number]
-                                PageRoute & Params: [...]
-                                InterInteraction Steps: 
-                                    - [number]: [...]
-                                    - [number]: [...]
-                                    - [number]: [...]
-                            - [number]
+                            * [number]
                                 PageRoute & Params: [...]
                                 InterInteraction Steps: 
                                     - [number]: [...]
