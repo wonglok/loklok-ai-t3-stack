@@ -85,6 +85,23 @@ export const useGlobalAI = create<{
         });
     };
 
+    let enable3rd = false;
+    let enable2nd = false;
+    if (typeof window !== "undefined") {
+        let memory =
+            (window?.performance as any)?.memory?.jsHeapSizeLimit /
+            1024 /
+            1024 /
+            1024;
+
+        if (memory >= 2.5) {
+            enable2nd = true;
+        }
+        if (memory >= 3.5) {
+            enable3rd = true;
+        }
+    }
+
     return {
         lockInWorkers: false,
         refreshSlot: refreshSlot,
@@ -100,29 +117,26 @@ export const useGlobalAI = create<{
 
                 currentModel: models[0].value,
                 llmStatus: "empty",
-                // engine: null,
                 bannerText: "",
             },
             {
                 lockedBy: "",
-                enabled: true,
+                enabled: enable2nd,
                 name: "_02",
                 displayName: "AI Developer 02",
 
                 currentModel: models[0].value,
                 llmStatus: "empty",
-                // engine: null,
                 bannerText: "",
             },
             {
                 lockedBy: "",
-                enabled: false,
+                enabled: enable3rd,
                 name: "_03",
                 displayName: "AI Developer 03",
 
                 currentModel: models[0].value,
                 llmStatus: "empty",
-                // engine: null,
                 bannerText: "",
             },
             {
@@ -133,7 +147,6 @@ export const useGlobalAI = create<{
 
                 currentModel: models[0].value,
                 llmStatus: "empty",
-                // engine: null,
                 bannerText: "",
             },
             {
@@ -144,7 +157,6 @@ export const useGlobalAI = create<{
 
                 currentModel: models[0].value,
                 llmStatus: "empty",
-                // engine: null,
                 bannerText: "",
             },
         ],
