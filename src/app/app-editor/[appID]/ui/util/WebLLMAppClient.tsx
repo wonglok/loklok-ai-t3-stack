@@ -133,26 +133,7 @@ export const WebLLMAppClient = {
                         await returnFreeEngineSlot({ slot: slot });
                     },
                 },
-                {
-                    name: "genReactComponentTree",
-                    status: "waiting",
-                    deps: ["genFeatrues"],
-                    func: async () => {
-                        let slot = await provideFreeEngineSlot({
-                            name: "genReactComponentTree",
-                        });
 
-                        await genReactComponentTree({
-                            slot: slot,
-                            userPrompt: userPrompt,
-                            featuresText: await readFileContent({
-                                path: `/study/genFeatrues.md`,
-                            }),
-                            engine: apiMap.get(slot.name).engine,
-                        });
-                        await returnFreeEngineSlot({ slot: slot });
-                    },
-                },
                 {
                     name: "genMongoDatabase",
                     status: "waiting",
@@ -174,26 +155,47 @@ export const WebLLMAppClient = {
                     },
                 },
 
-                {
-                    name: "genTRPCProcedure",
-                    status: "waiting",
-                    deps: ["genReactComponentTree"],
-                    func: async () => {
-                        let slot = await provideFreeEngineSlot({
-                            name: "genTRPCProcedure",
-                        });
+                // {
+                //     name: "genReactComponentTree",
+                //     status: "waiting",
+                //     deps: ["genFeatrues"],
+                //     func: async () => {
+                //         let slot = await provideFreeEngineSlot({
+                //             name: "genReactComponentTree",
+                //         });
 
-                        await genTRPCProcedure({
-                            slot: slot,
-                            userPrompt: userPrompt,
-                            reactComponentsText: await readFileContent({
-                                path: `/study/genReactComponentTree.md`,
-                            }),
-                            engine: apiMap.get(slot.name).engine,
-                        });
-                        await returnFreeEngineSlot({ slot: slot });
-                    },
-                },
+                //         await genReactComponentTree({
+                //             slot: slot,
+                //             userPrompt: userPrompt,
+                //             featuresText: await readFileContent({
+                //                 path: `/study/genFeatrues.md`,
+                //             }),
+                //             engine: apiMap.get(slot.name).engine,
+                //         });
+                //         await returnFreeEngineSlot({ slot: slot });
+                //     },
+                // },
+
+                // {
+                //     name: "genTRPCProcedure",
+                //     status: "waiting",
+                //     deps: ["genReactComponentTree"],
+                //     func: async () => {
+                //         let slot = await provideFreeEngineSlot({
+                //             name: "genTRPCProcedure",
+                //         });
+
+                //         await genTRPCProcedure({
+                //             slot: slot,
+                //             userPrompt: userPrompt,
+                //             reactComponentsText: await readFileContent({
+                //                 path: `/study/genReactComponentTree.md`,
+                //             }),
+                //             engine: apiMap.get(slot.name).engine,
+                //         });
+                //         await returnFreeEngineSlot({ slot: slot });
+                //     },
+                // },
             ];
 
             await (async () => {

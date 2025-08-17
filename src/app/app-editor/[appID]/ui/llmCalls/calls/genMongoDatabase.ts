@@ -3,7 +3,11 @@
 import type * as webllm from "@mlc-ai/web-llm";
 import { systemPromptPureText } from "../persona/systemPromptPureText";
 import { llmRequestToFileStream } from "../common/llmRequestToFileStream";
-
+import z from "zod";
+import { systemPromptDiffCode } from "../persona/systemPromptDiffCode";
+import { writeToFile } from "../common/writeToFile";
+import { readFileContent } from "../common/readFileContent";
+import { newUnifiedDiffStrategy } from "diff-apply";
 export const genMongoDatabase = async ({
     slot,
     userPrompt,
@@ -16,7 +20,7 @@ export const genMongoDatabase = async ({
     let messages: webllm.ChatCompletionMessageParam[] = [
         {
             role: `system`,
-            content: `${systemPromptPureText}`,
+            content: `${systemPromptDiffCode}`,
         },
         {
             role: "assistant",
@@ -29,94 +33,13 @@ ${userPrompt}`,
 ${featuresText}`,
         },
         {
-            role: "assistant",
-            content: `
-
-# Instruction
-You are a senior product manager:
-Review the current "user requirements" and write a new "product requirement definition"
-
-## Design Thinking Requirements:
-    1. Oragnise the text in a neat and tidy way
-    2. rewrite wordings to better english
-    3. ponder bible proverbs scriptures for wisidom when designing the system, 
-    4. learn from the wisdom of single source of truth, constant values, pure functions
-    
-## Format Requirements
-    1. Use markdown
-    2. Use emoji
-    3. Use indentation
-    4. NEVER Wrap text with ** in markdown
-    5. NEVER USE ** in markdown
-    5. NEVER Bold Text in markdown
-    6. Always add a new line for each new item (better spacing...)
-    7. Must follow the Output format below:
-    8. use * as a new item
-    9. use - as a property of that new item
-`,
-        },
-
-        {
-            role: "assistant",
-            content: `
-
-# Output in Pure Text Format
-    
-    ## Backend Database:
-
-        Mongoise Database:
-            * Each Collection
-                - CollectionTitle: [...]
-                - Description: [...]
-                - DataFields: 
-                    * DataField 
-                        - Name: [...]
-                        - DataType: [mongoose compatible data type]
-            * Each Collection
-                - CollectionTitle: [...]
-                - Description: [...]
-                - DataFields: 
-                    * DataField 
-                        - Name: [...]
-                        - DataType: [mongoose compatible data type]
-
-`,
+            role: `user`,
+            content: `implement the mongoose database models in javascript es6 modules according to "Product Requirement Definition". organise each model in their own file.`,
         },
         {
-            role: "user",
-            content: `Write the Backend Database Section.`,
+            role: `user`,
+            content: `output diffcode only, don't output comments or notes`,
         },
-
-        /*
-
-
-
-
-
-    ## Backend tRPC Procedures (Similar to REST Endpoints): 
-
-        Procedures:
-        
-            * Each Procedure
-                - Title: [...]
-                - Description: [...]
-                - Input Parameters: [...]
-                - Output Parameters: [...]
-
-            * Each Procedure
-                - Title: [...]
-                - Description: [...]
-                - Input Parameters: [...]
-                - Output Parameters: [...]
-
-## Front End tRPC SDK
-[...]
-
-## Zustand State Management
-[...]
-
-
-             */
     ];
 
     const request: webllm.ChatCompletionRequestStreaming = {
@@ -124,17 +47,79 @@ Review the current "user requirements" and write a new "product requirement defi
         stream: true,
         stream_options: { include_usage: true },
         messages: messages,
-        temperature: 0,
+        temperature: 0.0,
     };
 
-    let path = `/study/genMongoDB.md`;
-
+    let latestJSONPath = `/study/genMongoDB.json`;
     await llmRequestToFileStream({
-        path: path,
-        request: request,
+        path: latestJSONPath,
+        request: {
+            ...request,
+            response_format: {
+                type: "json_object",
+                schema: JSON.stringify(
+                    z.toJSONSchema(
+                        z.object({
+                            version: z.literal("2025-08-12---init"),
+                            mongoose: z
+                                .array(
+                                    z
+                                        .object({
+                                            collectionName: z.string(),
+                                        })
+                                        .describe(
+                                            "each mongoose database collection",
+                                        ),
+                                )
+                                .describe("mongoose database collections"),
+                        }),
+                    ),
+                ),
+            },
+        },
         engine,
         slot: slot,
     });
+    let newJSON = await readFileContent({ path: latestJSONPath });
+    console.log(newJSON);
+
+    // let existingCode = "";
+    // await writeToFile({
+    //     path: ``,
+    //     content: `${existingCode}`,
+    // });
+
+    // let path = `/study/genMongoDB.diff.md`;
+
+    // await llmRequestToFileStream({
+    //     path: path,
+    //     request: {
+    //         ...request,
+    //     },
+    //     engine,
+    //     slot: slot,
+    // });
+
+    // let diffText = await readFileContent({ path });
+
+    // console.log(diffText);
+
+    // let parseDiff = await import("parse-diff").then(
+    //     async ({ default: parseDiff }) => {
+    //         return parseDiff;
+    //     },
+    // );
+
+    // let item = await parseDiff(diffText);
+
+    // console.log(item);
+
+    // const strategy = newUnifiedDiffStrategy.create(0.95); // 95% confidence required
+
+    // let result = await strategy.applyDiff({
+    //     originalContent: existingCode,
+    //     diffContent: diffText,
+    // });
 
     ///////////////////////////////////////////////////////////////////////////////////
     // usecase

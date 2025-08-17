@@ -40,19 +40,10 @@ ${reactComponentsText}`,
 
         Procedures:
             * Each Procedure
-                - Title: [...]
-                - CallName: [...]
-                - Description: [...]
-                - Input Parameters: [...]
-                - Output Parameters: [...]
+                - CallName: [api.post.procedureName]
             * Each Procedure
-                - Title: [...]
-                - CallName: [...]
-                - Description: [...]
-                - Input Parameters: [...]
-                - Output Parameters: [...]
-    
-
+                - CallName: [api.post.procedureName]
+            [...]
 `,
         },
 

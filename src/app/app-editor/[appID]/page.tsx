@@ -11,14 +11,13 @@ export default function Page({ params }: { params: any }) {
     let appID = useGlobalAI((r) => r.appID);
 
     useEffect(() => {
-        //
         params.then(async (query: Record<string, any>) => {
             useGlobalAI.setState({
                 appID: query.appID,
             });
 
             if (typeof window !== "undefined") {
-                let files = (await appsCode.getItem(appID)) as MyFile[];
+                let files = (await appsCode.getItem(query.appID)) as MyFile[];
 
                 if (files instanceof Array) {
                     useGlobalAI.setState({
