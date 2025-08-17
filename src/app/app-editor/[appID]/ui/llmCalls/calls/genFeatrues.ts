@@ -45,7 +45,6 @@ Review the current "user requirements" and write a new "product requirement defi
         {
             role: "assistant",
             content: `
-
 # Output in Pure Text Format
     
     ## UserRoles and Features Section

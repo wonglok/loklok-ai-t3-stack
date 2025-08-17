@@ -183,10 +183,8 @@ export const useGlobalAI = create<{
 
 I want to have a system portal for me to login.
 
-System portal can generate teacher login and student login.
-
 Teacher portal can 
-1. generate student login.
+1. generate student login account.
 2. Upload 3d room
 3. Create avatar and some embed code to it or iframe URL to it
 4. Upload Videos 
@@ -200,6 +198,8 @@ Student can login to the metaverse and have fun.
 2. Watch Video in NPC Avatar
 3. View Learning Progress of Video Watching and Quiz Doing
 
+System portal can generate teacher login account and student login account.
+and have every feature above.
 
 `.trim(),
         loadingSpec: false,
