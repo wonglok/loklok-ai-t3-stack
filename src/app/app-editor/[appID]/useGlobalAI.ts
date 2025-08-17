@@ -25,6 +25,7 @@ export type EngineData = {
     llmStatus: "empty" | "downloading" | "idle" | "writing";
     // engine: webllm.MLCEngineInterface;
     bannerText: string;
+    bannerData?: any;
 };
 
 export const useGlobalAI = create<{
@@ -118,6 +119,7 @@ export const useGlobalAI = create<{
                 currentModel: models[0].value,
                 llmStatus: "empty",
                 bannerText: "",
+                bannerData: null,
             },
             {
                 lockedBy: "",
@@ -128,6 +130,7 @@ export const useGlobalAI = create<{
                 currentModel: models[0].value,
                 llmStatus: "empty",
                 bannerText: "",
+                bannerData: null,
             },
             {
                 lockedBy: "",
@@ -138,6 +141,7 @@ export const useGlobalAI = create<{
                 currentModel: models[0].value,
                 llmStatus: "empty",
                 bannerText: "",
+                bannerData: null,
             },
             {
                 lockedBy: "",
@@ -148,6 +152,7 @@ export const useGlobalAI = create<{
                 currentModel: models[0].value,
                 llmStatus: "empty",
                 bannerText: "",
+                bannerData: null,
             },
             {
                 lockedBy: "",
@@ -158,6 +163,7 @@ export const useGlobalAI = create<{
                 currentModel: models[0].value,
                 llmStatus: "empty",
                 bannerText: "",
+                bannerData: null,
             },
         ],
 
@@ -173,11 +179,15 @@ export const useGlobalAI = create<{
 
         // currentModel: models[0].value,
         appID: "",
-        prompt: `
-I want to build a expense tracker with tracking my money usage, and savings plan and recommendations on planning.
+        prompt: `I want to build an eclass School multipurpose metaverse using threejs. 
 
-I want to build a landing page as well.
+i want to have a teacher account that can create student account for student to login/
 
+I want to be able to add 3d map to it.
+
+i want to be able to customize the 3d map with different objects.
+
+i want to be able to program the behaviour of object using three.js custom code.
         `.trim(),
         loadingSpec: false,
         welcome: true,

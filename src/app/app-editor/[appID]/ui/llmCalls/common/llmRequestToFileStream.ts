@@ -53,6 +53,7 @@ export const llmRequestToFileStream = async ({
             author: `${slot.name}`,
             content: messageFragments,
             path: path,
+            inputSignature: `${Math.random()}`,
             persist: false,
         });
 

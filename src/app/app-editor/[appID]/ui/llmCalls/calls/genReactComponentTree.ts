@@ -66,7 +66,17 @@ You are a senior product manager:
 Review the current "user requirements" and write a new "product requirement definition"
 Rewrite wordings to better english and optimise for LLM reading
 
-# Output in Pure Text Format
+- replace [ReactJS-Layout-Name] and Fill in Content in There Accordingly
+- replace [ReactJS-Layout-Slot-ComponentName] and Fill in Content in There Accordingly
+- replace [ReactJS-ComponentName] and Fill in Content in There Accordingly
+- replace [ReactJS-SubComponentName] and Fill in Content in There Accordingly
+
+- use Zustnad Store Management
+- replace [Zustand-Output-Data] and fill in Content in there accordingly
+
+- Please import each component with their file path with baseFodler "/ReactUI/[name...].js"
+
+# Output Template in Pure Text Format
 
 ## Front End Pages:
 
@@ -80,51 +90,35 @@ Pages:
                 - Name : [Name]
                 - description: [description]
                 - ReactJS Components
-                - Please Replace ReactJS-LayoutName Accordingly
-                - Please Replace ReactJS-Layout-Slot-ComponentName Accordingly
-                - Please Replace ReactJS-ComponentName Accordingly
-                - Please Replace ReactJS-SubComponentName Accordingly
-            
-                \`\`\`jsx
+\`\`\`jsx
+[importCode...]
 
-        <[ReactJS-LayoutName]>
-            <[ReactJS-Layout-Slot-ComponentName]>
-                <[ReactJS-ComponentName]>
-                    <[ReactJS-SubComponentName]></[ReactJS-SubComponentName]>
-                    <[ReactJS-SubComponentName]></[ReactJS-SubComponentName]>
-                    <[ReactJS-SubComponentName]></[ReactJS-SubComponentName]>
-                </[ReactJS-ComponentName]>
-                <[ReactJS-ComponentName]>
-                    <[ReactJS-SubComponentName]></[ReactJS-SubComponentName]>
-                    <[ReactJS-SubComponentName]></[ReactJS-SubComponentName]>
-                    <[ReactJS-SubComponentName]></[ReactJS-SubComponentName]>
-                </[ReactJS-ComponentName]>
-                <[ReactJS-ComponentName]>
-                    <[ReactJS-SubComponentName]></[ReactJS-SubComponentName]>
-                    <[ReactJS-SubComponentName]></[ReactJS-SubComponentName]>
-                    <[ReactJS-SubComponentName]></[ReactJS-SubComponentName]>
-                </[ReactJS-ComponentName]>
-            </[ReactJS-Layout-Slot-ComponentName]>
-            <[ReactJS-Layout-Slot-ComponentName]>
-                <[ReactJS-ComponentName]>
-                    <[ReactJS-SubComponentName]></[ReactJS-SubComponentName]>
-                    <[ReactJS-SubComponentName]></[ReactJS-SubComponentName]>
-                    <[ReactJS-SubComponentName]></[ReactJS-SubComponentName]>
-                </[ReactJS-ComponentName]>
-                <[ReactJS-ComponentName]>
-                    <[ReactJS-SubComponentName]></[ReactJS-SubComponentName]>
-                    <[ReactJS-SubComponentName]></[ReactJS-SubComponentName]>
-                    <[ReactJS-SubComponentName]></[ReactJS-SubComponentName]>
-                </[ReactJS-ComponentName]>
-                <[ReactJS-ComponentName]>
-                    <[ReactJS-SubComponentName]></[ReactJS-SubComponentName]>
-                    <[ReactJS-SubComponentName]></[ReactJS-SubComponentName]>
-                    <[ReactJS-SubComponentName]></[ReactJS-SubComponentName]>
-                </[ReactJS-ComponentName]>
-            </[ReactJS-Layout-Slot-ComponentName]>
-        </ReactJSLayoutName>
 
-                \`\`\`
+export function Page () {
+
+    return <[ReactJS-Layout-Name]>
+        <[ReactJS-Layout-Slot-ComponentName]>
+            <[ReactJS-ComponentName]>
+                <[ReactJS-SubComponentName]>{[Zustand-Output-Data]}</[ReactJS-SubComponentName]>
+                <[ReactJS-SubComponentName]>{[Zustand-Output-Data]}</[ReactJS-SubComponentName]>
+                <[ReactJS-SubComponentName]>{[Zustand-Output-Data]}</[ReactJS-SubComponentName]>
+            </[ReactJS-ComponentName]>
+            <[ReactJS-ComponentName]>
+                <[ReactJS-SubComponentName]>{[Zustand-Output-Data]}</[ReactJS-SubComponentName]>
+                <[ReactJS-SubComponentName]>{[Zustand-Output-Data]}</[ReactJS-SubComponentName]>
+                <[ReactJS-SubComponentName]>{[Zustand-Output-Data]}</[ReactJS-SubComponentName]>
+            </[ReactJS-ComponentName]>
+            <[ReactJS-ComponentName]>
+                <[ReactJS-SubComponentName]>{[Zustand-Output-Data]}</[ReactJS-SubComponentName]>
+                <[ReactJS-SubComponentName]>{[Zustand-Output-Data]}</[ReactJS-SubComponentName]>
+                <[ReactJS-SubComponentName]>{[Zustand-Output-Data]}</[ReactJS-SubComponentName]>
+            </[ReactJS-ComponentName]>
+        </[ReactJS-Layout-Slot-ComponentName]>
+        [...]
+    </ReactJSLayout-Name>
+}
+
+\`\`\`
 `,
 
             /*
