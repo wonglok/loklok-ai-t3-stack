@@ -219,10 +219,56 @@ export function ControlPanel() {
                                 >
                                     Reset all
                                 </button>
+
                                 {files
                                     .slice()
                                     .sort(sortDate)
                                     .reverse()
+                                    .filter((r) => r.path.startsWith("/temp"))
+                                    .map((it, i, files) => {
+                                        //
+
+                                        return (
+                                            <div
+                                                key={it.path + i + "slides"}
+                                                className={
+                                                    (expandID === "" &&
+                                                        i === 0) ||
+                                                    expandID === it.path
+                                                        ? `bg-green-200`
+                                                        : `odd:bg-white even:bg-gray-100`
+                                                }
+                                            >
+                                                <div
+                                                    className="flex h-full w-full cursor-pointer justify-between px-3 py-2"
+                                                    onClick={() => {
+                                                        selectFile({
+                                                            index: i,
+                                                            total: files.length,
+                                                            file: it,
+                                                        });
+                                                    }}
+                                                >
+                                                    <div>{it.path}</div>
+                                                    <div>
+                                                        {engines.find(
+                                                            (r) =>
+                                                                r.name ===
+                                                                it.author,
+                                                        )?.llmStatus ===
+                                                            "writing" &&
+                                                            `🤖 ${it.author}`}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+
+                                {files
+                                    .slice()
+                                    .sort(sortDate)
+                                    .reverse()
+                                    .filter((r) => !r.path.startsWith("/temp"))
                                     .map((it, i, files) => {
                                         //
 
@@ -264,12 +310,10 @@ export function ControlPanel() {
                                     })}
                             </div>
 
-                            {/* 250 */}
                             <div
                                 className="h-full"
                                 style={{ width: `calc(100% - 350px)` }}
                             >
-                                {/*  */}
                                 <div
                                     id="docs"
                                     className="relative h-full shrink-0 overflow-x-auto"

@@ -9,6 +9,7 @@ import { writeToFile } from "../common/writeToFile";
 import { readFileContent } from "../common/readFileContent";
 import { newUnifiedDiffStrategy } from "diff-apply";
 import { readFileParseJSON } from "../common/readFileParseJSON";
+import { removeFileByPath } from "../common/removeFilePath";
 export const genMongoDatabase = async ({
     slot,
     userPrompt,
@@ -18,10 +19,28 @@ export const genMongoDatabase = async ({
     ///////////////////////////////////////////////////////////////////////////////////
     // manifest
     ///////////////////////////////////////////////////////////////////////////////////
+    let mongooseSpecPath = `/study/genMongoDB.json`;
 
-    let latestJSONPath = `/study/genMongoDB.json`;
+    let existingCode = await readFileContent({ path: mongooseSpecPath });
+    let schema = z.object({
+        mongooseModels: z
+            .array(
+                z
+                    .object({
+                        collectionName: z.string(),
+                        codeFilePath: z.string().describe(
+                            `example:  
+                                                    "/model/[CollectionName].model.js"
+                                                    Change [CollectionName] to the item name accrodingly 
+                                                `,
+                        ),
+                    })
+                    .describe("each mongoose database collection"),
+            )
+            .describe("mongoose database collections"),
+    });
     await llmRequestToFileStream({
-        path: latestJSONPath,
+        path: mongooseSpecPath,
         request: {
             seed: 19900831,
             stream: true,
@@ -29,7 +48,7 @@ export const genMongoDatabase = async ({
             messages: [
                 {
                     role: `system`,
-                    content: `${systemPromptDiffCode}`,
+                    content: `${systemPromptPureText}`,
                 },
                 {
                     role: "assistant",
@@ -41,52 +60,92 @@ ${userPrompt}`,
                     content: `Here's the "Use case and Features" Document:
 ${featuresText}`,
                 },
+
                 {
-                    role: `user`,
-                    content: `implement the mongoose database models in javascript es6 modules according to "Product Requirement Definition". organise each model in their own file.`,
-                },
-                {
-                    role: `user`,
-                    content: `output diffcode only, don't output comments or notes`,
+                    role: "user",
+                    content: `Please generate a list of mongoose database model`,
                 },
             ] as webllm.ChatCompletionMessageParam[],
             temperature: 0.0,
+            top_p: 0.05,
             response_format: {
                 type: "json_object",
-                schema: JSON.stringify(
-                    z.toJSONSchema(
-                        z.object({
-                            version: z.literal("2025-08-12---init"),
-                            mongoose: z
-                                .array(
-                                    z
-                                        .object({
-                                            collectionName: z.string(),
-                                            codeFilePath: z.string().describe(
-                                                `example:  
-                                                    "/model/[CollectionName].model.js"
-                                                    
-                                                    Change [CollectionName] to the item name accrodingly 
-                                                `,
-                                            ),
-                                        })
-                                        .describe(
-                                            "each mongoose database collection",
-                                        ),
-                                )
-                                .describe("mongoose database collections"),
-                        }),
-                    ),
-                ),
+                schema: JSON.stringify(z.toJSONSchema(schema)),
             },
         } as webllm.ChatCompletionRequestStreaming,
         engine,
         slot: slot,
     });
 
-    let newJSON = await readFileParseJSON({ path: latestJSONPath });
+    let latestModels = (await readFileParseJSON({
+        path: mongooseSpecPath,
+    })) as z.infer<typeof schema>;
 
-    console.log(newJSON);
+    for (let mongoose of latestModels.mongooseModels) {
+        let existingCodePath = `${mongoose.codeFilePath}`;
+        let existingModelCode = await readFileContent({
+            path: `${existingCodePath}`,
+        });
+
+        console.log("existingModelCode", existingModelCode);
+        let hasExistingCode = existingModelCode !== "";
+
+        let outputPath = hasExistingCode
+            ? `/temp/models/${mongoose.collectionName}.diff.md`
+            : `${existingCodePath}`;
+
+        await llmRequestToFileStream({
+            path: outputPath,
+            request: {
+                seed: 19900831,
+                stream: true,
+                stream_options: { include_usage: true },
+                messages: [
+                    {
+                        role: `system`,
+                        content: `${hasExistingCode ? systemPromptDiffCode : systemPromptPureText}`,
+                    },
+                    {
+                        role: "assistant",
+                        content: `Here's the "old-mongoose-model" Document:
+${existingModelCode}`,
+                    },
+
+                    {
+                        role: "assistant",
+                        content: `Here's the latest Product Requirement Document:
+${featuresText}
+                            `,
+                    },
+                    {
+                        role: `user`,
+                        content: `
+${
+    hasExistingCode
+        ? `
+Please write the latest mongoose model code for "${mongoose.collectionName}" model at the file path "${mongoose.codeFilePath}";
+only output diff code. `
+        : `
+Please write the latest mongoose model code for "${mongoose.collectionName}" model at the file path "${mongoose.codeFilePath}";
+        `
+}
+`.trim(),
+                    },
+                ] as webllm.ChatCompletionMessageParam[],
+                temperature: 0.0,
+                top_p: 0.05,
+            } as webllm.ChatCompletionRequestStreaming,
+            engine,
+            slot: slot,
+        });
+
+        let latestModelDiffCode = await readFileContent({
+            path: `${outputPath}`,
+        });
+
+        console.log(latestModelDiffCode);
+        //
+    }
 
     // let existingCode = "";
     // await writeToFile({

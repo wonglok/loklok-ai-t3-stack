@@ -34,7 +34,7 @@ export const llmRequestToFileStream = async ({
     let fileObject = await readFileObject({ path });
 
     if (fileObject) {
-        let nowHash = `${md5(JSON.stringify({ request, content: fileObject.content }))}`;
+        let nowHash = `${md5(JSON.stringify({ request, model: slot.currentModel, content: fileObject.content }))}`;
         if (nowHash === fileObject.inputSignature) {
             return;
         }
@@ -91,7 +91,7 @@ export const llmRequestToFileStream = async ({
         path: path,
         inputSignature:
             slot.llmStatus === "writing"
-                ? `${md5(JSON.stringify({ request, content: messageFragments }))}`
+                ? `${md5(JSON.stringify({ request, model: slot.currentModel, content: messageFragments }))}`
                 : `${Math.random()}`,
 
         persist: true,

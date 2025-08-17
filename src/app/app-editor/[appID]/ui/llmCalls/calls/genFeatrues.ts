@@ -68,6 +68,14 @@ Review the current "user requirements" and write a new "product requirement defi
                                 - PageRoute & Params: [...]
                                 - Interactions: 
                                     * Action Step [number]: [...]
+                                    * Action Step [number]: [...]
+                                    * Action Step [number]: [...]
+                            * Overall Step [number]
+                                - PageRoute & Params: [...]
+                                - Interactions: 
+                                    * Action Step [number]: [...]
+                                    * Action Step [number]: [...]
+                                    * Action Step [number]: [...]
 
                      * Feature
                         - Title: [...]
