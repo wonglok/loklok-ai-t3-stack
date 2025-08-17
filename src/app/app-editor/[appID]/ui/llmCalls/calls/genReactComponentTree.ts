@@ -76,133 +76,42 @@ Pages:
         - WebPage's Description: [...]
         - WebPage's Access Level Securirty Requirement: [...]
 
-        * WebPage's ReactJS Layout Component 
+        * WebPage's ReactJS Component
                 - Name : [Name]
                 - description: [description]
-                - Slots of the Layout:
-                    - SlotName: [SlotName]
-                        * ReactJS Component 
-                            - Name : [Name]
-                            - description: [description]
-                        * ReactJS Component 
-                            - Name : [Name]
-                            - description: [description]
-                        * ReactJS Component 
-                            - Name : [Name]
-                            - description: [description]
-
-                    - SlotName: [SlotName]
-                        * ReactJS Component 
-                            - Name : [Name]
-                            - description: [description]
-                        * ReactJS Component 
-                            - Name : [Name]
-                            - description: [description]
-                        * ReactJS Component 
-                            - Name : [Name]
-                            - description: [description]
-                            - ReactJS SubComponents:
-                                * ReactJS SubComponent 
-                                    - Name : [Name]
-                                    - description: [description]
-                                * ReactJS SubComponent 
-                                    - Name : [Name]
-                                    - description: [description]
-                                * ReactJS SubComponent 
-                                    - Name : [Name]
-                                    - description: [description]
-    * WebPage
-        - WebPage's Route & Params: [...]
-        - WebPage's Description: [...]
-        - WebPage's Access Level Securirty Requirement: [...]
-
-        * WebPage's ReactJS Layout Component 
-                - Name : [Name]
-                - description: [description]
-                - Slots of the Layout:
-                    - SlotName: [SlotName]
-                        * ReactJS Component 
-                            - Name : [Name]
-                            - description: [description]
-                            - ReactJS SubComponents:
-                                * ReactJS SubComponent 
-                                    - Name : [Name]
-                                    - description: [description]
-                                * ReactJS SubComponent 
-                                    - Name : [Name]
-                                    - description: [description]
-                                * ReactJS SubComponent 
-                                    - Name : [Name]
-                                    - description: [description]
-                        * ReactJS Component 
-                            - Name : [Name]
-                            - description: [description]
-                        * ReactJS Component 
-                            - Name : [Name]
-                            - description: [description]
-
-                    - SlotName: [SlotName]
-                        * ReactJS Component 
-                            - Name : [Name]
-                            - description: [description]
-                        * ReactJS Component 
-                            - Name : [Name]
-                            - description: [description]
-                        * ReactJS Component 
-                            - Name : [Name]
-                            - description: [description]
+                    * ReactJS Component 
+                        - Name : [Name]
+                        - description: [description]
+                        - ReactJS SubComponents:
+                            * ReactJS SubComponent 
+                                - Name : [Name]
+                                - description: [description]
+                            * ReactJS SubComponent 
+                                - Name : [Name]
+                                - description: [description]
+                            * ReactJS SubComponent 
+                                - Name : [Name]
+                                - description: [description]
+                    * ReactJS Component 
+                        - Name : [Name]
+                        - description: [description]
+                        - ReactJS SubComponents:
+                            * ReactJS SubComponent 
+                                - Name : [Name]
+                                - description: [description]
+                            * ReactJS SubComponent 
+                                - Name : [Name]
+                                - description: [description]
+                            * ReactJS SubComponent 
+                                - Name : [Name]
+                                - description: [description]
 
 `,
         },
         {
             role: "user",
-            content: `Write the Front End Pages and UI Components Section.`,
+            content: `Write the Front End Pages Section.`,
         },
-
-        /*
-
-    ## Backend Database:
-
-        Mongoise Database:
-            * Each Collection
-                - CollectionTitle: [...]
-                - Description: [...]
-                - DataFields: 
-                    * DataField 
-                        - Name: [...]
-                        - DataType: [mongoose compatible data type]
-            * Each Collection
-                - CollectionTitle: [...]
-                - Description: [...]
-                - DataFields: 
-                    * DataField 
-                        - Name: [...]
-                        - DataType: [mongoose compatible data type]
-
-    ## Backend tRPC Procedures (Similar to REST Endpoints): 
-
-        Procedures:
-        
-            * Each Procedure
-                - Title: [...]
-                - Description: [...]
-                - Input Parameters: [...]
-                - Output Parameters: [...]
-
-            * Each Procedure
-                - Title: [...]
-                - Description: [...]
-                - Input Parameters: [...]
-                - Output Parameters: [...]
-
-## Front End tRPC SDK
-[...]
-
-## Zustand State Management
-[...]
-
-
-             */
     ];
 
     const request: webllm.ChatCompletionRequestStreaming = {
@@ -226,3 +135,5 @@ Pages:
     // usecase
     ///////////////////////////////////////////////////////////////////////////////////
 };
+
+// youtube@t3.gg
