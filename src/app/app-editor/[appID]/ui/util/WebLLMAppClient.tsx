@@ -1,6 +1,7 @@
 "use client";
 
 import type * as webllm from "@mlc-ai/web-llm";
+import { hasModelInCache } from "@mlc-ai/web-llm";
 import { EngineData, useGlobalAI } from "../../useGlobalAI";
 // import { z } from "zod";
 
@@ -99,10 +100,26 @@ export const WebLLMAppClient = {
             ),
         });
 
+        for (let slot of enabledEngines) {
+            let has = await hasModelInCache(slot.currentModel);
+            if (has) {
+                continue;
+            } else {
+                let api = await makeEngineAPI({ name: slot.name });
+                apiMap.set(slot.name, api);
+            }
+        }
+
         await Promise.all(
             enabledEngines.map((slot) => {
                 return new Promise(async (resolve) => {
                     try {
+                        if (apiMap.has(slot.name)) {
+                            let api = apiMap.get(slot.name);
+                            resolve(api);
+                            return;
+                        }
+
                         let api = await makeEngineAPI({ name: slot.name });
                         apiMap.set(slot.name, api);
                         resolve(api);
