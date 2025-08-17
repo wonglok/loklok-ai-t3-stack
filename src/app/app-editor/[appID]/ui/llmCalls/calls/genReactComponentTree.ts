@@ -27,18 +27,14 @@ export const genReactComponentTree = async ({
             .array(
                 z
                     .object({
-                        itemName: z.string().describe("ReactJS Components"),
-                        codeFilePath: z.string().describe(
-                            `example:  
-                                "/react/"itemName".js"
-                                Change "itemName" to the React JS Component name accrodingly 
-                            `,
-                        ),
+                        ReactComponentName: z.string(),
+                        slug: z.string(),
                     })
                     .describe("each reactComponent item"),
             )
             .describe("reactComponent list"),
     });
+
     await llmRequestToFileStream({
         path: reactComponentSpecPath,
         request: {
@@ -82,21 +78,21 @@ export const genReactComponentTree = async ({
     })) as z.infer<typeof schema>;
 
     for (let reactComponent of lateSpec.reactComponentModels) {
-        if (!reactComponent.codeFilePath.startsWith("/")) {
-            reactComponent.codeFilePath = `/${reactComponent.codeFilePath}`;
+        if (!reactComponent.slug.startsWith("/")) {
+            reactComponent.slug = `/react/${reactComponent.slug}`;
         }
-        console.log("manager.addTask", reactComponent.codeFilePath);
+        console.log("manager.addTask", reactComponent.slug);
 
         manager?.addTask({
-            name: reactComponent.codeFilePath,
+            name: reactComponent.slug,
             deps: [],
             func: async ({ slot, engine }) => {
-                console.log("begin-task", reactComponent.codeFilePath);
+                console.log("begin-task", reactComponent.slug);
 
-                let outputPath = `${reactComponent.codeFilePath}`;
+                let outputPath = `${reactComponent.slug}`;
 
                 await llmRequestToFileStream({
-                    path: reactComponent.codeFilePath,
+                    path: reactComponent.slug,
                     needsExtractCode: true,
                     request: {
                         seed: 19900831,
@@ -113,12 +109,12 @@ ${featuresText}
                             {
                                 role: `user`,
                                 content: `
-Please write the latest reactComponent component javascript code for "${reactComponent.itemName}" component.
+Please write the latest reactComponent component javascript code for "${reactComponent.ReactComponentName}" component.
 
 - only write the javascript code block 
 - please use esm modules javascript and ecma script ES6 javascript
 
-export const ${`${JSON.stringify(reactComponent.itemName)}ReactComponent`} = () => {
+export const ${`${JSON.stringify(reactComponent.ReactComponentName)}ReactComponent`} = () => {
 
     return ...
 };

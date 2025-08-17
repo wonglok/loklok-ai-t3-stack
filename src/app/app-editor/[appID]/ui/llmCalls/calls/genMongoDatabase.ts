@@ -30,12 +30,7 @@ export const genMongoDatabase = async ({
                 z
                     .object({
                         collectionName: z.string(),
-                        codeFilePath: z.string().describe(
-                            `example:  
-                                                    "/model/[CollectionName].model.js"
-                                                    Change [CollectionName] to the item name accrodingly 
-                                                `,
-                        ),
+                        slug: z.string(),
                     })
                     .describe("each mongoose database collection"),
             )
@@ -84,19 +79,19 @@ ${featuresText}`,
     })) as z.infer<typeof schema>;
 
     for (let mongoose of latestModels.mongooseModels) {
-        if (!mongoose.codeFilePath.startsWith("/")) {
-            mongoose.codeFilePath = `/${mongoose.codeFilePath}`;
+        if (!mongoose.slug.startsWith("/")) {
+            mongoose.slug = `/models/${mongoose.slug}`;
         }
-        console.log("manager.addTask", mongoose.codeFilePath);
+        console.log("manager.addTask", mongoose.slug);
 
         manager?.addTask({
-            name: mongoose.codeFilePath,
+            name: mongoose.slug,
             deps: [],
             func: async ({ slot, engine }) => {
-                console.log("begin-task", mongoose.codeFilePath);
+                console.log("begin-task", mongoose.slug);
                 //
 
-                // let existingCodePath = `${mongoose.codeFilePath}`;
+                // let existingCodePath = `${mongoose.slug}`;
                 // let existingModelCode = await readFileContent({
                 //     path: `${existingCodePath}`,
                 // });
@@ -104,10 +99,10 @@ ${featuresText}`,
                 // console.log("existingModelCode", existingModelCode);
                 // let hasExistingCode = existingModelCode !== "";
 
-                let outputPath = `${mongoose.codeFilePath}`;
+                let outputPath = `${mongoose.slug}`;
 
                 await llmRequestToFileStream({
-                    path: mongoose.codeFilePath,
+                    path: mongoose.slug,
                     needsExtractCode: true,
                     request: {
                         seed: 19900831,
