@@ -59,20 +59,14 @@ Review the current "user requirements" and write a new "product requirement defi
                         Description: [...]
                         Navigation Steps: 
                             * [number]
-                                PageRoute & Params: [...]
-                                Interaction Steps: 
+                                urlRoute: [...]
+                                interactiveSteps: 
                                     - [number]: [...]
                                     - [number]: [...]
                                     - [number]: [...]
                             * [number]
-                                PageRoute & Params: [...]
-                                InterInteraction Steps: 
-                                    - [number]: [...]
-                                    - [number]: [...]
-                                    - [number]: [...]
-                            * [number]
-                                PageRoute & Params: [...]
-                                InterInteraction Steps: 
+                                urlRoute: [...]
+                                interactiveSteps: 
                                     - [number]: [...]
                                     - [number]: [...]
                                     - [number]: [...]
@@ -84,17 +78,34 @@ Review the current "user requirements" and write a new "product requirement defi
                         Description: [...]
                         Navigation Steps: 
                             * [number]
-                                PageRoute & Params: [...]
-                                Interaction Steps: 
+                                urlRoute: [...]
+                                interactiveSteps: 
                                     - [number]: [...]
                                     - [number]: [...]
                                     - [number]: [...]
                             * [number]
-                                PageRoute & Params: [...]
-                                InterInteraction Steps: 
+                                urlRoute: [...]
+                                interactiveSteps: 
                                     - [number]: [...]
                                     - [number]: [...]
                                     - [number]: [...]
+                            * [number]
+                                urlRoute: [...]
+                                interactiveSteps: 
+                                    - [number]: [...]
+                                    - [number]: [...]
+                                    - [number]: [...]
+                    * [number]
+                        Title: [...]
+                        Description: [...]
+                        Navigation Steps: 
+                            * [number]
+                                urlRoute: [...]
+                                interactiveSteps: 
+                                    - [number]: [...]
+                                    - [number]: [...]
+                                    - [number]: [...]
+            
 
 
 
@@ -115,7 +126,7 @@ Please compelte the section: "UserRoles and Features Section"
 
         Pages:
             * Each Web Page 
-                - PageRoute & Params: [...]
+                - urlRoute: [...]
                 - PageDescription: [...]
 
                 * Each ReactJS Component 

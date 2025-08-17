@@ -179,8 +179,10 @@ export const useGlobalAI = create<{
 
         // currentModel: models[0].value,
         appID: "",
-        prompt: `I want to build an eClass School multipurpose Metaverse using ThreeJS and React Three Fiber Framework and nextJS and React JS Library. 
+        prompt: `
 
+I'm a developer.      
+I want to build an eClass School multipurpose Metaverse using ThreeJS and React Three Fiber Framework and nextJS and React JS Library. 
 I want to have a system portal for me to login.
 
 Teacher portal can 
@@ -197,6 +199,7 @@ Student can login to the metaverse and have fun.
 1. Do Quiz
 2. Watch Video in NPC Avatar
 3. View Learning Progress of Video Watching and Quiz Doing
+
 
 System portal can generate teacher login account and student login account.
 and have access to all feature above.
