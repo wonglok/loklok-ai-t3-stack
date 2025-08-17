@@ -98,6 +98,10 @@ ${featuresText}`,
 
 `,
         },
+        {
+            role: "user",
+            content: `Write the Front End Pages and UI Components Section.`,
+        },
 
         /*
 

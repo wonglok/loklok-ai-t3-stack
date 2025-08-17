@@ -102,6 +102,12 @@ Review the current "user requirements" and write a new "product requirement defi
                                     * Action Step [number]: [...]
 `,
         },
+        {
+            role: "user",
+            content: `
+Please compelte the section: "UserRoles and Features Section"
+            `,
+        },
 
         /*
 
