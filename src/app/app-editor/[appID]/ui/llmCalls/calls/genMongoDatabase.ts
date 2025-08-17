@@ -137,8 +137,9 @@ ${featuresText}
                             {
                                 role: `user`,
                                 content: `
-Please write the latest mongoose model javascript code for "${mongoose.collectionName}" model 
+Please write the latest mongoose model javascript code for "${mongoose.collectionName}" model.
 
+- only write the javascript code block 
 - please use esm
 - example code:
 const db = mongoose.connection.useDb("app_development_${useGlobalAI.getState().appID}", { useCache: true });
