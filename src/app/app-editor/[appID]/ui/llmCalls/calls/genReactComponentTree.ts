@@ -67,48 +67,43 @@ Review the current "user requirements" and write a new "product requirement defi
 Rewrite wordings to better english and optimise for LLM reading
 
 # Output in Pure Text Format
-    
-## Front End Pages and UI Components:
+
+## Front End Pages:
 
 Pages:
-    * Each Web Page 
+    * WebPage
         - Page Route & Params: [...]
         - Page Description: [...]
         - Page Access Level Securirty Requirement: [...]
 
-            * Page's ReactJS Layout Component 
+        * Page's ReactJS Layout Component 
                 - Name : [Name]
                 - description: [description]
                 - Slots of the Layout:
-                    * Slot's ReactJS Component 
-                        - Name : [Name]
-                        - description: [description]
-                    * Slot's ReactJS Component 
-                        - Name : [Name]
-                        - description: [description]
-                    * Slot's ReactJS Component 
-                        - Name : [Name]
-                        - description: [description]
+                    - SlotName: [SlotName]
+                        * ReactJS Component 
+                            - Name : [Name]
+                            - description: [description]
+                        * ReactJS Component 
+                            - Name : [Name]
+                            - description: [description]
+                        * ReactJS Component 
+                            - Name : [Name]
+                            - description: [description]
+                        * ReactJS Component 
+                            - Name : [Name]
+                            - description: [description]
 
-    * Each Web Page 
-        - Page Route & Params: [...]
-        - Page Description: [...]
-        - Page Access Level Securirty Requirement: [...]
+                    - SlotName: [SlotName]
+                        * ReactJS Component 
+                            - Name : [Name]
+                            - description: [description]
+                        * ReactJS Component 
+                            - Name : [Name]
+                            - description: [description]
 
-            * Page's ReactJS Layout Component 
-                - Name : [Name]
-                - description: [description]
-                - Slots of the Layout:
-                    * Slot's ReactJS Component 
-                        - Name : [Name]
-                        - description: [description]
-                    * Slot's ReactJS Component 
-                        - Name : [Name]
-                        - description: [description]
-                    * Slot's ReactJS Component 
-                        - Name : [Name]
-                        - description: [description]
-
+## UI Components:
+    [...]
 
 `,
         },
