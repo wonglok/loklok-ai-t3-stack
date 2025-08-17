@@ -109,19 +109,6 @@ ${featuresText}`,
                         stream: true,
                         stream_options: { include_usage: true },
                         messages: [
-                            // {
-                            //     role: `system`,
-                            //     content: `${hasExistingCode ? systemPromptDiffCode : systemPromptPureText}`,
-                            // },
-                            //                         {
-                            //                             role: "assistant",
-                            //                             content: `Here's the "old-mongoose-model" Document:
-                            // ${existingModelCode}`,
-                            //                         },
-                            // {
-                            //     role: `system`,
-                            //     content: `${systemPromptPureText}`,
-                            // },
                             {
                                 role: "assistant",
                                 content:
@@ -135,7 +122,7 @@ ${featuresText}
 Please write the latest mongoose model javascript code for "${mongoose.collectionName}" model.
 
 - only write the javascript code block 
-- please use esm
+- please use esm modules javascript and ecma script ES6 javascript
 
 - MUST INCLUDE this next line:
 const db = mongoose.connection.useDb("app_development_${useGlobalAI.getState().appID}", { useCache: true });

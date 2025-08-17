@@ -23,11 +23,11 @@ export const genReactComponentTree = async ({
     // let existingCode = await readFileContent({ path: reactComponentSpecPath });\
 
     let schema = z.object({
-        reactComponentModels: z
+        ReactJSComponents: z
             .array(
                 z
                     .object({
-                        ReactComponentName: z.string(),
+                        ReactJSComponentName: z.string(),
                         slug: z.string(),
                     })
                     .describe("each reactComponent item"),
@@ -59,7 +59,7 @@ export const genReactComponentTree = async ({
 
                 {
                     role: "user",
-                    content: `Please extract all reactComponent needed from the "product requirement document".`,
+                    content: `Please extract all reactComponent needed from the "product requirement document" make sure the slugs and the ReactJSComponentName are unique.`,
                 },
             ] as webllm.ChatCompletionMessageParam[],
             temperature: 0.0,
@@ -77,7 +77,7 @@ export const genReactComponentTree = async ({
         path: reactComponentSpecPath,
     })) as z.infer<typeof schema>;
 
-    for (let reactComponent of lateSpec.reactComponentModels) {
+    for (let reactComponent of lateSpec.ReactJSComponents) {
         if (!reactComponent.slug.startsWith("/")) {
             reactComponent.slug = `/react/${reactComponent.slug}`;
         }
@@ -109,12 +109,12 @@ ${featuresText}
                             {
                                 role: `user`,
                                 content: `
-Please write the latest reactComponent component javascript code for "${reactComponent.ReactComponentName}" component.
+Please write the latest reactComponent component javascript code for "${reactComponent.ReactJSComponentName}" component.
 
 - only write the javascript code block 
 - please use esm modules javascript and ecma script ES6 javascript
 
-export const ${`${JSON.stringify(reactComponent.ReactComponentName)}ReactComponent`} = () => {
+export const ${`${JSON.stringify(reactComponent.ReactJSComponentName)}ReactComponent`} = () => {
 
     return ...
 };

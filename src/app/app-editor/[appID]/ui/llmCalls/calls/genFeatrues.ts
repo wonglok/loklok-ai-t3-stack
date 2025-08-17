@@ -11,7 +11,36 @@ export const genFeatrues = async ({ slot, userPrompt, engine }) => {
     let messages: webllm.ChatCompletionMessageParam[] = [
         {
             role: `system`,
-            content: `${systemPromptPureText}`,
+            content: `
+Instruction
+You are a senior product manager tasked with reviewing the provided user requirements and drafting a clear, concise product requirements definition (PRD) for a software system. Incorporate design thinking principles and draw inspiration from biblical proverbs to infuse wisdom into the system's feature design, emphasizing clarity, empathy, and user-centric solutions.
+Design Thinking Requirements
+
+Organize the content in a clear, structured, and professional manner.
+Use precise, polished, and professional language to enhance readability and clarity.
+Draw inspiration from biblical proverbs (e.g., Proverbs 3:5-6 for guidance, Proverbs 15:22 for collaboration) to inform wise, thoughtful feature design.
+Ensure the system includes organizational concepts, such as team or group functionalities, to support collaborative workflows.
+
+Format Requirements
+
+Use markdown for formatting.
+Apply consistent indentation for hierarchy and readability.
+Avoid using double asterisks (**) or bold text in markdown.
+Include a blank line between each new item for better spacing.
+Adhere strictly to the output format provided below.
+
+Output Format
+User Roles and Features
+User Roles:
+    - Role:
+        Name: [...]
+        Features:
+            - Feature [Number]:
+                URL Route: [...]
+                Title: [...]
+                Description: [...]
+
+            `,
         },
         {
             role: "user",
@@ -22,179 +51,12 @@ export const genFeatrues = async ({ slot, userPrompt, engine }) => {
         {
             role: "user",
             content: `
-# Instruction
-You are a senior product manager:
-Review the current "user requirements" and write a new "product requirement definition"
 
-## Design Thinking Requirements:
-    1. Oragnise the text in a neat and tidy way
-    2. rewrite wordings to better english
-    3. learn from bible proverbs scriptures for wisidom when designing the system features 
-    4. Does the system has organization concpet like team feature? 
-
-## Format Requirements
-    1. Use markdown
-    3. Use indentation
-    4. NEVER Wrap text with ** in markdown
-    5. NEVER USE ** in markdown
-    5. NEVER Bold Text in markdown
-    6. Always add a new line for each new item (better spacing...)
-    7. Must follow the Output format below:
-`,
-        },
-
-        {
-            role: "assistant",
-            content: `
-# Output in Pure Text Format
-    
-    ## UserRoles and Features Section
-
-        UserRoles:
-            * UserRole
-                name: [...]
-                Features:
-                    * [number]
-                        Title: [...]
-                        Description: [...]
-                        Navigation Steps: 
-                            * [number]
-                                urlRoute: [...]
-                                interactiveSteps: 
-                                    - [number]: [...]
-                                    - [number]: [...]
-                                    - [number]: [...]
-                            * [number]
-                                urlRoute: [...]
-                                interactiveSteps: 
-                                    - [number]: [...]
-                                    - [number]: [...]
-                                    - [number]: [...]
-            * UserRole
-                name: [...]
-                Features:
-                    * [number]
-                        Title: [...]
-                        Description: [...]
-                        Navigation Steps: 
-                            * [number]
-                                urlRoute: [...]
-                                interactiveSteps: 
-                                    - [number]: [...]
-                                    - [number]: [...]
-                                    - [number]: [...]
-                            * [number]
-                                urlRoute: [...]
-                                interactiveSteps: 
-                                    - [number]: [...]
-                                    - [number]: [...]
-                                    - [number]: [...]
-                            * [number]
-                                urlRoute: [...]
-                                interactiveSteps: 
-                                    - [number]: [...]
-                                    - [number]: [...]
-                                    - [number]: [...]
-                    * [number]
-                        Title: [...]
-                        Description: [...]
-                        Navigation Steps: 
-                            * [number]
-                                urlRoute: [...]
-                                interactiveSteps: 
-                                    - [number]: [...]
-                                    - [number]: [...]
-                                    - [number]: [...]
-            
+Please read about "user-requirements.txt" and rewrite it accroding to system prompt.
 
 
-
-
-`,
-        },
-        {
-            role: "user",
-            content: `
-Please compelte the section: "UserRoles and Features Section"
             `,
         },
-
-        /*
-
-
-    ## Front End Pages and UI Components:
-
-        Pages:
-            * Each Web Page 
-                - urlRoute: [...]
-                - PageDescription: [...]
-
-                * Each ReactJS Component 
-                    - Name : [Name]
-                    - description: [description]
-                    - Sub-Components: 
-                        ...
-                        * Each ReactJS Component 
-                            - Name : [Name]
-                            - description: [description]
-                            - Sub-Components:  
-                                ...
-                                * Each ReactJS Component 
-                                    - Name : [Name]
-                                    - description: [description]
-                        ...
-                        * Each ReactJS Component 
-                            - Name : [Name]
-                            - description: [description]
-                            - Sub-Components:  
-                                ...
-                                * Each ReactJS Component 
-                                    - Name : [Name]
-                                    - description: [description]
-
-
-## Backend Database:
-
-        Mongoise Database:
-            * Each Collection
-                - CollectionTitle: [...]
-                - Description: [...]
-                - DataFields: 
-                    * DataField 
-                        - Name: [...]
-                        - DataType: [mongoose compatible data type]
-            * Each Collection
-                - CollectionTitle: [...]
-                - Description: [...]
-                - DataFields: 
-                    * DataField 
-                        - Name: [...]
-                        - DataType: [mongoose compatible data type]
-
-    ## Backend tRPC Procedures (Similar to REST Endpoints): 
-
-        Procedures:
-        
-            * Each Procedure
-                - Title: [...]
-                - Description: [...]
-                - Input Parameters: [...]
-                - Output Parameters: [...]
-
-            * Each Procedure
-                - Title: [...]
-                - Description: [...]
-                - Input Parameters: [...]
-                - Output Parameters: [...]
-
-## Front End tRPC SDK
-[...]
-
-## Zustand State Management
-[...]
-
-
-             */
     ];
 
     const request: webllm.ChatCompletionRequestStreaming = {

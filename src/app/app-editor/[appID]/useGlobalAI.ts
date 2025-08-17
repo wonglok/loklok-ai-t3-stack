@@ -179,29 +179,56 @@ export const useGlobalAI = create<{
 
         // currentModel: models[0].value,
         appID: "",
-        prompt: `
+        prompt: `I want to build an e-class software for a teacher and their students.
 
-I'm a developer.      
-I want to build an eClass School multipurpose Metaverse using ThreeJS and React Three Fiber Framework and nextJS and React JS Library. 
-I want to have a system portal for me to login.
+Here are the user types / role:
+1. System Admin (can access all features)
+2. Teacher (can access teacher features and Student features)
+3. Student (can only access student features)
 
-Teacher portal can 
-1. generate student login account.
-2. Upload 3d room
-3. Create avatar and some embed code to it or iframe URL to it
-4. Upload Videos 
-5. Upload Quiz and Questions
-6. Add Video to Avatar
-7. Add Quiz to Avatar
-8. Dashboard 
+System Admin can create Teacher Login Accounts and Student Login Accounts.
 
-Student can login to the metaverse and have fun.
-1. Do Quiz
-2. Watch Video in NPC Avatar
-3. View Learning Progress of Video Watching and Quiz Doing
+Teacher can metaverse.
 
-System portal can generate teacher login account and student login account.
-and have access to all feature above.
+Metaverse has
+- Avatars of Teachers
+- Avatars of Students
+- NPC Avatars
+- Environment Lighting
+- Venue 3D model like School / Canteen
+
+Teacher can create NPC Avatars
+
+Generic NPC Avatars have different functionality. 
+- Quiz Function
+- Video Watching Function
+- Portal Function
+- VR Practice
+- AI Tutor
+
+Teacher can 
+1. Create different pages
+2. Add Metaverse to the page
+3. Add NPC Avatar to the Metaverse
+4. Add Functionality to that NPC Avatar
+5. Create Student Account Login (register for students in batch)
+
+Teacher can review report
+1. Student Learning Progress
+2. Quiz Scores
+3. Traffic Count
+4. AI tutor interactive data
+5. VR Practice data
+
+Student can
+1. Register to Metaverse 
+2. Login to Metaverse
+3. Interact with NPC
+4. Track their learning progress
+    1. View what quiz are finished and what quiz haven't started
+    2. View which video watched or not
+    3. View VR Practice Result
+    4. View AI Tutor Result
 
 `.trim(),
         loadingSpec: false,
