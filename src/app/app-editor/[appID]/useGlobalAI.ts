@@ -95,7 +95,7 @@ export const useGlobalAI = create<{
             {
                 lockedBy: "",
                 enabled: true,
-                name: "e01",
+                name: "_01",
                 displayName: "AI Developer 01",
 
                 currentModel: models[0].value,
@@ -106,7 +106,7 @@ export const useGlobalAI = create<{
             {
                 lockedBy: "",
                 enabled: true,
-                name: "e02",
+                name: "_02",
                 displayName: "AI Developer 02",
 
                 currentModel: models[0].value,
@@ -117,7 +117,7 @@ export const useGlobalAI = create<{
             {
                 lockedBy: "",
                 enabled: false,
-                name: "e03",
+                name: "_03",
                 displayName: "AI Developer 03",
 
                 currentModel: models[0].value,
@@ -128,7 +128,7 @@ export const useGlobalAI = create<{
             {
                 lockedBy: "",
                 enabled: false,
-                name: "e04",
+                name: "_04",
                 displayName: "AI Developer 04",
 
                 currentModel: models[0].value,
@@ -139,7 +139,7 @@ export const useGlobalAI = create<{
             {
                 lockedBy: "",
                 enabled: false,
-                name: "e05",
+                name: "_05",
                 displayName: "AI Developer 05",
 
                 currentModel: models[0].value,
