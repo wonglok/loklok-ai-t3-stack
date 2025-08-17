@@ -72,11 +72,11 @@ Rewrite wordings to better english and optimise for LLM reading
 
 Pages:
     * WebPage
-        - Page Route & Params: [...]
-        - Page Description: [...]
-        - Page Access Level Securirty Requirement: [...]
+        - WebPage's Route & Params: [...]
+        - WebPage's Description: [...]
+        - WebPage's Access Level Securirty Requirement: [...]
 
-        * Page's ReactJS Layout Component 
+        * WebPage's ReactJS Layout Component 
                 - Name : [Name]
                 - description: [description]
                 - Slots of the Layout:
@@ -90,6 +90,53 @@ Pages:
                         * ReactJS Component 
                             - Name : [Name]
                             - description: [description]
+
+                    - SlotName: [SlotName]
+                        * ReactJS Component 
+                            - Name : [Name]
+                            - description: [description]
+                        * ReactJS Component 
+                            - Name : [Name]
+                            - description: [description]
+                        * ReactJS Component 
+                            - Name : [Name]
+                            - description: [description]
+                            - ReactJS SubComponents:
+                                * ReactJS SubComponent 
+                                    - Name : [Name]
+                                    - description: [description]
+                                * ReactJS SubComponent 
+                                    - Name : [Name]
+                                    - description: [description]
+                                * ReactJS SubComponent 
+                                    - Name : [Name]
+                                    - description: [description]
+    * WebPage
+        - WebPage's Route & Params: [...]
+        - WebPage's Description: [...]
+        - WebPage's Access Level Securirty Requirement: [...]
+
+        * WebPage's ReactJS Layout Component 
+                - Name : [Name]
+                - description: [description]
+                - Slots of the Layout:
+                    - SlotName: [SlotName]
+                        * ReactJS Component 
+                            - Name : [Name]
+                            - description: [description]
+                            - ReactJS SubComponents:
+                                * ReactJS SubComponent 
+                                    - Name : [Name]
+                                    - description: [description]
+                                * ReactJS SubComponent 
+                                    - Name : [Name]
+                                    - description: [description]
+                                * ReactJS SubComponent 
+                                    - Name : [Name]
+                                    - description: [description]
+                        * ReactJS Component 
+                            - Name : [Name]
+                            - description: [description]
                         * ReactJS Component 
                             - Name : [Name]
                             - description: [description]
@@ -101,9 +148,9 @@ Pages:
                         * ReactJS Component 
                             - Name : [Name]
                             - description: [description]
-
-## UI Components:
-    [...]
+                        * ReactJS Component 
+                            - Name : [Name]
+                            - description: [description]
 
 `,
         },
