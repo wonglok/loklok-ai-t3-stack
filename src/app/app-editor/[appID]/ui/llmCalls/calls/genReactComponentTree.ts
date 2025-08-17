@@ -68,49 +68,48 @@ Rewrite wordings to better english and optimise for LLM reading
 
 # Output in Pure Text Format
     
-    ## Front End Pages and UI Components:
+## Front End Pages and UI Components:
 
-    Pages:
-        * Each Web Page 
-            - PageRoute & Params: [...]
-            - PageDescription: [...]
+Pages:
+    * Each Web Page 
+        - Page Route & Params: [...]
+        - Page Description: [...]
+        - Page Access Level Securirty Requirement: [...]
 
-            * Each ReactJS Component 
+            * Page's ReactJS Layout Component 
                 - Name : [Name]
                 - description: [description]
-                - Childrens (Optional): 
-                    
-                    * Each ReactJS Component 
+                - Slots of the Layout:
+                    * Slot's ReactJS Component 
                         - Name : [Name]
                         - description: [description]
-                    
-                    * Each ReactJS Component 
+                    * Slot's ReactJS Component 
                         - Name : [Name]
                         - description: [description]
-                        - Childrens (Optional):  
-                        
-                            * Each ReactJS Component 
-                                - Name : [Name]
-                                - description: [description]
-                                - Childrens (Optional):  
-
-                                * Each ReactJS Component 
-                                    - Name : [Name]
-                                    - description: [description]
-                    
-                    * Each ReactJS Component 
+                    * Slot's ReactJS Component 
                         - Name : [Name]
                         - description: [description]
-                        - Childrens (Optional):  
 
-                            * Each ReactJS Component 
-                                - Name : [Name]
-                                - description: [description]
-                                - Childrens (Optional):  
+    * Each Web Page 
+        - Page Route & Params: [...]
+        - Page Description: [...]
+        - Page Access Level Securirty Requirement: [...]
 
-                                    * Each ReactJS Component 
-                                    - Name : [Name]
-                                    - description: [description]
+            * Page's ReactJS Layout Component 
+                - Name : [Name]
+                - description: [description]
+                - Slots of the Layout:
+                    * Slot's ReactJS Component 
+                        - Name : [Name]
+                        - description: [description]
+                    * Slot's ReactJS Component 
+                        - Name : [Name]
+                        - description: [description]
+                    * Slot's ReactJS Component 
+                        - Name : [Name]
+                        - description: [description]
+
+
 `,
         },
         {
