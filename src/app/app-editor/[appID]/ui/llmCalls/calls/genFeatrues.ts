@@ -203,7 +203,7 @@ Please compelte the section: "UserRoles and Features Section"
         temperature: 0,
     };
 
-    let path = `/study/genFeatrues.md`;
+    let path = `/docs/genFeatrues.md`;
 
     await llmRequestToFileStream({
         path: path,

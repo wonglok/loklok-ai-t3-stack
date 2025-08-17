@@ -15,13 +15,14 @@ export const genMongoDatabase = async ({
     userPrompt,
     featuresText = "",
     engine,
+    manager = null,
 }) => {
     ///////////////////////////////////////////////////////////////////////////////////
     // manifest
     ///////////////////////////////////////////////////////////////////////////////////
-    let mongooseSpecPath = `/study/genMongoDB.json`;
+    let mongooseSpecPath = `/docs/genMongoDB.json`;
 
-    let existingCode = await readFileContent({ path: mongooseSpecPath });
+    // let existingCode = await readFileContent({ path: mongooseSpecPath });
     let schema = z.object({
         mongooseModels: z
             .array(
@@ -82,68 +83,74 @@ ${featuresText}`,
     })) as z.infer<typeof schema>;
 
     for (let mongoose of latestModels.mongooseModels) {
-        let existingCodePath = `${mongoose.codeFilePath}`;
-        let existingModelCode = await readFileContent({
-            path: `${existingCodePath}`,
-        });
+        if (!mongoose.codeFilePath.startsWith("/")) {
+            mongoose.codeFilePath = `/${mongoose.codeFilePath}`;
+        }
+        console.log("manager.addTask", mongoose.codeFilePath);
 
-        console.log("existingModelCode", existingModelCode);
-        let hasExistingCode = existingModelCode !== "";
+        manager?.addTask(mongoose.codeFilePath, async ({ slot }) => {
+            console.log("begin-task", mongoose.codeFilePath);
+            //
 
-        let outputPath = hasExistingCode
-            ? `/temp/models/${mongoose.collectionName}.diff.md`
-            : `${existingCodePath}`;
+            // let existingCodePath = `${mongoose.codeFilePath}`;
+            // let existingModelCode = await readFileContent({
+            //     path: `${existingCodePath}`,
+            // });
 
-        await llmRequestToFileStream({
-            path: outputPath,
-            request: {
-                seed: 19900831,
-                stream: true,
-                stream_options: { include_usage: true },
-                messages: [
-                    {
-                        role: `system`,
-                        content: `${hasExistingCode ? systemPromptDiffCode : systemPromptPureText}`,
-                    },
-                    {
-                        role: "assistant",
-                        content: `Here's the "old-mongoose-model" Document:
-${existingModelCode}`,
-                    },
+            // console.log("existingModelCode", existingModelCode);
+            // let hasExistingCode = existingModelCode !== "";
 
-                    {
-                        role: "assistant",
-                        content: `Here's the latest Product Requirement Document:
+            let outputPath = `${mongoose.codeFilePath}`;
+
+            await llmRequestToFileStream({
+                path: mongoose.codeFilePath,
+                needsExtractCode: true,
+                request: {
+                    seed: 19900831,
+                    stream: true,
+                    stream_options: { include_usage: true },
+                    messages: [
+                        // {
+                        //     role: `system`,
+                        //     content: `${hasExistingCode ? systemPromptDiffCode : systemPromptPureText}`,
+                        // },
+                        //                         {
+                        //                             role: "assistant",
+                        //                             content: `Here's the "old-mongoose-model" Document:
+                        // ${existingModelCode}`,
+                        //                         },
+                        // {
+                        //     role: `system`,
+                        //     content: `${systemPromptPureText}`,
+                        // },
+                        {
+                            role: "assistant",
+                            content:
+                                `Here's the latest Product Requirement Document:
 ${featuresText}
-                            `,
-                    },
-                    {
-                        role: `user`,
-                        content: `
-${
-    hasExistingCode
-        ? `
-Please write the latest mongoose model code for "${mongoose.collectionName}" model at the file path "${mongoose.codeFilePath}";
-only output diff code. `
-        : `
-Please write the latest mongoose model code for "${mongoose.collectionName}" model at the file path "${mongoose.codeFilePath}";
-        `
-}
+                            `.trim(),
+                        },
+                        {
+                            role: `user`,
+                            content: `
+Please write the latest mongoose model javascript code for "${mongoose.collectionName}" model
 `.trim(),
-                    },
-                ] as webllm.ChatCompletionMessageParam[],
-                temperature: 0.0,
-                top_p: 0.05,
-            } as webllm.ChatCompletionRequestStreaming,
-            engine,
-            slot: slot,
+                        },
+                    ] as webllm.ChatCompletionMessageParam[],
+                    temperature: 0.0,
+                    top_p: 0.05,
+                } as webllm.ChatCompletionRequestStreaming,
+                engine,
+                slot: slot,
+            });
+
+            let latestCodeWritten = await readFileContent({
+                path: `${outputPath}`,
+            });
+
+            console.log(latestCodeWritten);
         });
 
-        let latestModelDiffCode = await readFileContent({
-            path: `${outputPath}`,
-        });
-
-        console.log(latestModelDiffCode);
         //
     }
 
@@ -153,7 +160,7 @@ Please write the latest mongoose model code for "${mongoose.collectionName}" mod
     //     content: `${existingCode}`,
     // });
 
-    // let path = `/study/genMongoDB.diff.md`;
+    // let path = `/docs/genMongoDB.diff.md`;
 
     // await llmRequestToFileStream({
     //     path: path,

@@ -96,7 +96,7 @@ Please write procedures needed by the React Components:
         temperature: 0,
     };
 
-    let path = `/study/genTRPCProcedure.md`;
+    let path = `/docs/genTRPCProcedure.md`;
 
     await llmRequestToFileStream({
         path: path,

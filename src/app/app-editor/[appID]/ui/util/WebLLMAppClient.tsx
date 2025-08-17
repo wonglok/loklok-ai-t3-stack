@@ -115,6 +115,24 @@ export const WebLLMAppClient = {
 
         //
         try {
+            let manager = {
+                addTask: (name = "name", func = async ({ slot }) => {}) => {
+                    tasks.push({
+                        name: name,
+                        status: "waiting",
+                        deps: [],
+                        func: async () => {
+                            let slot = await provideFreeEngineSlot({
+                                name: name,
+                            });
+
+                            await func({ slot });
+
+                            await returnFreeEngineSlot({ slot: slot });
+                        },
+                    });
+                },
+            };
             let tasks = [
                 {
                     name: "genFeatrues",
@@ -144,10 +162,11 @@ export const WebLLMAppClient = {
                         });
 
                         await genMongoDatabase({
+                            manager: manager,
                             slot: slot,
                             userPrompt: userPrompt,
                             featuresText: await readFileContent({
-                                path: `/study/genFeatrues.md`,
+                                path: `/docs/genFeatrues.md`,
                             }),
                             engine: apiMap.get(slot.name).engine,
                         });
@@ -168,7 +187,7 @@ export const WebLLMAppClient = {
                 //             slot: slot,
                 //             userPrompt: userPrompt,
                 //             featuresText: await readFileContent({
-                //                 path: `/study/genFeatrues.md`,
+                //                 path: `/docs/genFeatrues.md`,
                 //             }),
                 //             engine: apiMap.get(slot.name).engine,
                 //         });
@@ -189,7 +208,7 @@ export const WebLLMAppClient = {
                 //             slot: slot,
                 //             userPrompt: userPrompt,
                 //             reactComponentsText: await readFileContent({
-                //                 path: `/study/genReactComponentTree.md`,
+                //                 path: `/docs/genReactComponentTree.md`,
                 //             }),
                 //             engine: apiMap.get(slot.name).engine,
                 //         });
@@ -335,7 +354,7 @@ export const WebLLMAppClient = {
     //                 temperature: 0.0,
     //             };
 
-    //             let path = `/study/blueprint.md`;
+    //             let path = `/docs/blueprint.md`;
 
     //             await WebLLMAppClient.llmRequestToFileStream({
     //                 path: path,
@@ -367,7 +386,7 @@ export const WebLLMAppClient = {
     //         ).then((r) => r.default);
 
     //         let studyText = await WebLLMAppClient.readFileContent({
-    //             path: `/study/blueprint.md`,
+    //             path: `/docs/blueprint.md`,
     //         });
 
     //         const request: webllm.ChatCompletionRequestStreaming = {
@@ -421,13 +440,13 @@ export const WebLLMAppClient = {
     //         };
 
     //         await WebLLMAppClient.llmRequestToFileStream({
-    //             path: `/study/database.json`,
+    //             path: `/docs/database.json`,
     //             request: request,
     //             engine,
     //         });
 
     //         let rootObject = await WebLLMAppClient.readFileParseJSONContent({
-    //             path: `/study/database.json`,
+    //             path: `/docs/database.json`,
     //         });
 
     //         console.log(rootObject);
@@ -548,10 +567,10 @@ export const WebLLMAppClient = {
     //         //             (r) => r.default,
     //         //         );
     //         //         let mongooseText = await WebLLMAppClient.readFileContent({
-    //         //             path: `/study/mongoose.json`,
+    //         //             path: `/docs/mongoose.json`,
     //         //         });
     //         //         let proceduresText = await WebLLMAppClient.readFileContent({
-    //         //             path: `/study/procedures.json`,
+    //         //             path: `/docs/procedures.json`,
     //         //         });
     //         //         console.log(proceduresText);
     //         //         let proceduresList = JSON.parse(proceduresText.trim()).procedures;
@@ -736,7 +755,7 @@ export const WebLLMAppClient = {
     //         engine: webllm.MLCEngineInterface;
     //     }) => {
     //         let studyText = await WebLLMAppClient.readFileContent({
-    //             path: `/study/blueprint.md`,
+    //             path: `/docs/blueprint.md`,
     //         });
 
     //         const request: webllm.ChatCompletionRequest = {
@@ -799,14 +818,14 @@ export const WebLLMAppClient = {
     //         };
 
     //         await WebLLMAppClient.llmRequestToFileStream({
-    //             path: `/study/ui.json`,
+    //             path: `/docs/ui.json`,
     //             request: request,
     //             engine,
     //         });
 
     //         const rootObjectComponents =
     //             await WebLLMAppClient.readFileParseJSONContent({
-    //                 path: `/study/ui.json`,
+    //                 path: `/docs/ui.json`,
     //             });
 
     //         for (const eachObject of rootObjectComponents.components) {
@@ -872,12 +891,12 @@ export const WebLLMAppClient = {
     //     createAppRootRouterComponents: async ({ engine }) => {
     //         {
     //             let studyText = await WebLLMAppClient.readFileContent({
-    //                 path: `/study/blueprint.md`,
+    //                 path: `/docs/blueprint.md`,
     //             });
 
     //             const rootObjectComponents =
     //                 await WebLLMAppClient.readFileParseJSONContent({
-    //                     path: `/study/ui.json`,
+    //                     path: `/docs/ui.json`,
     //                 });
 
     //             const request: webllm.ChatCompletionRequest = {

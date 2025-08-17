@@ -157,7 +157,7 @@ ${featuresText}`,
         temperature: 0,
     };
 
-    let path = `/study/genReactComponentTree.md`;
+    let path = `/docs/genReactComponentTree.md`;
 
     await llmRequestToFileStream({
         path: path,

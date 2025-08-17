@@ -37,7 +37,7 @@
         "**/*.cjs",
         "**/*.js",
         ".next/types/**/*.ts",
-        "src/app/app-editor/[appID]/ui/util/llmCalls/study/featurestjs"
+        "src/app/app-editor/[appID]/ui/util/llmCalls/docs/featurestjs"
     ],
     "exclude": ["node_modules", "public"]
 }
