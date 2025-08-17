@@ -155,6 +155,7 @@ export const WebLLMAppClient = {
                             userPrompt,
                             engine: apiMap.get(slot.name).engine,
                         });
+
                         await returnFreeEngineSlot({ slot: slot });
                     },
                 },
@@ -177,6 +178,30 @@ export const WebLLMAppClient = {
                             }),
                             engine: apiMap.get(slot.name).engine,
                         });
+
+                        await returnFreeEngineSlot({ slot: slot });
+                    },
+                },
+
+                {
+                    name: "genReactComponentTree",
+                    status: "waiting",
+                    deps: ["genFeatrues"],
+                    func: async () => {
+                        let slot = await provideFreeEngineSlot({
+                            name: "genReactComponentTree",
+                        });
+
+                        await genReactComponentTree({
+                            manager: manager,
+                            slot: slot,
+                            userPrompt: userPrompt,
+                            featuresText: await readFileContent({
+                                path: `/docs/genFeatrues.md`,
+                            }),
+                            engine: apiMap.get(slot.name).engine,
+                        });
+
                         await returnFreeEngineSlot({ slot: slot });
                     },
                 },
