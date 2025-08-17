@@ -79,34 +79,83 @@ Pages:
         * WebPage's ReactJS Component
                 - Name : [Name]
                 - description: [description]
-                    * ReactJS Component 
-                        - Name : [Name]
-                        - description: [description]
-                        - ReactJS SubComponents:
-                            * ReactJS SubComponent 
-                                - Name : [Name]
-                                - description: [description]
-                            * ReactJS SubComponent 
-                                - Name : [Name]
-                                - description: [description]
-                            * ReactJS SubComponent 
-                                - Name : [Name]
-                                - description: [description]
-                    * ReactJS Component 
-                        - Name : [Name]
-                        - description: [description]
-                        - ReactJS SubComponents:
-                            * ReactJS SubComponent 
-                                - Name : [Name]
-                                - description: [description]
-                            * ReactJS SubComponent 
-                                - Name : [Name]
-                                - description: [description]
-                            * ReactJS SubComponent 
-                                - Name : [Name]
-                                - description: [description]
+                - ReactJS Components
+                - Please Replace ReactJS-LayoutName Accordingly
+                - Please Replace ReactJS-Layout-Slot-ComponentName Accordingly
+                - Please Replace ReactJS-ComponentName Accordingly
+                - Please Replace ReactJS-SubComponentName Accordingly
+            
+                \`\`\`jsx
 
+        <[ReactJS-LayoutName]>
+            <[ReactJS-Layout-Slot-ComponentName]>
+                <[ReactJS-ComponentName]>
+                    <[ReactJS-SubComponentName]></[ReactJS-SubComponentName]>
+                    <[ReactJS-SubComponentName]></[ReactJS-SubComponentName]>
+                    <[ReactJS-SubComponentName]></[ReactJS-SubComponentName]>
+                </[ReactJS-ComponentName]>
+                <[ReactJS-ComponentName]>
+                    <[ReactJS-SubComponentName]></[ReactJS-SubComponentName]>
+                    <[ReactJS-SubComponentName]></[ReactJS-SubComponentName]>
+                    <[ReactJS-SubComponentName]></[ReactJS-SubComponentName]>
+                </[ReactJS-ComponentName]>
+                <[ReactJS-ComponentName]>
+                    <[ReactJS-SubComponentName]></[ReactJS-SubComponentName]>
+                    <[ReactJS-SubComponentName]></[ReactJS-SubComponentName]>
+                    <[ReactJS-SubComponentName]></[ReactJS-SubComponentName]>
+                </[ReactJS-ComponentName]>
+            </[ReactJS-Layout-Slot-ComponentName]>
+            <[ReactJS-Layout-Slot-ComponentName]>
+                <[ReactJS-ComponentName]>
+                    <[ReactJS-SubComponentName]></[ReactJS-SubComponentName]>
+                    <[ReactJS-SubComponentName]></[ReactJS-SubComponentName]>
+                    <[ReactJS-SubComponentName]></[ReactJS-SubComponentName]>
+                </[ReactJS-ComponentName]>
+                <[ReactJS-ComponentName]>
+                    <[ReactJS-SubComponentName]></[ReactJS-SubComponentName]>
+                    <[ReactJS-SubComponentName]></[ReactJS-SubComponentName]>
+                    <[ReactJS-SubComponentName]></[ReactJS-SubComponentName]>
+                </[ReactJS-ComponentName]>
+                <[ReactJS-ComponentName]>
+                    <[ReactJS-SubComponentName]></[ReactJS-SubComponentName]>
+                    <[ReactJS-SubComponentName]></[ReactJS-SubComponentName]>
+                    <[ReactJS-SubComponentName]></[ReactJS-SubComponentName]>
+                </[ReactJS-ComponentName]>
+            </[ReactJS-Layout-Slot-ComponentName]>
+        </ReactJSLayoutName>
+
+                \`\`\`
 `,
+
+            /*
+* ReactJS Component 
+    - Name : [Name]
+    - description: [description]
+    - ReactJS SubComponents:
+        * ReactJS SubComponent 
+            - Name : [Name]
+            - description: [description]
+        * ReactJS SubComponent 
+            - Name : [Name]
+            - description: [description]
+        * ReactJS SubComponent 
+            - Name : [Name]
+            - description: [description]
+* ReactJS Component 
+    - Name : [Name]
+    - description: [description]
+    - ReactJS SubComponents:
+        * ReactJS SubComponent 
+            - Name : [Name]
+            - description: [description]
+        * ReactJS SubComponent 
+            - Name : [Name]
+            - description: [description]
+        * ReactJS SubComponent 
+            - Name : [Name]
+            - description: [description]
+
+*/
         },
         {
             role: "user",

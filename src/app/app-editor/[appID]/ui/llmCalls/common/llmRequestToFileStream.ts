@@ -28,7 +28,6 @@ export const llmRequestToFileStream = async ({
     engine: webllm.MLCEngineInterface;
     slot: EngineData | null;
 }) => {
-    slot.llmStatus = "writing";
     useGlobalAI.getState().refreshSlot(slot);
 
     let fileObject = await readFileObject({ path });
@@ -50,7 +49,6 @@ export const llmRequestToFileStream = async ({
 
         let str = chunk.choices[0]?.delta?.content || "";
         messageFragments += str;
-
         await writeToFile({
             author: `${slot.name}`,
             content: messageFragments,
@@ -74,6 +72,7 @@ export const llmRequestToFileStream = async ({
             useGlobalAI.getState().refreshSlot(slot);
             break;
         }
+        slot.llmStatus = "writing";
     }
 
     if (pathUtil.extname(path) === ".js" && !needsExtractCode) {
