@@ -52,6 +52,7 @@ import {
     SquareIcon,
     StopCircleIcon,
 } from "lucide-react";
+import { factoryResetThisApp } from "../llmCalls/common/factoryResetThisApp";
 
 function AIMatcher({ name }: { name: string }) {
     let models = useGlobalAI((r) => r.models);
@@ -152,7 +153,17 @@ export function Launcher() {
             </div>
 
             {!lockInWorkers && (
-                <div className="text-right">
+                <div className="flex justify-between text-right">
+                    <Button
+                        variant="destructive"
+                        onClick={() => {
+                            if (window.confirm("remove all?")) {
+                                factoryResetThisApp();
+                            }
+                        }}
+                    >
+                        Delete all & Reboot?
+                    </Button>
                     <Button
                         onClick={async () => {
                             await WebLLMAppClient.buildApp({
@@ -167,7 +178,10 @@ export function Launcher() {
             )}
 
             {lockInWorkers && (
-                <div className="text-right">
+                <div className="flex justify-between text-right">
+                    <Button variant="destructive" disabled>
+                        Stop to Reset
+                    </Button>
                     <Button
                         onClick={async () => {
                             await WebLLMAppClient.abortProcess();

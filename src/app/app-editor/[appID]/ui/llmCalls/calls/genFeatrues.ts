@@ -30,6 +30,7 @@ Review the current "user requirements" and write a new "product requirement defi
     1. Oragnise the text in a neat and tidy way
     2. rewrite wordings to better english
     3. learn from bible proverbs scriptures for wisidom when designing the system features 
+    4. Does the system has organization concpet like team feature? 
 
 ## Format Requirements
     1. Use markdown
