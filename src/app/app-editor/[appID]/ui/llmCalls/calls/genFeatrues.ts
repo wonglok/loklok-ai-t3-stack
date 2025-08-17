@@ -57,65 +57,62 @@ Review the current "user requirements" and write a new "product requirement defi
         UserRoles:
             * UserRole
                 - name: [...]
-                
                 - Features:
-                    * Feature
+                    * [number]
                         - Title: [...]
                         - Description: [...]
-                        - Overall Steps: 
-                            * Overall Step [number]
+                        - Navigation Steps: 
+                            * [number]
                                 - PageRoute & Params: [...]
                                 - access_level: [internet | member-login | staff-login | system-admin]
-                                - Interactions: 
-                                    * Action Step [number]: [...]
-                                    * Action Step [number]: [...]
-                                    * Action Step [number]: [...]
-                            * Overall Step [number]
+                                - Interaction Steps: 
+                                    * [number]: [...]
+                                    * [number]: [...]
+                                    * [number]: [...]
+                            * [number]
                                 - PageRoute & Params: [...]
                                 - access_level: [internet | member-login | staff-login | system-admin]
-                                - Interactions: 
-                                    * Action Step [number]: [...]
-                                    * Action Step [number]: [...]
-                                    * Action Step [number]: [...]
-                            * Overall Step [number]
+                                - InterInteraction Steps: 
+                                    * [number]: [...]
+                                    * [number]: [...]
+                                    * [number]: [...]
+                            * [number]
                                 - PageRoute & Params: [...]
                                 - access_level: [internet | member-login | staff-login | system-admin]
-                                - Interactions: 
-                                    * Action Step [number]: [...]
-                                    * Action Step [number]: [...]
-                                    * Action Step [number]: [...]
-
+                                - InterInteraction Steps: 
+                                    * [number]: [...]
+                                    * [number]: [...]
+                                    * [number]: [...]
             * UserRole
                 - name: [...]
-                
                 - Features:
-                    * Feature
+                    * [number]
                         - Title: [...]
                         - Description: [...]
-                        - Overall Steps: 
-                            * Overall Step [number]
+                        - Navigation Steps: 
+                            * [number]
                                 - PageRoute & Params: [...]
                                 - access_level: [internet | member-login | staff-login | system-admin]
-                                - Interactions: 
-                                    * Action Step [number]: [...]
-                                    * Action Step [number]: [...]
-                                    * Action Step [number]: [...]
-                            * Overall Step [number]
+                                - Interaction Steps: 
+                                    * [number]: [...]
+                                    * [number]: [...]
+                                    * [number]: [...]
+                            * [number]
                                 - PageRoute & Params: [...]
                                 - access_level: [internet | member-login | staff-login | system-admin]
-                                - Interactions: 
-                                    * Action Step [number]: [...]
-                                    * Action Step [number]: [...]
-                                    * Action Step [number]: [...]
-                            * Overall Step [number]
+                                - InterInteraction Steps: 
+                                    * [number]: [...]
+                                    * [number]: [...]
+                                    * [number]: [...]
+                            * [number]
                                 - PageRoute & Params: [...]
                                 - access_level: [internet | member-login | staff-login | system-admin]
-                                - Interactions: 
-                                    * Action Step [number]: [...]
-                                    * Action Step [number]: [...]
-                                    * Action Step [number]: [...]
+                                - InterInteraction Steps: 
+                                    * [number]: [...]
+                                    * [number]: [...]
+                                    * [number]: [...]
 
-                    
+
 
 
 `,
