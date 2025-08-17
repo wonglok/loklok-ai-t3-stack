@@ -85,6 +85,10 @@ Review the current "user requirements" and write a new "product requirement defi
                                     * Action Step [number]: [...]
                                     * Action Step [number]: [...]
 
+            * UserRole
+                - name: [...]
+                
+                - Features:
                     * Feature
                         - Title: [...]
                         - Description: [...]
@@ -96,6 +100,22 @@ Review the current "user requirements" and write a new "product requirement defi
                                     * Action Step [number]: [...]
                                     * Action Step [number]: [...]
                                     * Action Step [number]: [...]
+                            * Overall Step [number]
+                                - PageRoute & Params: [...]
+                                - access_level: [internet | member-login | staff-login | system-admin]
+                                - Interactions: 
+                                    * Action Step [number]: [...]
+                                    * Action Step [number]: [...]
+                                    * Action Step [number]: [...]
+                            * Overall Step [number]
+                                - PageRoute & Params: [...]
+                                - access_level: [internet | member-login | staff-login | system-admin]
+                                - Interactions: 
+                                    * Action Step [number]: [...]
+                                    * Action Step [number]: [...]
+                                    * Action Step [number]: [...]
+
+                    
 
 
 `,
