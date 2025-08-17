@@ -8,7 +8,7 @@ export const genFeatrues = async ({ slot, userPrompt, engine }) => {
     ///////////////////////////////////////////////////////////////////////////////////
     // manifest
     ///////////////////////////////////////////////////////////////////////////////////
-    let messages: any = [
+    let messages: webllm.ChatCompletionMessageParam[] = [
         {
             role: `system`,
             content: `${systemPromptPureText}`,
@@ -22,7 +22,6 @@ export const genFeatrues = async ({ slot, userPrompt, engine }) => {
         {
             role: "user",
             content: `
-
 # Instruction
 You are a senior product manager:
 Review the current "user requirements" and write a new "product requirement definition"
@@ -48,7 +47,7 @@ Review the current "user requirements" and write a new "product requirement defi
         },
 
         {
-            role: "user",
+            role: "assistant",
             content: `
 
 # Output in Pure Text Format

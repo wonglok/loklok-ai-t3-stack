@@ -13,32 +13,25 @@ export const genTRPCProcedure = async ({
     ///////////////////////////////////////////////////////////////////////////////////
     // manifest
     ///////////////////////////////////////////////////////////////////////////////////
-    let messages: any = [
+    let messages: webllm.ChatCompletionMessageParam[] = [
         {
             role: `system`,
             content: `${systemPromptPureText}`,
         },
         {
-            role: "user",
-            content: `here's the "user-requirements.txt"
-    ${userPrompt}`,
+            role: "assistant",
+            content: `here's the "user-requirements" Document:
+${userPrompt}`,
         },
 
         {
-            role: "user",
+            role: "assistant",
             content: `here's the "React UI Components" Document:
-    ${reactComponentsText}`,
+${reactComponentsText}`,
         },
 
         {
-            role: "user",
-            content: `
-Please write a sepcification of backend endpoints:
-`,
-        },
-
-        {
-            role: "user",
+            role: "assistant",
             content: `
 
 # Output in Pure Text Format
@@ -60,6 +53,13 @@ Please write a sepcification of backend endpoints:
                 - Output Parameters: [...]
     
 
+`,
+        },
+
+        {
+            role: "user",
+            content: `
+Please write procedures needed by the React Components:
 `,
         },
 
@@ -86,8 +86,6 @@ Please write a sepcification of backend endpoints:
                     * DataField 
                         - Name: [...]
                         - DataType: [mongoose compatible data type]
-
-   
 
 ## Front End tRPC SDK
 [...]

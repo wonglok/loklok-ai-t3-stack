@@ -13,53 +13,53 @@ export const genReactComponentTree = async ({
     ///////////////////////////////////////////////////////////////////////////////////
     // manifest
     ///////////////////////////////////////////////////////////////////////////////////
-    let messages: any = [
+    let messages: webllm.ChatCompletionMessageParam[] = [
         {
             role: `system`,
             content: `${systemPromptPureText}`,
         },
 
         {
-            role: "user",
+            role: "assistant",
             content: `here's the "user-requirements.txt"
-    ${userPrompt}`,
+${userPrompt}`,
         },
 
         {
             role: "assistant",
             content: `here's the "features and tutorials.txt"
-    ${featuresText}`,
+${featuresText}`,
         },
+
+        //         {
+        //             role: "assistant",
+        //             content: `
+        // # Instructio
+        // You are a senior product manager:
+        // Review the current "user requirements" and write a new "product requirement definition"
+
+        // ## Design Thinking Requirements:
+        //     1. Oragnise the text in a neat and tidy way
+        //     2. rewrite wordings to better english
+        //     3. ponder bible proverbs scriptures for wisidom when designing the system,
+        //     4. learn from the wisdom of single source of truth, constant values, pure functions
+
+        // ## Format Requirements
+        //     1. Use markdown
+        //     2. Use emoji
+        //     3. Use indentation
+        //     4. NEVER Wrap text with ** in markdown
+        //     5. NEVER USE ** in markdown
+        //     5. NEVER Bold Text in markdown
+        //     6. Always add a new line for each new item (better spacing...)
+        //     7. Must follow the Output format below:
+        //     8. use * as a new item
+        //     9. use - as a property of that new item
+        // `,
+        //         },
 
         {
             role: "assistant",
-            content: `
-# Instructio
-You are a senior product manager:
-Review the current "user requirements" and write a new "product requirement definition"
-
-## Design Thinking Requirements:
-    1. Oragnise the text in a neat and tidy way
-    2. rewrite wordings to better english
-    3. ponder bible proverbs scriptures for wisidom when designing the system, 
-    4. learn from the wisdom of single source of truth, constant values, pure functions
-    
-## Format Requirements
-    1. Use markdown
-    2. Use emoji
-    3. Use indentation
-    4. NEVER Wrap text with ** in markdown
-    5. NEVER USE ** in markdown
-    5. NEVER Bold Text in markdown
-    6. Always add a new line for each new item (better spacing...)
-    7. Must follow the Output format below:
-    8. use * as a new item
-    9. use - as a property of that new item
-`,
-        },
-
-        {
-            role: "user",
             content: `
 
 # Output in Pure Text Format
@@ -101,11 +101,7 @@ Review the current "user requirements" and write a new "product requirement defi
 
         /*
 
-
-
-
-
-## Backend Database:
+    ## Backend Database:
 
         Mongoise Database:
             * Each Collection

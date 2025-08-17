@@ -97,13 +97,15 @@ function EnableSwitch({ name }: { name: string }) {
     let engines = useGlobalAI((r) => r.engines);
     let item = engines.find((r) => r.name === name);
     let lockInWorkers = useGlobalAI((r) => r.lockInWorkers);
+
     return (
         <>
-            {item.llmStatus === "writing" && (
+            {lockInWorkers && item.llmStatus === "writing" && (
                 <div className="pr-3">
                     <LoaderIcon className="animate-spin"></LoaderIcon>
                 </div>
             )}
+
             <Switch
                 disabled={lockInWorkers}
                 checked={item.enabled}

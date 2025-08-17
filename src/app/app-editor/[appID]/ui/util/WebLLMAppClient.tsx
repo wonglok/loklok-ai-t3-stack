@@ -211,27 +211,21 @@ export const WebLLMAppClient = {
                             return;
                         }
 
-                        let depCount = first.deps.length;
+                        let dependenciesCount = first.deps.length;
 
                         let allCompleted =
                             first?.deps
-                                .map((dep) => {
-                                    //
-
-                                    let doneList = tasks.filter((tsk) => {
-                                        return (
-                                            dep === tsk.name &&
-                                            tsk.status === "done"
-                                        );
+                                .map((eachDep) => {
+                                    let thisTask = tasks.find((tsk) => {
+                                        return tsk.name === eachDep;
                                     });
-
-                                    return doneList.length === depCount;
+                                    return thisTask.status === "done";
                                 })
-                                .filter((r) => r).length === 0;
+                                .filter((r) => r).length === dependenciesCount;
 
                         if (first && allCompleted) {
                             if (first) {
-                                first.status = "writing";
+                                first.status = "working";
                                 first.func().then(() => {
                                     first.status = "done";
                                 });
@@ -278,6 +272,8 @@ export const WebLLMAppClient = {
             //     engine,
             // });
         } finally {
+            //
+            //
         }
     },
     ///////////////////////////////////////////////////////////////////////////////////

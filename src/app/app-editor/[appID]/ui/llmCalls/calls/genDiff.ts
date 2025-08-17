@@ -22,7 +22,7 @@ export const genDiff = async ({
     let existingCode = `
 `;
 
-    let messages: any = [
+    let messages: webllm.ChatCompletionMessageParam[] = [
         {
             role: `system`,
             content: `${systemPromptDiffCode}`,
@@ -39,11 +39,11 @@ export const genDiff = async ({
         // },
         //
         {
-            role: `user`,
+            role: `assistant`,
             content: `I will show you the "Product Requirement Definition" in next message.`,
         },
         {
-            role: "user",
+            role: "assistant",
             content: `
 I want to build a bible testimony app powered by ai embedding.
 

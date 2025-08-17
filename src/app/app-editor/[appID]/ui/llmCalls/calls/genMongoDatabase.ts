@@ -13,23 +13,23 @@ export const genMongoDatabase = async ({
     ///////////////////////////////////////////////////////////////////////////////////
     // manifest
     ///////////////////////////////////////////////////////////////////////////////////
-    let messages: any = [
+    let messages: webllm.ChatCompletionMessageParam[] = [
         {
             role: `system`,
             content: `${systemPromptPureText}`,
         },
         {
-            role: "user",
+            role: "assistant",
             content: `Here's the "user-requirements" Document:
 ${userPrompt}`,
         },
         {
-            role: "user",
+            role: "assistant",
             content: `Here's the "Use case and Features" Document:
 ${featuresText}`,
         },
         {
-            role: "user",
+            role: "assistant",
             content: `
 
 # Instruction
@@ -57,7 +57,7 @@ Review the current "user requirements" and write a new "product requirement defi
         },
 
         {
-            role: "user",
+            role: "assistant",
             content: `
 
 # Output in Pure Text Format
