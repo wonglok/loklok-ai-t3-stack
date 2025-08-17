@@ -311,7 +311,7 @@ export function ControlPanel() {
                                                                     <div className="flex justify-between rounded-t-2xl bg-gray-100 px-3 py-3">
                                                                         <span>
                                                                             {
-                                                                                " ⭐️ "
+                                                                                "⭐️ "
                                                                             }
                                                                             {
                                                                                 file.path

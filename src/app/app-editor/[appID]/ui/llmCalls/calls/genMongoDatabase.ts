@@ -141,7 +141,8 @@ Please write the latest mongoose model javascript code for "${mongoose.collectio
 
 - only write the javascript code block 
 - please use esm
-- example code:
+
+- MUST INCLUDE this next line:
 const db = mongoose.connection.useDb("app_development_${useGlobalAI.getState().appID}", { useCache: true });
 
 const ${`${JSON.stringify(mongoose.collectionName)}Schema`} = [...];
@@ -150,6 +151,7 @@ if (!db.models[${JSON.stringify(mongoose.collectionName)}]) {
     db.model(${JSON.stringify(mongoose.collectionName)}, ${`${JSON.stringify(mongoose.collectionName)}Schema`});
 }
 
+- MUST INCLUDE this next line:
 export model like: export default db.model("${mongoose.collectionName}")
 `.trim(),
                             },
