@@ -4,12 +4,13 @@ import type * as webllm from "@mlc-ai/web-llm";
 import { systemPromptPureText } from "../persona/systemPromptPureText";
 import { llmRequestToFileStream } from "../common/llmRequestToFileStream";
 import z from "zod";
-import { systemPromptDiffCode } from "../persona/systemPromptDiffCode";
-import { writeToFile } from "../common/writeToFile";
+// import { systemPromptDiffCode } from "../persona/systemPromptDiffCode";
+// import { writeToFile } from "../common/writeToFile";
 import { readFileContent } from "../common/readFileContent";
-import { newUnifiedDiffStrategy } from "diff-apply";
+// import { newUnifiedDiffStrategy } from "diff-apply";
 import { readFileParseJSON } from "../common/readFileParseJSON";
-import { removeFileByPath } from "../common/removeFilePath";
+// import { removeFileByPath } from "../common/removeFilePath";
+import { useGlobalAI } from "../../../useGlobalAI";
 export const genMongoDatabase = async ({
     slot,
     userPrompt,
@@ -68,7 +69,7 @@ ${featuresText}`,
                 },
             ] as webllm.ChatCompletionMessageParam[],
             temperature: 0.0,
-            top_p: 0.05,
+            // top_p: 0.05,
             response_format: {
                 type: "json_object",
                 schema: JSON.stringify(z.toJSONSchema(schema)),
@@ -136,12 +137,24 @@ ${featuresText}
                             {
                                 role: `user`,
                                 content: `
-Please write the latest mongoose model javascript code for "${mongoose.collectionName}" model
+Please write the latest mongoose model javascript code for "${mongoose.collectionName}" model 
+
+- please use esm
+- example code:
+const db = mongoose.connection.useDb("app_development_${useGlobalAI.getState().appID}", { useCache: true });
+
+const ${`${JSON.stringify(mongoose.collectionName)}Schema`} = [...];
+
+if (!db.models[${JSON.stringify(mongoose.collectionName)}]) {
+    db.model(${JSON.stringify(mongoose.collectionName)}, ${`${JSON.stringify(mongoose.collectionName)}Schema`});
+}
+
+export model like: export default db.model("${mongoose.collectionName}")
 `.trim(),
                             },
                         ] as webllm.ChatCompletionMessageParam[],
                         temperature: 0.0,
-                        top_p: 0.05,
+                        // top_p: 0.05,
                     } as webllm.ChatCompletionRequestStreaming,
                     engine,
                     slot: slot,
