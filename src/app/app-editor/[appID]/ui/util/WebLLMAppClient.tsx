@@ -118,7 +118,7 @@ export const WebLLMAppClient = {
             let tasks = [
                 {
                     name: "genFeatrues",
-                    done: false,
+                    status: "waiting",
                     deps: [],
                     func: async () => {
                         let slot = await provideFreeEngineSlot({
@@ -135,7 +135,7 @@ export const WebLLMAppClient = {
                 },
                 {
                     name: "genReactComponentTree",
-                    done: false,
+                    status: "waiting",
                     deps: ["genFeatrues"],
                     func: async () => {
                         let slot = await provideFreeEngineSlot({
@@ -155,7 +155,7 @@ export const WebLLMAppClient = {
                 },
                 {
                     name: "genMongoDatabase",
-                    done: false,
+                    status: "waiting",
                     deps: ["genFeatrues"],
                     func: async () => {
                         let slot = await provideFreeEngineSlot({
@@ -176,7 +176,7 @@ export const WebLLMAppClient = {
 
                 {
                     name: "genTRPCProcedure",
-                    done: false,
+                    status: "waiting",
                     deps: ["genReactComponentTree"],
                     func: async () => {
                         let slot = await provideFreeEngineSlot({
@@ -203,27 +203,37 @@ export const WebLLMAppClient = {
                         .engines.filter((r) => r.enabled && r.lockedBy === "");
 
                     if (engines.length > 0) {
-                        let first = tasks[0];
-                        let foundInTask = false;
+                        let first = tasks.filter((tsk) => {
+                            return tsk.status === "waiting";
+                        })[0];
 
-                        first.deps.forEach((dep) => {
-                            if (
-                                tasks.some((tsk) => {
-                                    return dep === tsk.name && tsk.done;
+                        if (!first) {
+                            return;
+                        }
+
+                        let depCount = first.deps.length;
+
+                        let allCompleted =
+                            first?.deps
+                                .map((dep) => {
+                                    //
+
+                                    let doneList = tasks.filter((tsk) => {
+                                        return (
+                                            dep === tsk.name &&
+                                            tsk.status === "done"
+                                        );
+                                    });
+
+                                    return doneList.length === depCount;
                                 })
-                            ) {
-                                if (!foundInTask) {
-                                    foundInTask = true;
-                                }
-                            }
-                        });
+                                .filter((r) => r).length === 0;
 
-                        let allCompleted = !foundInTask;
                         if (first && allCompleted) {
-                            let top = tasks.shift();
-                            if (top) {
-                                top.func().then(() => {
-                                    top.done = true;
+                            if (first) {
+                                first.status = "writing";
+                                first.func().then(() => {
+                                    first.status = "done";
                                 });
                             }
                         }
