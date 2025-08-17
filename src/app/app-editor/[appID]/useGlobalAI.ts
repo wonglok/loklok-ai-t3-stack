@@ -173,29 +173,12 @@ export const useGlobalAI = create<{
 
         // currentModel: models[0].value,
         appID: "",
-        prompt: `I want to build a bible testimony app powered by ai embeddings and RAG Agents.
+        prompt: `
+I want to build a expense tracker with tracking my money usage, and savings plan and recommendations on planning.
 
-## PlatformAdmin:
-PlatformAdmin can login to Platform Portal. 
-PlatformAdmin can create Pastor's Login Accounts and help Pastors reset password.
+I want to build a landing page as well.
 
-## Pastor:
-Pastors can login to Pastor Portal.
-
-Pastor Portal can do a few things:
-1. upload testimony text and youtube video link 
-2. edit testimony and set it to be hidden or visible.
-3. generate embeddings data for the testimony.
-4. approve and publish the testimony to their pastor account.
-
-## Internet users:
-Internet Users can visit public web app at home page of the website. 
-In Public WebApp, they can view testimony preview, video and text.
-In Public WebApp, they can search testimony powered by ai.
-
-Internet Users can login to their user profile.
-In User Profile, they can write testimony and request pastor to approve for publishing to public.
-`.trim(),
+        `.trim(),
         loadingSpec: false,
         welcome: true,
         spec: "",
