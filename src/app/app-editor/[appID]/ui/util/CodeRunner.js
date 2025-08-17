@@ -47,7 +47,7 @@ export function CodeRunner() {
             // @ts-ignore
             window.importHttpModule = window.importHttpModule || (() => { })
             // @ts-ignore
-            window.importHttpModule(`/dynamic-linked-library/es-module-shims/es-module-shims.js`).then(() => {
+            window.importHttpModule(`/global-vars/es-module-shims/es-module-shims.js`).then(() => {
                 // @ts-ignore
                 window.importShim('/src/main.js')
             })

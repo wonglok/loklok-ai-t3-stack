@@ -30,7 +30,7 @@ export default NPM_GV_CACHE['TJ-@react-three/drei']['${keyname}'];
         }
     }
 
-    fs.writeFileSync(`${here}/public/dynamic-linked-library/@react-three/drei.js`, str)
+    fs.writeFileSync(`${here}/public/global-vars/@react-three/drei.js`, str)
 }
 
 {
@@ -54,7 +54,7 @@ export default NPM_GV_CACHE['TJ-@react-three/fiber']['${keyname}'];
         }
     }
 
-    fs.writeFileSync(`${here}/public/dynamic-linked-library/@react-three/fiber.js`, text)
+    fs.writeFileSync(`${here}/public/global-vars/@react-three/fiber.js`, text)
 }
 
 {
@@ -79,7 +79,7 @@ export const ${propertyName} = NPM_GV_CACHE['TJ-react19']['${propertyName}'];
 `
         }
     }
-    fs.writeFileSync(`${here}/public/dynamic-linked-library/react19.js`, text)
+    fs.writeFileSync(`${here}/public/global-vars/react19.js`, text)
 }
 
 {
@@ -104,7 +104,7 @@ export const ${propertyName} = NPM_GV_CACHE['TJ-react-dom19']['${propertyName}']
 `
         }
     }
-    fs.writeFileSync(`${here}/public/dynamic-linked-library/react-dom19.js`, text)
+    fs.writeFileSync(`${here}/public/global-vars/react-dom19.js`, text)
 }
 
 {
@@ -127,7 +127,7 @@ export default NPM_GV_CACHE['TJ-zustand']['${keyname}'];
 `
         }
     }
-    fs.writeFileSync(`${here}/public/dynamic-linked-library/zustand.js`, text)
+    fs.writeFileSync(`${here}/public/global-vars/zustand.js`, text)
 }
 
 
@@ -152,7 +152,7 @@ export default NPM_GV_CACHE['TJ-wouter']['${keyname}'];
 `
         }
     }
-    fs.writeFileSync(`${here}/public/dynamic-linked-library/wouter.js`, text)
+    fs.writeFileSync(`${here}/public/global-vars/wouter.js`, text)
 }
 
 
@@ -177,6 +177,6 @@ export default NPM_GV_CACHE['TJ-wouter/use-hash-location']['${keyname}'];
 `
         }
     }
-    fs.writeFileSync(`${here}/public/dynamic-linked-library/wouter-hash-location.js`, text)
+    fs.writeFileSync(`${here}/public/global-vars/wouter-hash-location.js`, text)
 }
 
