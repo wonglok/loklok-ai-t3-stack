@@ -2,7 +2,7 @@
 
 import type * as webllm from "@mlc-ai/web-llm";
 // import { CreateWebWorkerMLCEngine } from "@mlc-ai/web-llm";
-import { EngineData, MyFile, useGlobalAI } from "../../../useGlobalAI";
+import { EngineData, MyFile, useGenAI } from "../../../useGenAI";
 // @ts-ignore
 import { z } from "zod";
 
@@ -28,7 +28,7 @@ export const llmRequestToFileStream = async ({
     engine: webllm.MLCEngineInterface;
     slot: EngineData | null;
 }) => {
-    useGlobalAI.getState().refreshSlot(slot);
+    useGenAI.getState().refreshSlot(slot);
 
     let fileObject = await readFileObject({ path });
 
@@ -64,13 +64,13 @@ export const llmRequestToFileStream = async ({
         });
 
         slot.bannerText = `✍🏻 ${path}`;
-        useGlobalAI.getState().refreshSlot(slot);
+        useGenAI.getState().refreshSlot(slot);
 
-        let lockInWorkers = useGlobalAI.getState().lockInWorkers;
+        let lockInWorkers = useGenAI.getState().lockInWorkers;
         if (!lockInWorkers) {
             slot.llmStatus = "idle";
             slot.bannerText = "";
-            useGlobalAI.getState().refreshSlot(slot);
+            useGenAI.getState().refreshSlot(slot);
             break;
         }
         slot.llmStatus = "writing";
@@ -98,5 +98,5 @@ export const llmRequestToFileStream = async ({
     });
     slot.llmStatus = "idle";
     slot.bannerText = "";
-    useGlobalAI.getState().refreshSlot(slot);
+    useGenAI.getState().refreshSlot(slot);
 };

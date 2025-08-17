@@ -1,4 +1,4 @@
-import { useGlobalAI } from "../../useGlobalAI";
+import { useGenAI } from "../../useGenAI";
 import { Button } from "@/components/ui/button";
 import {
     // DownloadCloudIcon,
@@ -73,7 +73,7 @@ let selectFile = ({
     total: number;
     index: number;
 }) => {
-    useGlobalAI.setState({
+    useGenAI.setState({
         expandID: `${file.path}`,
     });
 
@@ -114,8 +114,8 @@ function MonacoEditor({
     onChange?: (v: string) => void;
 }) {
     //
-    let lockInWorkers = useGlobalAI((r) => r.lockInWorkers);
-    let files = useGlobalAI((r) => r.files);
+    let lockInWorkers = useGenAI((r) => r.lockInWorkers);
+    let files = useGenAI((r) => r.files);
     let sortedFiles = files?.slice().sort(sortDate).reverse();
     let track = sortedFiles[0]?.content === value;
 
@@ -177,20 +177,26 @@ let sortDate = (a: any, b: any) => {
 
 export function ControlPanel() {
     //
-    let appID = useGlobalAI((r) => r.appID);
-    let engines = useGlobalAI((r) => r.engines);
+    let appID = useGenAI((r) => r.appID);
+    let engines = useGenAI((r) => r.engines);
 
     // let currentModel = useGlobalAI((r) => r.currentModel);
     // let prompt = useGlobalAI((r) => r.prompt);
     // let models = useGlobalAI((r) => r.models);
     // let setupLLMProgress = useGlobalAI((r) => r.setupLLMProgress);
-    let expandID = useGlobalAI((r) => r.expandID);
+    let expandID = useGenAI((r) => r.expandID);
 
     // let stopFunc = useGlobalAI((r) => r.stopFunc);
-    let files = useGlobalAI((r) => r.files);
+    let files = useGenAI((r) => r.files);
 
     let sortedFiles = files?.slice().sort(sortDate).reverse();
     // lockInWorkers
+
+    useEffect(() => {
+        if (sortedFiles[0]?.path && files.length === 1) {
+            useGenAI.setState({ expandID: sortedFiles[0]?.path });
+        }
+    }, [sortedFiles[0]?.path]);
     return (
         <>
             <div className="relative flex h-full w-full overflow-hidden text-sm">
@@ -247,7 +253,7 @@ export function ControlPanel() {
                                                                 it.author,
                                                         )?.llmStatus ===
                                                             "writing" &&
-                                                            `🤖 ${it.author}`}
+                                                            `${it.author}`}
                                                     </div>
                                                 </div>
                                             </div>
@@ -334,7 +340,7 @@ export function ControlPanel() {
                                                                             file.content =
                                                                                 value;
 
-                                                                            useGlobalAI.setState(
+                                                                            useGenAI.setState(
                                                                                 {
                                                                                     files: JSON.parse(
                                                                                         JSON.stringify(

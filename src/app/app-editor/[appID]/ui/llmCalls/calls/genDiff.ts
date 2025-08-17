@@ -5,7 +5,7 @@ import { systemPromptDiffCode } from "../persona/systemPromptDiffCode";
 import { writeToFile } from "../common/writeToFile";
 import { llmRequestToFileStream } from "../common/llmRequestToFileStream";
 import { readFileContent } from "../common/readFileContent";
-import { EngineData } from "../../../useGlobalAI";
+import { EngineData } from "../../../useGenAI";
 
 export const genDiff = async ({
     userPrompt,

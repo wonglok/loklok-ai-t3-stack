@@ -1,5 +1,5 @@
 import * as pathUtil from "path";
-import { MyFile, useGlobalAI } from "../../../useGlobalAI";
+import { MyFile, useGenAI } from "../../../useGenAI";
 import { appsCode } from "./appsCode";
 
 export const writeToFile = async ({
@@ -16,7 +16,7 @@ export const writeToFile = async ({
     inputSignature?: string;
 }) => {
     let files = JSON.parse(
-        JSON.stringify(useGlobalAI.getState().files),
+        JSON.stringify(useGenAI.getState().files),
     ) as MyFile[];
 
     let file = files.find((r) => r.path === path);
@@ -40,11 +40,11 @@ export const writeToFile = async ({
         files.push(newFile);
     }
 
-    useGlobalAI.setState({
+    useGenAI.setState({
         files: JSON.parse(JSON.stringify(files)) as MyFile[],
     });
 
     if (persist) {
-        await appsCode.setItem(useGlobalAI.getState().appID, files);
+        await appsCode.setItem(useGenAI.getState().appID, files);
     }
 };

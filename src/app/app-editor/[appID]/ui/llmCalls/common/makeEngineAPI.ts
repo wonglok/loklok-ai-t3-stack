@@ -2,7 +2,7 @@
 
 import type * as webllm from "@mlc-ai/web-llm";
 import { CreateWebWorkerMLCEngine } from "@mlc-ai/web-llm";
-import { useGlobalAI } from "../../../useGlobalAI";
+import { useGenAI } from "../../../useGenAI";
 // import Worker from "worker-loader!./webllm.worker.ts";
 
 // @ts-ignore
@@ -21,11 +21,11 @@ import Worker from "./webllm.worker.ts";
 
 //
 export const makeEngineAPI = async ({ name }: { name: string }) => {
-    let engines = useGlobalAI.getState().engines;
+    let engines = useGenAI.getState().engines;
 
     let slot = engines.find((r) => r.name === name);
 
-    let refresh = useGlobalAI.getState().refreshSlot;
+    let refresh = useGenAI.getState().refreshSlot;
 
     const initProgressCallback = (report: webllm.InitProgressReport) => {
         console.log(report);
@@ -52,7 +52,7 @@ export const makeEngineAPI = async ({ name }: { name: string }) => {
     slot.llmStatus = "idle";
     refresh(slot);
 
-    useGlobalAI.setState({
+    useGenAI.setState({
         loading: false,
     });
 

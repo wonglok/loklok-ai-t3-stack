@@ -1,5 +1,5 @@
 import md5 from "md5";
-import { EngineData, useGlobalAI } from "../../../useGlobalAI";
+import { EngineData, useGenAI } from "../../../useGenAI";
 
 export const provideFreeEngineSlot = async ({
     name = "",
@@ -8,16 +8,16 @@ export const provideFreeEngineSlot = async ({
 }) => {
     let engine = await new Promise((resolve) => {
         let ttt = setInterval(() => {
-            let engines = useGlobalAI.getState().engines;
+            let engines = useGenAI.getState().engines;
             let foundSlot = engines.find((r) => r.lockedBy === "" && r.enabled);
 
             if (foundSlot) {
                 let locker = `${name || `_${md5(`${Math.random()}`)}`}`;
 
-                useGlobalAI.setState({
+                useGenAI.setState({
                     engines: JSON.parse(
                         JSON.stringify(
-                            useGlobalAI.getState().engines.map((r) => {
+                            useGenAI.getState().engines.map((r) => {
                                 if (r.name === foundSlot.name) {
                                     r.lockedBy = locker;
                                     return r;
@@ -38,10 +38,10 @@ export const provideFreeEngineSlot = async ({
 };
 
 export const returnFreeEngineSlot = async ({ slot }) => {
-    useGlobalAI.setState({
+    useGenAI.setState({
         engines: JSON.parse(
             JSON.stringify(
-                useGlobalAI.getState().engines.map((r) => {
+                useGenAI.getState().engines.map((r) => {
                     if (r.name === slot.name) {
                         slot.lockedBy = "";
                         return slot;

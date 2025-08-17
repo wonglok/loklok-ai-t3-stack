@@ -1,4 +1,4 @@
-import { MyFile, useGlobalAI } from "../../../useGlobalAI";
+import { MyFile, useGenAI } from "../../../useGenAI";
 
 export const readFileObject = async ({
     path = "/manifest/mongoose.json",
@@ -8,7 +8,7 @@ export const readFileObject = async ({
     throwError?: boolean;
 }) => {
     let files = JSON.parse(
-        JSON.stringify(useGlobalAI.getState().files),
+        JSON.stringify(useGenAI.getState().files),
     ) as MyFile[];
     let file = files.find((r) => r.path === path);
 

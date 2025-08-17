@@ -10,7 +10,7 @@ import { readFileContent } from "../common/readFileContent";
 // import { newUnifiedDiffStrategy } from "diff-apply";
 import { readFileParseJSON } from "../common/readFileParseJSON";
 // import { removeFileByPath } from "../common/removeFilePath";
-import { useGlobalAI } from "../../../useGlobalAI";
+import { useGenAI } from "../../../useGenAI";
 export const genMongoDatabase = async ({
     slot,
     userPrompt,
@@ -79,9 +79,6 @@ ${featuresText}`,
     })) as z.infer<typeof schema>;
 
     for (let mongoose of latestModels.mongooseModels) {
-        if (!mongoose.slug.startsWith("/")) {
-            mongoose.slug = `/models/${mongoose.slug}`;
-        }
         console.log("manager.addTask", mongoose.slug);
 
         manager?.addTask({
@@ -89,7 +86,6 @@ ${featuresText}`,
             deps: [],
             func: async ({ slot, engine }) => {
                 console.log("begin-task", mongoose.slug);
-                //
 
                 // let existingCodePath = `${mongoose.slug}`;
                 // let existingModelCode = await readFileContent({
@@ -122,10 +118,10 @@ ${featuresText}
 Please write the latest mongoose model javascript code for "${mongoose.collectionName}" model.
 
 - only write the javascript code block 
-- please use esm modules javascript and ecma script ES6 javascript
+- please use es6 modules javascript 
 
 - MUST INCLUDE this next line:
-const db = mongoose.connection.useDb("app_development_${useGlobalAI.getState().appID}", { useCache: true });
+const db = mongoose.connection.useDb("app_development_${useGenAI.getState().appID}", { useCache: true });
 
 const ${`${JSON.stringify(mongoose.collectionName)}Schema`} = [...];
 

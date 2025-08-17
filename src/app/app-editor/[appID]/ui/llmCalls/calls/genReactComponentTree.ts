@@ -6,7 +6,7 @@ import { llmRequestToFileStream } from "../common/llmRequestToFileStream";
 import z from "zod";
 import { readFileParseJSON } from "../common/readFileParseJSON";
 import { readFileContent } from "../common/readFileContent";
-import { useGlobalAI } from "../../../useGlobalAI";
+import { useGenAI } from "../../../useGenAI";
 
 export const genReactComponentTree = async ({
     slot,

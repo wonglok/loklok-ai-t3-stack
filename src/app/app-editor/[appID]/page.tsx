@@ -1,6 +1,6 @@
 "use client";
 
-import { MyFile, useGlobalAI } from "./useGlobalAI";
+import { MyFile, useGenAI } from "./useGenAI";
 import { useEffect } from "react";
 import { ControlPanel } from "./ui/components/ControlPanel";
 import { WebGPUGate } from "./ui/components/WebGPUGate";
@@ -8,11 +8,11 @@ import { appsCode } from "./ui/llmCalls/common/appsCode";
 // import { WebLLMAppClient } from "./ui/util/WebLLMAppClient";
 
 export default function Page({ params }: { params: any }) {
-    let appID = useGlobalAI((r) => r.appID);
+    let appID = useGenAI((r) => r.appID);
 
     useEffect(() => {
         params.then(async (query: Record<string, any>) => {
-            useGlobalAI.setState({
+            useGenAI.setState({
                 appID: query.appID,
             });
 
@@ -20,7 +20,7 @@ export default function Page({ params }: { params: any }) {
                 let files = (await appsCode.getItem(query.appID)) as MyFile[];
 
                 if (files instanceof Array) {
-                    useGlobalAI.setState({
+                    useGenAI.setState({
                         files: files,
                     });
                 }

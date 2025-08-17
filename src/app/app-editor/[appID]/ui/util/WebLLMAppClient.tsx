@@ -2,7 +2,7 @@
 
 import type * as webllm from "@mlc-ai/web-llm";
 import { hasModelInCache } from "@mlc-ai/web-llm";
-import { EngineData, useGlobalAI } from "../../useGlobalAI";
+import { EngineData, useGenAI } from "../../useGenAI";
 // import { z } from "zod";
 
 // import * as markdownit from "markdown-it";
@@ -48,7 +48,7 @@ export const WebLLMAppClient = {
     [`abortProcess`]: async () => {
         //
 
-        useGlobalAI.getState().stopFunc();
+        useGenAI.getState().stopFunc();
 
         //
     },
@@ -56,7 +56,7 @@ export const WebLLMAppClient = {
     // buildApp
     ///////////////////////////////////////////////////////////////////////////////////
     [`buildApp`]: async ({ userPrompt }: { userPrompt: string }) => {
-        useGlobalAI.setState({
+        useGenAI.setState({
             stopFunc: async () => {
                 try {
                     for await (let [key, val] of apiMap.entries()) {
@@ -67,9 +67,9 @@ export const WebLLMAppClient = {
                         val.slot.bannerText = "";
                     }
 
-                    useGlobalAI.setState({
+                    useGenAI.setState({
                         engines: JSON.parse(
-                            JSON.stringify(useGlobalAI.getState().engines),
+                            JSON.stringify(useGenAI.getState().engines),
                         ),
                         lockInWorkers: false,
                         stopFunc: () => {},
@@ -79,9 +79,9 @@ export const WebLLMAppClient = {
             },
         });
 
-        useGlobalAI.setState({ lockInWorkers: true });
+        useGenAI.setState({ lockInWorkers: true });
 
-        let enabledEngines = useGlobalAI
+        let enabledEngines = useGenAI
             .getState() //
             .engines //
             .filter((r) => r.enabled);
@@ -268,7 +268,7 @@ export const WebLLMAppClient = {
 
             await (async () => {
                 let tryTrigger = async () => {
-                    let engines = useGlobalAI
+                    let engines = useGenAI
                         .getState()
                         .engines.filter((r) => r.enabled && r.lockedBy === "");
 

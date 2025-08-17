@@ -1,11 +1,11 @@
-import { useGlobalAI } from "../../../useGlobalAI";
+import { useGenAI } from "../../../useGenAI";
 import { appsCode } from "./appsCode";
 
 export const factoryResetThisApp = async () => {
-    useGlobalAI.setState({
+    useGenAI.setState({
         files: [],
     });
-    await appsCode.setItem(useGlobalAI.getState().appID, []);
+    await appsCode.setItem(useGenAI.getState().appID, []);
 
     location.reload();
 };

@@ -16,7 +16,7 @@ import {
 } from "@/components/ai-elements/prompt-input";
 import { useEffect } from "react";
 
-import { useGlobalAI } from "../../useGlobalAI";
+import { useGenAI } from "../../useGenAI";
 
 import { Label } from "@/components/ui/label";
 
@@ -55,10 +55,10 @@ import {
 import { factoryResetThisApp } from "../llmCalls/common/factoryResetThisApp";
 
 function AIMatcher({ name }: { name: string }) {
-    let models = useGlobalAI((r) => r.models);
-    let engines = useGlobalAI((r) => r.engines);
+    let models = useGenAI((r) => r.models);
+    let engines = useGenAI((r) => r.engines);
     let item = engines.find((r) => r.name === name);
-    let lockInWorkers = useGlobalAI((r) => r.lockInWorkers);
+    let lockInWorkers = useGenAI((r) => r.lockInWorkers);
 
     return (
         <>
@@ -68,7 +68,7 @@ function AIMatcher({ name }: { name: string }) {
                     value={item.currentModel}
                     onValueChange={(v) => {
                         item.currentModel = v;
-                        useGlobalAI.setState({
+                        useGenAI.setState({
                             engines: JSON.parse(JSON.stringify(engines)),
                         });
                     }}
@@ -95,9 +95,9 @@ function AIMatcher({ name }: { name: string }) {
 }
 
 function EnableSwitch({ name }: { name: string }) {
-    let engines = useGlobalAI((r) => r.engines);
+    let engines = useGenAI((r) => r.engines);
     let item = engines.find((r) => r.name === name);
-    let lockInWorkers = useGlobalAI((r) => r.lockInWorkers);
+    let lockInWorkers = useGenAI((r) => r.lockInWorkers);
 
     return (
         <>
@@ -112,7 +112,7 @@ function EnableSwitch({ name }: { name: string }) {
                 checked={item.enabled}
                 onCheckedChange={(v) => {
                     item.enabled = v;
-                    useGlobalAI.setState({
+                    useGenAI.setState({
                         engines: JSON.parse(JSON.stringify(engines)),
                     });
                 }}
@@ -122,10 +122,10 @@ function EnableSwitch({ name }: { name: string }) {
 }
 
 export function Launcher() {
-    let prompt = useGlobalAI((r) => r.prompt);
-    let engines = useGlobalAI((r) => r.engines);
+    let prompt = useGenAI((r) => r.prompt);
+    let engines = useGenAI((r) => r.engines);
     let names = engines.map((r) => r.name);
-    let lockInWorkers = useGlobalAI((r) => r.lockInWorkers);
+    let lockInWorkers = useGenAI((r) => r.lockInWorkers);
 
     function onSubmit(ev) {
         ev.preventDefault();
@@ -142,7 +142,7 @@ export function Launcher() {
                     onChange={(e) => {
                         //
 
-                        useGlobalAI.setState({
+                        useGenAI.setState({
                             prompt: e.target.value,
                         });
 

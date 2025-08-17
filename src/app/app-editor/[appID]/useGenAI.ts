@@ -28,7 +28,7 @@ export type EngineData = {
     bannerData?: any;
 };
 
-export const useGlobalAI = create<{
+export const useGenAI = create<{
     lockInWorkers: boolean;
     files: MyFile[];
     expandID: string;
@@ -86,6 +86,7 @@ export const useGlobalAI = create<{
         });
     };
 
+    let enable4th = false;
     let enable3rd = false;
     let enable2nd = false;
     if (typeof window !== "undefined") {
@@ -101,6 +102,9 @@ export const useGlobalAI = create<{
         if (memory >= 3.5) {
             enable3rd = true;
         }
+        if (memory >= 3.85) {
+            enable4th = true;
+        }
     }
 
     return {
@@ -113,10 +117,10 @@ export const useGlobalAI = create<{
             {
                 lockedBy: "",
                 enabled: true,
-                name: "_01",
+                name: "ai01",
                 displayName: "AI Developer 01",
 
-                currentModel: models[0].value,
+                currentModel: models[1].value,
                 llmStatus: "empty",
                 bannerText: "",
                 bannerData: null,
@@ -124,10 +128,10 @@ export const useGlobalAI = create<{
             {
                 lockedBy: "",
                 enabled: enable2nd,
-                name: "_02",
+                name: "ai02",
                 displayName: "AI Developer 02",
 
-                currentModel: models[0].value,
+                currentModel: models[1].value,
                 llmStatus: "empty",
                 bannerText: "",
                 bannerData: null,
@@ -135,21 +139,21 @@ export const useGlobalAI = create<{
             {
                 lockedBy: "",
                 enabled: enable3rd,
-                name: "_03",
+                name: "ai03",
                 displayName: "AI Developer 03",
 
-                currentModel: models[0].value,
+                currentModel: models[1].value,
                 llmStatus: "empty",
                 bannerText: "",
                 bannerData: null,
             },
             {
                 lockedBy: "",
-                enabled: false,
-                name: "_04",
+                enabled: enable4th,
+                name: "ai04",
                 displayName: "AI Developer 04",
 
-                currentModel: models[0].value,
+                currentModel: models[1].value,
                 llmStatus: "empty",
                 bannerText: "",
                 bannerData: null,
@@ -157,10 +161,10 @@ export const useGlobalAI = create<{
             {
                 lockedBy: "",
                 enabled: false,
-                name: "_05",
+                name: "ai05",
                 displayName: "AI Developer 05",
 
-                currentModel: models[0].value,
+                currentModel: models[1].value,
                 llmStatus: "empty",
                 bannerText: "",
                 bannerData: null,
@@ -199,19 +203,19 @@ Metaverse has
 
 Teacher can create NPC Avatars
 
-Generic NPC Avatars have different functionality. 
-- Quiz Function
-- Video Watching Function
-- Portal Function
-- VR Practice
-- AI Tutor
 
-Teacher can 
-1. Create different pages
-2. Add Metaverse to the page
-3. Add NPC Avatar to the Metaverse
-4. Add Functionality to that NPC Avatar
-5. Create Student Account Login (register for students in batch)
+Teacher can Mange Pages
+
+1. Each Page has a Metaverse
+2. Each Metaverse has a few NPC Avatars
+3. Each NPC Avatar can have multiple functionalities in the following:
+    1. Generic NPC Avatars have different functionality. 
+        - Quiz Function
+        - Video Watching Function
+        - Portal Function
+        - VR Practice
+        - AI Tutor
+4. Create Student Account Login (register for students in batch)
 
 Teacher can review report
 1. Student Learning Progress
