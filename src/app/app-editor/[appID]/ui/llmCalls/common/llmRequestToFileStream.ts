@@ -71,6 +71,7 @@ export const llmRequestToFileStream = async ({
         if (!lockInWorkers) {
             slot.llmStatus = "idle";
             slot.bannerText = "";
+            useGlobalAI.getState().refreshSlot(slot);
             break;
         }
     }

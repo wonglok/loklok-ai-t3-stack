@@ -8,6 +8,7 @@ import { systemPromptDiffCode } from "../persona/systemPromptDiffCode";
 import { writeToFile } from "../common/writeToFile";
 import { readFileContent } from "../common/readFileContent";
 import { newUnifiedDiffStrategy } from "diff-apply";
+import { readFileParseJSON } from "../common/readFileParseJSON";
 export const genMongoDatabase = async ({
     slot,
     userPrompt,
@@ -17,44 +18,39 @@ export const genMongoDatabase = async ({
     ///////////////////////////////////////////////////////////////////////////////////
     // manifest
     ///////////////////////////////////////////////////////////////////////////////////
-    let messages: webllm.ChatCompletionMessageParam[] = [
-        {
-            role: `system`,
-            content: `${systemPromptDiffCode}`,
-        },
-        {
-            role: "assistant",
-            content: `Here's the "user-requirements" Document:
-${userPrompt}`,
-        },
-        {
-            role: "assistant",
-            content: `Here's the "Use case and Features" Document:
-${featuresText}`,
-        },
-        {
-            role: `user`,
-            content: `implement the mongoose database models in javascript es6 modules according to "Product Requirement Definition". organise each model in their own file.`,
-        },
-        {
-            role: `user`,
-            content: `output diffcode only, don't output comments or notes`,
-        },
-    ];
-
-    const request: webllm.ChatCompletionRequestStreaming = {
-        seed: 19900831,
-        stream: true,
-        stream_options: { include_usage: true },
-        messages: messages,
-        temperature: 0.0,
-    };
 
     let latestJSONPath = `/study/genMongoDB.json`;
     await llmRequestToFileStream({
         path: latestJSONPath,
         request: {
-            ...request,
+            seed: 19900831,
+            stream: true,
+            stream_options: { include_usage: true },
+            messages: [
+                {
+                    role: `system`,
+                    content: `${systemPromptDiffCode}`,
+                },
+                {
+                    role: "assistant",
+                    content: `Here's the "user-requirements" Document:
+${userPrompt}`,
+                },
+                {
+                    role: "assistant",
+                    content: `Here's the "Use case and Features" Document:
+${featuresText}`,
+                },
+                {
+                    role: `user`,
+                    content: `implement the mongoose database models in javascript es6 modules according to "Product Requirement Definition". organise each model in their own file.`,
+                },
+                {
+                    role: `user`,
+                    content: `output diffcode only, don't output comments or notes`,
+                },
+            ] as webllm.ChatCompletionMessageParam[],
+            temperature: 0.0,
             response_format: {
                 type: "json_object",
                 schema: JSON.stringify(
@@ -66,6 +62,13 @@ ${featuresText}`,
                                     z
                                         .object({
                                             collectionName: z.string(),
+                                            codeFilePath: z.string().describe(
+                                                `example:  
+                                                    "/model/[CollectionName].model.js"
+                                                    
+                                                    Change [CollectionName] to the item name accrodingly 
+                                                `,
+                                            ),
                                         })
                                         .describe(
                                             "each mongoose database collection",
@@ -76,11 +79,13 @@ ${featuresText}`,
                     ),
                 ),
             },
-        },
+        } as webllm.ChatCompletionRequestStreaming,
         engine,
         slot: slot,
     });
-    let newJSON = await readFileContent({ path: latestJSONPath });
+
+    let newJSON = await readFileParseJSON({ path: latestJSONPath });
+
     console.log(newJSON);
 
     // let existingCode = "";

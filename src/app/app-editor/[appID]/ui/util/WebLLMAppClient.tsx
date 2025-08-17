@@ -243,13 +243,19 @@ export const WebLLMAppClient = {
                 };
 
                 await doTask();
+
+                await new Promise((resolve) => {
+                    let ts = setInterval(() => {
+                        let doneList = tasks.filter((r) => r.status === "done");
+                        if (doneList.length === tasks.length) {
+                            clearInterval(ts);
+                            WebLLMAppClient.abortProcess();
+                            resolve(null);
+                        }
+                    });
+                });
             })();
 
-            // await WebLLMAppClient.testDiff({
-            //     //
-            //     userPrompt,
-            //     engine,
-            // });
             // console.log("before studyRequirements");
             // await WebLLMAppClient.studyRequirements({
             //     userPrompt: userPrompt,
