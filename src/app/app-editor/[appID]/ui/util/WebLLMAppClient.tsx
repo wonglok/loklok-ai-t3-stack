@@ -9,6 +9,8 @@ import { EngineData, useGlobalAI } from "../../useGlobalAI";
 // import { createInstance } from "localforage";
 // import md5 from "md5";
 // import { newUnifiedDiffStrategyService } from "diff-apply";
+//
+
 import { genFeatrues } from "../llmCalls/calls/genFeatrues";
 import { makeEngineAPI } from "../llmCalls/common/makeEngineAPI";
 import {
@@ -20,6 +22,8 @@ import { genTRPCProcedure } from "../llmCalls/calls/genTRPCProcedure";
 import { genReactComponentTree } from "../llmCalls/calls/genReactComponentTree";
 import { genMongoDatabase } from "../llmCalls/calls/genMongoDatabase";
 import { readFileContent } from "../llmCalls/common/readFileContent";
+
+//
 // import { systemPromptPureText } from "../llmCalls/persona/systemPromptPureText";
 // import { appsCode } from "../llmCalls/common/appsCode";
 
@@ -218,7 +222,7 @@ export const WebLLMAppClient = {
                         if (first && allCompleted) {
                             let top = tasks.shift();
                             if (top) {
-                                await top.func().then(() => {
+                                top.func().then(() => {
                                     top.done = true;
                                 });
                             }
