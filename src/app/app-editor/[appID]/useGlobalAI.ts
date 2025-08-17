@@ -179,15 +179,17 @@ export const useGlobalAI = create<{
 
         // currentModel: models[0].value,
         appID: "",
-        prompt: `I want to build an eclass School multipurpose metaverse using threejs. 
+        prompt: `I want to build an eClass School multipurpose Metaverse using threejs. 
 
 i want to have a teacher account that can create student account for student to login/
 
 I want to be able to add 3d map to it.
 
-i want to be able to customize the 3d map with different objects.
+i want to be able to add avatar NPC to the the 3d map.
 
-i want to be able to program the behaviour of object using three.js custom code.
+i want to be able to program the behaviour of avatar using three.js custom code.
+
+
         `.trim(),
         loadingSpec: false,
         welcome: true,

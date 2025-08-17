@@ -178,15 +178,15 @@ export const WebLLMAppClient = {
                 },
 
                 {
-                    name: "genMongoDatabase",
+                    name: "genReactComponentTree",
                     status: "waiting",
                     deps: ["genFeatrues"],
                     func: async () => {
                         let slot = await provideFreeEngineSlot({
-                            name: "genMongoDatabase",
+                            name: "genReactComponentTree",
                         });
 
-                        await genMongoDatabase({
+                        await genReactComponentTree({
                             manager: manager,
                             slot: slot,
                             userPrompt: userPrompt,
@@ -201,15 +201,15 @@ export const WebLLMAppClient = {
                 },
 
                 {
-                    name: "genReactComponentTree",
+                    name: "genMongoDatabase",
                     status: "waiting",
                     deps: ["genFeatrues"],
                     func: async () => {
                         let slot = await provideFreeEngineSlot({
-                            name: "genReactComponentTree",
+                            name: "genMongoDatabase",
                         });
 
-                        await genReactComponentTree({
+                        await genMongoDatabase({
                             manager: manager,
                             slot: slot,
                             userPrompt: userPrompt,
