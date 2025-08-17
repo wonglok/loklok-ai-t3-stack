@@ -79,7 +79,7 @@ export const genReactComponentTree = async ({
 
     for (let reactComponent of lateSpec.ReactJSComponents) {
         if (!reactComponent.slug.startsWith("/")) {
-            reactComponent.slug = `/react/${reactComponent.slug}`;
+            reactComponent.slug = `${reactComponent.slug}`;
         }
         console.log("manager.addTask", reactComponent.slug);
 
@@ -89,10 +89,10 @@ export const genReactComponentTree = async ({
             func: async ({ slot, engine }) => {
                 console.log("begin-task", reactComponent.slug);
 
-                let outputPath = `${reactComponent.slug}`;
+                let outputPath = `/react/${reactComponent.slug}.js`;
 
                 await llmRequestToFileStream({
-                    path: reactComponent.slug,
+                    path: outputPath,
                     needsExtractCode: true,
                     request: {
                         seed: 19900831,

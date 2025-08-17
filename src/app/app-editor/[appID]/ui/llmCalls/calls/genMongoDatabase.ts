@@ -99,10 +99,10 @@ ${featuresText}`,
                 // console.log("existingModelCode", existingModelCode);
                 // let hasExistingCode = existingModelCode !== "";
 
-                let outputPath = `${mongoose.slug}`;
+                let outputPath = `/models/${mongoose.slug}.js`;
 
                 await llmRequestToFileStream({
-                    path: mongoose.slug,
+                    path: outputPath,
                     needsExtractCode: true,
                     request: {
                         seed: 19900831,
