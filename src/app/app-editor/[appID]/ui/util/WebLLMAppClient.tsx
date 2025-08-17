@@ -249,7 +249,10 @@ export const WebLLMAppClient = {
                                 first.status = "working";
                                 first.func().then(() => {
                                     first.status = "done";
+                                    doTask();
                                 });
+
+                                return;
                             }
                         }
                     }

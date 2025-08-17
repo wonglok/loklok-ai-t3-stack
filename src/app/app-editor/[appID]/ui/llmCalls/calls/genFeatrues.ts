@@ -57,7 +57,6 @@ Review the current "user requirements" and write a new "product requirement defi
         UserRoles:
             * UserRole
                 - name: [...]
-                - access_level: [internet | member-login | staff-login | system-admin]
                 
                 - Features:
                     * Feature
@@ -66,48 +65,39 @@ Review the current "user requirements" and write a new "product requirement defi
                         - Overall Steps: 
                             * Overall Step [number]
                                 - PageRoute & Params: [...]
+                                - access_level: [internet | member-login | staff-login | system-admin]
                                 - Interactions: 
                                     * Action Step [number]: [...]
                                     * Action Step [number]: [...]
                                     * Action Step [number]: [...]
                             * Overall Step [number]
                                 - PageRoute & Params: [...]
+                                - access_level: [internet | member-login | staff-login | system-admin]
                                 - Interactions: 
                                     * Action Step [number]: [...]
                                     * Action Step [number]: [...]
                                     * Action Step [number]: [...]
-
-                     * Feature
-                        - Title: [...]
-                        - Description: [...]
-                        - Overall Steps: 
                             * Overall Step [number]
                                 - PageRoute & Params: [...]
+                                - access_level: [internet | member-login | staff-login | system-admin]
                                 - Interactions: 
                                     * Action Step [number]: [...]
+                                    * Action Step [number]: [...]
+                                    * Action Step [number]: [...]
 
-            * UserRole
-                - name: [...]
-                - access_level: [internet | member-login | staff-login | system-admin]
-                
-                - Features:
                     * Feature
                         - Title: [...]
                         - Description: [...]
                         - Overall Steps: 
                             * Overall Step [number]
                                 - PageRoute & Params: [...]
+                                - access_level: [internet | member-login | staff-login | system-admin]
                                 - Interactions: 
+                                    * Action Step [number]: [...]
+                                    * Action Step [number]: [...]
                                     * Action Step [number]: [...]
 
-                     * Feature
-                        - Title: [...]
-                        - Description: [...]
-                        - Overall Steps: 
-                            * Overall Step [number]
-                                - PageRoute & Params: [...]
-                                - Interactions: 
-                                    * Action Step [number]: [...]
+
 `,
         },
         {
