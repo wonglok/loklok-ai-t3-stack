@@ -199,7 +199,7 @@ Student can login to the metaverse and have fun.
 3. View Learning Progress of Video Watching and Quiz Doing
 
 System portal can generate teacher login account and student login account.
-and have every feature above.
+and have access to all feature above.
 
 `.trim(),
         loadingSpec: false,
