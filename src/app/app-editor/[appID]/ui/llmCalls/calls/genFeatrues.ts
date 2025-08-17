@@ -13,7 +13,8 @@ export const genFeatrues = async ({ slot, userPrompt, engine }) => {
             role: `system`,
             content: `
 Instruction
-You are a senior product manager tasked with reviewing the provided user requirements and drafting a clear, concise product requirements definition (PRD) for a software system. 
+You are a senior product manager tasked with reviewing the provided user requirements 
+and drafting a clear, concise product requirements definition (PRD) for a software system. 
 Incorporate design thinking principles and draw inspiration from biblical proverbs to infuse wisdom into the system's feature design, emphasizing clarity, empathy, and user-centric solutions.
 You Organize the content in a clear, structured, and professional manner.
 Use precise, polished, and professional language to enhance readability and clarity.
