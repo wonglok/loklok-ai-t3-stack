@@ -41,8 +41,6 @@ Review the current "user requirements" and write a new "product requirement defi
     5. NEVER Bold Text in markdown
     6. Always add a new line for each new item (better spacing...)
     7. Must follow the Output format below:
-    8. use * as a new item
-    9. use - as a property of that new item
 `,
         },
 
@@ -56,61 +54,55 @@ Review the current "user requirements" and write a new "product requirement defi
 
         UserRoles:
             * UserRole
-                - name: [...]
-                - Features:
-                    * [number]
-                        - Title: [...]
-                        - Description: [...]
-                        - Navigation Steps: 
-                            * [number]
-                                - PageRoute & Params: [...]
-                                - access_level: [internet | member-login | staff-login | system-admin]
-                                - Interaction Steps: 
-                                    * [number]: [...]
-                                    * [number]: [...]
-                                    * [number]: [...]
-                            * [number]
-                                - PageRoute & Params: [...]
-                                - access_level: [internet | member-login | staff-login | system-admin]
-                                - InterInteraction Steps: 
-                                    * [number]: [...]
-                                    * [number]: [...]
-                                    * [number]: [...]
-                            * [number]
-                                - PageRoute & Params: [...]
-                                - access_level: [internet | member-login | staff-login | system-admin]
-                                - InterInteraction Steps: 
-                                    * [number]: [...]
-                                    * [number]: [...]
-                                    * [number]: [...]
+                name: [...]
+                Features:
+                    - [number]
+                        Title: [...]
+                        Description: [...]
+                        Navigation Steps: 
+                            - [number]
+                                PageRoute & Params: [...]
+                                Interaction Steps: 
+                                    - [number]: [...]
+                                    - [number]: [...]
+                                    - [number]: [...]
+                            - [number]
+                                PageRoute & Params: [...]
+                                InterInteraction Steps: 
+                                    - [number]: [...]
+                                    - [number]: [...]
+                                    - [number]: [...]
+                            - [number]
+                                PageRoute & Params: [...]
+                                InterInteraction Steps: 
+                                    - [number]: [...]
+                                    - [number]: [...]
+                                    - [number]: [...]
             * UserRole
-                - name: [...]
-                - Features:
-                    * [number]
-                        - Title: [...]
-                        - Description: [...]
-                        - Navigation Steps: 
-                            * [number]
-                                - PageRoute & Params: [...]
-                                - access_level: [internet | member-login | staff-login | system-admin]
-                                - Interaction Steps: 
-                                    * [number]: [...]
-                                    * [number]: [...]
-                                    * [number]: [...]
-                            * [number]
-                                - PageRoute & Params: [...]
-                                - access_level: [internet | member-login | staff-login | system-admin]
-                                - InterInteraction Steps: 
-                                    * [number]: [...]
-                                    * [number]: [...]
-                                    * [number]: [...]
-                            * [number]
-                                - PageRoute & Params: [...]
-                                - access_level: [internet | member-login | staff-login | system-admin]
-                                - InterInteraction Steps: 
-                                    * [number]: [...]
-                                    * [number]: [...]
-                                    * [number]: [...]
+                name: [...]
+                Features:
+                    - [number]
+                        Title: [...]
+                        Description: [...]
+                        Navigation Steps: 
+                            - [number]
+                                PageRoute & Params: [...]
+                                Interaction Steps: 
+                                    - [number]: [...]
+                                    - [number]: [...]
+                                    - [number]: [...]
+                            - [number]
+                                PageRoute & Params: [...]
+                                InterInteraction Steps: 
+                                    - [number]: [...]
+                                    - [number]: [...]
+                                    - [number]: [...]
+                            - [number]
+                                PageRoute & Params: [...]
+                                InterInteraction Steps: 
+                                    - [number]: [...]
+                                    - [number]: [...]
+                                    - [number]: [...]
 
 
 
