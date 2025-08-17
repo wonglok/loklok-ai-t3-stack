@@ -31,7 +31,6 @@ Review the current "user requirements" and write a new "product requirement defi
     2. rewrite wordings to better english
     3. ponder bible proverbs scriptures for wisidom when designing the system, 
     4. learn from the wisdom of single source of truth, constant values, pure functions
-    5. MUST use the correct user access level: ["access_level"] pick one from [internet | member-login | staff-login | system-admin]
 
 ## Format Requirements
     1. Use markdown
