@@ -295,10 +295,15 @@ export const WebLLMAppClient = {
 
                         if (first && allCompleted) {
                             if (first) {
-                                first.status = "working";
-                                first.func().then(() => {
-                                    first.status = "done";
-                                });
+                                requestIdleCallback(
+                                    () => {
+                                        first.status = "working";
+                                        first.func().then(() => {
+                                            first.status = "done";
+                                        });
+                                    },
+                                    { timeout: 1000 },
+                                );
                             }
                         }
                     }
