@@ -113,7 +113,8 @@ Wrap the entire response in a single markdown document.
 
 Generate the response now, starting with Step 1, and output it as a complete design based on the provided requirements.
 
-Try to write short sentences and fit the entire output within 4096 tokens. the output limit is 4096 tokens.
+Try to fit the entire output within 4096 tokens. 
+The output limit is 4096 tokens.
 `,
         },
     ];
