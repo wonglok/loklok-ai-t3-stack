@@ -112,6 +112,8 @@ Summarize how the design enables rapid app development via AI-driven workflows.
 Wrap the entire response in a single markdown document.
 
 Generate the response now, starting with Step 1, and output it as a complete design based on the provided requirements.
+
+Try to write short sentences and fit the entire output within 4096 tokens. the output limit is 4096 tokens.
 `,
         },
     ];
