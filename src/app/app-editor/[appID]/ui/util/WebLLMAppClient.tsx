@@ -66,7 +66,7 @@ export const WebLLMAppClient = {
                         val.slot.llmStatus = "idle";
                         val.slot.bannerText = "";
                     }
-
+                    apiMap.clear();
                     useGenAI.setState({
                         engines: JSON.parse(
                             JSON.stringify(useGenAI.getState().engines),

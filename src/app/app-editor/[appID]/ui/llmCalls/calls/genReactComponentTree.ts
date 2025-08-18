@@ -6,7 +6,6 @@ import { llmRequestToFileStream } from "../common/llmRequestToFileStream";
 import z from "zod";
 import { readFileParseJSON } from "../common/readFileParseJSON";
 import { readFileContent } from "../common/readFileContent";
-import { useGenAI } from "../../../useGenAI";
 
 export const genReactComponentTree = async ({
     slot,
@@ -38,6 +37,7 @@ export const genReactComponentTree = async ({
     await llmRequestToFileStream({
         path: reactComponentSpecPath,
         request: {
+            max_tokens: 4096,
             seed: 19900831,
             stream: true,
             stream_options: { include_usage: true },
@@ -95,6 +95,7 @@ export const genReactComponentTree = async ({
                     path: outputPath,
                     needsExtractCode: true,
                     request: {
+                        max_tokens: 4096,
                         seed: 19900831,
                         stream: true,
                         stream_options: { include_usage: true },
@@ -113,6 +114,7 @@ Please write the latest reactComponent component javascript code for "${reactCom
 
 - only write the javascript code block 
 - please use esm modules javascript and ecma script ES6 javascript
+- use ShadCN User Interface Framework and tailwind css
 
 export const ${`${JSON.stringify(reactComponent.ReactJSComponentName)}ReactComponent`} = () => {
 

@@ -31,7 +31,7 @@ export const llmRequestToFileStream = async ({
     useGenAI.getState().refreshSlot(slot);
 
     let fileObject = await readFileObject({ path });
-
+    slot.bannerData = fileObject;
     if (fileObject) {
         let nowHash = `${md5(JSON.stringify({ request, model: slot.currentModel, content: fileObject.content }))}`;
         if (nowHash === fileObject.inputSignature) {

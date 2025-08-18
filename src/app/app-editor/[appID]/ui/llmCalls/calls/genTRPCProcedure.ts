@@ -42,6 +42,7 @@ export const getTRPCProcedure = async ({
     await llmRequestToFileStream({
         path: reactComponentSpecPath,
         request: {
+            max_tokens: 4096,
             seed: 19900831,
             stream: true,
             stream_options: { include_usage: true },
@@ -99,6 +100,7 @@ export const getTRPCProcedure = async ({
                     path: reactComponent.codeFilePath,
                     needsExtractCode: true,
                     request: {
+                        max_tokens: 4096,
                         seed: 19900831,
                         stream: true,
                         stream_options: { include_usage: true },

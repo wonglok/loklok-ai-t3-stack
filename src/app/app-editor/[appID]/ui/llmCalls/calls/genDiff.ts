@@ -89,6 +89,7 @@ In User Profile, they can write testimony and request pastor to approve for publ
         stream_options: { include_usage: true },
         messages: messages,
         temperature: 0.0,
+        max_tokens: 4096,
     };
 
     await writeToFile({

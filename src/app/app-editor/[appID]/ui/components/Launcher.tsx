@@ -85,8 +85,18 @@ function AIMatcher({ name }: { name: string }) {
                     </SelectContent>
                 </Select>
             )}
+
             {item.bannerText && (
-                <div className="mt-2 rounded-lg border p-2">
+                <div
+                    onClick={() => {
+                        if (item?.bannerData) {
+                            useGenAI.setState({
+                                expandID: item.bannerData?.path,
+                            });
+                        }
+                    }}
+                    className="mt-2 rounded-lg border p-2"
+                >
                     {item.bannerText}
                 </div>
             )}

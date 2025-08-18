@@ -117,7 +117,7 @@ export const useGenAI = create<{
             {
                 lockedBy: "",
                 enabled: true,
-                name: "ai01",
+                name: "#01",
                 displayName: "AI Developer 01",
 
                 currentModel: models[1].value,
@@ -128,7 +128,7 @@ export const useGenAI = create<{
             {
                 lockedBy: "",
                 enabled: enable2nd,
-                name: "ai02",
+                name: "#02",
                 displayName: "AI Developer 02",
 
                 currentModel: models[1].value,
@@ -139,7 +139,7 @@ export const useGenAI = create<{
             {
                 lockedBy: "",
                 enabled: enable3rd,
-                name: "ai03",
+                name: "#03",
                 displayName: "AI Developer 03",
 
                 currentModel: models[1].value,
@@ -149,8 +149,8 @@ export const useGenAI = create<{
             },
             {
                 lockedBy: "",
-                enabled: enable4th,
-                name: "ai04",
+                enabled: false,
+                name: "#04",
                 displayName: "AI Developer 04",
 
                 currentModel: models[1].value,
@@ -161,7 +161,7 @@ export const useGenAI = create<{
             {
                 lockedBy: "",
                 enabled: false,
-                name: "ai05",
+                name: "#05",
                 displayName: "AI Developer 05",
 
                 currentModel: models[1].value,
@@ -192,19 +192,17 @@ Here are the user types / role:
 
 System Admin can create Teacher Login Accounts and Student Login Accounts.
 
-Teacher can metaverse.
+Teacher can create, update, delete, and metaverse.
 
 Metaverse has
-- Avatars of Teachers
-- Avatars of Students
-- NPC Avatars
+- Avatars of Teachers walking around
+- Avatars of Students walking around
+- NPC Avatars standing at spots
 - Environment Lighting
 - Venue 3D model like School / Canteen
 
 Teacher can create NPC Avatars
-
-
-Teacher can Mange Pages
+Teacher can create Page.
 
 1. Each Page has a Metaverse
 2. Each Metaverse has a few NPC Avatars
@@ -213,16 +211,15 @@ Teacher can Mange Pages
         - Quiz Function
         - Video Watching Function
         - Portal Function
-        - VR Practice
-        - AI Tutor
 4. Create Student Account Login (register for students in batch)
 
-Teacher can review report
+Teacher can review analytics and report
 1. Student Learning Progress
 2. Quiz Scores
 3. Traffic Count
-4. AI tutor interactive data
 5. VR Practice data
+6. Page view count
+
 
 Student can
 1. Register to Metaverse 
@@ -232,7 +229,6 @@ Student can
     1. View what quiz are finished and what quiz haven't started
     2. View which video watched or not
     3. View VR Practice Result
-    4. View AI Tutor Result
 
 `.trim(),
         loadingSpec: false,

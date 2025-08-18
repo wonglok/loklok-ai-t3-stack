@@ -28,10 +28,9 @@ export const makeEngineAPI = async ({ name }: { name: string }) => {
     let refresh = useGenAI.getState().refreshSlot;
 
     const initProgressCallback = (report: webllm.InitProgressReport) => {
-        console.log(report);
+        // console.log(report);
 
         slot.bannerText = report.text;
-
         slot.llmStatus = "downloading";
         refresh(slot);
     };

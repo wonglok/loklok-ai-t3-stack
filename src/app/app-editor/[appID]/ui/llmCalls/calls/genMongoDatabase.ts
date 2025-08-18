@@ -10,7 +10,8 @@ import { readFileContent } from "../common/readFileContent";
 // import { newUnifiedDiffStrategy } from "diff-apply";
 import { readFileParseJSON } from "../common/readFileParseJSON";
 // import { removeFileByPath } from "../common/removeFilePath";
-import { useGenAI } from "../../../useGenAI";
+// import { useGenAI } from "../../../useGenAI";
+import slugify from "slugify";
 export const genMongoDatabase = async ({
     slot,
     userPrompt,
@@ -29,16 +30,22 @@ export const genMongoDatabase = async ({
             .array(
                 z
                     .object({
-                        collectionName: z.string(),
-                        slug: z.string(),
+                        collectionName: z
+                            .string()
+                            .describe("camelCase letter casing"),
+                        slug: z
+                            .string()
+                            .describe("make sure the slug is url friendly"),
                     })
                     .describe("each mongoose database collection"),
             )
             .describe("mongoose database collections"),
     });
+
     await llmRequestToFileStream({
         path: mongooseSpecPath,
         request: {
+            max_tokens: 4096,
             seed: 19900831,
             stream: true,
             stream_options: { include_usage: true },
@@ -79,6 +86,7 @@ ${featuresText}`,
     })) as z.infer<typeof schema>;
 
     for (let mongoose of latestModels.mongooseModels) {
+        mongoose.slug = `${slugify(mongoose.slug, { lower: true, replacement: "-" })}`;
         console.log("manager.addTask", mongoose.slug);
 
         manager?.addTask({
@@ -91,7 +99,6 @@ ${featuresText}`,
                 // let existingModelCode = await readFileContent({
                 //     path: `${existingCodePath}`,
                 // });
-
                 // console.log("existingModelCode", existingModelCode);
                 // let hasExistingCode = existingModelCode !== "";
 
@@ -101,6 +108,7 @@ ${featuresText}`,
                     path: outputPath,
                     needsExtractCode: true,
                     request: {
+                        max_tokens: 4096,
                         seed: 19900831,
                         stream: true,
                         stream_options: { include_usage: true },
@@ -120,17 +128,20 @@ Please write the latest mongoose model javascript code for "${mongoose.collectio
 - only write the javascript code block 
 - please use es6 modules javascript 
 
-- MUST INCLUDE this next line:
-const db = mongoose.connection.useDb("app_development_${useGenAI.getState().appID}", { useCache: true });
+- MUST INCLUDE this "addModel" javascript function:
 
-const ${`${JSON.stringify(mongoose.collectionName)}Schema`} = [...];
+export function addModel ({ appID }) {
+    const db = mongoose.connection.useDb("app_development_appID", { useCache: true });
 
-if (!db.models[${JSON.stringify(mongoose.collectionName)}]) {
-    db.model(${JSON.stringify(mongoose.collectionName)}, ${`${JSON.stringify(mongoose.collectionName)}Schema`});
+    const ${`${JSON.stringify(mongoose.collectionName)}Schema`} = [...];
+
+    if (!db.models[${JSON.stringify(mongoose.collectionName)}]) {
+        db.model(${JSON.stringify(mongoose.collectionName)}, ${`${JSON.stringify(mongoose.collectionName)}Schema`});
+    }
+
+    return db.model("${mongoose.collectionName}");
 }
 
-- MUST INCLUDE this next line:
-export model like: export default db.model("${mongoose.collectionName}")
 `.trim(),
                             },
                         ] as webllm.ChatCompletionMessageParam[],
