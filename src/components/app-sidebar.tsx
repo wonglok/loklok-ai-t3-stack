@@ -45,7 +45,7 @@ const data = {
             plan: "Startup",
         },
         {
-            name: "Evil Corp.",
+            name: "Waa Corp.",
             logo: Command,
             plan: "Free",
         },

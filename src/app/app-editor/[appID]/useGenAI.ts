@@ -47,9 +47,8 @@ export const useGenAI = create<{
     engines: EngineData[];
 
     brainworks: boolean;
-    //
+
     onCancelSigature: () => void;
-    //
 
     models: { key: string; value: string }[];
 
@@ -68,6 +67,10 @@ export const useGenAI = create<{
         {
             key: "Qwen Coder 7B (~4GB)",
             value: `Qwen2.5-Coder-7B-Instruct-q4f16_1-MLC`,
+        },
+        {
+            key: "Qwen 3 8B (4GB)",
+            value: "Qwen3-8B-q4f16_1-MLC",
         },
     ];
 
