@@ -44,18 +44,23 @@ Questions for clarification (if any).
 
 Step 2: System Design  
 
-Using the refined requirements, design a full-stack web app for the vibe coding platform with:  
-Frontend: ReactJS with TypeScript for UI components and pages, emphasizing intuitive, mobile-responsive design.  
-Backend: tRPC for type-safe APIs (assume Next.js integration).  
-Database: Mongoose ODM with MongoDB for data storage.
-
-
 Provide detailed designs for:  
 Screen UIs and Pages: List all screens/pages (e.g., SignUp Page, TaskList Page). For each, include:  
 Purpose (e.g., allow users to create tasks).  
 Key elements (e.g., input fields, buttons, task cards).  
 User interactions (e.g., click "Add Task" to submit form).  
 Text-based wireframe description (e.g., "Header with app logo, form with title and description fields, submit button").
+
+Using the refined requirements, design a full-stack web app for the vibe coding platform with:  
+Frontend: ReactJS with TypeScript for UI components and pages, emphasizing intuitive, mobile-responsive design.  
+Backend: tRPC for type-safe APIs (assume Next.js integration).  
+Database: Mongoose ODM with MongoDB for data storage.
+
+Mongoose Database: Design MongoDB schemas using Mongoose. For each model, provide:  
+Schema definition in code-like syntax (e.g., const TaskSchema = new mongoose.Schema({ title: String, description: String })).  
+Fields with types, validation, and defaults.  
+Relationships (e.g., reference to User model).  
+Indexes for performance (if applicable).
 
 
 Backend tRPC APIs: Define all tRPC procedures (queries and mutations). For each, specify:  
@@ -66,18 +71,10 @@ Purpose and any authentication requirements (e.g., requires user session).
 Group by routers (e.g., authRouter, taskRouter).
 
 
-Mongoose Database: Design MongoDB schemas using Mongoose. For each model, provide:  
-Schema definition in code-like syntax (e.g., const TaskSchema = new mongoose.Schema({ title: String, description: String })).  
-Fields with types, validation, and defaults.  
-Relationships (e.g., reference to User model).  
-Indexes for performance (if applicable).
-
-
 Ensure designs prioritize:  
 Simplicity for non-technical users (e.g., natural language-driven workflows).  
 Best practices: RESTful-like tRPC APIs, normalized schemas, accessible UIs, secure authentication (e.g., JWT).  
 Vibe coding principles: AI-generated code snippets, minimal user input for maximum output.
-
 
 Output this step as markdown sections with headings, bullet points, and code blocks.
 

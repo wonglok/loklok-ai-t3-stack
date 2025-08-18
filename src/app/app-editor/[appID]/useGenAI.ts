@@ -123,7 +123,7 @@ export const useGenAI = create<{
                 name: "#01",
                 displayName: "AI Developer 01",
 
-                currentModel: models[1].value,
+                currentModel: models[2].value,
                 llmStatus: "empty",
                 bannerText: "",
                 bannerData: null,
