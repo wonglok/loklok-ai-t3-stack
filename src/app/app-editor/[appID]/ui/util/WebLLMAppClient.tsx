@@ -220,6 +220,8 @@ export const WebLLMAppClient = {
                 let doTask = async ({ task }) => {
                     task.status = "reserved";
 
+                    console.log("begin waiting task");
+
                     await new Promise((resovle) => {
                         let ttt = setInterval(() => {
                             let isReady =
@@ -243,6 +245,11 @@ export const WebLLMAppClient = {
                     let slot = await provideFreeEngineSlot({
                         name: task.name,
                     });
+
+                    await toast("Begin Writing Code", {
+                        description: `${task.name} by ${slot.displayName}`,
+                    });
+
                     return task.func({ slot }).then(async () => {
                         task.status = "done";
                         await returnFreeEngineSlot({ slot: slot });
@@ -260,19 +267,31 @@ export const WebLLMAppClient = {
                             (r) => r.enabled && r.lockedBy === "",
                         ).length;
 
-                    console.log("init");
+                    if (engineCount >= 2) {
+                        await checkTaskToDo();
 
-                    await Promise.all(
-                        taskList
-                            .filter((r) => r.status === "waiting")
-                            .slice(0, engineCount)
-                            .filter((r) => r)
-                            .map((task) => {
-                                return doTask({ task: task });
-                            }),
-                    );
-
-                    return await checkTaskToDo();
+                        await Promise.all(
+                            taskList
+                                .filter((r) => r.status === "waiting")
+                                .slice(0, 1)
+                                .filter((r) => r)
+                                .map((task) => {
+                                    return doTask({ task: task });
+                                }),
+                        );
+                    } else if (engineCount === 1) {
+                        await Promise.all(
+                            taskList
+                                .filter((r) => r.status === "waiting")
+                                .slice(0, 1)
+                                .filter((r) => r)
+                                .map((task) => {
+                                    return doTask({ task: task });
+                                }),
+                        );
+                    } else {
+                        await checkTaskToDo();
+                    }
                 };
                 await checkTaskToDo();
 
