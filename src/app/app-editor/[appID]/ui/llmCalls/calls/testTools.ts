@@ -152,5 +152,5 @@ export async function testTools({ engine, userPrompt, slot }) {
 
     console.log(useGenAI.getState().files);
 
-    sdk.destroy();
+    await sdk.destroy();
 }

@@ -1,6 +1,8 @@
 import z from "zod";
 import * as webllm from "@mlc-ai/web-llm";
 import { JSONSchema } from "zod/v4/core";
+import { useGenAI } from "../../../useGenAI";
+import { writeToFile } from "../common/writeToFile";
 
 type MyTool = {
     name: string;
@@ -111,6 +113,11 @@ export class ToolFunctionSDK {
             content: tool_response,
             tool_call_id: "0",
         });
+
+        await writeToFile({
+            path: "messages.json",
+            content: `${JSON.stringify(this.messages, null, "\t")}`,
+        });
     }
 
     getSystemPrompt() {
@@ -152,9 +159,13 @@ Reminder:
 - Put the entire function call reply on one line
 - Always add your sources when using search results to answer the user query
 
-
-# Diff Code Insturction
+${
+    extraSystemPrompt
+        ? `
 ${extraSystemPrompt}
+`
+        : ``
+}
 `;
     }
     getToolSystemJSON({ name, description, input, output }: MyTool) {
