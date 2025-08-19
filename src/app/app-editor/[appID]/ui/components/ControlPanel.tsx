@@ -30,6 +30,10 @@ import {
     // PromptInput,
     // PromptInputButton,
 } from "@/components/ai-elements/prompt-input";
+import {
+    MonacoJsxSyntaxHighlight,
+    getWorker,
+} from "monaco-jsx-syntax-highlight";
 
 // import { PreviewPanelLoader } from "./PreviewPanelLoader";
 // import { Conversation } from "@/components/ai-elements/conversation";
@@ -44,7 +48,7 @@ import {
 //https://github.com/Aider-AI/aider/blob/main/aider/coders/udiff_prompts.py#L17C1-L18C1
 
 import Editor from "@monaco-editor/react";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import * as pathUtil from "path";
 import { format } from "date-fns";
 // import { CodePod } from "../util/CodePod";
@@ -151,6 +155,48 @@ function MonacoEditor({
         }
     }, [files]);
 
+    const handleEditorDidMount = useCallback((editor: any, monaco: any) => {
+        setEditor(editor);
+
+        monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
+            jsx: monaco.languages.typescript.JsxEmit.Preserve,
+            target: monaco.languages.typescript.ScriptTarget.ES2020,
+            esModuleInterop: true,
+            moduleResolution: "nodenext",
+            baseUrl: "./src", // Or your project's base directory
+            paths: {
+                "../types": ["./types/index.ts"], // Adjust to your actual path
+            },
+        });
+
+        const monacoJsxSyntaxHighlight = new MonacoJsxSyntaxHighlight(
+            getWorker(),
+            monaco,
+        );
+
+        // editor is the result of monaco.editor.create
+        const { highlighter, dispose } =
+            monacoJsxSyntaxHighlight.highlighterBuilder({
+                editor: editor,
+            });
+
+        try {
+            // init highlight
+            highlighter();
+        } finally {
+        }
+
+        editor.onDidChangeModelContent(() => {
+            // content change, highlight
+            try {
+                highlighter();
+            } finally {
+            }
+        });
+
+        return dispose;
+    }, []);
+
     return (
         <div
             className="h-full w-full"
@@ -173,38 +219,15 @@ function MonacoEditor({
         >
             <Editor
                 options={{
-                    saveViewState: true,
+                    fontSize: 12,
+                    lineHeight: 20.0,
+                    automaticLayout: true,
                 }}
-                path={path}
+                path={"file:///index.tsx"}
+                // path={path}
                 height={height}
-                onMount={(editor, monaco) => {
-                    monaco.languages.typescript.typescriptDefaults.addExtraLib;
-
-                    // Important Bit #3: Tell typescript to use 'react' for jsx files.
-                    monaco.languages.typescript.typescriptDefaults.setCompilerOptions(
-                        {
-                            jsx: "react",
-                        },
-                    );
-
-                    monaco.languages.typescript.typescriptDefaults.setEagerModelSync(
-                        true,
-                    );
-
-                    monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions(
-                        {
-                            noSemanticValidation: false,
-                            noSyntaxValidation: false,
-                        },
-                    );
-
-                    editor.addCommand(
-                        monaco.KeyMod.WinCtrl | monaco.KeyCode.s,
-                        () => console.log("hello world"),
-                    );
-
-                    setEditor(editor);
-                }}
+                onMount={handleEditorDidMount}
+                // defaultLanguage="typescript"
                 language={
                     defaultLanguage
                     // llmStatus === "writing" && track && path.includes(".js")

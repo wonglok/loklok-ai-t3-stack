@@ -6,7 +6,7 @@ import { llmRequestToFileStream } from "../common/llmRequestToFileStream";
 import z from "zod";
 import { readFileParseJSON } from "../common/readFileParseJSON";
 import { readFileContent } from "../common/readFileContent";
-import { useGenAI } from "../../../useGenAI";
+// import { useGenAI } from "../../../useGenAI";
 
 export const genReactComponentTree = async ({
     slot,
@@ -115,7 +115,6 @@ ${featuresText}
 - DO NOT include '@/...' at the beginning of import url like this: "import { Button } from '@/components/ui/button';" (wrong)
 - MUST use '/' at the beginning of import url like this: "import { Button } from '/components/ui/button';" (good and right)
 - Use Vanilla JSX html with Tailwind CSS
-- DO NOT import shadcn components from "/components/..."
 
 export const App = () => {
     return ...
@@ -146,7 +145,7 @@ export const App = () => {
             func: async ({ slot, engine }) => {
                 console.log("begin-task", reactComponent.slug);
 
-                let outputPath = `/react/${reactComponent.slug}.tsx`;
+                let outputPath = `/components/${reactComponent.slug}.tsx`;
 
                 await llmRequestToFileStream({
                     path: outputPath,
@@ -175,7 +174,7 @@ Please write the latest reactComponent component typescript code for "${reactCom
 - DO NOT include '@/...' at the beginning of import url like this: "import { Button } from '@/components/ui/button';" (wrong)
 - MUST use '/' at the beginning of import url like this: "import { Button } from '/components/ui/button';" (good and right)
 - Use Vanilla JSX html with Tailwind CSS
-- DO NOT import shadcn components from "/components/..."
+- DO NOT use ui components in "/components/ui/" folder
 
 export const ${`${JSON.stringify(reactComponent.ReactJSComponentName)}ReactComponent`} = () => {
     return ...

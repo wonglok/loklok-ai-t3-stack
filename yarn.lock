@@ -5260,6 +5260,11 @@ mkdirp@^3.0.1:
   resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-3.0.1.tgz#e44e4c5607fb279c168241713cc6e0fea9adcb50"
   integrity sha512-+NsyUUAZDmo6YVHzL/stxSu3t9YS1iljliy3BSDrXJ/dkn1KYdmtZODGGjLcc9XLgVVpH4KshHB8XmZgMhaBXg==
 
+monaco-jsx-syntax-highlight@^1.2.2:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/monaco-jsx-syntax-highlight/-/monaco-jsx-syntax-highlight-1.2.2.tgz#95132f6c638c608eaa7de1b26ed0cd13879bdaaa"
+  integrity sha512-V1JkspFJKIaRX5C2D3UuWjIz2xgWI+7slf+gMFgz8yIr0LSTl3AhD8Gk/7gvbMqp6pKOynIhWJEaluwwUtLz7w==
+
 months@^2.0.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/months/-/months-2.1.0.tgz#9385ae1968b84313dff223b11080058d1ec326fd"
