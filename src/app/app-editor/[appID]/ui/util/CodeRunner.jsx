@@ -36,9 +36,19 @@ export function CodeRunner() {
                 shimMode: true,
                 enforceIntegrity: false,
                 resolve: (id, parentUrl, resolve) => {
+                    let removeTSJS = (pathname = '') => {
+                        if (pathname.endsWith('.ts')) {
+                            return pathname.replace('.ts', '')
+                        }
+                        if (pathname.endsWith('.js')) {
+                            return pathname.replace('.js', '')
+                        }
+                        return pathname
+                    }
+
                     console.log(id)
                     let fileEntry = fileList.find((it) => {
-                        return it.path === id
+                        return removeTSJS(it.path) === removeTSJS(id)
                     })
                     return URL.createObjectURL(new Blob([fileEntry?.code || ''], { type: 'application/javascript' }))
                 },

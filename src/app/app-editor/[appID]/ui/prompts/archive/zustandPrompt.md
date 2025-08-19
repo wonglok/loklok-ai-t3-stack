@@ -1,4 +1,4 @@
-```javascript
+```typescript
 import { create } from "zustand";
 import { getTRPC } from "./getTRPC.js";
 

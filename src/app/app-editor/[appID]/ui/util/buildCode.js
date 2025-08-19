@@ -71,7 +71,18 @@ export const buildCode = async ({ files = [] }) => {
                             })
                     }
 
-                    let file = files.find((e) => `${CodePrefix}${e.path}` === id)
+                    let removeTSJS = (pathname = '') => {
+                        if (pathname.endsWith('.ts')) {
+                            return pathname.replace('.ts', '')
+                        }
+                        if (pathname.endsWith('.js')) {
+                            return pathname.replace('.js', '')
+                        }
+                        return pathname
+                    }
+
+                    let file = files.find((e) => removeTSJS(`${CodePrefix}${e.path}`) === removeTSJS(id))
+
                     if (!file) {
                         return `console.log('file is not found or is under generation', ${JSON.stringify(id)})`
                     }
@@ -100,7 +111,7 @@ export const buildCode = async ({ files = [] }) => {
 
                     if (file?.content) {
                         try {
-                            let javascript = transform(file.content || '', {
+                            let es6 = transform(file.content || '', {
                                 transforms: ['jsx'],
                                 preserveDynamicImport: true,
                                 production: false,
@@ -108,7 +119,7 @@ export const buildCode = async ({ files = [] }) => {
                                 jsxFragmentPragma: 'React.Fragment',
                             }).code
 
-                            return javascript
+                            return es6
                         } catch (e) {
                             console.log(e)
                             console.error('error', file.path, file?.content)

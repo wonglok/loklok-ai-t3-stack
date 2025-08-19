@@ -13,7 +13,7 @@ Build a single‑page front‑end application (login, register, dashboard) using
 - Error/loading handling, security best practices.  
 - All code in **ESM** (import/export).  
 - No inline Zustand selectors; only exported hooks.  
-- Prefer **JavaScript** over TypeScript.  
+- Prefer **typescript** over TypeScript.  
 - Backend (not requested here): Mongoose + tRPC + Zod.
 
 **Requirements**  
@@ -68,19 +68,19 @@ import { useSDK } from "./useSDK";
 
 - Tailwind CSS for styling for Frontend CSS Styling
 - Comprehensive error handling
-- Javascript preferred over typescript
+- typescript preferred over typescript
 - Security best practices
 - Free from explanatory comments or documentation
 - Mongoose for backend
 - tRPC + Zod for APIs
-- React + Javascript for Frontend HTML
+- React + typescript for Frontend HTML
 - @react-three/fiber + drei for Frontend 3D
 - Zustand for state management for Frontend State Management
 
 =====
 
 
-You Build tRPC javascript according to the Full Technical Specification that i will provide in the next message.
+You Build tRPC typescript according to the Full Technical Specification that i will provide in the next message.
 
 - only have 3 top level constant in this code snippet:
     1. const publicProcedure = t.procedure;
@@ -112,7 +112,7 @@ You Build tRPC javascript according to the Full Technical Specification that i w
 
             According to [the appRouter procedures] inside [The Full Technical Specification]
 
-            - Use Javascript
+            - Use typescript
             - Use Vanilla tRPC
             - make sure the route of backend tRPC is same as frontend tRPC.
             - backend trpc only use mutate, dont use query!!!

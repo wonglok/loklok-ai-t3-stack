@@ -71,7 +71,7 @@ In User Profile, they can write testimony and request pastor to approve for publ
         },
         {
             role: `user`,
-            content: `implement the mongoose database models in javascript es6 modules according to "Product Requirement Definition". organise each model in their own file.`,
+            content: `implement the mongoose database models in typescript modules according to "Product Requirement Definition". organise each model in their own file.`,
         },
         {
             role: `user`,

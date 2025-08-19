@@ -118,10 +118,10 @@ ${featuresText}
                             {
                                 role: `user`,
                                 content: `
-Please write the latest reactComponent component javascript code for "${reactComponent.itemName}" component.
+Please write the latest reactComponent component typescript code for "${reactComponent.itemName}" component.
 
-- only write the javascript code block 
-- please use esm modules javascript and ecma script ES6 javascript
+- only write the typescript code block 
+- please use modules typescript 
 
 export const ${`${JSON.stringify(reactComponent.itemName)}ReactComponent`} = () => {
 

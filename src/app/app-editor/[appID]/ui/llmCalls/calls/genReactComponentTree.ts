@@ -6,6 +6,7 @@ import { llmRequestToFileStream } from "../common/llmRequestToFileStream";
 import z from "zod";
 import { readFileParseJSON } from "../common/readFileParseJSON";
 import { readFileContent } from "../common/readFileContent";
+import { useGenAI } from "../../../useGenAI";
 
 export const genReactComponentTree = async ({
     slot,
@@ -110,10 +111,11 @@ ${featuresText}
                             {
                                 role: `user`,
                                 content: `
-Please write the latest reactComponent component javascript code for "${reactComponent.ReactJSComponentName}" component.
+Please write the latest reactComponent component typescript code for "${reactComponent.ReactJSComponentName}" component.
 
-- only write the javascript code block 
-- please use esm modules javascript and ecma script ES6 javascript
+- only write the typescript code block 
+- please use modules with typescript 
+
 - use ShadCN User Interface Framework and tailwind css
 
 export const ${`${JSON.stringify(reactComponent.ReactJSComponentName)}ReactComponent`} = () => {
@@ -140,6 +142,58 @@ export const ${`${JSON.stringify(reactComponent.ReactJSComponentName)}ReactCompo
 
         //
     }
+
+    manager?.addTask({
+        name: "entry/App",
+        deps: [],
+        func: async () => {
+            let outputPath = `/entry/App.ts`;
+
+            await llmRequestToFileStream({
+                path: outputPath,
+                needsExtractCode: true,
+                request: {
+                    max_tokens: 4096,
+                    seed: 19900831,
+                    stream: true,
+                    stream_options: { include_usage: true },
+                    messages: [
+                        {
+                            role: "assistant",
+                            content:
+                                `Here's the latest Product Requirement Document:
+${featuresText}
+                                `.trim(),
+                        },
+                        {
+                            role: "assistant",
+                            content: `here's "ReactJS-Components.json"
+${JSON.stringify(lateSpec)}
+                            `,
+                        },
+                        {
+                            role: `user`,
+                            content: `
+- only write the typescript code block 
+- please use modules with typescript 
+- use ShadCN User Interface Framework and tailwind css
+- please import all components accordingly to 'ReactJS-Components.json' and put them in App Function Component
+
+export const App = () => {
+    return ...
+};
+
+`.trim(),
+                        },
+                    ] as webllm.ChatCompletionMessageParam[],
+                    temperature: 0.0,
+                    // top_p: 0.05,
+                } as webllm.ChatCompletionRequestStreaming,
+                engine,
+                slot: slot,
+            });
+        },
+    });
 
     //     ///////////////////////////////////////////////////////////////////////////////////
     //     // usecase

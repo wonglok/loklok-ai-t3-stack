@@ -123,12 +123,12 @@ ${featuresText}
                             {
                                 role: `user`,
                                 content: `
-Please write the latest mongoose model javascript code for "${mongoose.collectionName}" model.
+Please write the latest mongoose model typescript code for "${mongoose.collectionName}" model.
 
-- only write the javascript code block 
-- please use es6 modules javascript 
+- only write the typescript code block 
+- please use modules with typescript 
 
-- MUST INCLUDE this "addModel" javascript function:
+- MUST INCLUDE this "addModel" typescript function:
 
 export function addModel ({ appID }) {
     const db = mongoose.connection.useDb("app_development_appID", { useCache: true });

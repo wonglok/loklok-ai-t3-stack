@@ -11,7 +11,7 @@ export function CodePod() {
             ...files,
             {
                 path: `/ui/useSDK.js`,
-                content: /* javascript */ `
+                content: /* typescript */ `
 import { create } from 'zustand'
 
 export const useSDK = create((set, get) =>{
@@ -23,7 +23,7 @@ export const useSDK = create((set, get) =>{
             },
             {
                 path: `/src/App.js`,
-                content: /* javascript */ `
+                content: /* typescript */ `
 import * as ReactDOM from 'react-dom'
 import * as React from 'react'
 import { Canvas } from '@react-three/fiber'
@@ -68,7 +68,7 @@ export function MyApp () {
             },
             {
                 path: `/src/main.js`,
-                content: /* javascript */ `
+                content: /* typescript */ `
 import { MyApp } from '../src/App.js'
 import * as ReactDOM from 'react-dom'
 import * as React from 'react'
