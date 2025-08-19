@@ -47,7 +47,7 @@ export async function testTools({ engine, userPrompt, slot }) {
                     console.log(location);
                     return {
                         location: `${location}`,
-                        temperature: "33.31230 degree",
+                        temperature: "20.31230 degree",
                     };
                 },
             },
@@ -138,12 +138,19 @@ export async function testTools({ engine, userPrompt, slot }) {
     await sdk.run({
         messages: [
             {
-                role: "assistant",
-                content: `${systemPromptDiffCode}`,
+                role: "user",
+                content: `
+${systemPromptDiffCode}                
+`,
             },
             {
                 role: "user",
-                content: `output diffcode only. write the last output in /diff.txt`,
+                content: `
+1. read /weather.txt
+2. get the latest weather in macau.
+2. Generate Precise Code Changes (diff code)
+3. write the diff code to /weather2.txt
+                `,
             },
         ],
     });
@@ -152,5 +159,18 @@ export async function testTools({ engine, userPrompt, slot }) {
 
     console.log(useGenAI.getState().files);
 
+    let text = await readFileContent({ path: `/diff.txt` });
+
+    let parseDiff = await import("parse-diff").then(
+        async ({ default: parseDiff }) => {
+            return parseDiff;
+        },
+    );
+
+    let diffList = await parseDiff(text);
+    console.log(diffList);
+
     await sdk.destroy();
 }
+
+//

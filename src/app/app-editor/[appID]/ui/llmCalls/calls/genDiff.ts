@@ -153,7 +153,7 @@ In User Profile, they can write testimony and request pastor to approve for publ
     //     content: `${existingCode}`,
     // });
 
-    let path = `/ppap/diff_gen.md`;
+    // let path = `/ppap/diff_gen.md`;
 
     // await llmRequestToFileStream({
     //     path: path,
@@ -163,77 +163,71 @@ In User Profile, they can write testimony and request pastor to approve for publ
     //     slot,
     // });
 
-    const tools: Array<webllm.ChatCompletionTool> = [
-        {
-            type: "function",
-            function: {
-                name: "get_current_weather",
-                description: "Get the current weather of a place / location",
-                parameters: z.toJSONSchema(
-                    z.object({
-                        location: z
-                            .string()
-                            .describe("place name or location name"),
-                    }),
-                ),
-            },
-        },
-    ];
+    // const tools: Array<webllm.ChatCompletionTool> = [
+    //     {
+    //         type: "function",
+    //         function: {
+    //             name: "get_current_weather",
+    //             description: "Get the current weather of a place / location",
+    //             parameters: z.toJSONSchema(
+    //                 z.object({
+    //                     location: z
+    //                         .string()
+    //                         .describe("place name or location name"),
+    //                 }),
+    //             ),
+    //         },
+    //     },
+    // ];
 
-    const request = {
-        stream: false, // works with stream as well, where the last chunk returns tool_calls
-        // stream_options: { include_usage: true },
-        messages: [
-            {
-                role: "user",
-                content: "Get the current weather in Hong Kong",
-            },
-        ],
-        tool_choice: "auto",
-        tools: tools,
-        response_format: {
-            type: "json_object",
-        },
-    } as webllm.ChatCompletionRequest;
+    // const request = {
+    //     stream: false, // works with stream as well, where the last chunk returns tool_calls
+    //     // stream_options: { include_usage: true },
+    //     messages: [
+    //         {
+    //             role: "user",
+    //             content: "Get the current weather in Hong Kong",
+    //         },
+    //     ],
+    //     tool_choice: "auto",
+    //     tools: tools,
+    //     response_format: {
+    //         type: "json_object",
+    //     },
+    // } as webllm.ChatCompletionRequest;
 
-    if (!request.stream) {
-        await engine.resetChat();
-        let resp = await engine.chat.completions.create(
-            request as webllm.ChatCompletionRequest,
-        );
-        console.log(resp);
-    } else {
-        await engine.resetChat();
-        let chunks = (await engine.chat.completions.create({
-            ...request,
-            stream: true,
-        } as webllm.ChatCompletionRequest)) as AsyncIterable<webllm.ChatCompletionChunk>;
+    // if (!request.stream) {
+    //     await engine.resetChat();
+    //     let resp = await engine.chat.completions.create(
+    //         request as webllm.ChatCompletionRequest,
+    //     );
+    //     console.log(resp);
+    // } else {
+    //     await engine.resetChat();
+    //     let chunks = (await engine.chat.completions.create({
+    //         ...request,
+    //         stream: true,
+    //     } as webllm.ChatCompletionRequest)) as AsyncIterable<webllm.ChatCompletionChunk>;
 
-        let streamText = "";
-        for await (let chunk of chunks) {
-            console.log(JSON.stringify(chunk, null, "  "));
-            if (chunk.choices[0]?.delta) {
-                let content = chunk.choices[0]?.delta.content;
-                if (typeof content === "string") {
-                    streamText += content;
-                    console.log(streamText);
-                }
-            }
-            if (chunk.choices[0]?.delta?.tool_calls) {
-                console.log(chunk);
-            }
-        }
-    }
+    //     let streamText = "";
+    //     for await (let chunk of chunks) {
+    //         console.log(JSON.stringify(chunk, null, "  "));
+    //         if (chunk.choices[0]?.delta) {
+    //             let content = chunk.choices[0]?.delta.content;
+    //             if (typeof content === "string") {
+    //                 streamText += content;
+    //                 console.log(streamText);
+    //             }
+    //         }
+    //         if (chunk.choices[0]?.delta?.tool_calls) {
+    //             console.log(chunk);
+    //         }
+    //     }
+    // }
 
     // let diffText = await readFileContent({ path });
 
     // console.log(diffText);
-
-    // let parseDiff = await import("parse-diff").then(
-    //     async ({ default: parseDiff }) => {
-    //         return parseDiff;
-    //     },
-    // );
 
     // let item = await parseDiff(diffText);
     // console.log(item);

@@ -1,4 +1,6 @@
-export const systemPromptDiffCode = `# Generate Precise Code Changes
+export const systemPromptDiffCode = `
+
+# Generating Precise Code Changes
 
 Generate a unified diff that can be cleanly applied to modify code files.
 
@@ -30,8 +32,8 @@ Generate a unified diff that can be cleanly applied to modify code files.
 6. MUST NOT include line numbers in the @@ header
 
 ## Example
-
 Good diff (follows all requirements):
+
 \`\`\`diff
 --- existing-code.js
 +++ existing-code.js
@@ -42,5 +44,6 @@ def calculate_total(items):
 -          total += item.price
 +      return sum(item.price for item in items)
 \`\`\`diff
+
 
 `;

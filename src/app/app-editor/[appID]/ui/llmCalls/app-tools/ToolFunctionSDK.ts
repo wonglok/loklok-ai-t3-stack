@@ -18,6 +18,7 @@ export class ToolFunctionSDK {
     public engine: webllm.MLCEngineInterface;
     public needReset: boolean;
     public messages: webllm.ChatCompletionMessageParam[];
+    public toolCallID: number;
     constructor({
         tools = [],
         extraSystemPrompt = "",
@@ -31,6 +32,7 @@ export class ToolFunctionSDK {
         this.tools = tools;
         this.engine = engine;
         this.engine.resetChat();
+        this.toolCallID = 0;
 
         this.messages = [
             { role: "system", content: `${this.getSystemPrompt()}` },
@@ -111,8 +113,9 @@ export class ToolFunctionSDK {
         this.messages.push({
             role: "tool",
             content: tool_response,
-            tool_call_id: "0",
+            tool_call_id: `${this.toolCallID}`,
         });
+        this.toolCallID++;
 
         await writeToFile({
             path: "messages.json",
