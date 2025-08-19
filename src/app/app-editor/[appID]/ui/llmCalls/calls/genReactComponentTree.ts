@@ -112,7 +112,10 @@ ${featuresText}
 - only write the typescript code block 
 - please use modules with typescript 
 - use tailwind css
-- please import all components accordingly to "Product Requirement Document" and the react component section and put them in App Function Component
+- DO NOT include '@/...' at the beginning of import url like this: "import { Button } from '@/components/ui/button';" (wrong)
+- MUST use '/' at the beginning of import url like this: "import { Button } from '/components/ui/button';" (good and right)
+- Use Vanilla JSX html with Tailwind CSS
+- DO NOT import shadcn components from "/components/..."
 
 export const App = () => {
     return ...
@@ -168,8 +171,11 @@ Please write the latest reactComponent component typescript code for "${reactCom
 
 - only write the typescript code block 
 - please use modules with typescript 
-
-- use ShadCN User Interface Framework and tailwind css
+- use tailwind css
+- DO NOT include '@/...' at the beginning of import url like this: "import { Button } from '@/components/ui/button';" (wrong)
+- MUST use '/' at the beginning of import url like this: "import { Button } from '/components/ui/button';" (good and right)
+- Use Vanilla JSX html with Tailwind CSS
+- DO NOT import shadcn components from "/components/..."
 
 export const ${`${JSON.stringify(reactComponent.ReactJSComponentName)}ReactComponent`} = () => {
     return ...

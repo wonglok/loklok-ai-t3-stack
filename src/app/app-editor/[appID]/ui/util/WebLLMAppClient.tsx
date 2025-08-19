@@ -65,7 +65,7 @@ export const WebLLMAppClient = {
                         console.log("destroy", key);
                         await val.destroy();
                         val.slot.lockedBy = "";
-                        val.slot.llmStatus = "idle";
+                        val.slot.llmStatus = "empty";
                         val.slot.bannerText = "";
                     }
                     engineAPIMap.clear();

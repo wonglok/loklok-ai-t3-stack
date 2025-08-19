@@ -52,7 +52,6 @@ add following import for React Components:
 import { useState } from "react";
 import { useSDK } from "./useSDK";
 
-- shadcn Library for User Interface Framework
 - Responsive UI components
 - UI components shouldn't have any margin pixel for the outermost div element.
 - use Zustand for State Management for React
