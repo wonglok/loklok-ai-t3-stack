@@ -121,7 +121,7 @@ ${systemPromptDiffCode}
             {
                 role: "user",
                 content: `
-write: i love you Jesus in /hk1.txt
+write: i love you dear in /hk1.txt
 `,
             },
         ],
@@ -157,14 +157,15 @@ ${await readFileContent({ path: `/hk2.txt` })}
                 content: `
 # instruction
 
-I want to update /hk1.txt to /hk2.txt
+Update /hk1.txt to have the content from /hk2.txt
 
 `,
             },
             {
                 role: "user",
                 content: `
-write output by generate diff code foramt and save it to /diff-hk3.txt
+# Output format
+Generate diff code and save content the diff code to /diff.txt
     `,
             },
         ],
