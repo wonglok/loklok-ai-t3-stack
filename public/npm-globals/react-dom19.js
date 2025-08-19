@@ -4,7 +4,7 @@ window.NPM_CACHE = window.NPM_CACHE || {};
 // @ts-ignore
 const NPM_CACHE = window.NPM_CACHE;
 
-NPM_CACHE['npm-react-dom19'] = NPM_CACHE['npm-react-dom19'] || {};
+NPM_CACHE['npm-react-dom19'] = NPM_CACHE['npm-react-dom19'] || {}; 
 
 export const createRoot = NPM_CACHE['npm-react-dom19']['createRoot'];
 

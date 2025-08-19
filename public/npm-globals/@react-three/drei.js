@@ -4,7 +4,7 @@ window.NPM_CACHE = window.NPM_CACHE || {};
 // @ts-ignore
 const NPM_CACHE = window.NPM_CACHE;
 
-NPM_CACHE['npm-@react-three/drei'] = NPM_CACHE['npm-@react-three/drei'] || {};
+NPM_CACHE['npm-@react-three/drei'] = NPM_CACHE['npm-@react-three/drei'] || {}; 
 
 export const AccumulativeShadows = NPM_CACHE['npm-@react-three/drei']['AccumulativeShadows'];
 

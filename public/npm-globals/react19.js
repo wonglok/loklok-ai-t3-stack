@@ -4,7 +4,7 @@ window.NPM_CACHE = window.NPM_CACHE || {};
 // @ts-ignore
 const NPM_CACHE = window.NPM_CACHE;
 
-NPM_CACHE['npm-react19'] = NPM_CACHE['npm-react19'] || {};
+NPM_CACHE['npm-react19'] = NPM_CACHE['npm-react19'] || {}; 
 
 export const Children = NPM_CACHE['npm-react19']['Children'];
 
