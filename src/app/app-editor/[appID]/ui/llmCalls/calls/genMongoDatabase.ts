@@ -90,6 +90,7 @@ ${featuresText}`,
         console.log("manager.addTask", mongoose.slug);
 
         manager?.addTask({
+            displayName: `${mongoose.collectionName}`,
             name: mongoose.slug,
             deps: [],
             func: async ({ slot, engine }) => {

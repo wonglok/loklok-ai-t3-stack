@@ -79,6 +79,7 @@ export const genReactComponentTree = async ({
     })) as z.infer<typeof schema>;
 
     manager?.addTask({
+        displayName: `React JS Entry App`,
         name: "entry/App",
         deps: [],
         func: async () => {
@@ -146,6 +147,7 @@ export const App = () => {
         console.log("manager.addTask", reactComponent.slug);
 
         manager?.addTask({
+            displayName: `React JS Component ${reactComponent.ReactJSComponentName}`,
             name: reactComponent.slug,
             deps: [],
             func: async ({ slot, engine }) => {

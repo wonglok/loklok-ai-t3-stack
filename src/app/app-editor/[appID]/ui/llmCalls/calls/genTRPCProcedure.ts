@@ -92,6 +92,7 @@ export const getTRPCProcedure = async ({
         console.log("manager.addTask", reactComponent.codeFilePath);
 
         manager?.addTask({
+            displayName: `TRPC Procedure: ${reactComponent.itemName}`,
             name: reactComponent.codeFilePath,
             deps: [],
             func: async ({ slot, engine }) => {
