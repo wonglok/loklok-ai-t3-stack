@@ -111,7 +111,6 @@ export const WebLLMAppClient = {
                         engineAPIMap.set(slot.name, api);
                     }),
                 );
-                continue;
             } else {
                 let api = await makeEngineAPI({ name: slot.name });
                 engineAPIMap.set(slot.name, api);
@@ -120,24 +119,6 @@ export const WebLLMAppClient = {
 
         await Promise.all(proms);
 
-        let slot = await provideFreeEngineSlot({
-            name: `Display Name`,
-        });
-
-        await testTools({
-            userPrompt: `${userPrompt}`,
-            slot: slot,
-            engine: engineAPIMap.get(slot.name).engine,
-        });
-
-        let test: any = true;
-        if (test) {
-            test = true;
-        }
-        if (test) {
-            return;
-        }
-        //
         try {
             let manager = {
                 addTask: ({
@@ -238,6 +219,9 @@ export const WebLLMAppClient = {
             await (async () => {
                 let doTask = async ({ task }) => {
                     task.status = "reserved";
+                    let slot = await provideFreeEngineSlot({
+                        name: task.name,
+                    });
 
                     console.log("begin waiting task");
 
@@ -256,13 +240,9 @@ export const WebLLMAppClient = {
                         });
                     });
 
-                    let slot = await provideFreeEngineSlot({
-                        name: task.name,
-                    });
-
                     console.log("slot", slot);
 
-                    await toast("Begin Writing Code", {
+                    toast("Begin Writing Code", {
                         description: `${task.name} by ${slot.displayName}`,
                     });
 
@@ -283,23 +263,11 @@ export const WebLLMAppClient = {
                             (r) => r.enabled && r.lockedBy === "",
                         ).length;
 
-                    if (engineCount >= 2) {
-                        await Promise.any(
-                            taskList
-                                .filter((r) => r.status === "waiting")
-                                .slice(0, engineCount)
-                                .filter((r) => r)
-                                .map((task) => {
-                                    return doTask({ task: task });
-                                }),
-                        );
-
-                        await doOneMore();
-                    } else if (engineCount === 1) {
+                    if (engineCount >= 1 && taskList.length >= 1) {
                         await Promise.all(
                             taskList
                                 .filter((r) => r.status === "waiting")
-                                .slice(0, 1)
+                                .slice(0, engineCount)
                                 .filter((r) => r)
                                 .map((task) => {
                                     return doTask({ task: task }).then(() => {
@@ -308,7 +276,9 @@ export const WebLLMAppClient = {
                                 }),
                         );
                     } else {
-                        doOneMore();
+                        setTimeout(() => {
+                            doOneMore();
+                        }, 100);
                     }
                 };
                 doOneMore();
