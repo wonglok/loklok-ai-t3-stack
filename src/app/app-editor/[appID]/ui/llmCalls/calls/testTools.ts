@@ -25,58 +25,17 @@ export async function testTools({ engine, userPrompt, slot }) {
     let sdk = new ToolFunctionSDK({
         tools: [
             {
-                name: "get_current_temperature",
-                description: "Get the current temperature at a location.",
-
-                input: z
-                    .object({
-                        location: z
-                            .string()
-                            .describe(
-                                'The location to get the temperature for, in the format "City, Country"',
-                            ),
-                    })
-                    .required({
-                        location: true,
-                    }),
-                output: z
-                    .object({
-                        location: z
-                            .string()
-                            .describe(
-                                'The location to get the temperature for, in the format "City, Country"',
-                            ),
-
-                        temperature: z
-                            .string()
-                            .describe(
-                                "The weather temperature of the location",
-                            ),
-                    })
-                    .required({
-                        temperature: true,
-                    }),
-                execute: ({ location }) => {
-                    console.log(location);
-                    return {
-                        location: `${location}`,
-                        temperature: `${20 + 20 * Math.random()} Degree`,
-                    };
-                },
-            },
-
-            {
                 name: "read_file",
-                description: "read content from file at pathname",
+                description: "read content from file at pathName",
 
                 input: z
                     .object({
-                        pathname: z
+                        pathName: z
                             .string()
-                            .describe("The pathname of the file"),
+                            .describe("The pathName of the file"),
                     })
                     .required({
-                        pathname: true,
+                        pathName: true,
                     }),
                 output: z
                     .object({
@@ -85,8 +44,8 @@ export async function testTools({ engine, userPrompt, slot }) {
                     .required({
                         content: true,
                     }),
-                execute: async ({ pathname }) => {
-                    let content = await readFileContent({ path: pathname });
+                execute: async ({ pathName }) => {
+                    let content = await readFileContent({ path: pathName });
                     return {
                         content: content,
                     };
@@ -95,17 +54,17 @@ export async function testTools({ engine, userPrompt, slot }) {
 
             {
                 name: "write_file",
-                description: "write content to file at pathname",
+                description: "write content to file at pathName",
 
                 input: z
                     .object({
-                        pathname: z
+                        pathName: z
                             .string()
-                            .describe("The pathname of the file"),
+                            .describe("The pathName of the file"),
                         content: z.string().describe("The content of the file"),
                     })
                     .required({
-                        pathname: true,
+                        pathName: true,
                     }),
                 output: z
                     .object({
@@ -114,15 +73,46 @@ export async function testTools({ engine, userPrompt, slot }) {
                     .required({
                         successful: true,
                     }),
-                execute: async ({ pathname, content }) => {
-                    await writeToFile({ path: pathname, content });
+                execute: async ({ pathName, content }) => {
+                    await writeToFile({ path: pathName, content });
+                    return {
+                        successful: true,
+                    };
+                },
+            },
+
+            {
+                name: "write_output",
+                description: "write output to file at pathName",
+
+                input: z
+                    .object({
+                        pathName: z
+                            .string()
+                            .describe("The pathName of the file"),
+                        content: z.string().describe("The content of the file"),
+                    })
+                    .required({
+                        pathName: true,
+                    }),
+                output: z
+                    .object({
+                        successful: z.boolean().describe("write is successful"),
+                    })
+                    .required({
+                        successful: true,
+                    }),
+                execute: async ({ pathName, content }) => {
+                    await writeToFile({ path: pathName, content });
                     return {
                         successful: true,
                     };
                 },
             },
         ],
-        extraSystemPrompt: ``,
+        extraSystemPrompt: `
+${systemPromptDiffCode}
+        `,
         engine: engine,
     });
 
@@ -130,15 +120,9 @@ export async function testTools({ engine, userPrompt, slot }) {
         messages: [
             {
                 role: "user",
-                content: `how today's temperatre in hong kong?`,
-            },
-        ],
-    });
-    await sdk.run({
-        messages: [
-            {
-                role: "user",
-                content: `write down the temperature of hong kong at /hk1.txt`,
+                content: `
+write: ppap in /hk1.txt
+`,
             },
         ],
     });
@@ -147,40 +131,36 @@ export async function testTools({ engine, userPrompt, slot }) {
         messages: [
             {
                 role: "user",
-                content: `how today's temperatre in hong kong?`,
+                content: `
+write: hophophop in /hk2.txt
+`,
             },
         ],
     });
-    await sdk.run({
-        messages: [
-            {
-                role: "user",
-                content: `write down the temperature of hong kong at /hk2.txt`,
-            },
-        ],
-    });
-
-    //     // console.log("inspect", sdk.messages);
 
     await sdk.run({
         messages: [
             {
                 role: "assistant",
-                content: `
-    ${systemPromptDiffCode}
+                content: `here's /hk1.txt
+${await readFileContent({ path: `/hk1.txt` })}
+                `,
+            },
+            {
+                role: "assistant",
+                content: `here's /hk2.txt
+
+${await readFileContent({ path: `/hk2.txt` })}
     `,
             },
             {
                 role: "user",
                 content: `
-
-# output requirement:
-- LLM should output and write diff code only
-
 # instruction
-1. read /hk1.txt
-2. read /hk2.txt
-3. I need to update /hk1.txt to /hk2.txt via generating diff code, save diff code to /diff.txt
+
+i want to generate diff code from /hk1.txt to /hk2.txt
+
+write output to /diff.txt
 
     `,
             },

@@ -83,7 +83,7 @@ export class ToolFunctionSDK {
             const response = reply.choices[0].message.content;
 
             console.log(reply.usage);
-            console.log("Response 1: " + response);
+            console.log(`Response ${this.toolCallID}: ${response}`);
 
             // write it down in the weather.txt
             this.messages.push({ role: "assistant", content: response });
