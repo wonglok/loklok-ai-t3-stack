@@ -284,9 +284,16 @@ export const WebLLMAppClient = {
                                 }),
                         );
                     } else {
-                        setTimeout(() => {
-                            doOneMore();
-                        }, 100);
+                        if (
+                            tasks.filter((r) => r.status === "done").length ===
+                            tasks.length
+                        ) {
+                            return;
+                        } else {
+                            setTimeout(() => {
+                                doOneMore();
+                            }, 100);
+                        }
                     }
                 };
                 doOneMore();
