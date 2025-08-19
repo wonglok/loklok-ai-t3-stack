@@ -103,6 +103,9 @@ export const WebLLMAppClient = {
         for (let slot of enabledEngines) {
             let has = await hasModelInCache(slot.currentModel);
             if (has) {
+                makeEngineAPI({ name: slot.name }).then((api) => {
+                    apiMap.set(slot.name, api);
+                });
                 continue;
             } else {
                 let api = await makeEngineAPI({ name: slot.name });
@@ -230,53 +233,47 @@ export const WebLLMAppClient = {
 
             await (async () => {
                 let tryTrigger = async () => {
-                    let engines = useGenAI
-                        .getState()
-                        .engines.filter((r) => r.enabled && r.lockedBy === "");
+                    let first = tasks.filter((tsk) => {
+                        return tsk.status === "waiting";
+                    })[0];
 
-                    if (engines.length > 0) {
-                        let first = tasks.filter((tsk) => {
-                            return tsk.status === "waiting";
-                        })[0];
-
-                        if (!first) {
-                            return;
-                        }
-
-                        let slot = await provideFreeEngineSlot({
-                            name: first.name,
-                        });
-
-                        let dependenciesCount = first.needs.length;
-
-                        let allCompleted =
-                            first?.needs
-                                .map((eachDep) => {
-                                    let thisTask = tasks.find((tsk) => {
-                                        return tsk.name === eachDep;
-                                    });
-                                    return thisTask?.status === "done";
-                                })
-                                .filter((r) => r).length === dependenciesCount;
-
-                        if (first && allCompleted) {
-                            if (first) {
-                                first.status = "working";
-                                first.func({ slot }).then(() => {
-                                    first.status = "done";
-                                });
-                                toast("Begin Writing File", {
-                                    description: (
-                                        <pre className="mt-2 w-[320px] rounded-md bg-neutral-950 p-4 text-white">
-                                            {`🧑🏻‍💻`} {first.displayName}
-                                        </pre>
-                                    ),
-                                });
-                            }
-                        }
-
-                        await tryTrigger();
+                    if (!first) {
+                        return;
                     }
+
+                    let slot = await provideFreeEngineSlot({
+                        name: first.name,
+                    });
+
+                    let dependenciesCount = first.needs.length;
+
+                    let allCompleted =
+                        first?.needs
+                            .map((eachDep) => {
+                                let thisTask = tasks.find((tsk) => {
+                                    return tsk.name === eachDep;
+                                });
+                                return thisTask?.status === "done";
+                            })
+                            .filter((r) => r).length === dependenciesCount;
+
+                    if (first && allCompleted) {
+                        if (first) {
+                            first.status = "working";
+                            first.func({ slot }).then(() => {
+                                first.status = "done";
+                            });
+                            toast("Begin Writing File", {
+                                description: (
+                                    <pre className="mt-2 w-[320px] rounded-md bg-neutral-950 p-4 text-white">
+                                        {`🧑🏻‍💻`} {first.displayName}
+                                    </pre>
+                                ),
+                            });
+                        }
+                    }
+
+                    await tryTrigger();
                 };
 
                 await tryTrigger();
