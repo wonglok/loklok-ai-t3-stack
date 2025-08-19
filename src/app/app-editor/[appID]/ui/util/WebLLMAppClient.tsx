@@ -225,7 +225,10 @@ export const WebLLMAppClient = {
                         name: "task" + ii,
                     });
 
-                    console.log("successfully obtained an einge!!");
+                    console.log(
+                        "successfully obtained an engine!!",
+                        `${"task" + ii}`,
+                    );
 
                     let first = tasks.filter((tsk) => {
                         return tsk.status === "waiting";
@@ -238,21 +241,28 @@ export const WebLLMAppClient = {
                         return;
                     }
 
-                    first.status = "taken";
+                    await new Promise((resolve) => {
+                        let t3 = setInterval(() => {
+                            let dependenciesCount = first.needs.length;
+                            let allCompleted =
+                                first?.needs
+                                    .filter((eachDep) => {
+                                        let thisTask = tasks.find((tsk) => {
+                                            return tsk.name === eachDep;
+                                        });
+                                        return thisTask?.status === "done";
+                                    })
+                                    .filter((r) => r).length ===
+                                dependenciesCount;
 
-                    let dependenciesCount = first.needs.length;
+                            if (allCompleted) {
+                                clearInterval(t3);
+                                resolve(null);
+                            }
+                        });
+                    });
 
-                    let allCompleted =
-                        first?.needs
-                            .filter((eachDep) => {
-                                let thisTask = tasks.find((tsk) => {
-                                    return tsk.name === eachDep;
-                                });
-                                return thisTask?.status === "done";
-                            })
-                            .filter((r) => r).length === dependenciesCount;
-
-                    if (first && allCompleted) {
+                    if (first) {
                         first.status = "working";
 
                         toast("Begin Writing File", {
