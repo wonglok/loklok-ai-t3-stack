@@ -1,12 +1,12 @@
 "use client";
 
 import { useGenAI } from "../../useGenAI";
-import { useFilesFrame } from "./useFilesFrame";
+import { useFilesFrameHook } from "./useFilesFrameHook";
 
 export function CodePod() {
     let files = useGenAI(r => r.files) || []
 
-    let { show } = useFilesFrame({
+    let { show } = useFilesFrameHook({
         files: [
             ...files,
             {
@@ -51,15 +51,15 @@ export function MyApp () {
 
 
     return <div className="w-full h-full relative">
-        <Canvas className="w-full h-full ">
+        {/* <Canvas className="w-full h-full ">
             <Sphere>
                 <MeshTransmissionMaterial color="white" thickness={1.1}></MeshTransmissionMaterial>
             </Sphere>
             <Environment preset="lobby" background></Environment>
             <OrbitControls></OrbitControls>
-        </Canvas>
-
-        <div className=" absolute top-0 left-0 z-100">
+        </Canvas> */}
+        {/* absolute top-0 left-0 z-100 */}
+        <div className=" ">
             {App}
         </div>
     </div>

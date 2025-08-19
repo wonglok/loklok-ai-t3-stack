@@ -103,7 +103,7 @@ export const buildCode = async ({ files = [] }) => {
                             let javascript = transform(file.content || '', {
                                 transforms: ['jsx'],
                                 preserveDynamicImport: true,
-                                production: true,
+                                production: false,
                                 jsxPragma: 'React.createElement',
                                 jsxFragmentPragma: 'React.Fragment',
                             }).code

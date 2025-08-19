@@ -102,7 +102,7 @@ ${featuresText}`,
                 // console.log("existingModelCode", existingModelCode);
                 // let hasExistingCode = existingModelCode !== "";
 
-                let outputPath = `/models/${mongoose.slug}.js`;
+                let outputPath = `/models/${mongoose.slug}.ts`;
 
                 await llmRequestToFileStream({
                     path: outputPath,

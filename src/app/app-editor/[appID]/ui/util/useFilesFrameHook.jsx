@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
-export const useFilesFrame = ({
+export const useFilesFrameHook = ({
     // Default Code
     // Default Code
     // Default Code
@@ -80,7 +80,16 @@ export const useFilesFrame = ({
             //
             run()
             //
-        }, 500)
+        }, 1000)
+        let save = () => {
+            run()
+        }
+        window.addEventListener('save-editor', save)
+
+        return () => {
+            window.removeEventListener('save-editor', save)
+        }
+
     }, [files.map(r => r.content + r.path).join('_')])
 
     return {

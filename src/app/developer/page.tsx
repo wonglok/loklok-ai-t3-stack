@@ -1,6 +1,6 @@
 "use client";
 
-import { useFilesFrame } from "../app-editor/[appID]/ui/util/useFilesFrame";
+import { useFilesFrame } from "../app-editor/[appID]/ui/util/useFilesFrameHook";
 
 export default function Page() {
     let { show } = useFilesFrame({

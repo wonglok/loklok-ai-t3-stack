@@ -44,7 +44,7 @@ import {
 //https://github.com/Aider-AI/aider/blob/main/aider/coders/udiff_prompts.py#L17C1-L18C1
 
 import Editor from "@monaco-editor/react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as pathUtil from "path";
 import { format } from "date-fns";
 // import { CodePod } from "../util/CodePod";
@@ -116,6 +116,7 @@ function MonacoEditor({
     onChange?: (v: string) => void;
 }) {
     //
+    let ref = useRef<any>(null);
     let lockInWorkers = useGenAI((r) => r.lockInWorkers);
     let files = useGenAI((r) => r.files);
     let sortedFiles = files?.slice().sort(sortDate).reverse();
@@ -146,21 +147,46 @@ function MonacoEditor({
     }, [files]);
 
     return (
-        <Editor
-            path={path}
-            height={height}
-            onMount={(editor, monaco) => {
-                setEditor(editor);
+        <div
+            className="h-full w-full"
+            onKeyDownCapture={(ev) => {
+                if ((ev.ctrlKey || ev.metaKey) && ev.key === "Escape") {
+                    ev.preventDefault();
+                    ev.stopPropagation();
+
+                    window.dispatchEvent(
+                        new CustomEvent("save-editor", {
+                            detail: {
+                                path,
+                                value,
+                                defaultLanguage,
+                            },
+                        }),
+                    );
+                }
             }}
-            language={
-                defaultLanguage
-                // llmStatus === "writing" && track && path.includes(".js")
-                //     ? "markdown"
-                //     : defaultLanguage
-            }
-            value={value}
-            onChange={onChange}
-        ></Editor>
+        >
+            <Editor
+                path={path}
+                height={height}
+                onMount={(editor, monaco) => {
+                    editor.addCommand(
+                        monaco.KeyMod.WinCtrl | monaco.KeyCode.s,
+                        () => console.log("hello world"),
+                    );
+
+                    setEditor(editor);
+                }}
+                language={
+                    defaultLanguage
+                    // llmStatus === "writing" && track && path.includes(".js")
+                    //     ? "markdown"
+                    //     : defaultLanguage
+                }
+                value={value}
+                onChange={onChange}
+            ></Editor>
+        </div>
     );
 }
 
