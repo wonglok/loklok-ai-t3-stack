@@ -40,6 +40,12 @@ export function CodeRunner() {
                         if (pathname.endsWith('.ts')) {
                             return pathname.replace('.ts', '')
                         }
+                        if (pathname.endsWith('.tsx')) {
+                            return pathname.replace('.tsx', '')
+                        }
+                        if (pathname.endsWith('.jsx')) {
+                            return pathname.replace('.jsx', '')
+                        }
                         if (pathname.endsWith('.js')) {
                             return pathname.replace('.js', '')
                         }

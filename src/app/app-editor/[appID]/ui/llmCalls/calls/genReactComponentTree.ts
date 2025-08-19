@@ -87,7 +87,7 @@ export const genReactComponentTree = async ({
         name: "entry/App",
         deps: ["genFeatrues"],
         func: async () => {
-            let outputPath = `/entry/App.ts`;
+            let outputPath = `/entry/App.tsx`;
 
             await llmRequestToFileStream({
                 path: outputPath,
@@ -146,7 +146,7 @@ export const App = () => {
             func: async ({ slot, engine }) => {
                 console.log("begin-task", reactComponent.slug);
 
-                let outputPath = `/react/${reactComponent.slug}.ts`;
+                let outputPath = `/react/${reactComponent.slug}.tsx`;
 
                 await llmRequestToFileStream({
                     path: outputPath,

@@ -51,7 +51,7 @@ import { format } from "date-fns";
 // import { factoryResetThisApp } from "../llmCalls/common/factoryResetThisApp";
 import { persistToDisk } from "../llmCalls/common/persistToDisk";
 import { Launcher } from "./Launcher";
-import { CodePod } from "../util/CodePod";
+// import { CodePod } from "../util/CodePod";
 // import { UseBoundStore } from "zustand";
 // import { useEngineType } from "../llmCalls/common/makeEngine";
 
@@ -60,7 +60,11 @@ let getLang = (filename: string) => {
         return "json";
     } else if (pathUtil.extname(filename) === ".js") {
         return "javascript";
+    } else if (pathUtil.extname(filename) === ".jsx") {
+        return "javascript";
     } else if (pathUtil.extname(filename) === ".ts") {
+        return "typescript";
+    } else if (pathUtil.extname(filename) === ".tsx") {
         return "typescript";
     } else {
         return "markdown";
@@ -174,6 +178,26 @@ function MonacoEditor({
                 path={path}
                 height={height}
                 onMount={(editor, monaco) => {
+                    monaco.languages.typescript.typescriptDefaults.addExtraLib;
+
+                    // Important Bit #3: Tell typescript to use 'react' for jsx files.
+                    monaco.languages.typescript.typescriptDefaults.setCompilerOptions(
+                        {
+                            jsx: "react",
+                        },
+                    );
+
+                    monaco.languages.typescript.typescriptDefaults.setEagerModelSync(
+                        true,
+                    );
+
+                    monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions(
+                        {
+                            noSemanticValidation: false,
+                            noSyntaxValidation: false,
+                        },
+                    );
+
                     editor.addCommand(
                         monaco.KeyMod.WinCtrl | monaco.KeyCode.s,
                         () => console.log("hello world"),
