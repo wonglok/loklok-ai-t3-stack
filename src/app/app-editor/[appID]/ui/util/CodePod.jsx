@@ -35,7 +35,8 @@ export function MyApp () {
     let [App, setApp] = React.useState(null)
 
     React.useEffect(() => {
-        import('@/entry/App.js').then((variable) =>{
+        import('/entry/App.js').then((variable) =>{
+            console.log('variable', variable)
             if (variable?.App) {
                 try {
                     setApp(<variable.App></variable.App>)
@@ -48,8 +49,6 @@ export function MyApp () {
         })
     }, [])
 
-
-
     return <div className="w-full h-full relative">
         {/* <Canvas className="w-full h-full ">
             <Sphere>
@@ -59,7 +58,7 @@ export function MyApp () {
             <OrbitControls></OrbitControls>
         </Canvas> */}
         {/* absolute top-0 left-0 z-100 */}
-        <div className=" ">
+        <div className="ppap">
             {App}
         </div>
     </div>

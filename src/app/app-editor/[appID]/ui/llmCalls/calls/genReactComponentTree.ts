@@ -78,6 +78,67 @@ export const genReactComponentTree = async ({
         path: reactComponentSpecPath,
     })) as z.infer<typeof schema>;
 
+    manager?.addTask({
+        name: "entry/App",
+        deps: [],
+        func: async () => {
+            let outputPath = `/entry/App.ts`;
+
+            await llmRequestToFileStream({
+                path: outputPath,
+                needsExtractCode: true,
+                request: {
+                    max_tokens: 4096,
+                    seed: 19900831,
+                    stream: true,
+                    stream_options: { include_usage: true },
+                    messages: [
+                        {
+                            role: "assistant",
+                            content:
+                                `Here's the latest Product Requirement Document:
+${featuresText}
+                                `.trim(),
+                        },
+                        {
+                            role: "assistant",
+                            content: `here's "ReactJS-Components.json"
+${JSON.stringify(
+    lateSpec.ReactJSComponents.map((r) => {
+        return {
+            path: `/react/${r.slug}.ts`,
+            ...r,
+        };
+    }),
+    null,
+    "\t",
+)}
+                            `,
+                        },
+                        {
+                            role: `user`,
+                            content: `
+- only write the typescript code block 
+- please use modules with typescript 
+- use ShadCN User Interface Framework and tailwind css
+- please import all components accordingly to 'ReactJS-Components.json' and put them in App Function Component
+
+export const App = () => {
+    return ...
+};
+
+`.trim(),
+                        },
+                    ] as webllm.ChatCompletionMessageParam[],
+                    temperature: 0.0,
+                    // top_p: 0.05,
+                } as webllm.ChatCompletionRequestStreaming,
+                engine,
+                slot: slot,
+            });
+        },
+    });
+
     for (let reactComponent of lateSpec.ReactJSComponents) {
         if (!reactComponent.slug.startsWith("/")) {
             reactComponent.slug = `${reactComponent.slug}`;
@@ -142,58 +203,6 @@ export const ${`${JSON.stringify(reactComponent.ReactJSComponentName)}ReactCompo
 
         //
     }
-
-    manager?.addTask({
-        name: "entry/App",
-        deps: [],
-        func: async () => {
-            let outputPath = `/entry/App.ts`;
-
-            await llmRequestToFileStream({
-                path: outputPath,
-                needsExtractCode: true,
-                request: {
-                    max_tokens: 4096,
-                    seed: 19900831,
-                    stream: true,
-                    stream_options: { include_usage: true },
-                    messages: [
-                        {
-                            role: "assistant",
-                            content:
-                                `Here's the latest Product Requirement Document:
-${featuresText}
-                                `.trim(),
-                        },
-                        {
-                            role: "assistant",
-                            content: `here's "ReactJS-Components.json"
-${JSON.stringify(lateSpec)}
-                            `,
-                        },
-                        {
-                            role: `user`,
-                            content: `
-- only write the typescript code block 
-- please use modules with typescript 
-- use ShadCN User Interface Framework and tailwind css
-- please import all components accordingly to 'ReactJS-Components.json' and put them in App Function Component
-
-export const App = () => {
-    return ...
-};
-
-`.trim(),
-                        },
-                    ] as webllm.ChatCompletionMessageParam[],
-                    temperature: 0.0,
-                    // top_p: 0.05,
-                } as webllm.ChatCompletionRequestStreaming,
-                engine,
-                slot: slot,
-            });
-        },
-    });
 
     //     ///////////////////////////////////////////////////////////////////////////////////
     //     // usecase

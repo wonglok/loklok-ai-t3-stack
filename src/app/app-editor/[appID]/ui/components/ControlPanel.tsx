@@ -167,6 +167,9 @@ function MonacoEditor({
             }}
         >
             <Editor
+                options={{
+                    saveViewState: true,
+                }}
                 path={path}
                 height={height}
                 onMount={(editor, monaco) => {

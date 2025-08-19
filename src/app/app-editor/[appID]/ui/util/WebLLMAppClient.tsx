@@ -86,7 +86,7 @@ export const WebLLMAppClient = {
             .engines //
             .filter((r) => r.enabled);
 
-        console.log(enabledEngines.map((r) => r.name));
+        // console.log(enabledEngines.map((r) => r.name));
 
         toast("Starting Engine", {
             description: (
@@ -142,38 +142,33 @@ export const WebLLMAppClient = {
                         name: `${name}`,
                         status: "waiting",
                         needs: needs || [],
-                        func: async () => {
-                            let slot = await provideFreeEngineSlot({
-                                name: `${name}`,
-                            });
+                        func: async ({ slot }) => {
+                            // let slot = await provideFreeEngineSlot({
+                            //     name: `${name}`,
+                            // });
 
                             await func({
                                 slot,
                                 engine: apiMap.get(slot.name).engine,
                             });
 
-                            await returnFreeEngineSlot({ slot: slot });
+                            // await returnFreeEngineSlot({ slot: slot });
                         },
                     });
                 },
             };
+
             let tasks = [
                 {
                     name: "genFeatrues",
                     status: "waiting",
                     needs: [],
-                    func: async () => {
-                        let slot = await provideFreeEngineSlot({
-                            name: "genFeatrues",
-                        });
-
+                    func: async ({ slot }) => {
                         await genFeatrues({
                             slot: slot,
                             userPrompt,
                             engine: apiMap.get(slot.name).engine,
                         });
-
-                        await returnFreeEngineSlot({ slot: slot });
                     },
                 },
 
@@ -181,11 +176,7 @@ export const WebLLMAppClient = {
                     name: "genReactComponentTree",
                     status: "waiting",
                     needs: ["genFeatrues"],
-                    func: async () => {
-                        let slot = await provideFreeEngineSlot({
-                            name: "genReactComponentTree",
-                        });
-
+                    func: async ({ slot }) => {
                         await genReactComponentTree({
                             manager: manager,
                             slot: slot,
@@ -195,8 +186,6 @@ export const WebLLMAppClient = {
                             }),
                             engine: apiMap.get(slot.name).engine,
                         });
-
-                        await returnFreeEngineSlot({ slot: slot });
                     },
                 },
 
@@ -204,10 +193,10 @@ export const WebLLMAppClient = {
                     name: "genMongoDatabase",
                     status: "waiting",
                     needs: ["genFeatrues"],
-                    func: async () => {
-                        let slot = await provideFreeEngineSlot({
-                            name: "genMongoDatabase",
-                        });
+                    func: async ({ slot }) => {
+                        // let slot = await provideFreeEngineSlot({
+                        //     name: "genMongoDatabase",
+                        // });
 
                         await genMongoDatabase({
                             manager: manager,
@@ -219,7 +208,7 @@ export const WebLLMAppClient = {
                             engine: apiMap.get(slot.name).engine,
                         });
 
-                        await returnFreeEngineSlot({ slot: slot });
+                        // await returnFreeEngineSlot({ slot: slot });
                     },
                 },
 
@@ -296,7 +285,12 @@ export const WebLLMAppClient = {
                         if (first && allCompleted) {
                             if (first) {
                                 first.status = "working";
-                                first.func().then(() => {
+
+                                let slot = await provideFreeEngineSlot({
+                                    name: first.name,
+                                });
+                                first.func({ slot }).then(async () => {
+                                    await returnFreeEngineSlot({ slot: slot });
                                     setTimeout(() => {
                                         first.status = "done";
                                     });
