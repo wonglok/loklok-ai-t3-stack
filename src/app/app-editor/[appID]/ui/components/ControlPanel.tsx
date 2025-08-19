@@ -51,6 +51,7 @@ import { format } from "date-fns";
 // import { factoryResetThisApp } from "../llmCalls/common/factoryResetThisApp";
 import { persistToDisk } from "../llmCalls/common/persistToDisk";
 import { Launcher } from "./Launcher";
+import { CodePod } from "../util/CodePod";
 // import { UseBoundStore } from "zustand";
 // import { useEngineType } from "../llmCalls/common/makeEngine";
 
@@ -246,6 +247,13 @@ export function ControlPanel() {
                             {/* file list */}
                             <div className="h-full w-[350px] overflow-x-hidden overflow-y-scroll border-r border-gray-300">
                                 {/*  */}
+                                {files.filter((r) =>
+                                    r.path.includes("entry/App"),
+                                ).length > 0 && (
+                                    <div className="aspect-video w-full">
+                                        <CodePod></CodePod>
+                                    </div>
+                                )}
 
                                 {files
                                     .slice()

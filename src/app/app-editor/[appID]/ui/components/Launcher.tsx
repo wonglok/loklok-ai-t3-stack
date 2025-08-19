@@ -205,13 +205,12 @@ export function Launcher() {
                 </div>
             )}
 
-            {lockInWorkers && (
+            {/* {lockInWorkers && (
                 <>
                     <div className="aspect-[16/9] w-full">
-                        <CodePod></CodePod>
                     </div>
                 </>
-            )}
+            )} */}
 
             {engines.map(({ name, displayName }) => {
                 return (

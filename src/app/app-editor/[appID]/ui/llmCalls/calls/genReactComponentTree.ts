@@ -47,11 +47,15 @@ export const genReactComponentTree = async ({
                     role: `system`,
                     content: `${systemPromptPureText}`,
                 },
+                //
+                //
                 //             {
                 //                 role: "assistant",
                 //                 content: `Here's the "user-requirements" Document:
                 // ${userPrompt}`,
                 //             },
+                //
+                //
                 {
                     role: "assistant",
                     content: `Here's the "product requirement document" Document:
@@ -97,32 +101,18 @@ export const genReactComponentTree = async ({
                         {
                             role: "assistant",
                             content:
-                                `Here's the latest Product Requirement Document:
+                                `Here's the latest Product "Requirement Document":
 ${featuresText}
                                 `.trim(),
                         },
-                        {
-                            role: "assistant",
-                            content: `here's "ReactJS-Components.json"
-${JSON.stringify(
-    lateSpec.ReactJSComponents.map((r) => {
-        return {
-            path: `/react/${r.slug}.ts`,
-            ...r,
-        };
-    }),
-    null,
-    "\t",
-)}
-                            `,
-                        },
+
                         {
                             role: `user`,
                             content: `
 - only write the typescript code block 
 - please use modules with typescript 
 - use ShadCN User Interface Framework and tailwind css
-- please import all components accordingly to 'ReactJS-Components.json' and put them in App Function Component
+- please import all components accordingly to "Product Requirement Document" and the react component section and put them in App Function Component
 
 export const App = () => {
     return ...
