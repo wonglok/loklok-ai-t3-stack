@@ -21,8 +21,10 @@ import {
 import { toast } from "sonner";
 // import { genTRPCProcedure } from "../llmCalls/calls/genTRPCProcedure";
 import { genReactComponentTree } from "../llmCalls/calls/genReactComponentTree";
-import { genMongoDatabase } from "../llmCalls/calls/genMongoDatabase";
+// import { genMongoDatabase } from "../llmCalls/calls/genMongoDatabase";
 import { readFileContent } from "../llmCalls/common/readFileContent";
+import { genDiff } from "../llmCalls/calls/genDiff";
+import { testTools } from "../llmCalls/calls/testTools";
 
 //
 // import { systemPromptPureText } from "../llmCalls/persona/systemPromptPureText";
@@ -34,7 +36,7 @@ import { readFileContent } from "../llmCalls/common/readFileContent";
 // import remarkRehype from "remark-rehype";
 // import remarkMan from "remark-man";
 
-let apiMap: Map<
+let engineAPIMap: Map<
     string,
     {
         //
@@ -59,14 +61,14 @@ export const WebLLMAppClient = {
         useGenAI.setState({
             stopFunc: async () => {
                 try {
-                    for await (let [key, val] of apiMap.entries()) {
+                    for await (let [key, val] of engineAPIMap.entries()) {
                         console.log("destroy", key);
                         await val.destroy();
                         val.slot.lockedBy = "";
                         val.slot.llmStatus = "idle";
                         val.slot.bannerText = "";
                     }
-                    apiMap.clear();
+                    engineAPIMap.clear();
                     useGenAI.setState({
                         engines: JSON.parse(
                             JSON.stringify(useGenAI.getState().engines),
@@ -106,18 +108,35 @@ export const WebLLMAppClient = {
             if (has) {
                 proms.push(
                     makeEngineAPI({ name: slot.name }).then((api) => {
-                        apiMap.set(slot.name, api);
+                        engineAPIMap.set(slot.name, api);
                     }),
                 );
                 continue;
             } else {
                 let api = await makeEngineAPI({ name: slot.name });
-                apiMap.set(slot.name, api);
+                engineAPIMap.set(slot.name, api);
             }
         }
 
         await Promise.all(proms);
 
+        let slot = await provideFreeEngineSlot({
+            name: `Display Name`,
+        });
+
+        await testTools({
+            userPrompt: `${userPrompt}`,
+            slot: slot,
+            engine: engineAPIMap.get(slot.name).engine,
+        });
+
+        let test: any = true;
+        if (test) {
+            test = true;
+        }
+        if (test) {
+            return;
+        }
         //
         try {
             let manager = {
@@ -139,7 +158,7 @@ export const WebLLMAppClient = {
 
                             await func({
                                 slot,
-                                engine: apiMap.get(slot.name).engine,
+                                engine: engineAPIMap.get(slot.name).engine,
                             });
 
                             // await returnFreeEngineSlot({ slot: slot });
@@ -162,7 +181,7 @@ export const WebLLMAppClient = {
                         await genFeatrues({
                             slot: slot,
                             userPrompt,
-                            engine: apiMap.get(slot.name).engine,
+                            engine: engineAPIMap.get(slot.name).engine,
                         });
                         // await returnFreeEngineSlot({ slot: slot });
                     },
@@ -185,7 +204,7 @@ export const WebLLMAppClient = {
                             featuresText: await readFileContent({
                                 path: `/docs/genFeatrues.md`,
                             }),
-                            engine: apiMap.get(slot.name).engine,
+                            engine: engineAPIMap.get(slot.name).engine,
                         });
                         // await returnFreeEngineSlot({ slot: slot });
                     },
@@ -208,7 +227,7 @@ export const WebLLMAppClient = {
                 //             featuresText: await readFileContent({
                 //                 path: `/docs/genFeatrues.md`,
                 //             }),
-                //             engine: apiMap.get(slot.name).engine,
+                //             engine: engineAPIMap.get(slot.name).engine,
                 //         });
 
                 // await returnFreeEngineSlot({ slot: slot });
@@ -224,16 +243,11 @@ export const WebLLMAppClient = {
 
                     await new Promise((resovle) => {
                         let ttt = setInterval(() => {
-                            let isReady =
-                                task.deps.length ===
-                                tasks.filter((t) => {
-                                    return (
-                                        t.status === "done" &&
-                                        task.deps.find(
-                                            (depName) => depName === t.name,
-                                        )
-                                    );
-                                }).length;
+                            let isReady = !(task.deps.length > 0);
+
+                            if (task.deps.length === 0) {
+                                isReady = true;
+                            }
 
                             if (isReady) {
                                 clearInterval(ttt);
@@ -246,6 +260,8 @@ export const WebLLMAppClient = {
                         name: task.name,
                     });
 
+                    console.log("slot", slot);
+
                     await toast("Begin Writing Code", {
                         description: `${task.name} by ${slot.displayName}`,
                     });
@@ -256,7 +272,7 @@ export const WebLLMAppClient = {
                     });
                 };
 
-                let checkTaskToDo = async () => {
+                let doOneMore = async () => {
                     let taskList = tasks.filter((tsk) => {
                         return tsk.status === "waiting";
                     });
@@ -268,17 +284,17 @@ export const WebLLMAppClient = {
                         ).length;
 
                     if (engineCount >= 2) {
-                        await checkTaskToDo();
-
-                        await Promise.all(
+                        await Promise.any(
                             taskList
                                 .filter((r) => r.status === "waiting")
-                                .slice(0, 1)
+                                .slice(0, engineCount)
                                 .filter((r) => r)
                                 .map((task) => {
                                     return doTask({ task: task });
                                 }),
                         );
+
+                        await doOneMore();
                     } else if (engineCount === 1) {
                         await Promise.all(
                             taskList
@@ -286,14 +302,16 @@ export const WebLLMAppClient = {
                                 .slice(0, 1)
                                 .filter((r) => r)
                                 .map((task) => {
-                                    return doTask({ task: task });
+                                    return doTask({ task: task }).then(() => {
+                                        return doOneMore();
+                                    });
                                 }),
                         );
                     } else {
-                        await checkTaskToDo();
+                        doOneMore();
                     }
                 };
-                await checkTaskToDo();
+                doOneMore();
 
                 //
 

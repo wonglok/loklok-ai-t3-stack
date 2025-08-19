@@ -47,6 +47,10 @@ export const llmRequestToFileStream = async ({
     for await (const chunk of asyncChunkGenerator) {
         i++;
 
+        console.log("chunk", JSON.stringify(chunk, null, "\t"));
+
+        //
+
         let str = chunk.choices[0]?.delta?.content || "";
         messageFragments += str;
         await writeToFile({

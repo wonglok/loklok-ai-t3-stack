@@ -116,13 +116,6 @@
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.28.2.tgz#2ae5a9d51cc583bd1f5673b3bb70d6d819682473"
   integrity sha512-KHp2IflsnGywDjBWDkR9iEqiWSpc8GIi0lgTT3mOElT0PP1tG26P4tmFI2YvAdzgq9RGyoHZQEIEdZy6Ec5xCA==
 
-"@built-in-ai/web-llm@^0.2.1":
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/@built-in-ai/web-llm/-/web-llm-0.2.1.tgz#6e9351ca094d153e6cef6dd2810a4ba848ebb780"
-  integrity sha512-A179PNIy/2hSEdNvUvnk3E99ZoBz5HDqM7c3HDmReLHXTeokrdPrYoNzWiHFBHx71s18fonwitKCWIBtJ2kC2Q==
-  dependencies:
-    "@mlc-ai/web-llm" "^0.2.79"
-
 "@choojs/findup@^0.2.0":
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/@choojs/findup/-/findup-0.2.1.tgz#ac13c59ae7be6e1da64de0779a0a7f03d75615a3"

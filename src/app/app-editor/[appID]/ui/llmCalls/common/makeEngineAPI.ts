@@ -43,7 +43,7 @@ export const makeEngineAPI = async ({ name }: { name: string }) => {
 
     let engine = (await CreateWebWorkerMLCEngine(workerLLM, slot.currentModel, {
         initProgressCallback: initProgressCallback,
-        logLevel: "INFO",
+        logLevel: "DEBUG",
     })) as webllm.MLCEngineInterface;
 
     // console.log("build", name);

@@ -1,7 +1,10 @@
 import { create } from "zustand";
-import type * as webllm from "@mlc-ai/web-llm";
+import { functionCallingModelIds } from "@mlc-ai/web-llm";
+import * as webllm from "@mlc-ai/web-llm";
 import { object, set } from "zod";
 import md5 from "md5";
+
+console.log(functionCallingModelIds);
 
 export type MyFile = {
     filename: string;
@@ -56,16 +59,24 @@ export const useGenAI = create<{
     refreshSlot: (v: any) => void;
 }>((set, get) => {
     let models = [
+        {
+            key: "Llama-3.1-8B-Instruct ~ RAM 5GB",
+            value: `Llama-3.1-8B-Instruct-q4f16_1-MLC`,
+        },
+        {
+            key: "Hermes-2-Pro-Llama-3-8B ~ RAM 5GB",
+            value: `Hermes-2-Pro-Llama-3-8B-q4f16_1-MLC`,
+        },
         // {
-        //     key: "Qwen Coder 1.5B (~750MB)",
+        //     key: "Qwen Coder 1.5B ~ RAM 750B",
         //     value: `Qwen2.5-Coder-1.5B-Instruct-q4f16_1-MLC`,
         // },
         {
-            key: "Qwen Coder 3B (~1.5GB)",
+            key: "Qwen Coder 3B ~ RAM 1.5B",
             value: `Qwen2.5-Coder-3B-Instruct-q4f16_1-MLC`,
         },
         {
-            key: "Qwen Coder 7B (~4GB)",
+            key: "Qwen Coder 7B ~ RAM 4GB",
             value: `Qwen2.5-Coder-7B-Instruct-q4f16_1-MLC`,
         },
         // {
@@ -123,7 +134,7 @@ export const useGenAI = create<{
                 name: "#01",
                 displayName: "AI Developer 01",
 
-                currentModel: models[1].value,
+                currentModel: models[0].value,
                 llmStatus: "empty",
                 bannerText: "",
                 bannerData: null,
@@ -156,7 +167,7 @@ export const useGenAI = create<{
                 name: "#04",
                 displayName: "AI Developer 04",
 
-                currentModel: models[1].value,
+                currentModel: models[0].value,
                 llmStatus: "empty",
                 bannerText: "",
                 bannerData: null,
@@ -167,7 +178,7 @@ export const useGenAI = create<{
                 name: "#05",
                 displayName: "AI Developer 05",
 
-                currentModel: models[1].value,
+                currentModel: models[0].value,
                 llmStatus: "empty",
                 bannerText: "",
                 bannerData: null,

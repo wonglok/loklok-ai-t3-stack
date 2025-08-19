@@ -1,7 +1,7 @@
 "use client";
 
 import type * as webllm from "@mlc-ai/web-llm";
-import { systemPromptPureText } from "../persona/systemPromptPureText";
+// import { systemPromptPureText } from "../persona/systemPromptPureText";
 import { llmRequestToFileStream } from "../common/llmRequestToFileStream";
 import { readFileContent } from "../common/readFileContent";
 
@@ -135,6 +135,8 @@ The output limit is 4096 tokens.
     });
 
     let resultText = await readFileContent({ path: path });
+
+    console.log("file-content", resultText);
 
     ///////////////////////////////////////////////////////////////////////////////////
     // usecase

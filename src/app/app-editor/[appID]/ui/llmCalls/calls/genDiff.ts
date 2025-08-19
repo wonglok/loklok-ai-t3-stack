@@ -6,6 +6,7 @@ import { writeToFile } from "../common/writeToFile";
 import { llmRequestToFileStream } from "../common/llmRequestToFileStream";
 import { readFileContent } from "../common/readFileContent";
 import { EngineData } from "../../../useGenAI";
+import z from "zod";
 
 export const genDiff = async ({
     userPrompt,
@@ -71,7 +72,7 @@ In User Profile, they can write testimony and request pastor to approve for publ
         },
         {
             role: `user`,
-            content: `implement the mongoose database models in typescript modules according to "Product Requirement Definition". organise each model in their own file.`,
+            content: `implement the mongoose database models in typescript modules according to "Product Requirement Definition". organise each model in their own codeblock one by one`,
         },
         {
             role: `user`,
@@ -83,41 +84,159 @@ In User Profile, they can write testimony and request pastor to approve for publ
     //https://github.com/pylarco/diff-apply?tab=readme-ov-file#llm-integration-and-prompting-guide
     //https://github.com/pylarco/diff-apply?tab=readme-ov-file#llm-integration-and-prompting-guide
 
-    const request: webllm.ChatCompletionRequestStreaming = {
-        seed: 19900831,
-        stream: true,
-        stream_options: { include_usage: true },
-        messages: messages,
-        temperature: 0.0,
-        max_tokens: 4096,
-    };
+    // const tools: Array<webllm.ChatCompletionTool> = [
+    //     {
+    //         type: "function",
+    //         function: {
+    //             name: "write_file",
+    //             description: "write file content at filePath",
+    //             parameters: {
+    //                 type: "object",
+    //                 properties: {
+    //                     filePath: {
+    //                         type: "string",
+    //                         description: "the file path",
+    //                     },
+    //                     content: {
+    //                         type: "string",
+    //                         description: "the file content",
+    //                     },
+    //                 },
+    //                 required: ["filePath", "content"],
+    //             },
+    //         },
+    //     },
 
-    await writeToFile({
-        path: "existingCode.js",
-        content: `${existingCode}`,
-    });
+    //     {
+    //         type: "function",
+    //         function: {
+    //             name: "read_file",
+    //             description: "read file content at filePath",
+    //             parameters: {
+    //                 type: "object",
+    //                 properties: {
+    //                     filePath: {
+    //                         type: "string",
+    //                         description: "the file path",
+    //                     },
+    //                 },
+    //                 required: ["filePath"],
+    //             },
+    //         },
+    //     },
+    // ];
+    //
+    // tool_choice: "auto",
+    // tools: tools,
+
+    // console.log(webllm.functionCallingModelIds);
+
+    // const request: webllm.ChatCompletionRequest = {
+    //     tools,
+    //     tool_choice: "auto",
+
+    //     // seed: 19900831,
+    //     // stream: false,
+    //     // stream_options: { include_usage: true },
+    //     messages: [
+    //         {
+    //             role: "user",
+    //             content: `write a hello world to world.txt reply me in json`,
+    //         },
+    //     ], //messages,
+    //     temperature: 0.0,
+    //     max_tokens: 4096,
+    // };
+
+    // await writeToFile({
+    //     path: "existingCode.js",
+    //     content: `${existingCode}`,
+    // });
 
     let path = `/ppap/diff_gen.md`;
 
-    await llmRequestToFileStream({
-        path: path,
-        request: request,
-        engine,
-        slot: slot,
-    });
+    // await llmRequestToFileStream({
+    //     path: path,
+    //     request: request,
+    //     engine: engine,
+    //     needsExtractCode: true,
+    //     slot,
+    // });
 
-    let diffText = await readFileContent({ path });
-
-    console.log(diffText);
-
-    let parseDiff = await import("parse-diff").then(
-        async ({ default: parseDiff }) => {
-            return parseDiff;
+    const tools: Array<webllm.ChatCompletionTool> = [
+        {
+            type: "function",
+            function: {
+                name: "get_current_weather",
+                description: "Get the current weather of a place / location",
+                parameters: z.toJSONSchema(
+                    z.object({
+                        location: z
+                            .string()
+                            .describe("place name or location name"),
+                    }),
+                ),
+            },
         },
-    );
+    ];
 
-    let item = await parseDiff(diffText);
-    console.log(item);
+    const request = {
+        stream: false, // works with stream as well, where the last chunk returns tool_calls
+        // stream_options: { include_usage: true },
+        messages: [
+            {
+                role: "user",
+                content: "Get the current weather in Hong Kong",
+            },
+        ],
+        tool_choice: "auto",
+        tools: tools,
+        response_format: {
+            type: "json_object",
+        },
+    } as webllm.ChatCompletionRequest;
+
+    if (!request.stream) {
+        await engine.resetChat();
+        let resp = await engine.chat.completions.create(
+            request as webllm.ChatCompletionRequest,
+        );
+        console.log(resp);
+    } else {
+        await engine.resetChat();
+        let chunks = (await engine.chat.completions.create({
+            ...request,
+            stream: true,
+        } as webllm.ChatCompletionRequest)) as AsyncIterable<webllm.ChatCompletionChunk>;
+
+        let streamText = "";
+        for await (let chunk of chunks) {
+            console.log(JSON.stringify(chunk, null, "  "));
+            if (chunk.choices[0]?.delta) {
+                let content = chunk.choices[0]?.delta.content;
+                if (typeof content === "string") {
+                    streamText += content;
+                    console.log(streamText);
+                }
+            }
+            if (chunk.choices[0]?.delta?.tool_calls) {
+                console.log(chunk);
+            }
+        }
+    }
+
+    // let diffText = await readFileContent({ path });
+
+    // console.log(diffText);
+
+    // let parseDiff = await import("parse-diff").then(
+    //     async ({ default: parseDiff }) => {
+    //         return parseDiff;
+    //     },
+    // );
+
+    // let item = await parseDiff(diffText);
+    // console.log(item);
 
     /*
 // let diffList = await parseDiff(diffText);

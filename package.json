@@ -21,7 +21,6 @@
         "@ai-sdk/openai-compatible": "^1.0.7",
         "@ai-sdk/provider-utils": "^3.0.1",
         "@ai-sdk/react": "^2.0.8",
-        "@built-in-ai/web-llm": "^0.2.1",
         "@hookform/resolvers": "^5.2.1",
         "@icons-pack/react-simple-icons": "^13.7.0",
         "@mlc-ai/web-llm": "^0.2.79",
