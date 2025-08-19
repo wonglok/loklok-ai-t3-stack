@@ -100,12 +100,15 @@ export const WebLLMAppClient = {
             ),
         });
 
+        let proms = [];
         for (let slot of enabledEngines) {
             let has = await hasModelInCache(slot.currentModel);
             if (has) {
-                makeEngineAPI({ name: slot.name }).then((api) => {
-                    apiMap.set(slot.name, api);
-                });
+                proms.push(
+                    makeEngineAPI({ name: slot.name }).then((api) => {
+                        apiMap.set(slot.name, api);
+                    }),
+                );
                 continue;
             } else {
                 let api = await makeEngineAPI({ name: slot.name });
@@ -113,25 +116,7 @@ export const WebLLMAppClient = {
             }
         }
 
-        await Promise.all(
-            enabledEngines.map((slot) => {
-                return new Promise(async (resolve) => {
-                    try {
-                        if (apiMap.has(slot.name)) {
-                            let api = apiMap.get(slot.name);
-                            resolve(api);
-                            return;
-                        }
-
-                        let api = await makeEngineAPI({ name: slot.name });
-                        apiMap.set(slot.name, api);
-                        resolve(api);
-                    } catch (e) {
-                        console.log(e);
-                    }
-                });
-            }),
-        );
+        await Promise.all(proms);
 
         //
         try {
@@ -232,24 +217,34 @@ export const WebLLMAppClient = {
             ];
 
             await (async () => {
+                let ii = 0;
                 let tryTrigger = async () => {
+                    ii++;
+
+                    let slot = await provideFreeEngineSlot({
+                        name: "task" + ii,
+                    });
+
+                    console.log("successfully obtained an einge!!");
+
                     let first = tasks.filter((tsk) => {
                         return tsk.status === "waiting";
                     })[0];
 
                     if (!first) {
+                        setTimeout(() => {
+                            console.log("end", "no more task need to work on");
+                        }, 100);
                         return;
                     }
 
-                    let slot = await provideFreeEngineSlot({
-                        name: first.name,
-                    });
+                    first.status = "taken";
 
                     let dependenciesCount = first.needs.length;
 
                     let allCompleted =
                         first?.needs
-                            .map((eachDep) => {
+                            .filter((eachDep) => {
                                 let thisTask = tasks.find((tsk) => {
                                     return tsk.name === eachDep;
                                 });
@@ -258,24 +253,36 @@ export const WebLLMAppClient = {
                             .filter((r) => r).length === dependenciesCount;
 
                     if (first && allCompleted) {
-                        if (first) {
-                            first.status = "working";
-                            first.func({ slot }).then(() => {
-                                first.status = "done";
-                            });
-                            toast("Begin Writing File", {
-                                description: (
-                                    <pre className="mt-2 w-[320px] rounded-md bg-neutral-950 p-4 text-white">
-                                        {`🧑🏻‍💻`} {first.displayName}
-                                    </pre>
-                                ),
-                            });
-                        }
-                    }
+                        first.status = "working";
 
-                    await tryTrigger();
+                        toast("Begin Writing File", {
+                            description: (
+                                <pre className="mt-2 w-[320px] rounded-md bg-neutral-950 p-4 text-white">
+                                    {`🧑🏻‍💻`} {first.displayName}
+                                </pre>
+                            ),
+                        });
+
+                        first.func({ slot }).then(() => {
+                            first.status = "done";
+
+                            setTimeout(() => {
+                                console.log(
+                                    "try trigger",
+                                    "just started a task",
+                                );
+                                tryTrigger();
+                            }, 100);
+                        });
+                    } else {
+                        setTimeout(() => {
+                            console.log("try trigger", "dep not ready");
+                            tryTrigger();
+                        }, 100);
+                    }
                 };
 
+                console.log("try trigger", "init");
                 await tryTrigger();
 
                 //
