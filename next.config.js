@@ -3,7 +3,7 @@
  * for Docker builds.
  */
 import "./src/env.js";
-import './npm-adapter.js'
+import './npm-globals.js'
 
 const nextConfig = {
     eslint: { ignoreDuringBuilds: !!process.env.CI },

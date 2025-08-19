@@ -46,11 +46,11 @@ export const genReactComponentTree = async ({
                     role: `system`,
                     content: `${systemPromptPureText}`,
                 },
-                {
-                    role: "assistant",
-                    content: `Here's the "user-requirements" Document:
-    ${userPrompt}`,
-                },
+                //             {
+                //                 role: "assistant",
+                //                 content: `Here's the "user-requirements" Document:
+                // ${userPrompt}`,
+                //             },
                 {
                     role: "assistant",
                     content: `Here's the "product requirement document" Document:
@@ -89,7 +89,7 @@ export const genReactComponentTree = async ({
             func: async ({ slot, engine }) => {
                 console.log("begin-task", reactComponent.slug);
 
-                let outputPath = `/react/${reactComponent.slug}.js`;
+                let outputPath = `/react/${reactComponent.slug}.ts`;
 
                 await llmRequestToFileStream({
                     path: outputPath,
@@ -117,7 +117,6 @@ Please write the latest reactComponent component javascript code for "${reactCom
 - use ShadCN User Interface Framework and tailwind css
 
 export const ${`${JSON.stringify(reactComponent.ReactJSComponentName)}ReactComponent`} = () => {
-
     return ...
 };
 

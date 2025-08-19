@@ -21,13 +21,13 @@ export function CodeRunner() {
 
             // @ts-ignore
             const NPM_CACHE = window.NPM_CACHE
-            NPM_CACHE['TJ-react-dom19'] = ReactDOM19
-            NPM_CACHE['TJ-react19'] = React19
-            NPM_CACHE['TJ-@react-three/drei'] = ReactThreeDrei
-            NPM_CACHE['TJ-@react-three/fiber'] = ReactThreeFiber
-            NPM_CACHE['TJ-zustand'] = Zustand
-            NPM_CACHE['TJ-wouter'] = WouterBase
-            NPM_CACHE['TJ-wouter/use-hash-location'] = WouterHash
+            NPM_CACHE['npm-react-dom19'] = ReactDOM19
+            NPM_CACHE['npm-react19'] = React19
+            NPM_CACHE['npm-@react-three/drei'] = ReactThreeDrei
+            NPM_CACHE['npm-@react-three/fiber'] = ReactThreeFiber
+            NPM_CACHE['npm-zustand'] = Zustand
+            NPM_CACHE['npm-wouter'] = WouterBase
+            NPM_CACHE['npm-wouter/use-hash-location'] = WouterHash
 
             window['React'] = React19
 
@@ -47,7 +47,7 @@ export function CodeRunner() {
             // @ts-ignore
             window.importHttpModule = window.importHttpModule || (() => { })
             // @ts-ignore
-            window.importHttpModule(`/global-vars/es-module-shims/es-module-shims.js`).then(() => {
+            window.importHttpModule(`/npm-globals/es-module-shims/es-module-shims.js`).then(() => {
                 // @ts-ignore
                 window.importShim('/src/main.js')
             })

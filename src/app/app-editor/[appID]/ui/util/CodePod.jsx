@@ -16,6 +16,7 @@ import { create } from 'zustand'
 
 export const useSDK = create((set, get) =>{
     return {
+        //
     }
 })
                 `,
@@ -34,10 +35,10 @@ export function MyApp () {
     let [App, setApp] = React.useState(null)
 
     React.useEffect(() => {
-        import('/app-engine/App.js').then((props) =>{
-            if (props?.App) {
+        import('@/entry/App.js').then((variable) =>{
+            if (variable?.App) {
                 try {
-                    setApp(<props.App></props.App>)
+                    setApp(<variable.App></variable.App>)
                 } catch (e) {
 
                 }

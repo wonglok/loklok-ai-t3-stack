@@ -30,7 +30,6 @@ export const getTRPCProcedure = async ({
                         itemName: z.string().describe("ReactJS Components"),
                         codeFilePath: z.string().describe(
                             `example:  
-                                "/react/"itemName".js"
                                 Change "itemName" to the React JS Component name accrodingly 
                             `,
                         ),
@@ -51,11 +50,15 @@ export const getTRPCProcedure = async ({
                     role: `system`,
                     content: `${systemPromptPureText}`,
                 },
-                {
-                    role: "assistant",
-                    content: `Here's the "user-requirements" Document:
-    ${userPrompt}`,
-                },
+                //
+                //
+                //             {
+                //                 role: "assistant",
+                //                 content: `Here's the "user-requirements" Document:
+                // ${userPrompt}`,
+                //             },
+                //
+                //
                 {
                     role: "assistant",
                     content: `Here's the "product requirement document" Document:

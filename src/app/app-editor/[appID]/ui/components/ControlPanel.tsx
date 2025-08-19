@@ -59,6 +59,8 @@ let getLang = (filename: string) => {
         return "json";
     } else if (pathUtil.extname(filename) === ".js") {
         return "javascript";
+    } else if (pathUtil.extname(filename) === ".ts") {
+        return "typescript";
     } else {
         return "markdown";
     }

@@ -30,33 +30,33 @@ export const buildCode = async ({ files = [] }) => {
                         return moduleName
                     }
                     if (moduleName === 'zustand') {
-                        return `${NetworkPrefix}/global-vars/zustand.js`
+                        return `${NetworkPrefix}/npm-globals/zustand.js`
                     }
                     if (moduleName === 'wouter') {
-                        return `${NetworkPrefix}/global-vars/wouter.js`
+                        return `${NetworkPrefix}/npm-globals/wouter.js`
                     }
                     if (moduleName === 'wouter/use-hash-location') {
-                        return `${NetworkPrefix}/global-vars/wouter-hash-location.js`
+                        return `${NetworkPrefix}/npm-globals/wouter-hash-location.js`
                     }
 
                     /// NETWORK DOWNLOAD_LOAD ///
                     if (moduleName === 'react-dom') {
-                        return `${NetworkPrefix}/global-vars/react-dom19.js`
+                        return `${NetworkPrefix}/npm-globals/react-dom19.js`
                     }
                     if (moduleName === 'react') {
-                        return `${NetworkPrefix}/global-vars/react19.js`
+                        return `${NetworkPrefix}/npm-globals/react19.js`
                     }
                     if (moduleName === '@react-three/fiber') {
-                        return `${NetworkPrefix}/global-vars/@react-three/fiber.js`
+                        return `${NetworkPrefix}/npm-globals/@react-three/fiber.js`
                     }
                     if (moduleName === '@react-three/drei') {
-                        return `${NetworkPrefix}/global-vars/@react-three/drei.js`
+                        return `${NetworkPrefix}/npm-globals/@react-three/drei.js`
                     }
                     if (moduleName === 'three') {
-                        return `${NetworkPrefix}/global-vars/three.js-r179/three/build/three.module.js`
+                        return `${NetworkPrefix}/npm-globals/three.js-r179/three/build/three.module.js`
                     }
                     if (moduleName.indexOf('three/examples/') === 0) {
-                        return `${NetworkPrefix}/global-vars/three.js-r179/three/examples/${moduleName.replace('three/examples/', '')}`
+                        return `${NetworkPrefix}/npm-globals/three.js-r179/three/examples/${moduleName.replace('three/examples/', '')}`
                     }
 
                     return new URL(moduleName, parentBaseURL).href

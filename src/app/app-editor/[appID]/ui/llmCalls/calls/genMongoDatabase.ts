@@ -54,11 +54,11 @@ export const genMongoDatabase = async ({
                     role: `system`,
                     content: `${systemPromptPureText}`,
                 },
-                {
-                    role: "assistant",
-                    content: `Here's the "user-requirements" Document:
-${userPrompt}`,
-                },
+                //                 {
+                //                     role: "assistant",
+                //                     content: `Here's the "user-requirements" Document:
+                // ${userPrompt}`,
+                //                 },
                 {
                     role: "assistant",
                     content: `Here's the "Use case and Features" Document:
