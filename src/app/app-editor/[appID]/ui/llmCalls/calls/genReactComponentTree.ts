@@ -85,7 +85,7 @@ export const genReactComponentTree = async ({
     manager?.addTask({
         displayName: `React JS Entry App`,
         name: "entry/App",
-        deps: [],
+        deps: ["genFeatrues"],
         func: async () => {
             let outputPath = `/entry/App.ts`;
 
@@ -139,7 +139,7 @@ export const App = () => {
         manager?.addTask({
             displayName: `React JS Component ${reactComponent.ReactJSComponentName}`,
             name: reactComponent.slug,
-            deps: [],
+            deps: ["genFeatrues"],
             func: async ({ slot, engine }) => {
                 console.log("begin-task", reactComponent.slug);
 

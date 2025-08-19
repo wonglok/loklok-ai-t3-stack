@@ -124,13 +124,13 @@ export const WebLLMAppClient = {
                 addTask: ({
                     displayName = "",
                     name = "name",
-                    needs = null,
+                    deps = null,
                     func = async ({ slot, engine }) => {},
                 }) => {
                     tasks.push({
                         name: `${name}`,
                         status: "waiting",
-                        needs: needs || [],
+                        deps: deps || [],
                         displayName: displayName || name,
                         func: async ({ slot }) => {
                             // let slot = await provideFreeEngineSlot({
@@ -142,7 +142,7 @@ export const WebLLMAppClient = {
                                 engine: apiMap.get(slot.name).engine,
                             });
 
-                            await returnFreeEngineSlot({ slot: slot });
+                            // await returnFreeEngineSlot({ slot: slot });
                         },
                     });
                 },
@@ -153,7 +153,7 @@ export const WebLLMAppClient = {
                     displayName: "User Requirement Specifcation",
                     name: "genFeatrues",
                     status: "waiting",
-                    needs: [],
+                    deps: [],
                     func: async ({ slot }) => {
                         // let slot = await provideFreeEngineSlot({
                         //     name: `genFeatrues`,
@@ -164,7 +164,7 @@ export const WebLLMAppClient = {
                             userPrompt,
                             engine: apiMap.get(slot.name).engine,
                         });
-                        await returnFreeEngineSlot({ slot: slot });
+                        // await returnFreeEngineSlot({ slot: slot });
                     },
                 },
 
@@ -172,7 +172,7 @@ export const WebLLMAppClient = {
                     displayName: "React Components",
                     name: "genReactComponentTree",
                     status: "waiting",
-                    needs: ["genFeatrues"],
+                    deps: ["genFeatrues"],
                     func: async ({ slot }) => {
                         // let slot = await provideFreeEngineSlot({
                         //     name: `genReactComponentTree`,
@@ -187,7 +187,7 @@ export const WebLLMAppClient = {
                             }),
                             engine: apiMap.get(slot.name).engine,
                         });
-                        await returnFreeEngineSlot({ slot: slot });
+                        // await returnFreeEngineSlot({ slot: slot });
                     },
                 },
 
@@ -195,7 +195,7 @@ export const WebLLMAppClient = {
                 //     displayName: "MongoDB and Mongoose",
                 //     name: "genMongoDatabase",
                 //     status: "waiting",
-                //     needs: ["genFeatrues"],
+                //     deps: ["genFeatrues"],
                 //     func: async () => {
                 //         let slot = await provideFreeEngineSlot({
                 //             name: "genMongoDatabase",
@@ -211,89 +211,70 @@ export const WebLLMAppClient = {
                 //             engine: apiMap.get(slot.name).engine,
                 //         });
 
-                //         await returnFreeEngineSlot({ slot: slot });
+                // await returnFreeEngineSlot({ slot: slot });
                 //     },
                 // },
             ];
 
             await (async () => {
-                let ii = 0;
-                let tryTrigger = async () => {
-                    ii++;
+                let doTask = async ({ task }) => {
+                    task.status = "reserved";
 
-                    let slot = await provideFreeEngineSlot({
-                        name: "task" + ii,
-                    });
+                    await new Promise((resovle) => {
+                        let ttt = setInterval(() => {
+                            let isReady =
+                                task.deps.length ===
+                                tasks.filter((t) => {
+                                    return (
+                                        t.status === "done" &&
+                                        task.deps.find(
+                                            (depName) => depName === t.name,
+                                        )
+                                    );
+                                }).length;
 
-                    console.log(
-                        "successfully obtained an engine!!",
-                        `${"task" + ii}`,
-                    );
-
-                    let first = tasks.filter((tsk) => {
-                        return tsk.status === "waiting";
-                    })[0];
-
-                    if (!first) {
-                        setTimeout(() => {
-                            console.log("end", "no more task need to work on");
-                        }, 100);
-                        return;
-                    }
-
-                    await new Promise((resolve) => {
-                        let t3 = setInterval(() => {
-                            let dependenciesCount = first.needs.length;
-                            let allCompleted =
-                                first?.needs
-                                    .filter((eachDep) => {
-                                        let thisTask = tasks.find((tsk) => {
-                                            return tsk.name === eachDep;
-                                        });
-                                        return thisTask?.status === "done";
-                                    })
-                                    .filter((r) => r).length ===
-                                dependenciesCount;
-
-                            if (allCompleted) {
-                                clearInterval(t3);
-                                resolve(null);
+                            if (isReady) {
+                                clearInterval(ttt);
+                                resovle(null);
                             }
                         });
                     });
 
-                    if (first) {
-                        first.status = "working";
-
-                        toast("Begin Writing File", {
-                            description: (
-                                <pre className="mt-2 w-[320px] rounded-md bg-neutral-950 p-4 text-white">
-                                    {`🧑🏻‍💻`} {first.displayName}
-                                </pre>
-                            ),
-                        });
-
-                        first.func({ slot }).then(() => {
-                            first.status = "done";
-
-                            setTimeout(() => {
-                                console.log(
-                                    "try trigger",
-                                    "just started a task",
-                                );
-                                tryTrigger();
-                            }, 100);
-                        });
-                    } else {
-                        setTimeout(() => {
-                            console.log("try trigger", "dep not ready");
-                            tryTrigger();
-                        }, 100);
-                    }
+                    let slot = await provideFreeEngineSlot({
+                        name: task.name,
+                    });
+                    return task.func({ slot }).then(async () => {
+                        task.status = "done";
+                        await returnFreeEngineSlot({ slot: slot });
+                    });
                 };
 
-                console.log("try trigger", "init");
-                await tryTrigger();
+                let checkTaskToDo = async () => {
+                    let taskList = tasks.filter((tsk) => {
+                        return tsk.status === "waiting";
+                    });
+
+                    let engineCount = useGenAI
+                        .getState()
+                        .engines.filter(
+                            (r) => r.enabled && r.lockedBy === "",
+                        ).length;
+
+                    console.log("init");
+
+                    await Promise.all(
+                        taskList
+                            .filter((r) => r.status === "waiting")
+                            .slice(0, engineCount)
+                            .filter((r) => r)
+                            .map((task) => {
+                                return doTask({ task: task });
+                            }),
+                    );
+
+                    return await checkTaskToDo();
+                };
+                await checkTaskToDo();
 
                 //
 
@@ -546,7 +527,7 @@ export const WebLLMAppClient = {
     //                     engine,
     //                     request,
     //                     path: `/models/${eachObject.modelName}.js`,
-    //                     needsExtractCode: true,
+    //                     depsExtractCode: true,
     //                 });
 
     //                 console.log("modelName", eachObject.modelName);
@@ -924,7 +905,7 @@ export const WebLLMAppClient = {
     //                     engine,
     //                     request,
     //                     path: `/ui/${name}.js`,
-    //                     needsExtractCode: true,
+    //                     depsExtractCode: true,
     //                 });
     //             }
     //         }
@@ -1001,7 +982,7 @@ export const WebLLMAppClient = {
     //                 engine,
     //                 request,
     //                 path: `/app-engine/App.js`,
-    //                 needsExtractCode: true,
+    //                 depsExtractCode: true,
     //             });
     //         }
     //     },
@@ -1199,10 +1180,10 @@ export const WebLLMAppClient = {
     //         path = "/manifest/mongoose.json",
     //         request,
     //         engine,
-    //         needsExtractCode = false,
+    //         depsExtractCode = false,
     //     }: {
     //         path: string;
-    //         needsExtractCode?: boolean;
+    //         depsExtractCode?: boolean;
     //         request: webllm.ChatCompletionRequestStreaming;
     //         engine: webllm.MLCEngineInterface;
     //     }) => {
@@ -1241,10 +1222,10 @@ export const WebLLMAppClient = {
     //             });
     //         }
 
-    //         if (pathUtil.extname(path) === ".js" && !needsExtractCode) {
-    //             console.log("did you forget to set needsExtractCode to true ??");
+    //         if (pathUtil.extname(path) === ".js" && !depsExtractCode) {
+    //             console.log("did you forget to set depsExtractCode to true ??");
     //         }
-    //         if (needsExtractCode) {
+    //         if (depsExtractCode) {
     //             messageFragments =
     //                 await WebLLMAppClient.extractFirstCodeBlockContent({
     //                     markdown: messageFragments,
