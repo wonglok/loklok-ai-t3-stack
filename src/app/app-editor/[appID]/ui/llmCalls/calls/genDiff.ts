@@ -265,6 +265,3 @@ In User Profile, they can write testimony and request pastor to approve for publ
     // usecase
     ///////////////////////////////////////////////////////////////////////////////////
 };
-
-{
-}

@@ -62,6 +62,7 @@
         "diff-apply": "^1.0.6",
         "embla-carousel-react": "^8.6.0",
         "express": "^5.1.0",
+        "fast-xml-parser": "^5.2.5",
         "file-loader": "^6.2.0",
         "gasp": "^0.0.2",
         "glslify-loader": "^2.0.0",

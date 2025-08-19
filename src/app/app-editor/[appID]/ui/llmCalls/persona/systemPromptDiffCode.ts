@@ -1,6 +1,6 @@
 export const systemPromptDiffCode = `
 
-# Generating Precise Code Changes
+# Generating Precise Code Changes (DIFF CODE)
 
 Generate a unified diff that can be cleanly applied to modify code files.
 
@@ -30,13 +30,14 @@ Generate a unified diff that can be cleanly applied to modify code files.
 4. MUST use proper unified diff format
 5. MUST NOT include timestamps in file headers
 6. MUST NOT include line numbers in the @@ header
+7. STRITLY FOLLOW REQUIREMENT FOR GENERATING (DIFF CODE)
+8. MUST NOT include Example
 
-## Example
-Good diff (follows all requirements):
+////////// EXAMPLE BEGIN //////////////
 
 \`\`\`diff
---- existing-code.js
-+++ existing-code.js
+--- {original_file_path}.js
++++ {new_file_path}.js
 @@ ... @@
 def calculate_total(items):
 -      total = 0
@@ -45,5 +46,5 @@ def calculate_total(items):
 +      return sum(item.price for item in items)
 \`\`\`diff
 
-
+////////// EXAMPLE END //////////////
 `;

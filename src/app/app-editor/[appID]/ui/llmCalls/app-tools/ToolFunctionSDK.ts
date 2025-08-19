@@ -3,7 +3,7 @@ import * as webllm from "@mlc-ai/web-llm";
 import { JSONSchema } from "zod/v4/core";
 import { useGenAI } from "../../../useGenAI";
 import { writeToFile } from "../common/writeToFile";
-
+import * as xml from "fast-xml-parser";
 type MyTool = {
     name: string;
     description: any;
@@ -60,67 +60,88 @@ export class ToolFunctionSDK {
     }: {
         messages: webllm.ChatCompletionMessageParam[];
     }) {
-        const seed = 0;
-        // -------
-        // -------
-        // -------
-        // -------
-        // -------
-        // 1. First request, expect to generate tool call to get temperature of Paris
-        if (messages.length > 0) {
-            this.messages.push(...messages);
+        try {
+            const seed = 0;
+            // -------
+            // -------
+            // -------
+            // -------
+            // -------
+            // 1. First request, expect to generate tool call to get temperature of Paris
+            if (messages.length > 0) {
+                this.messages.push(...messages);
+            }
+
+            const request: webllm.ChatCompletionRequest = {
+                stream: false, // works with either streaming or non-streaming; code below assumes non-streaming
+                messages: this.messages,
+                seed: seed,
+                max_tokens: 4096,
+            };
+
+            const reply = await this.engine.chat.completions.create(request);
+            const response = reply.choices[0].message.content;
+
+            console.log(reply.usage);
+            console.log("Response 1: " + response);
+
+            // write it down in the weather.txt
+            this.messages.push({ role: "assistant", content: response });
+
+            // <function>{"name": "get_current_temperature", "parameters": {"location": "Paris, France"}}</function>
+
+            let parser = new xml.XMLParser();
+            let xmlDyamicData = parser.parse(response);
+            console.log("xmlDyamicData", xmlDyamicData);
+
+            let functions = [];
+            if (typeof xmlDyamicData.function === "string") {
+                functions.push(xmlDyamicData.function);
+            }
+            if (xmlDyamicData.function instanceof Array) {
+                functions = xmlDyamicData.function;
+            }
+
+            console.log("functions args", functions);
+            // console.log("functions", functions);
+            // let argsStr = this.extractFunctionArgsFromString(response);
+            // let argsData = this.jsonFromStr(argsStr);
+            // console.log(argsData);
+
+            for await (let rawJSON of functions) {
+                let argsData = JSON.parse(rawJSON);
+                let tool = this.tools.find((r) => r.name === argsData.name);
+
+                let result = await tool.execute({
+                    ...tool.input.parse(argsData.parameters),
+                    _sdk: this,
+                });
+                let cleandValues = tool.output.parse(result);
+
+                // -------
+                // 2. Call function on your own to get tool response
+                // -------
+                const tool_response = JSON.stringify({
+                    output: JSON.stringify(cleandValues),
+                });
+
+                this.messages.push({
+                    role: "tool",
+                    content: tool_response,
+                    tool_call_id: `${this.toolCallID}`,
+                });
+                this.toolCallID++;
+
+                await writeToFile({
+                    path: "messages.json",
+                    content: `${JSON.stringify(this.messages, null, "\t")}`,
+                });
+            }
+        } catch (e) {
+            console.log(e);
+        } finally {
+            console.log("==== done ==== ");
         }
-
-        const request: webllm.ChatCompletionRequest = {
-            stream: false, // works with either streaming or non-streaming; code below assumes non-streaming
-            messages: this.messages,
-            seed: seed,
-            max_tokens: 4096,
-        };
-
-        const reply = await this.engine.chat.completions.create(request);
-        const response = reply.choices[0].message.content;
-
-        console.log(reply.usage);
-        console.log("Response 1: " + response);
-
-        // write it down in the weather.txt
-        this.messages.push({ role: "assistant", content: response });
-
-        // <function>{"name": "get_current_temperature", "parameters": {"location": "Paris, France"}}</function>
-
-        let argsStr = this.extractFunctionArgsFromString(response);
-        let argsData = this.jsonFromStr(argsStr);
-
-        console.log(argsData);
-
-        let tool = this.tools.find((r) => r.name === argsData.name);
-
-        let result = await tool.execute({
-            ...tool.input.parse(argsData.parameters),
-            _sdk: this,
-        });
-        let cleandValues = tool.output.parse(result);
-
-        // -------
-        // 2. Call function on your own to get tool response
-        // -------
-        const tool_response = JSON.stringify({
-            output: JSON.stringify(cleandValues),
-        });
-
-        //
-        this.messages.push({
-            role: "tool",
-            content: tool_response,
-            tool_call_id: `${this.toolCallID}`,
-        });
-        this.toolCallID++;
-
-        await writeToFile({
-            path: "messages.json",
-            content: `${JSON.stringify(this.messages, null, "\t")}`,
-        });
     }
 
     getSystemPrompt() {
