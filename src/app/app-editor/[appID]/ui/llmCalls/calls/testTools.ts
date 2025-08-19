@@ -121,7 +121,7 @@ ${systemPromptDiffCode}
             {
                 role: "user",
                 content: `
-write: ppap in /hk1.txt
+write: i love you Jesus in /hk1.txt
 `,
             },
         ],
@@ -132,7 +132,7 @@ write: ppap in /hk1.txt
             {
                 role: "user",
                 content: `
-write: hophophop in /hk2.txt
+write: i love you Abba Father in /hk2.txt
 `,
             },
         ],
@@ -149,7 +149,6 @@ ${await readFileContent({ path: `/hk1.txt` })}
             {
                 role: "assistant",
                 content: `here's /hk2.txt
-
 ${await readFileContent({ path: `/hk2.txt` })}
     `,
             },
@@ -158,10 +157,14 @@ ${await readFileContent({ path: `/hk2.txt` })}
                 content: `
 # instruction
 
-i want to generate diff code from /hk1.txt to /hk2.txt
+I want to update from /hk1.txt to /hk2.txt
 
-write output to /diff.txt
-
+`,
+            },
+            {
+                role: "user",
+                content: `
+write output by generate diff code foramt and save it to /diff-hk3.txt
     `,
             },
         ],
