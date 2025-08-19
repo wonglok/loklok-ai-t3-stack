@@ -10,6 +10,7 @@ import { readFileContent } from "../common/readFileContent";
 import { systemPromptDiffCode } from "../persona/systemPromptDiffCode";
 // import type * as webllm from "@mlc-ai/web-llm";
 import * as diffApply from "diff-apply";
+import { WebLLMAppClient } from "../../util/WebLLMAppClient";
 
 declare global {
     interface Window {
@@ -54,36 +55,7 @@ export async function testTools({ engine, userPrompt, slot }) {
 
             {
                 name: "write_file",
-                description: "write content to file at pathName",
-
-                input: z
-                    .object({
-                        pathName: z
-                            .string()
-                            .describe("The pathName of the file"),
-                        content: z.string().describe("The content of the file"),
-                    })
-                    .required({
-                        pathName: true,
-                    }),
-                output: z
-                    .object({
-                        successful: z.boolean().describe("write is successful"),
-                    })
-                    .required({
-                        successful: true,
-                    }),
-                execute: async ({ pathName, content }) => {
-                    await writeToFile({ path: pathName, content });
-                    return {
-                        successful: true,
-                    };
-                },
-            },
-
-            {
-                name: "write_output",
-                description: "write output to file at pathName",
+                description: "save content to file at pathName",
 
                 input: z
                     .object({
@@ -116,57 +88,39 @@ ${systemPromptDiffCode}
         engine: engine,
     });
 
-    await sdk.run({
-        messages: [
-            {
-                role: "user",
-                content: `
-write: i love you dear in /hk1.txt
+    //
+
+    await writeToFile({
+        path: `/current-code.js`,
+        content: `
+i love singing ppap        
 `,
-            },
-        ],
     });
 
-    await sdk.run({
-        messages: [
-            {
-                role: "user",
-                content: `
-write: i love you my Jesus my Abba Father and my Precious Sweet HolySpirit in /hk2.txt
-`,
-            },
-        ],
-    });
+    //
 
     await sdk.run({
         messages: [
             {
                 role: "assistant",
-                content: `here's /hk1.txt
-${await readFileContent({ path: `/hk1.txt` })}
-                `,
-            },
-            {
-                role: "assistant",
-                content: `here's /hk2.txt
-${await readFileContent({ path: `/hk2.txt` })}
-    `,
+                content: `read "/current-code.js"`,
             },
             {
                 role: "user",
                 content: `
-# instruction
+# Task
 
-Update /hk1.txt to have the content from /hk2.txt
+can you update the "/current-code.js" with the following:
 
+i love singing worship songs now.
 `,
             },
             {
                 role: "user",
                 content: `
-# Output format
-Generate diff code and save content the diff code to /diff.txt
-    `,
+# Output Requirements:
+1. MUST Generate "DIFF PATCH CODE" then write to "./diff.txt" file
+`,
             },
         ],
     });
@@ -256,6 +210,11 @@ index 0000000..e69de29bb2d1a4e26901ba7040642beee5a783e4
     // console.log(diffList);
 
     await sdk.destroy();
+
+    await new Promise((resolve) => {
+        WebLLMAppClient.abortProcess();
+        resolve(null);
+    });
 }
 
 //
