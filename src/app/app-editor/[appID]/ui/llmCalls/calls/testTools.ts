@@ -132,7 +132,7 @@ write: i love you Jesus in /hk1.txt
             {
                 role: "user",
                 content: `
-write: i love you Abba Father in /hk2.txt
+write: i love you my Jesus my Abba Father and my Precious Sweet HolySpirit in /hk2.txt
 `,
             },
         ],
@@ -157,7 +157,7 @@ ${await readFileContent({ path: `/hk2.txt` })}
                 content: `
 # instruction
 
-I want to update from /hk1.txt to /hk2.txt
+I want to update /hk1.txt to /hk2.txt
 
 `,
             },
