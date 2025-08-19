@@ -60,6 +60,15 @@ export const useGenAI = create<{
 }>((set, get) => {
     let models = [
         {
+            key: "Qwen Coder 7B ~ RAM 4GB",
+            value: `Qwen2.5-Coder-7B-Instruct-q4f16_1-MLC`,
+        },
+        {
+            key: "Qwen Coder 3B ~ RAM 1.5B",
+            value: `Qwen2.5-Coder-3B-Instruct-q4f16_1-MLC`,
+        },
+
+        {
             key: "Llama-3.1-8B-Instruct ~ RAM 5GB",
             value: `Llama-3.1-8B-Instruct-q4f16_1-MLC`,
         },
@@ -67,21 +76,14 @@ export const useGenAI = create<{
             key: "Hermes-2-Pro-Llama-3-8B ~ RAM 5GB",
             value: `Hermes-2-Pro-Llama-3-8B-q4f16_1-MLC`,
         },
+        {
+            key: "Qwen 3 8B (4GB)",
+            value: "Qwen3-8B-q4f16_1-MLC",
+        },
+
         // {
         //     key: "Qwen Coder 1.5B ~ RAM 750B",
         //     value: `Qwen2.5-Coder-1.5B-Instruct-q4f16_1-MLC`,
-        // },
-        {
-            key: "Qwen Coder 3B ~ RAM 1.5B",
-            value: `Qwen2.5-Coder-3B-Instruct-q4f16_1-MLC`,
-        },
-        {
-            key: "Qwen Coder 7B ~ RAM 4GB",
-            value: `Qwen2.5-Coder-7B-Instruct-q4f16_1-MLC`,
-        },
-        // {
-        //     key: "Qwen 3 8B (4GB)",
-        //     value: "Qwen3-8B-q4f16_1-MLC",
         // },
     ];
 
@@ -197,54 +199,11 @@ export const useGenAI = create<{
 
         // currentModel: models[0].value,
         appID: "",
-        prompt: `I want to build an e-class software for a teacher and their students.
+        prompt: `
 
-Here are the user types / role:
-1. System Admin (can access all features)
-2. Teacher (can access teacher features and Student features)
-3. Student (can only access student features)
+I want to build a todo list
 
-System Admin can create Teacher Login Accounts and Student Login Accounts.
-
-Teacher can create, update, delete, and metaverse.
-
-Metaverse has
-- Avatars of Teachers walking around
-- Avatars of Students walking around
-- NPC Avatars standing at spots
-- Environment Lighting
-- Venue 3D model like School / Canteen
-
-Teacher can create NPC Avatars
-Teacher can create Page.
-
-1. Each Page has a Metaverse
-2. Each Metaverse has a few NPC Avatars
-3. Each NPC Avatar can have multiple functionalities in the following:
-    1. Generic NPC Avatars have different functionality. 
-        - Quiz Function
-        - Video Watching Function
-        - Portal Function
-4. Create Student Account Login (register for students in batch)
-
-Teacher can review analytics and report
-1. Student Learning Progress
-2. Quiz Scores
-3. Traffic Count
-5. VR Practice data
-6. Page view count
-
-
-Student can
-1. Register to Metaverse 
-2. Login to Metaverse
-3. Interact with NPC
-4. Track their learning progress
-    1. View what quiz are finished and what quiz haven't started
-    2. View which video watched or not
-    3. View VR Practice Result
-
-`.trim(),
+        `.trim(),
         loadingSpec: false,
         welcome: true,
         spec: "",

@@ -9,7 +9,6 @@ import { useSDK } from "/ui/useSDK";
 - save JWT to zustand and localStorage with appID as Key after user loggin successfully
 - save JWT to zustand and localStorage with appID as Key after user registered successfully
 
-- shadcn Library for User Interface Framework
 - Responsive UI component
 - UI component shouldn't have any margin pixel for the outermost div element.
 - use Zustand for State Management for React

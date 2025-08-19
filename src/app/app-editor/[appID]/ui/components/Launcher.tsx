@@ -149,7 +149,8 @@ export function Launcher() {
         >
             <div className="flex flex-row items-center justify-between rounded-lg border shadow-sm">
                 <textarea
-                    className="h-[350px] w-full resize-none rounded-xl bg-white p-3 text-sm"
+                    disabled={engines.some((r) => r.llmStatus === "writing")}
+                    className="h-[350px] w-full resize-none rounded-xl bg-white p-3 text-sm disabled:text-gray-600"
                     onChange={(e) => {
                         //
 
@@ -193,14 +194,27 @@ export function Launcher() {
                     <Button variant="destructive" disabled>
                         Stop to Reset
                     </Button>
+
                     <Button
+                        disabled={
+                            !engines.some((r) => r.llmStatus === "writing")
+                        }
                         onClick={async () => {
                             await WebLLMAppClient.abortProcess();
                         }}
                         className="cursor-pointer"
                     >
-                        Stop
-                        <StopCircleIcon className="ml-1 animate-spin"></StopCircleIcon>
+                        {!engines.some((r) => r.llmStatus === "writing") ? (
+                            <>
+                                {`Running...`}
+                                <HammerIcon></HammerIcon>
+                            </>
+                        ) : (
+                            <>
+                                {`Stop`}
+                                <StopCircleIcon className="ml-1 animate-spin"></StopCircleIcon>
+                            </>
+                        )}
                     </Button>
                 </div>
             )}

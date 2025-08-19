@@ -219,43 +219,26 @@ export const WebLLMAppClient = {
             await (async () => {
                 let doTask = async ({ task }) => {
                     task.status = "reserved";
-                    let slot = await provideFreeEngineSlot({
-                        name: task.name,
-                    });
 
                     console.log("begin waiting task");
 
-                    await new Promise((resovle) => {
-                        let ttt = setInterval(() => {
-                            let isReady = !(task.deps.length > 0);
-
-                            if (task.deps.length === 0) {
-                                isReady = true;
-                            }
-
-                            if (isReady) {
-                                clearInterval(ttt);
-                                resovle(null);
-                            }
-                        });
+                    let slot = await provideFreeEngineSlot({
+                        name: task.name,
                     });
-
                     console.log("slot", slot);
 
                     toast("Begin Writing Code", {
                         description: `${task.name} by ${slot.displayName}`,
                     });
-
                     return task.func({ slot }).then(async () => {
                         task.status = "done";
                         await returnFreeEngineSlot({ slot: slot });
                     });
                 };
 
+                let inc = 0;
                 let doOneMore = async () => {
-                    let taskList = tasks.filter((tsk) => {
-                        return tsk.status === "waiting";
-                    });
+                    inc++;
 
                     let engineCount = useGenAI
                         .getState()
@@ -263,11 +246,36 @@ export const WebLLMAppClient = {
                             (r) => r.enabled && r.lockedBy === "",
                         ).length;
 
+                    let taskList = tasks
+                        .filter((tsk) => {
+                            return tsk.status === "waiting";
+                        })
+
+                        .filter((task) => {
+                            return (
+                                task.deps.filter((eachDep) => {
+                                    return (
+                                        tasks.filter(
+                                            (r) =>
+                                                r.name === eachDep &&
+                                                r.status === "done",
+                                        ).length === task.deps.length
+                                    );
+                                }).length === task.deps.length
+                            );
+                        })
+                        .slice(0, engineCount);
+
+                    console.log(
+                        "task and engine",
+                        taskList.length,
+                        engineCount,
+                    );
+
                     if (engineCount >= 1 && taskList.length >= 1) {
                         await Promise.all(
                             taskList
                                 .filter((r) => r.status === "waiting")
-                                .slice(0, engineCount)
                                 .filter((r) => r)
                                 .map((task) => {
                                     return doTask({ task: task }).then(() => {

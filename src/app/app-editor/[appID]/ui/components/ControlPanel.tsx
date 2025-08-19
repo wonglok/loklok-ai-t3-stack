@@ -247,13 +247,13 @@ export function ControlPanel() {
                             {/* file list */}
                             <div className="h-full w-[350px] overflow-x-hidden overflow-y-scroll border-r border-gray-300">
                                 {/*  */}
-                                {files.filter((r) =>
+                                {/* {files.filter((r) =>
                                     r.path.includes("entry/App"),
                                 ).length > 0 && (
                                     <div className="aspect-video w-full">
                                         <CodePod></CodePod>
                                     </div>
-                                )}
+                                )} */}
 
                                 {files
                                     .slice()

@@ -111,7 +111,7 @@ ${featuresText}
                             content: `
 - only write the typescript code block 
 - please use modules with typescript 
-- use ShadCN User Interface Framework and tailwind css
+- use tailwind css
 - please import all components accordingly to "Product Requirement Document" and the react component section and put them in App Function Component
 
 export const App = () => {
