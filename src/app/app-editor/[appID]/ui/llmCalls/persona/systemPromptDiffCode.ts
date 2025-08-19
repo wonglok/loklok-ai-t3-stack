@@ -1,6 +1,5 @@
 export const systemPromptDiffCode = `
-
-# instruction to generate "DIFF PATCH CODE" / "DIFF CODE" / "CODE PATCH"
+# Instruction to generate "DIFF PATCH CODE"
 
 Generate a unified diff that can be cleanly applied to modify code files.
 

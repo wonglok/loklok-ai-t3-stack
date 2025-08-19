@@ -11,7 +11,7 @@ import { systemPromptDiffCode } from "../persona/systemPromptDiffCode";
 // import type * as webllm from "@mlc-ai/web-llm";
 import * as diffApply from "diff-apply";
 import { WebLLMAppClient } from "../../util/WebLLMAppClient";
-
+import path from "path";
 declare global {
     interface Window {
         diffApply: typeof diffApply;
@@ -27,27 +27,32 @@ export async function testTools({ engine, userPrompt, slot }) {
         tools: [
             {
                 name: "read_file",
-                description: "read content from file at pathName",
+                description: "read content from file at pathname",
 
                 input: z
                     .object({
-                        pathName: z
+                        pathname: z
                             .string()
-                            .describe("The pathName of the file"),
+                            .describe("The pathname of the file"),
                     })
                     .required({
-                        pathName: true,
+                        pathname: true,
                     }),
                 output: z
                     .object({
                         content: z.string().describe("The content of the file"),
+                        successfulRead: z
+                            .boolean()
+                            .describe("read is successful"),
                     })
                     .required({
+                        successfulRead: true,
                         content: true,
                     }),
-                execute: async ({ pathName }) => {
-                    let content = await readFileContent({ path: pathName });
+                execute: async ({ pathname }) => {
+                    let content = await readFileContent({ path: pathname });
                     return {
+                        successfulRead: true,
                         content: content,
                     };
                 },
@@ -55,29 +60,34 @@ export async function testTools({ engine, userPrompt, slot }) {
 
             {
                 name: "write_file",
-                description: "save content to file at pathName",
+                description: "save content to file at pathname",
 
                 input: z
                     .object({
-                        pathName: z
+                        pathname: z
                             .string()
-                            .describe("The pathName of the file"),
+                            .describe("The pathname of the file"),
                         content: z.string().describe("The content of the file"),
                     })
                     .required({
-                        pathName: true,
+                        pathname: true,
                     }),
                 output: z
                     .object({
-                        successful: z.boolean().describe("write is successful"),
+                        successfulWrite: z
+                            .boolean()
+                            .describe("write is successfulWrite"),
                     })
                     .required({
-                        successful: true,
+                        successfulWrite: true,
                     }),
-                execute: async ({ pathName, content }) => {
-                    await writeToFile({ path: pathName, content });
+                execute: async ({ pathname, content }) => {
+                    await writeToFile({
+                        path: path.join(`/temp/function/`, pathname),
+                        content,
+                    });
                     return {
-                        successful: true,
+                        successfulWrite: true,
                     };
                 },
             },
@@ -92,48 +102,59 @@ ${systemPromptDiffCode}
 
     await writeToFile({
         path: `/current-code.js`,
-        content: `
-i love singing ppap        
-`,
+        content: `i love singing ppap`,
     });
 
-    //
-
-    await sdk.run({
+    let messages = await sdk.run({
         messages: [
             {
                 role: "assistant",
-                content: `read "/current-code.js"`,
+                content: `
+Here is the content of "/current-code.js":
+${await readFileContent({ path: `/current-code.js` })}
+                `,
             },
             {
                 role: "user",
                 content: `
 # Task
 
-can you update the "/current-code.js" with the following:
-
+update "/current-code.js" file to the following:
 i love singing worship songs now.
+
 `,
             },
             {
                 role: "user",
                 content: `
 # Output Requirements:
-1. MUST Generate "DIFF PATCH CODE" then write to "./diff.txt" file
+- MAKE SURE the line breaks are correct 
+- MUST Generate "DIFF PATCH CODE" and then Save to "/diff.txt"
 `,
             },
         ],
     });
 
-    //
-    //
+    // messages = await sdk.run({
+    //     messages: [
+    //         ...messages,
+    //         {
+    //             role: "user",
+    //             content: `
+    //                 write "happy" to "happy.txt"
+    //             `,
+    //         },
+    //     ],
+    // });
+
+    console.log(messages);
 
     console.log("inspect", sdk.messages);
 
     console.log(useGenAI.getState().files);
 
-    let existingCode = await readFileContent({ path: "/hk1.txt" });
-    let diffCode = await readFileContent({ path: "/diff.txt" });
+    let existingCode = await readFileContent({ path: "/current-code.js" });
+    let diffCode = await readFileContent({ path: "/temp/diff.txt" });
 
     let strategy = diffApply.newUnifiedDiffStrategy.create(0.95);
 

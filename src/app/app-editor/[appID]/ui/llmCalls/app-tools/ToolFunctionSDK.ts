@@ -31,12 +31,6 @@ export class ToolFunctionSDK {
         this.extraSystemPrompt = extraSystemPrompt;
         this.tools = tools;
         this.engine = engine;
-        this.engine.resetChat();
-        this.toolCallID = 0;
-
-        this.messages = [
-            { role: "system", content: `${this.getSystemPrompt()}` },
-        ] as webllm.ChatCompletionMessageParam[];
     }
 
     extractFunctionArgsFromString(response: string) {
@@ -61,6 +55,12 @@ export class ToolFunctionSDK {
         messages: webllm.ChatCompletionMessageParam[];
     }) {
         try {
+            this.engine.resetChat();
+            this.toolCallID = 0;
+            this.messages = [
+                { role: "system", content: `${this.getSystemPrompt()}` },
+            ] as webllm.ChatCompletionMessageParam[];
+
             const seed = 0;
             // -------
             // -------
@@ -137,6 +137,10 @@ export class ToolFunctionSDK {
                     content: `${JSON.stringify(this.messages, null, "\t")}`,
                 });
             }
+
+            return JSON.parse(JSON.stringify(this.messages)).filter(
+                (r) => r.role !== "system",
+            );
         } catch (e) {
             console.log(e);
         } finally {
