@@ -144,10 +144,10 @@ export const WebLLMAppClient = {
                         status: "waiting",
                         needs: needs || [],
                         displayName: displayName || name,
-                        func: async () => {
-                            let slot = await provideFreeEngineSlot({
-                                name: `${name}`,
-                            });
+                        func: async ({ slot }) => {
+                            // let slot = await provideFreeEngineSlot({
+                            //     name: `${name}`,
+                            // });
 
                             await func({
                                 slot,
@@ -166,10 +166,11 @@ export const WebLLMAppClient = {
                     name: "genFeatrues",
                     status: "waiting",
                     needs: [],
-                    func: async () => {
-                        let slot = await provideFreeEngineSlot({
-                            name: `genFeatrues`,
-                        });
+                    func: async ({ slot }) => {
+                        // let slot = await provideFreeEngineSlot({
+                        //     name: `genFeatrues`,
+                        // });
+
                         await genFeatrues({
                             slot: slot,
                             userPrompt,
@@ -184,10 +185,10 @@ export const WebLLMAppClient = {
                     name: "genReactComponentTree",
                     status: "waiting",
                     needs: ["genFeatrues"],
-                    func: async () => {
-                        let slot = await provideFreeEngineSlot({
-                            name: `genReactComponentTree`,
-                        });
+                    func: async ({ slot }) => {
+                        // let slot = await provideFreeEngineSlot({
+                        //     name: `genReactComponentTree`,
+                        // });
 
                         await genReactComponentTree({
                             manager: manager,
@@ -202,40 +203,18 @@ export const WebLLMAppClient = {
                     },
                 },
 
-                {
-                    displayName: "MongoDB and Mongoose",
-                    name: "genMongoDatabase",
-                    status: "waiting",
-                    needs: ["genFeatrues"],
-                    func: async () => {
-                        let slot = await provideFreeEngineSlot({
-                            name: "genMongoDatabase",
-                        });
-
-                        await genMongoDatabase({
-                            manager: manager,
-                            slot: slot,
-                            userPrompt: userPrompt,
-                            featuresText: await readFileContent({
-                                path: `/docs/genFeatrues.md`,
-                            }),
-                            engine: apiMap.get(slot.name).engine,
-                        });
-
-                        await returnFreeEngineSlot({ slot: slot });
-                    },
-                },
-
                 // {
-                //     name: "genReactComponentTree",
+                //     displayName: "MongoDB and Mongoose",
+                //     name: "genMongoDatabase",
                 //     status: "waiting",
                 //     needs: ["genFeatrues"],
                 //     func: async () => {
                 //         let slot = await provideFreeEngineSlot({
-                //             name: "genReactComponentTree",
+                //             name: "genMongoDatabase",
                 //         });
 
-                //         await genReactComponentTree({
+                //         await genMongoDatabase({
+                //             manager: manager,
                 //             slot: slot,
                 //             userPrompt: userPrompt,
                 //             featuresText: await readFileContent({
@@ -243,27 +222,7 @@ export const WebLLMAppClient = {
                 //             }),
                 //             engine: apiMap.get(slot.name).engine,
                 //         });
-                //         await returnFreeEngineSlot({ slot: slot });
-                //     },
-                // },
 
-                // {
-                //     name: "genTRPCProcedure",
-                //     status: "waiting",
-                //     needs: ["genReactComponentTree"],
-                //     func: async () => {
-                //         let slot = await provideFreeEngineSlot({
-                //             name: "genTRPCProcedure",
-                //         });
-
-                //         await genTRPCProcedure({
-                //             slot: slot,
-                //             userPrompt: userPrompt,
-                //             reactComponentsText: await readFileContent({
-                //                 path: `/docs/genReactComponentTree.md`,
-                //             }),
-                //             engine: apiMap.get(slot.name).engine,
-                //         });
                 //         await returnFreeEngineSlot({ slot: slot });
                 //     },
                 // },
@@ -284,6 +243,10 @@ export const WebLLMAppClient = {
                             return;
                         }
 
+                        let slot = await provideFreeEngineSlot({
+                            name: first.name,
+                        });
+
                         let dependenciesCount = first.needs.length;
 
                         let allCompleted =
@@ -299,10 +262,9 @@ export const WebLLMAppClient = {
                         if (first && allCompleted) {
                             if (first) {
                                 first.status = "working";
-                                first.func().then(() => {
+                                first.func({ slot }).then(() => {
                                     first.status = "done";
                                 });
-
                                 toast("Begin Writing File", {
                                     description: (
                                         <pre className="mt-2 w-[320px] rounded-md bg-neutral-950 p-4 text-white">
@@ -312,18 +274,20 @@ export const WebLLMAppClient = {
                                 });
                             }
                         }
+
+                        await tryTrigger();
                     }
                 };
 
                 //
 
-                let tt = setInterval(() => {
-                    if (tasks.filter((r) => r.status !== "done").length === 0) {
-                        clearInterval(tt);
-                        return;
-                    }
-                    tryTrigger();
-                }, 250);
+                // let tt = setInterval(() => {
+                //     if (tasks.filter((r) => r.status !== "done").length === 0) {
+                //         clearInterval(tt);
+                //         return;
+                //     }
+                //     tryTrigger();
+                // }, 250);
 
                 await new Promise((resolve) => {
                     let ts = setInterval(() => {

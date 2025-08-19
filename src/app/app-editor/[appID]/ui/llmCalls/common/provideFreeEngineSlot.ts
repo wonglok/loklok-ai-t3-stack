@@ -31,7 +31,7 @@ export const provideFreeEngineSlot = async ({
                 clearInterval(ttt);
                 resolve(foundSlot);
             }
-        }, 5);
+        }, 0);
     });
 
     return engine as EngineData;
