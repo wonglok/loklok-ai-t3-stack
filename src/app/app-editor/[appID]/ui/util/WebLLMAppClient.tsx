@@ -279,6 +279,8 @@ export const WebLLMAppClient = {
                     }
                 };
 
+                await tryTrigger();
+
                 //
 
                 // let tt = setInterval(() => {
