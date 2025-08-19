@@ -1,16 +1,16 @@
 import { useGenAI } from "../../useGenAI";
-import { Button } from "@/components/ui/button";
-import {
-    // DownloadCloudIcon,
-    // FileIcon,
-    // Loader2Icon,
-    // SendIcon,
+// import { Button } from "@/components/ui/button";
+// import {
+//     // DownloadCloudIcon,
+//     // FileIcon,
+//     // Loader2Icon,
+//     // SendIcon,
 
-    HammerIcon,
-    LoaderIcon,
-    StopCircleIcon,
-} from "lucide-react";
-import { WebLLMAppClient } from "../util/WebLLMAppClient";
+//     HammerIcon,
+//     LoaderIcon,
+//     StopCircleIcon,
+// } from "lucide-react";
+// import { WebLLMAppClient } from "../util/WebLLMAppClient";
 
 //
 // import { Response } from "@/components/ai-elements/response";
@@ -48,7 +48,7 @@ import { useEffect, useState } from "react";
 import * as pathUtil from "path";
 import { format } from "date-fns";
 // import { CodePod } from "../util/CodePod";
-import { factoryResetThisApp } from "../llmCalls/common/factoryResetThisApp";
+// import { factoryResetThisApp } from "../llmCalls/common/factoryResetThisApp";
 import { persistToDisk } from "../llmCalls/common/persistToDisk";
 import { Launcher } from "./Launcher";
 // import { UseBoundStore } from "zustand";

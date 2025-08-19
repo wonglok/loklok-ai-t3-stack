@@ -68,10 +68,10 @@ export const useGenAI = create<{
             key: "Qwen Coder 7B (~4GB)",
             value: `Qwen2.5-Coder-7B-Instruct-q4f16_1-MLC`,
         },
-        {
-            key: "Qwen 3 8B (4GB)",
-            value: "Qwen3-8B-q4f16_1-MLC",
-        },
+        // {
+        //     key: "Qwen 3 8B (4GB)",
+        //     value: "Qwen3-8B-q4f16_1-MLC",
+        // },
     ];
 
     let refreshSlot = (slot) => {
@@ -99,7 +99,7 @@ export const useGenAI = create<{
             1024 /
             1024;
 
-        if (memory >= 2.5) {
+        if (memory >= 3.0) {
             enable2nd = true;
         }
         if (memory >= 3.5) {
@@ -123,7 +123,7 @@ export const useGenAI = create<{
                 name: "#01",
                 displayName: "AI Developer 01",
 
-                currentModel: models[2].value,
+                currentModel: models[1].value,
                 llmStatus: "empty",
                 bannerText: "",
                 bannerData: null,
@@ -134,7 +134,7 @@ export const useGenAI = create<{
                 name: "#02",
                 displayName: "AI Developer 02",
 
-                currentModel: models[1].value,
+                currentModel: models[0].value,
                 llmStatus: "empty",
                 bannerText: "",
                 bannerData: null,
@@ -145,7 +145,7 @@ export const useGenAI = create<{
                 name: "#03",
                 displayName: "AI Developer 03",
 
-                currentModel: models[1].value,
+                currentModel: models[0].value,
                 llmStatus: "empty",
                 bannerText: "",
                 bannerData: null,

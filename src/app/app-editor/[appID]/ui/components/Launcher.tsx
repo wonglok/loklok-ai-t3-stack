@@ -53,6 +53,7 @@ import {
     StopCircleIcon,
 } from "lucide-react";
 import { factoryResetThisApp } from "../llmCalls/common/factoryResetThisApp";
+import { CodePod } from "../util/CodePod";
 
 function AIMatcher({ name }: { name: string }) {
     let models = useGenAI((r) => r.models);
@@ -202,6 +203,14 @@ export function Launcher() {
                         <StopCircleIcon className="ml-1 animate-spin"></StopCircleIcon>
                     </Button>
                 </div>
+            )}
+
+            {lockInWorkers && (
+                <>
+                    <div className="aspect-[16/9] w-full">
+                        <CodePod></CodePod>
+                    </div>
+                </>
             )}
 
             {engines.map(({ name, displayName }) => {

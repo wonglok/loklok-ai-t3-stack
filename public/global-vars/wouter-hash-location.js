@@ -1,11 +1,11 @@
 
 // @ts-ignore
-window.NPM_GV_CACHE = window.NPM_GV_CACHE || {};
+window.NPM_CACHE = window.NPM_CACHE || {};
 // @ts-ignore
-const NPM_GV_CACHE = window.NPM_GV_CACHE;
+const NPM_CACHE = window.NPM_CACHE;
 
-NPM_GV_CACHE['TJ-wouter/use-hash-location'] = NPM_GV_CACHE['TJ-wouter/use-hash-location'] || {}; 
+NPM_CACHE['TJ-wouter/use-hash-location'] = NPM_CACHE['TJ-wouter/use-hash-location'] || {}; 
 
-export const navigate = NPM_GV_CACHE['TJ-wouter/use-hash-location']['navigate'];
+export const navigate = NPM_CACHE['TJ-wouter/use-hash-location']['navigate'];
 
-export const useHashLocation = NPM_GV_CACHE['TJ-wouter/use-hash-location']['useHashLocation'];
+export const useHashLocation = NPM_CACHE['TJ-wouter/use-hash-location']['useHashLocation'];

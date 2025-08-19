@@ -135,13 +135,13 @@ export const WebLLMAppClient = {
             let manager = {
                 addTask: ({
                     name = "name",
-                    deps = null,
+                    needs = null,
                     func = async ({ slot, engine }) => {},
                 }) => {
                     tasks.push({
                         name: `${name}`,
                         status: "waiting",
-                        deps: deps || [],
+                        needs: needs || [],
                         func: async () => {
                             let slot = await provideFreeEngineSlot({
                                 name: `${name}`,
@@ -161,7 +161,7 @@ export const WebLLMAppClient = {
                 {
                     name: "genFeatrues",
                     status: "waiting",
-                    deps: [],
+                    needs: [],
                     func: async () => {
                         let slot = await provideFreeEngineSlot({
                             name: "genFeatrues",
@@ -180,7 +180,7 @@ export const WebLLMAppClient = {
                 {
                     name: "genReactComponentTree",
                     status: "waiting",
-                    deps: ["genFeatrues"],
+                    needs: ["genFeatrues"],
                     func: async () => {
                         let slot = await provideFreeEngineSlot({
                             name: "genReactComponentTree",
@@ -203,7 +203,7 @@ export const WebLLMAppClient = {
                 {
                     name: "genMongoDatabase",
                     status: "waiting",
-                    deps: ["genFeatrues"],
+                    needs: ["genFeatrues"],
                     func: async () => {
                         let slot = await provideFreeEngineSlot({
                             name: "genMongoDatabase",
@@ -226,7 +226,7 @@ export const WebLLMAppClient = {
                 // {
                 //     name: "genReactComponentTree",
                 //     status: "waiting",
-                //     deps: ["genFeatrues"],
+                //     needs: ["genFeatrues"],
                 //     func: async () => {
                 //         let slot = await provideFreeEngineSlot({
                 //             name: "genReactComponentTree",
@@ -247,7 +247,7 @@ export const WebLLMAppClient = {
                 // {
                 //     name: "genTRPCProcedure",
                 //     status: "waiting",
-                //     deps: ["genReactComponentTree"],
+                //     needs: ["genReactComponentTree"],
                 //     func: async () => {
                 //         let slot = await provideFreeEngineSlot({
                 //             name: "genTRPCProcedure",
@@ -281,10 +281,10 @@ export const WebLLMAppClient = {
                             return;
                         }
 
-                        let dependenciesCount = first.deps.length;
+                        let dependenciesCount = first.needs.length;
 
                         let allCompleted =
-                            first?.deps
+                            first?.needs
                                 .map((eachDep) => {
                                     let thisTask = tasks.find((tsk) => {
                                         return tsk.name === eachDep;
@@ -295,19 +295,18 @@ export const WebLLMAppClient = {
 
                         if (first && allCompleted) {
                             if (first) {
-                                requestIdleCallback(
-                                    () => {
-                                        first.status = "working";
-                                        first.func().then(() => {
-                                            first.status = "done";
-                                        });
-                                    },
-                                    { timeout: 1000 },
-                                );
+                                first.status = "working";
+                                first.func().then(() => {
+                                    setTimeout(() => {
+                                        first.status = "done";
+                                    });
+                                });
                             }
                         }
                     }
                 };
+
+                //
 
                 let tt = setInterval(() => {
                     if (tasks.filter((r) => r.status !== "done").length === 0) {

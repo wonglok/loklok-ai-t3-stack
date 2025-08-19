@@ -17,17 +17,17 @@ export function CodeRunner() {
             let fileList = await fetch(blobURL).then((r) => r.json()) || []
 
             // @ts-ignore
-            window.NPM_GV_CACHE = window.NPM_GV_CACHE || {}
+            window.NPM_CACHE = window.NPM_CACHE || {}
 
             // @ts-ignore
-            const NPM_GV_CACHE = window.NPM_GV_CACHE
-            NPM_GV_CACHE['TJ-react-dom19'] = ReactDOM19
-            NPM_GV_CACHE['TJ-react19'] = React19
-            NPM_GV_CACHE['TJ-@react-three/drei'] = ReactThreeDrei
-            NPM_GV_CACHE['TJ-@react-three/fiber'] = ReactThreeFiber
-            NPM_GV_CACHE['TJ-zustand'] = Zustand
-            NPM_GV_CACHE['TJ-wouter'] = WouterBase
-            NPM_GV_CACHE['TJ-wouter/use-hash-location'] = WouterHash
+            const NPM_CACHE = window.NPM_CACHE
+            NPM_CACHE['TJ-react-dom19'] = ReactDOM19
+            NPM_CACHE['TJ-react19'] = React19
+            NPM_CACHE['TJ-@react-three/drei'] = ReactThreeDrei
+            NPM_CACHE['TJ-@react-three/fiber'] = ReactThreeFiber
+            NPM_CACHE['TJ-zustand'] = Zustand
+            NPM_CACHE['TJ-wouter'] = WouterBase
+            NPM_CACHE['TJ-wouter/use-hash-location'] = WouterHash
 
             window['React'] = React19
 

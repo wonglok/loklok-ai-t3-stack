@@ -37,7 +37,10 @@
         "**/*.cjs",
         "**/*.js",
         ".next/types/**/*.ts",
-        "src/app/app-editor/[appID]/ui/util/llmCalls/docs/featurestjs"
+        "src/app/app-editor/[appID]/ui/util/llmCalls/docs/featurestjs",
+        "src/app/app-editor/[appID]/ui/util/CodePod.jsx",
+        "src/app/app-editor/[appID]/ui/util/useFilesFrame.jsx",
+        "src/app/app-editor/[appID]/ui/util/CodeRunner.jsx"
     ],
     "exclude": ["node_modules", "public"]
 }

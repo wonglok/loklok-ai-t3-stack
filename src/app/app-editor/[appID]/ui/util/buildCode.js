@@ -63,33 +63,6 @@ export const buildCode = async ({ files = [] }) => {
                 },
 
                 async load(id) {
-                    // if (id.indexOf(`${NPMPrefix}`) === 0) {
-                    //     let pureID = id.replace(`${NPMPrefix}`, '')
-                    //     console.log('dynamic-npm', pureID)
-                    //     let text
-                    //     let npmID = JSON.stringify(pureID)
-                    //     text = `
-                    //             // @ts-ignore
-                    //             window.NPM_GV_CACHE = window.NPM_GV_CACHE || {};
-                    //             // @ts-ignore
-                    //             const NPM_GV_CACHE = window.NPM_GV_CACHE;
-                    //             NPM_GV_CACHE[${npmID}] = NPM_GV_CACHE[${npmID}] || {}; 
-                    //         `
-                    //     for (let propertyName in libs[pureID]) {
-                    //         if (propertyName !== 'default') {
-                    //             text += `
-                    //     export const ${propertyName} = NPM_GV_CACHE[${npmID}]['${propertyName}'];
-                    //     `
-                    //         } else {
-                    //             text += `
-                    //     export default NPM_GV_CACHE[${npmID}]['${propertyName}'];
-                    //     `
-                    //         }
-                    //     }
-                    //     return `${text}`
-                    // }
-                    //
-
                     if (id.indexOf('http') === 0) {
                         return fetch(id, { mode: 'cors', method: 'GET' })
                             .then((r) => r.text())
