@@ -226,6 +226,8 @@ export function getEachModel ({ mongoose, appID, dbInstance }) {
             });
         }
     };
+
+    //
     let scheduleTaskMongooseIntegration = ({
         lateSpec,
     }: {
@@ -281,8 +283,15 @@ const dbInstance = mongoose.connection.useDb("app_development_" + appID, { useCa
 - Only write the typescript code block
 - Use modules with typescript
 
+- DO NOT INCLUDE "import mongodb from 'mongodb';" 
 - DO NOT INCLUDE "import mongoose from 'mongoose';" 
 - MUST INCLUDE this "getAllModels" typescript function:
+
+export async function getAllModels ({ appID }) {
+    //
+
+    return data
+}
 
 `.trim(),
                             },

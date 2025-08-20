@@ -57,6 +57,12 @@ import { format } from "date-fns";
 import { persistToDisk } from "../llmCalls/common/persistToDisk";
 import { Launcher } from "./Launcher";
 import { DeleteIcon } from "lucide-react";
+import { CodePod } from "../util/CodePod";
+import SuperJSON from "superjson";
+import { httpBatchStreamLink, loggerLink, TRPCClient } from "@trpc/client";
+import { createTRPCClient } from "@trpc/client";
+import { AnyRouter } from "@trpc/server";
+
 // import { CodePod } from "../util/CodePod";
 // import { UseBoundStore } from "zustand";
 // import { useEngineType } from "../llmCalls/common/makeEngine";
@@ -246,6 +252,8 @@ function MonacoEditor({
     );
 }
 
+//
+
 let sortDate = (a: any, b: any) => {
     let dateA = new Date(a.createdAt).getTime();
     let dateB = new Date(b.createdAt).getTime();
@@ -259,6 +267,82 @@ let sortDate = (a: any, b: any) => {
     }
 };
 
+function TRPCClientTest() {
+    let appID = useGenAI((r) => r.appID);
+    return (
+        <>
+            <button
+                className="m-2 cursor-pointer bg-gray-200 p-2"
+                onClick={async () => {
+                    //
+
+                    class LokSDK {
+                        public client: TRPCClient<AnyRouter>;
+                        constructor({ appID }) {
+                            function getBaseUrl() {
+                                if (typeof window !== "undefined")
+                                    return window.location.origin;
+                                if (process.env.VERCEL_URL)
+                                    return `https://${process.env.VERCEL_URL}`;
+                                return `http://localhost:${process.env.PORT ?? 3000}`;
+                            }
+
+                            const client = createTRPCClient<AnyRouter>({
+                                links: [
+                                    // loggerLink({
+                                    //     enabled: (op) =>
+                                    //         process.env.NODE_ENV === "development" ||
+                                    //         (op.direction === "down" &&
+                                    //             op.result instanceof Error),
+                                    // }),
+                                    httpBatchStreamLink({
+                                        transformer: SuperJSON as any,
+                                        url: getBaseUrl() + "/api/engine",
+                                        headers: () => {
+                                            const headers = new Headers();
+                                            headers.set(
+                                                "x-trpc-source",
+                                                "nextjs-react",
+                                            );
+                                            headers.set("app-id", appID);
+                                            return headers;
+                                        },
+                                    }),
+                                ],
+                            });
+
+                            this.client = client;
+                        }
+                        async runTRPC({ method = "hello", input }) {
+                            return (this.client[method] as any)
+                                .mutate(input)
+                                .then((data) => {
+                                    console.log("data", data);
+                                    return data;
+                                });
+                        }
+                    }
+                    let sdk = new LokSDK({
+                        appID: appID,
+                    });
+
+                    await sdk.runTRPC({
+                        method: "hello",
+                        input: { text: "sure been good" },
+                    });
+
+                    //
+                    //
+                    //
+
+                    console.log(123, 123);
+                }}
+            >
+                trpc
+            </button>
+        </>
+    );
+}
 export function ControlPanel() {
     let appID = useGenAI((r) => r.appID);
 
@@ -304,13 +388,15 @@ export function ControlPanel() {
                             <div className="h-full w-[350px] overflow-x-hidden overflow-y-scroll border-r border-gray-300">
                                 {/*  */}
 
-                                {/* {files.filter((r) =>
+                                {files.filter((r) =>
                                     r.path.includes("entry/App"),
                                 ).length > 0 && (
                                     <div className="aspect-video w-full">
-                                    <CodePod></CodePod>
+                                        <CodePod></CodePod>
                                     </div>
-                                )} */}
+                                )}
+
+                                <TRPCClientTest></TRPCClientTest>
 
                                 {files
                                     .slice()

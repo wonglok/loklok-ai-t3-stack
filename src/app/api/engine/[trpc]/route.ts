@@ -25,6 +25,10 @@ let post = {
 };
 
 const handler = async (req: NextRequest) => {
+    let appID = req.headers.get("app-id");
+
+    console.log(appID);
+
     let func = new Function(
         `args`,
         `
@@ -34,10 +38,12 @@ const publicProcedure = args.publicProcedure;
 const z = args.z;
 const post = args.post;
 
-const outputRouter = createTRPCRouter({
+const appRouter = createTRPCRouter({
+    //
+
     hello: publicProcedure
         .input(z.object({ text: z.string() }))
-        .query(({ input }) => {
+        .mutation(({ input }) => {
             return {
                 greeting: input.text,
             };
@@ -50,20 +56,24 @@ const outputRouter = createTRPCRouter({
             return post;
         }),
 
-    getLatest: protectedProcedure.query(() => {
+    getLatest: protectedProcedure.mutation(() => {
         return post;
     }),
 
-    getSecretMessage: protectedProcedure.query(() => {
+    getSecretMessage: protectedProcedure.mutation(() => {
         return "you can now see this secret message!";
     }),
+
+    //
 });
 
-return outputRouter
+return appRouter
     `,
     );
 
-    let app = await func({
+    //
+
+    let appRouter = await func({
         createTRPCRouter,
         protectedProcedure,
         publicProcedure,
@@ -71,9 +81,12 @@ return outputRouter
         post,
     });
 
-    let appRouter = createTRPCRouter({
-        app: app,
-    });
+    console.log(appRouter);
+
+    // let myTRPCRouter = createTRPCRouter({
+    //     app: appRouter,
+    // });
+
     return fetchRequestHandler({
         endpoint: "/api/engine",
         req,
