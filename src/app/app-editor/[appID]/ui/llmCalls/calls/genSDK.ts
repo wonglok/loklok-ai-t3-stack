@@ -8,7 +8,7 @@ import { readFileParseJSON } from "../common/readFileParseJSON";
 import { readFileContent } from "../common/readFileContent";
 // import { useGenAI } from "../../../useGenAI";
 
-export const genZustand = async ({
+export const genSDK = async ({
     slot,
     featuresText = "",
     engine,
@@ -17,13 +17,13 @@ export const genZustand = async ({
 }) => {
     manager?.addTask({
         displayName: `Zustand Task`,
-        name: "genZustand",
+        name: "genSDK",
         deps: ["genFeatrues"],
         func: async ({ slot, engine }) => {
             ///////////////////////////////////////////////////////////////////////////////////
             // manifest
             ///////////////////////////////////////////////////////////////////////////////////
-            let specificationPath = `/docs/genZustand.json`;
+            let specificationPath = `/docs/genSDK.json`;
 
             // let existingCode = await readFileContent({ path: specificationPath });\
 

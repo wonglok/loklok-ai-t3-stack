@@ -25,7 +25,7 @@ import { genReactComponentTree } from "../llmCalls/calls/genReactComponentTree";
 import { readFileContent } from "../llmCalls/common/readFileContent";
 import { genDiff } from "../llmCalls/calls/genDiff";
 import { testTools } from "../llmCalls/app-tools/testTools";
-import { genZustand } from "../llmCalls/calls/genZustand";
+import { genSDK } from "../llmCalls/calls/genSDK";
 
 //
 // import { systemPromptPureText } from "../llmCalls/persona/systemPromptPureText";
@@ -165,21 +165,22 @@ export const WebLLMAppClient = {
                             userPrompt,
                             engine: engineAPIMap.get(slot.name).engine,
                         });
+
                         // await returnFreeEngineSlot({ slot: slot });
                     },
                 },
 
                 {
                     displayName: "Zustand",
-                    name: "genZustand",
+                    name: "genSDK",
                     status: "waiting",
                     deps: ["genFeatrues"],
                     func: async ({ slot }) => {
                         // let slot = await provideFreeEngineSlot({
-                        //     name: `genZustand`,
+                        //     name: `genSDK`,
                         // });
 
-                        await genZustand({
+                        await genSDK({
                             slot: slot,
                             engine: engineAPIMap.get(slot.name).engine,
                             featuresText: await readFileContent({
@@ -189,6 +190,7 @@ export const WebLLMAppClient = {
                             manager: manager,
                             userPrompt: userPrompt,
                         });
+
                         // await returnFreeEngineSlot({ slot: slot });
                     },
                 },
@@ -245,19 +247,15 @@ export const WebLLMAppClient = {
                 let doTask = async ({ task }) => {
                     task.status = "reserved";
 
-                    console.log("begin waiting task");
-
                     let slot = await provideFreeEngineSlot({
                         name: task.name,
                     });
                     console.log("slot", slot);
 
-                    toast("Begin Writing Code", {
-                        description: `${task.name} by ${slot.displayName}`,
-                    });
+                    console.log("begin waiting task", slot.name);
                     return task.func({ slot }).then(async () => {
-                        task.status = "done";
                         await returnFreeEngineSlot({ slot: slot });
+                        task.status = "done";
                     });
                 };
 

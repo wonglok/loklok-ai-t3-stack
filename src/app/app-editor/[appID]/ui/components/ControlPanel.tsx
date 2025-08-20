@@ -116,6 +116,7 @@ function MonacoEditor({
     onChange?: (v: string) => void;
 }) {
     //
+    //
     let ref = useRef<any>(null);
     let lockInWorkers = useGenAI((r) => r.lockInWorkers);
     let files = useGenAI((r) => r.files);
@@ -328,10 +329,10 @@ export function ControlPanel() {
                                                         : `odd:bg-white even:bg-gray-100`
                                                 }
                                             >
-                                                <div className="group flex h-full w-full cursor-pointer justify-between px-3 py-2">
-                                                    <div className="flex">
+                                                <div className="group flex h-full w-full cursor-pointer justify-between">
+                                                    <div className="flex h-full w-full items-center pl-2">
                                                         <div
-                                                            className="pointer-events-none shrink-0 opacity-0 group-hover:pointer-events-auto group-hover:opacity-100"
+                                                            className="pointer-events-none flex h-full shrink-0 items-center opacity-0 group-hover:pointer-events-auto group-hover:opacity-100"
                                                             onClick={async () => {
                                                                 if (
                                                                     confirm(
@@ -359,7 +360,7 @@ export function ControlPanel() {
                                                             ></DeleteIcon>
                                                         </div>
                                                         <div
-                                                            className=""
+                                                            className="h-full w-full py-2"
                                                             onClick={() => {
                                                                 selectFile({
                                                                     index: i,
@@ -371,7 +372,7 @@ export function ControlPanel() {
                                                             {it.path}
                                                         </div>
                                                     </div>
-                                                    <div>
+                                                    <div className="mr-2 flex shrink-0 items-center">
                                                         {engines.find(
                                                             (r) =>
                                                                 r.name ===

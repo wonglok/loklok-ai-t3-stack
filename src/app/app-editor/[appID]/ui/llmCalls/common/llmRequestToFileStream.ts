@@ -13,6 +13,7 @@ import md5 from "md5";
 import { readFileObject } from "./readFileObject";
 import { writeToFile } from "./writeToFile";
 import { extractFirstCodeBlockContent } from "./extractFirstCodeBlockContent";
+import { toast } from "sonner";
 // import { newUnifiedDiffStrategyService } from "diff-apply";
 
 export const llmRequestToFileStream = async ({
@@ -41,6 +42,10 @@ export const llmRequestToFileStream = async ({
 
     await engine.resetChat();
     const asyncChunkGenerator = await engine.chatCompletion(request);
+
+    toast(`${slot.displayName} Begin Writing Code`, {
+        description: `File: ${path}`,
+    });
 
     let messageFragments = "";
     let i = 0;
