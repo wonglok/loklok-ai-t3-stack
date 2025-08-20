@@ -139,10 +139,12 @@ function MonacoEditor({
                     return () => {};
                 }
             } else {
+                //
                 // if (editor) {
                 //     editor.revealLine(0);
                 //     return () => {};
                 // }
+                //
             }
         }
     }, [lockInWorkers, files]);
@@ -153,50 +155,48 @@ function MonacoEditor({
         (editor: any, monaco: any) => {
             setEditor(editor);
 
-            if (refClean.current) {
-                refClean.current.forEach((r) => r());
-                refClean.current = [];
-            }
-
             monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
                 jsx: monaco.languages.typescript.JsxEmit.Preserve,
                 target: monaco.languages.typescript.ScriptTarget.ES2020,
                 esModuleInterop: true,
-                moduleResolution: "nodenext",
+                // moduleResolution: "nodenext",
                 baseUrl: "./", // Or your project's base directory
                 paths: {
                     // "../types": ["./types/index.ts"], // Adjust to your actual path
                 },
             });
 
-            const monacoJsxSyntaxHighlight = new MonacoJsxSyntaxHighlight(
-                getWorker(),
-                monaco,
-            );
+            try {
+                if (refClean.current) {
+                    refClean.current.forEach((r) => r());
+                    refClean.current = [];
+                }
 
-            // editor is the result of monaco.editor.create
-            const { highlighter, dispose } =
-                monacoJsxSyntaxHighlight.highlighterBuilder({
-                    editor: editor,
+                const monacoJsxSyntaxHighlight = new MonacoJsxSyntaxHighlight(
+                    getWorker(),
+                    monaco,
+                );
+
+                // editor is the result of monaco.editor.create
+                const { highlighter, dispose } =
+                    monacoJsxSyntaxHighlight.highlighterBuilder({
+                        editor: editor,
+                    });
+
+                refClean.current.push(() => {
+                    dispose();
                 });
 
-            refClean.current.push(() => {
-                dispose();
-            });
-
-            try {
                 setTimeout(() => {
                     highlighter();
                 }, 100);
-            } finally {
-            }
 
-            editor.onDidChangeModelContent(() => {
-                try {
-                    highlighter();
-                } finally {
-                }
-            });
+                editor.onDidChangeModelContent(() => {
+                    try {
+                        highlighter();
+                    } catch (e) {}
+                });
+            } catch (e) {}
 
             return () => {};
         },
