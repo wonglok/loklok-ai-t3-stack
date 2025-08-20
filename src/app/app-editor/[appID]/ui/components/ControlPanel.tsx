@@ -98,17 +98,6 @@ let selectFile = ({
             clearInterval(ttt);
         }, 1000);
     }
-
-    // if (expandID === `${file.path}` || (expandID === "" && index === 0)) {
-    //     if (expandID === `${file.path}`) {
-    //         useGlobalAI.setState({
-    //             expandID: ``,
-    //         });
-    //     }
-
-    // } else {
-
-    // }
 };
 
 function MonacoEditor({
@@ -153,49 +142,52 @@ function MonacoEditor({
                 // }
             }
         }
-    }, [files]);
+    }, [lockInWorkers, files]);
 
-    const handleEditorDidMount = useCallback((editor: any, monaco: any) => {
-        setEditor(editor);
+    const handleEditorDidMount = useCallback(
+        (editor: any, monaco: any) => {
+            setEditor(editor);
 
-        monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
-            jsx: monaco.languages.typescript.JsxEmit.Preserve,
-            target: monaco.languages.typescript.ScriptTarget.ES2020,
-            esModuleInterop: true,
-            moduleResolution: "nodenext",
-            baseUrl: "./src", // Or your project's base directory
-            paths: {
-                "../types": ["./types/index.ts"], // Adjust to your actual path
-            },
-        });
-
-        const monacoJsxSyntaxHighlight = new MonacoJsxSyntaxHighlight(
-            getWorker(),
-            monaco,
-        );
-
-        // editor is the result of monaco.editor.create
-        const { highlighter, dispose } =
-            monacoJsxSyntaxHighlight.highlighterBuilder({
-                editor: editor,
+            monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
+                jsx: monaco.languages.typescript.JsxEmit.Preserve,
+                target: monaco.languages.typescript.ScriptTarget.ES2020,
+                esModuleInterop: true,
+                moduleResolution: "nodenext",
+                baseUrl: "./src", // Or your project's base directory
+                paths: {
+                    "../types": ["./types/index.ts"], // Adjust to your actual path
+                },
             });
 
-        try {
-            // init highlight
-            highlighter();
-        } finally {
-        }
+            const monacoJsxSyntaxHighlight = new MonacoJsxSyntaxHighlight(
+                getWorker(),
+                monaco,
+            );
 
-        editor.onDidChangeModelContent(() => {
-            // content change, highlight
+            // editor is the result of monaco.editor.create
+            const { highlighter, dispose } =
+                monacoJsxSyntaxHighlight.highlighterBuilder({
+                    editor: editor,
+                });
+
             try {
+                // init highlight
                 highlighter();
             } finally {
             }
-        });
 
-        return dispose;
-    }, []);
+            editor.onDidChangeModelContent(() => {
+                // content change, highlight
+                try {
+                    highlighter();
+                } finally {
+                }
+            });
+
+            return dispose;
+        },
+        [path],
+    );
 
     return (
         <div
@@ -275,7 +267,8 @@ export function ControlPanel() {
         if (sortedFiles[0]?.path && files.length === 1) {
             useGenAI.setState({ expandID: sortedFiles[0]?.path });
         }
-    }, [sortedFiles[0]?.path]);
+    }, [sortedFiles.map((r) => r.path).join("")]);
+
     return (
         <>
             <div className="relative flex h-full w-full overflow-hidden text-sm">
@@ -298,7 +291,7 @@ export function ControlPanel() {
                                     r.path.includes("entry/App"),
                                 ).length > 0 && (
                                     <div className="aspect-video w-full">
-                                        <CodePod></CodePod>
+                                    <CodePod></CodePod>
                                     </div>
                                 )} */}
 
