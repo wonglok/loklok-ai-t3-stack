@@ -1,5 +1,5 @@
 import { toast } from "sonner";
-import { EngineMap } from "../state/engineMap";
+import { EngineMap } from "../state/EngineMap";
 import { useTreeAI } from "../state/useTreeAI";
 import { buildEngineModel } from "./buildEngineModel";
 

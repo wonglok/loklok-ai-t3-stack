@@ -1,4 +1,4 @@
-import { EngineMap } from "../state/engineMap";
+import { EngineMap } from "../state/EngineMap";
 import { useTreeAI } from "../state/useTreeAI";
 
 //  getLMStudioModel({ name: "openai/gpt-oss-20b" })
