@@ -134,7 +134,7 @@ export const ${`${JSON.stringify(reactComponent.ReactJSComponentName)}ReactCompo
     return ...
 };
 
-    `.trim(),
+`.trim(),
                             },
                         ] as webllm.ChatCompletionMessageParam[],
                         temperature: 0.0,

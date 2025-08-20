@@ -1,21 +1,9 @@
-import { createClient } from "@/utils/supabase/server";
-import { cookies } from "next/headers";
+import { Tryme } from "./Tryme";
 
-export default async function Page() {
-    const cookieStore = (await cookies()) as any;
-    const supabase = createClient(cookieStore);
-
-    const { data: todos } = await supabase.from("todos").select();
-
+export default function page() {
     return (
-        <ul>
-            {todos?.map((todo) => (
-                <li>{todo}</li>
-            ))}
-        </ul>
+        <>
+            <Tryme></Tryme>
+        </>
     );
 }
-
-//
-//
-//
