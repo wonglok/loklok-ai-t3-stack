@@ -47,10 +47,13 @@ import {
 } from "@/components/ui/select";
 import { WebLLMAppClient } from "../util/WebLLMAppClient";
 import {
+    GlassWaterIcon,
     HammerIcon,
     LoaderIcon,
+    PlugIcon,
     SquareIcon,
     StopCircleIcon,
+    WalletCardsIcon,
 } from "lucide-react";
 import { factoryResetThisApp } from "../llmCalls/common/factoryResetThisApp";
 import { CodePod } from "../util/CodePod";
@@ -206,8 +209,8 @@ export function Launcher() {
                     >
                         {!engines.some((r) => r.llmStatus === "writing") ? (
                             <>
-                                {`Running...`}
-                                <HammerIcon></HammerIcon>
+                                {`Launching AI Agents`}
+                                <PlugIcon></PlugIcon>
                             </>
                         ) : (
                             <>

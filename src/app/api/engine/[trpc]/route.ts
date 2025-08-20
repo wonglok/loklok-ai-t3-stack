@@ -24,6 +24,34 @@ let post = {
     name: "Hello World",
 };
 
+let appManifst = [];
+
+let exampleCollectionDB = `
+
+function getEachModel({ allModels, mongoose, appID, dbInstance }) {
+    const db = dbInstance; // mongoose.connection.useDb("app_development_appID", { useCache: true });
+
+    const TaskSchema = new mongoose.Schema({
+        title: { type: String, required: true },
+        description: { type: String, required: true },
+        status: { type: Boolean, default: false },
+        user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+        createdAt: { type: Date, default: Date.now },
+        updatedAt: { type: Date, default: Date.now }
+    });
+
+    if (!db.models["Task"]) {
+        db.model("Task", TaskSchema);
+    }
+
+    allModels["Task"] = db.model("Task");
+
+    return allModels
+}
+
+
+`;
+
 const handler = async (req: NextRequest) => {
     let appID = req.headers.get("app-id");
 
@@ -37,6 +65,10 @@ const protectedProcedure = args.protectedProcedure;
 const publicProcedure = args.publicProcedure;
 const z = args.z;
 const post = args.post;
+const mongoose = args.mongoose;
+const appID = args.appID;
+
+${exampleCollectionDB}
 
 const appRouter = createTRPCRouter({
     //

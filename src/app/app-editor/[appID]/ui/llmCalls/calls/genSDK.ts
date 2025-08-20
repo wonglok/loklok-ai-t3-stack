@@ -112,12 +112,15 @@ export const genSDK = async ({
                         {
                             role: "user",
                             content: `
-- Please extract all zustand front end state management needed from the "product requirement document" 
-- Please extract all database collections needed from the "product requirement document" 
-- Please extract all tRPC front end needed from the "product requirement document" 
-- Please extract all tRPC backedn end needed from the "product requirement document" 
+- DO NOT ADD "Collection" in the mongoose db slug
+- DO NOT ADD "Collection" in the mongoose db collection name
+
+- Extract all zustand front end state management needed from the "product requirement document" 
+- Extract all database collections needed from the "product requirement document" 
+- Extract all tRPC front end needed from the "product requirement document" 
+- Extract all tRPC backedn end needed from the "product requirement document" 
 - make sure the slugs and the MoudleName are unique.
-- also include the App (Root component) with slug "app-root"`,
+- Include the App (Root component) with slug "app-root"`,
                         },
                     ] as webllm.ChatCompletionMessageParam[],
                     temperature: 0.0,
@@ -137,7 +140,7 @@ export const genSDK = async ({
             console.log(lateSpec);
             //
             await scheduleTaskMongooseModule({ lateSpec });
-            await scheduleTaskMongooseIntegration({ lateSpec });
+            // await scheduleTaskMongooseIntegration({ lateSpec });
 
             //
             await scheduleTasktRPCBackendModule({ lateSpec });
@@ -196,9 +199,11 @@ Please write the latest mongoose model typescript code for "${mongoose.Collectio
 - please use modules with typescript 
 
 - DO NOT INCLUDE "import mongoose from 'mongoose';" 
+- DO NOT EXPORT "getEachModel"
+
 - MUST INCLUDE this "getEachModel" typescript function:
 
-export function getEachModel ({ mongoose, appID, dbInstance }) {
+function getEachModel ({ allModels, mongoose, appID, dbInstance }) {
     const db = dbInstance // mongoose.connection.useDb("app_development_appID", { useCache: true });
 
     const ${`${JSON.stringify(mongoose.CollectionName)}Schema`} = [...];
@@ -207,9 +212,10 @@ export function getEachModel ({ mongoose, appID, dbInstance }) {
         db.model(${JSON.stringify(mongoose.CollectionName)}, ${`${JSON.stringify(mongoose.CollectionName)}Schema`});
     }
 
-    return db.model("${mongoose.CollectionName}");
-}
+    allModels["${mongoose.CollectionName}"] = db.model("${mongoose.CollectionName}");
 
+    return allModels;
+}
 `.trim(),
                                 },
                             ] as webllm.ChatCompletionMessageParam[],
@@ -231,87 +237,86 @@ export function getEachModel ({ mongoose, appID, dbInstance }) {
     };
 
     //
-    let scheduleTaskMongooseIntegration = ({
-        lateSpec,
-    }: {
-        lateSpec: SpecType;
-    }) => {
-        // mongoose.connection.useDb("app_development_appID", { useCache: true });
+    //     let scheduleTaskMongooseIntegration = ({
+    //         lateSpec,
+    //     }: {
+    //         lateSpec: SpecType;
+    //     }) => {
+    //         // mongoose.connection.useDb("app_development_appID", { useCache: true });
 
-        manager?.addTask({
-            displayName: `Mongoose Integration`,
-            name: "mongoose_integration",
-            deps: [],
-            func: async ({ slot, engine }) => {
-                console.log("begin-task", "mongoose_integration");
+    //         manager?.addTask({
+    //             displayName: `Mongoose Integration`,
+    //             name: "mongoose_integration",
+    //             deps: [],
+    //             func: async ({ slot, engine }) => {
+    //                 console.log("begin-task", "mongoose_integration");
 
-                let outputPath = `/models/mongoose_integration.ts`;
+    //                 let outputPath = `/models/mongoose_integration.ts`;
 
-                await llmRequestToFileStream({
-                    path: outputPath,
-                    needsExtractCode: true,
-                    request: {
-                        max_tokens: 4096,
-                        seed: 19900831,
-                        stream: true,
-                        stream_options: { include_usage: true },
-                        messages: [
-                            {
-                                role: "assistant",
-                                content:
-                                    `Here's the latest Product Requirement Document:
-${featuresText}
-                                    `.trim(),
-                            },
-                            {
-                                role: "assistant",
-                                content: `
-# Task 
-Please include all collections 
-`,
-                            },
-                            {
-                                role: `user`,
-                                content: `Here's the code template:
+    //                 await llmRequestToFileStream({
+    //                     path: outputPath,
+    //                     needsExtractCode: true,
+    //                     request: {
+    //                         max_tokens: 4096,
+    //                         seed: 19900831,
+    //                         stream: true,
+    //                         stream_options: { include_usage: true },
+    //                         messages: [
+    //                             {
+    //                                 role: "assistant",
+    //                                 content:
+    //                                     `Here's the latest Product Requirement Document:
+    // ${featuresText}
+    //                                     `.trim(),
+    //                             },
+    //                             {
+    //                                 role: "assistant",
+    //                                 content: `
+    // # Task
+    // Please include all collections
+    // `,
+    //                             },
+    //                             {
+    //                                 role: `user`,
+    //                                 content: `Here's the code template:
 
-const dbInstance = mongoose.connection.useDb("app_development_" + appID, { useCache: true });
+    // const dbInstance = mongoose.connection.useDb("app_development_" + appID, { useCache: true });
 
+    // `.trim(),
+    //                             },
+    //                             {
+    //                                 role: `user`,
+    //                                 content: `
 
-`.trim(),
-                            },
-                            {
-                                role: `user`,
-                                content: `
+    // - Only write the typescript code block
+    // - Use modules with typescript
 
-- Only write the typescript code block
-- Use modules with typescript
+    // - DO NOT INCLUDE "import mongodb from 'mongodb';"
+    // - DO NOT INCLUDE "import mongoose from 'mongoose';"
+    // - MUST INCLUDE this "getAllModels" typescript function:
 
-- DO NOT INCLUDE "import mongodb from 'mongodb';" 
-- DO NOT INCLUDE "import mongoose from 'mongoose';" 
-- MUST INCLUDE this "getAllModels" typescript function:
+    // export async function getAllModels ({ appID }) {
+    //     const models = {}
 
-export async function getAllModels ({ appID }) {
-    //
+    //     return models
+    // }
 
-    return data
-}
-
-`.trim(),
-                            },
-                        ] as webllm.ChatCompletionMessageParam[],
-                        temperature: 0.0,
-                        // top_p: 0.05,
-                    } as webllm.ChatCompletionRequestStreaming,
-                    engine,
-                    slot: slot,
-                });
-                let latestCodeWritten = await readFileContent({
-                    path: `${outputPath}`,
-                });
-                console.log(latestCodeWritten);
-            },
-        });
-    };
+    // `.trim(),
+    //                             },
+    //                         ] as webllm.ChatCompletionMessageParam[],
+    //                         temperature: 0.0,
+    //                         // top_p: 0.05,
+    //                     } as webllm.ChatCompletionRequestStreaming,
+    //                     engine,
+    //                     slot: slot,
+    //                 });
+    //                 let latestCodeWritten = await readFileContent({
+    //                     path: `${outputPath}`,
+    //                 });
+    //                 console.log(latestCodeWritten);
+    //             },
+    //         });
+    //     };
 
     let scheduleTasktRPCBackendModule = ({
         lateSpec,

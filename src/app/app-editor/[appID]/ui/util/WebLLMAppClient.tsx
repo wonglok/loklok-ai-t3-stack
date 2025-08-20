@@ -287,7 +287,7 @@ export const WebLLMAppClient = {
                                 }).length === task.deps.length
                             );
                         })
-                        .slice(0, engineCount);
+                        .slice(0, 1);
 
                     if (engineCount >= 1 && taskList.length >= 1) {
                         console.log(
@@ -316,7 +316,7 @@ export const WebLLMAppClient = {
                         } else {
                             setTimeout(() => {
                                 doOneMore();
-                            }, 100);
+                            }, 250);
                         }
                     }
                 };
