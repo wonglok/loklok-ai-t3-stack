@@ -18,6 +18,7 @@ export const genSDK = async ({
     manager,
 }) => {
     //
+
     let schema = z.object({
         databaseCollections: z
             .array(
@@ -41,18 +42,6 @@ export const genSDK = async ({
             )
             .describe("backend tRPC"),
 
-        zustandFrontEnd: z
-            .array(
-                z
-                    .object({
-                        dataName: z.string(),
-                        dataType: z.enum(["array", "string", "boolean"]),
-                        defaultValue: z.enum(["[]", "''", "false"]),
-                    })
-                    .describe("each data property"),
-            )
-            .describe("front end zustand"),
-
         tRPCFrontEnd: z
             .array(
                 z
@@ -63,6 +52,17 @@ export const genSDK = async ({
                     .describe("each Module item"),
             )
             .describe("front end tRPC"),
+
+        zustandFrontEnd: z
+            .array(
+                z
+                    .object({
+                        name: z.string(),
+                        defaultRawJSON: z.enum(["[]", "false"]),
+                    })
+                    .describe("each data property"),
+            )
+            .describe("front end zustand"),
     });
     type SpecType = z.infer<typeof schema>;
 
@@ -112,7 +112,10 @@ export const genSDK = async ({
                         {
                             role: "user",
                             content: `
+- Please extract all zustand front end state management needed from the "product requirement document" 
+- Please extract all database collections needed from the "product requirement document" 
 - Please extract all tRPC front end needed from the "product requirement document" 
+- Please extract all tRPC backedn end needed from the "product requirement document" 
 - make sure the slugs and the MoudleName are unique.
 - also include the App (Root component) with slug "app-root"`,
                         },

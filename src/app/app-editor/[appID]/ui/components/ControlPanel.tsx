@@ -278,6 +278,7 @@ function TRPCClientTest() {
 
                     class LokSDK {
                         public client: TRPCClient<AnyRouter>;
+
                         constructor({ appID }) {
                             function getBaseUrl() {
                                 if (typeof window !== "undefined")
@@ -286,6 +287,8 @@ function TRPCClientTest() {
                                     return `https://${process.env.VERCEL_URL}`;
                                 return `http://localhost:${process.env.PORT ?? 3000}`;
                             }
+
+                            //
 
                             const client = createTRPCClient<AnyRouter>({
                                 links: [
@@ -297,7 +300,7 @@ function TRPCClientTest() {
                                     // }),
                                     httpBatchStreamLink({
                                         transformer: SuperJSON as any,
-                                        url: getBaseUrl() + "/api/engine",
+                                        url: `${getBaseUrl()}/api/engine`,
                                         headers: () => {
                                             const headers = new Headers();
                                             headers.set(
@@ -311,10 +314,15 @@ function TRPCClientTest() {
                                 ],
                             });
 
+                            //
+
                             this.client = client;
+
+                            //
                         }
-                        async runTRPC({ method = "hello", input }) {
-                            return (this.client[method] as any)
+
+                        async runTRPC({ procedure = "hello", input }) {
+                            return (this.client[procedure] as any)
                                 .mutate(input)
                                 .then((data) => {
                                     console.log("data", data);
@@ -322,12 +330,15 @@ function TRPCClientTest() {
                                 });
                         }
                     }
+
+                    //
+
                     let sdk = new LokSDK({
                         appID: appID,
                     });
 
                     await sdk.runTRPC({
-                        method: "hello",
+                        procedure: "hello",
                         input: { text: "sure been good" },
                     });
 
