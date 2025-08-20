@@ -7,12 +7,16 @@ export async function onRun(
         //
     },
 ) {
-    // //
-    // let freeModel = await asyncGetFreeAI();
-    // buildAppDoc({ model: freeModel });
-    // console.log(freeModel);
-
-    let tt = setInterval(() => {
-        //
+    let yo = await new Promise((resolve) => {
+        let tt = setInterval(() => {
+            //
+            let yo = true;
+            if (yo) {
+                resolve(yo);
+                clearInterval(tt);
+            }
+        });
     });
+
+    console.log(yo);
 }

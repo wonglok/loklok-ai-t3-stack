@@ -5,7 +5,7 @@ import { buildEngineModel } from "./buildEngineModel";
 
 //  getLMStudioModel({ name: "openai/gpt-oss-20b" })
 
-export const lazyRunEngines = async () => {
+export const bootEngines = async () => {
     // //
     // let currentAIProvider = useTreeAI.getState().currentAIProvider;
     // if (currentAIProvider === "lmstudio") {
