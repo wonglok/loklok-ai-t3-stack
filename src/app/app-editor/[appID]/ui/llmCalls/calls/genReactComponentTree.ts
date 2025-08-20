@@ -5,7 +5,7 @@ import { systemPromptPureText } from "../persona/systemPromptPureText";
 import { llmRequestToFileStream } from "../common/llmRequestToFileStream";
 import z from "zod";
 import { readFileParseJSON } from "../common/readFileParseJSON";
-import { readFileContent } from "../common/readFileContent";
+// import { readFileContent } from "../common/readFileContent";
 // import { useGenAI } from "../../../useGenAI";
 
 export const genReactComponentTree = async ({
@@ -15,13 +15,6 @@ export const genReactComponentTree = async ({
     engine,
     manager,
 }) => {
-    ///////////////////////////////////////////////////////////////////////////////////
-    // manifest
-    ///////////////////////////////////////////////////////////////////////////////////
-    let reactComponentSpecPath = `/docs/genReactComponentTree.json`;
-
-    // let existingCode = await readFileContent({ path: reactComponentSpecPath });\
-
     let schema = z.object({
         ReactJSComponents: z
             .array(
@@ -34,6 +27,15 @@ export const genReactComponentTree = async ({
             )
             .describe("reactComponent list"),
     });
+
+    type SpecType = z.infer<typeof schema>;
+
+    ///////////////////////////////////////////////////////////////////////////////////
+    // manifest
+    ///////////////////////////////////////////////////////////////////////////////////
+    let reactComponentSpecPath = `/docs/genReactComponentTree.json`;
+
+    // let existingCode = await readFileContent({ path: reactComponentSpecPath });
 
     await llmRequestToFileStream({
         path: reactComponentSpecPath,
