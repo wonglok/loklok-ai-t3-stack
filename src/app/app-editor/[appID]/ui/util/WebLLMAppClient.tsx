@@ -24,7 +24,8 @@ import { genReactComponentTree } from "../llmCalls/calls/genReactComponentTree";
 // import { genMongoDatabase } from "../llmCalls/calls/genMongoDatabase";
 import { readFileContent } from "../llmCalls/common/readFileContent";
 import { genDiff } from "../llmCalls/calls/genDiff";
-import { testTools } from "../llmCalls/calls/testTools";
+import { testTools } from "../llmCalls/app-tools/testTools";
+import { genZustand } from "../llmCalls/calls/genZustand";
 
 //
 // import { systemPromptPureText } from "../llmCalls/persona/systemPromptPureText";
@@ -169,27 +170,51 @@ export const WebLLMAppClient = {
                 },
 
                 {
-                    displayName: "React Components",
-                    name: "genReactComponentTree",
+                    displayName: "Zustand",
+                    name: "genZustand",
                     status: "waiting",
                     deps: ["genFeatrues"],
                     func: async ({ slot }) => {
                         // let slot = await provideFreeEngineSlot({
-                        //     name: `genReactComponentTree`,
+                        //     name: `genZustand`,
                         // });
 
-                        await genReactComponentTree({
-                            manager: manager,
+                        await genZustand({
                             slot: slot,
-                            userPrompt: userPrompt,
+                            engine: engineAPIMap.get(slot.name).engine,
                             featuresText: await readFileContent({
                                 path: `/docs/genFeatrues.md`,
                             }),
-                            engine: engineAPIMap.get(slot.name).engine,
+
+                            manager: manager,
+                            userPrompt: userPrompt,
                         });
                         // await returnFreeEngineSlot({ slot: slot });
                     },
                 },
+
+                // {
+                //     displayName: "React Components",
+                //     name: "genReactComponentTree",
+                //     status: "waiting",
+                //     deps: ["genFeatrues"],
+                //     func: async ({ slot }) => {
+                //         // let slot = await provideFreeEngineSlot({
+                //         //     name: `genReactComponentTree`,
+                //         // });
+
+                //         await genReactComponentTree({
+                //             manager: manager,
+                //             slot: slot,
+                //             userPrompt: userPrompt,
+                //             featuresText: await readFileContent({
+                //                 path: `/docs/genFeatrues.md`,
+                //             }),
+                //             engine: engineAPIMap.get(slot.name).engine,
+                //         });
+                //         // await returnFreeEngineSlot({ slot: slot });
+                //     },
+                // },
 
                 // {
                 //     displayName: "MongoDB and Mongoose",
@@ -266,13 +291,14 @@ export const WebLLMAppClient = {
                         })
                         .slice(0, engineCount);
 
-                    console.log(
-                        "task and engine",
-                        taskList.length,
-                        engineCount,
-                    );
-
                     if (engineCount >= 1 && taskList.length >= 1) {
+                        console.log(
+                            "task",
+                            taskList.length,
+                            "engine",
+                            engineCount,
+                        );
+
                         await Promise.all(
                             taskList
                                 .filter((r) => r.status === "waiting")

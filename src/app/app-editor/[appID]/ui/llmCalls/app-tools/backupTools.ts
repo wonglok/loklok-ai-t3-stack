@@ -1,7 +1,7 @@
 import type * as webllm from "@mlc-ai/web-llm";
 import { useGenAI } from "../../../useGenAI";
 import { writeToFile } from "../common/writeToFile";
-import { ToolFunctionSDK } from "../app-tools/ToolFunctionSDK";
+import { ToolFunctionSDK } from "./ToolFunctionSDK";
 import z from "zod";
 
 export async function testTools({ engine, userPrompt, slot }) {

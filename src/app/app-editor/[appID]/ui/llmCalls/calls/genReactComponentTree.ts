@@ -64,11 +64,13 @@ export const genReactComponentTree = async ({
 
                 {
                     role: "user",
-                    content: `Please extract all reactComponent needed from the "product requirement document" make sure the slugs and the ReactJSComponentName are unique.`,
+                    content: `
+- Please extract all reactComponent needed from the "product requirement document" 
+- make sure the slugs and the ReactJSComponentName are unique.
+- also include the App (Root component) with slug "app-root"`,
                 },
             ] as webllm.ChatCompletionMessageParam[],
             temperature: 0.0,
-            // top_p: 0.05,
             response_format: {
                 type: "json_object",
                 schema: JSON.stringify(z.toJSONSchema(schema)),
@@ -81,56 +83,6 @@ export const genReactComponentTree = async ({
     let lateSpec = (await readFileParseJSON({
         path: reactComponentSpecPath,
     })) as z.infer<typeof schema>;
-
-    manager?.addTask({
-        displayName: `React JS Entry App`,
-        name: "entry/App",
-        deps: ["genFeatrues"],
-        func: async () => {
-            let outputPath = `/entry/App.tsx`;
-
-            await llmRequestToFileStream({
-                path: outputPath,
-                needsExtractCode: true,
-                request: {
-                    max_tokens: 4096,
-                    seed: 19900831,
-                    stream: true,
-                    stream_options: { include_usage: true },
-                    messages: [
-                        {
-                            role: "assistant",
-                            content:
-                                `Here's the latest Product "Requirement Document":
-${featuresText}
-                                `.trim(),
-                        },
-
-                        {
-                            role: `user`,
-                            content: `
-- only write the typescript code block 
-- please use modules with typescript 
-- use tailwind css
-- DO NOT include '@/...' at the beginning of import url like this: "import { Button } from '@/components/ui/button';" (wrong)
-- MUST use '/' at the beginning of import url like this: "import { Button } from '/components/ui/button';" (good and right)
-- Use Vanilla JSX html with Tailwind CSS
-
-export const App = () => {
-    return ...
-};
-
-`.trim(),
-                        },
-                    ] as webllm.ChatCompletionMessageParam[],
-                    temperature: 0.0,
-                    // top_p: 0.05,
-                } as webllm.ChatCompletionRequestStreaming,
-                engine,
-                slot: slot,
-            });
-        },
-    });
 
     for (let reactComponent of lateSpec.ReactJSComponents) {
         if (!reactComponent.slug.startsWith("/")) {
@@ -158,23 +110,23 @@ export const App = () => {
                         messages: [
                             {
                                 role: "assistant",
-                                content:
-                                    `Here's the latest Product Requirement Document:
+                                content: `
+Here's the latest "Product Requirement Document":
+
 ${featuresText}
-                                `.trim(),
+`.trim(),
                             },
                             {
-                                role: `user`,
+                                role: "user",
                                 content: `
-Please write the latest reactComponent component typescript code for "${reactComponent.ReactJSComponentName}" component.
+Please write the React JS component "${reactComponent.ReactJSComponentName}" with reference to the "Product Requirement Document":
 
-- only write the typescript code block 
-- please use modules with typescript 
-- use tailwind css
-- DO NOT include '@/...' at the beginning of import url like this: "import { Button } from '@/components/ui/button';" (wrong)
-- MUST use '/' at the beginning of import url like this: "import { Button } from '/components/ui/button';" (good and right)
-- Use Vanilla JSX html with Tailwind CSS
-- DO NOT use ui components in "/components/ui/" folder
+- Only write one Typescript code block
+- Use modules with Typescript
+- Use tailwind css
+- DO NOT include '@/...' at the beginning of import url like this: "import { Button } from '@/components/button';" (wrong)
+- MUST use '/' at the beginning of import url like this: "import { Button } from '/components/button';" (good and right)
+- Use html primitives of React JS 
 
 export const ${`${JSON.stringify(reactComponent.ReactJSComponentName)}ReactComponent`} = () => {
     return ...
@@ -190,11 +142,11 @@ export const ${`${JSON.stringify(reactComponent.ReactJSComponentName)}ReactCompo
                     slot: slot,
                 });
 
-                let latestCodeWritten = await readFileContent({
-                    path: `${outputPath}`,
-                });
+                // let latestCodeWritten = await readFileContent({
+                //     path: `${outputPath}`,
+                // });
 
-                console.log(latestCodeWritten);
+                // console.log(latestCodeWritten);
             },
         });
 

@@ -1,7 +1,10 @@
 "use client";
 
 import type * as webllm from "@mlc-ai/web-llm";
-import { CreateWebWorkerMLCEngine } from "@mlc-ai/web-llm";
+import {
+    CreateWebWorkerMLCEngine,
+    deleteChatConfigInCache,
+} from "@mlc-ai/web-llm";
 import { useGenAI } from "../../../useGenAI";
 // import Worker from "worker-loader!./webllm.worker.ts";
 
@@ -59,6 +62,7 @@ export const makeEngineAPI = async ({ name }: { name: string }) => {
         slot.llmStatus = "empty";
         slot.bannerText = "";
         refresh(slot);
+        deleteChatConfigInCache(slot.currentModel);
 
         await engine?.interruptGenerate();
 

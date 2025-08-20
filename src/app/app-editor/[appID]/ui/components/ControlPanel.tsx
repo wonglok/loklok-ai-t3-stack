@@ -30,6 +30,7 @@ import {
     // PromptInput,
     // PromptInputButton,
 } from "@/components/ai-elements/prompt-input";
+
 import {
     MonacoJsxSyntaxHighlight,
     getWorker,
@@ -55,6 +56,7 @@ import { format } from "date-fns";
 // import { factoryResetThisApp } from "../llmCalls/common/factoryResetThisApp";
 import { persistToDisk } from "../llmCalls/common/persistToDisk";
 import { Launcher } from "./Launcher";
+import { DeleteIcon } from "lucide-react";
 // import { CodePod } from "../util/CodePod";
 // import { UseBoundStore } from "zustand";
 // import { useEngineType } from "../llmCalls/common/makeEngine";
@@ -144,18 +146,25 @@ function MonacoEditor({
         }
     }, [lockInWorkers, files]);
 
+    const refClean = useRef([]);
+
     const handleEditorDidMount = useCallback(
         (editor: any, monaco: any) => {
             setEditor(editor);
+
+            if (refClean.current) {
+                refClean.current.forEach((r) => r());
+                refClean.current = [];
+            }
 
             monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
                 jsx: monaco.languages.typescript.JsxEmit.Preserve,
                 target: monaco.languages.typescript.ScriptTarget.ES2020,
                 esModuleInterop: true,
                 moduleResolution: "nodenext",
-                baseUrl: "./src", // Or your project's base directory
+                baseUrl: "./", // Or your project's base directory
                 paths: {
-                    "../types": ["./types/index.ts"], // Adjust to your actual path
+                    // "../types": ["./types/index.ts"], // Adjust to your actual path
                 },
             });
 
@@ -170,23 +179,27 @@ function MonacoEditor({
                     editor: editor,
                 });
 
+            refClean.current.push(() => {
+                dispose();
+            });
+
             try {
-                // init highlight
-                highlighter();
+                setTimeout(() => {
+                    highlighter();
+                }, 100);
             } finally {
             }
 
             editor.onDidChangeModelContent(() => {
-                // content change, highlight
                 try {
                     highlighter();
                 } finally {
                 }
             });
 
-            return dispose;
+            return () => {};
         },
-        [path],
+        [path, files.map((r) => r.path).join("")],
     );
 
     return (
@@ -212,8 +225,7 @@ function MonacoEditor({
             <Editor
                 options={{
                     fontSize: 12,
-                    lineHeight: 20.0,
-                    automaticLayout: true,
+                    lineHeight: 25.0,
                 }}
                 path={"file:///index.tsx"}
                 // path={path}
@@ -247,20 +259,22 @@ let sortDate = (a: any, b: any) => {
 };
 
 export function ControlPanel() {
-    //
     let appID = useGenAI((r) => r.appID);
+
     let engines = useGenAI((r) => r.engines);
 
     // let currentModel = useGlobalAI((r) => r.currentModel);
     // let prompt = useGlobalAI((r) => r.prompt);
     // let models = useGlobalAI((r) => r.models);
     // let setupLLMProgress = useGlobalAI((r) => r.setupLLMProgress);
+    // let stopFunc = useGlobalAI((r) => r.stopFunc);
+
     let expandID = useGenAI((r) => r.expandID);
 
-    // let stopFunc = useGlobalAI((r) => r.stopFunc);
     let files = useGenAI((r) => r.files);
 
     let sortedFiles = files?.slice().sort(sortDate).reverse();
+
     // lockInWorkers
 
     useEffect(() => {
@@ -314,17 +328,49 @@ export function ControlPanel() {
                                                         : `odd:bg-white even:bg-gray-100`
                                                 }
                                             >
-                                                <div
-                                                    className="flex h-full w-full cursor-pointer justify-between px-3 py-2"
-                                                    onClick={() => {
-                                                        selectFile({
-                                                            index: i,
-                                                            total: files.length,
-                                                            file: it,
-                                                        });
-                                                    }}
-                                                >
-                                                    <div>{it.path}</div>
+                                                <div className="group flex h-full w-full cursor-pointer justify-between px-3 py-2">
+                                                    <div className="flex">
+                                                        <div
+                                                            className="pointer-events-none shrink-0 opacity-0 group-hover:pointer-events-auto group-hover:opacity-100"
+                                                            onClick={async () => {
+                                                                if (
+                                                                    confirm(
+                                                                        "remove?",
+                                                                    )
+                                                                ) {
+                                                                    useGenAI.setState(
+                                                                        {
+                                                                            files: files.filter(
+                                                                                (
+                                                                                    r,
+                                                                                ) =>
+                                                                                    r.path !==
+                                                                                    it.path,
+                                                                            ),
+                                                                        },
+                                                                    );
+                                                                    await persistToDisk();
+                                                                }
+                                                            }}
+                                                        >
+                                                            <DeleteIcon
+                                                                className="mr-2 h-[20px] scale-[-1]"
+                                                                color="red"
+                                                            ></DeleteIcon>
+                                                        </div>
+                                                        <div
+                                                            className=""
+                                                            onClick={() => {
+                                                                selectFile({
+                                                                    index: i,
+                                                                    total: files.length,
+                                                                    file: it,
+                                                                });
+                                                            }}
+                                                        >
+                                                            {it.path}
+                                                        </div>
+                                                    </div>
                                                     <div>
                                                         {engines.find(
                                                             (r) =>
@@ -332,7 +378,7 @@ export function ControlPanel() {
                                                                 it.author,
                                                         )?.llmStatus ===
                                                             "writing" &&
-                                                            `${it.author}`}
+                                                            `👩🏼‍💻 ${it.author}`}
                                                     </div>
                                                 </div>
                                             </div>
@@ -357,6 +403,7 @@ export function ControlPanel() {
                                         .filter((r) => {
                                             return r?.path === expandID;
                                         })
+                                        .slice(0, 1)
                                         .map((file, i, n) => {
                                             let updatedAt = format(
                                                 new Date(file.updatedAt),
@@ -366,7 +413,7 @@ export function ControlPanel() {
                                             return (
                                                 <div
                                                     key={file.path}
-                                                    className="absolute top-0 left-0 flex w-[100%] shrink-0 items-center justify-center border-l border-gray-300 bg-gray-200 p-3 transition-transform duration-700 ease-in-out"
+                                                    className="flex w-[100%] shrink-0 items-center justify-center border-l border-gray-300 bg-gray-200 p-3 transition-transform duration-700 ease-in-out"
                                                     style={{
                                                         height: `calc(100%)`,
                                                         //
@@ -387,7 +434,7 @@ export function ControlPanel() {
                                                                     <div className="flex justify-between rounded-t-2xl bg-gray-100 px-3 py-3">
                                                                         <span>
                                                                             {
-                                                                                "⭐️ "
+                                                                                "📄 "
                                                                             }
                                                                             {
                                                                                 file.path

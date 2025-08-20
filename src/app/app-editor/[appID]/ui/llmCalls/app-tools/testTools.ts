@@ -3,7 +3,7 @@
 // import { useGenAI } from "../../../useGenAI";
 // import { writeToFile } from "../common/writeToFile";
 import { useGenAI } from "../../../useGenAI";
-import { ToolFunctionSDK } from "../app-tools/ToolFunctionSDK";
+import { ToolFunctionSDK } from "./ToolFunctionSDK";
 import z from "zod";
 import { writeToFile } from "../common/writeToFile";
 import { readFileContent } from "../common/readFileContent";
