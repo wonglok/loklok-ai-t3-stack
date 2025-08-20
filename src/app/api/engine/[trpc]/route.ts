@@ -198,7 +198,7 @@ return appRouter
     return fetchRequestHandler({
         endpoint: "/api/engine",
         req,
-        router: myTRPCRouter,
+        router: appRouter,
         createContext: () => {
             return createContext(req);
         },

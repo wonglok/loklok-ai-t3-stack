@@ -1,25 +1,25 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useGenAI } from "../../useGenAI";
-import { useFilesFrameHook } from "./useFilesFrameHook";
+import { useWebView } from "../web/useWebView";
+import { useTreeAI } from "../state/useTreeAI";
 
-export function CodePod() {
-    let files = useGenAI(r => r.files) || []
-    let [myFiles, setState] = useState([])
+export function ViewAI({}) {
+    let files = useTreeAI((r) => r.files);
+    let [appFiles, setFiles] = useState([]);
 
     useEffect(() => {
-        setState(files)
-    }, [files.map(r => r.path).join('-')])
+        setFiles(files);
+    }, [files.map((r) => r.path).join("-")]);
 
-    return <Runner myFiles={myFiles}></Runner>
+    return <CoreRunner appFiles={appFiles}></CoreRunner>;
 }
 
-
-function Runner({ myFiles }) {
-    let { show } = useFilesFrameHook({
+function CoreRunner({ appFiles }) {
+    let { show } = useWebView({
+        runPage: "/test/run",
         files: [
-            ...myFiles,
+            ...appFiles,
             {
                 path: `/ui/useSDK.js`,
                 content: `
@@ -47,7 +47,7 @@ export function MyApp () {
     let [App, setApp] = React.useState(null)
 
     React.useEffect(() => {
-        let files = ${JSON.stringify(myFiles)};
+        let files = ${JSON.stringify(appFiles)};
 
         if (files.some((r) => { return r.name === '/component/App.js' })) {
             import('/component/App.js').then((myModule) =>{

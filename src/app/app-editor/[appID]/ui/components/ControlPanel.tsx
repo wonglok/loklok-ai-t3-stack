@@ -1,4 +1,5 @@
 import { useGenAI } from "../../useGenAI";
+
 // import { Button } from "@/components/ui/button";
 // import {
 //     // DownloadCloudIcon,
@@ -11,11 +12,9 @@ import { useGenAI } from "../../useGenAI";
 //     StopCircleIcon,
 // } from "lucide-react";
 // import { WebLLMAppClient } from "../util/WebLLMAppClient";
-
-//
 // import { Response } from "@/components/ai-elements/response";
 // import { Scroller } from "./Scroller";
-//
+
 import {
     PromptInputModelSelect,
     PromptInputModelSelectContent,
@@ -83,29 +82,10 @@ let getLang = (filename: string) => {
     }
 };
 
-let selectFile = ({
-    file,
-    total,
-    index,
-}: {
-    file: any;
-    total: number;
-    index: number;
-}) => {
+let selectFile = ({ file }: { file: any }) => {
     useGenAI.setState({
         expandID: `${file.path}`,
     });
-
-    let docs = document.querySelector("#docs");
-    if (docs) {
-        let ttt = setInterval(() => {
-            docs.scrollLeft += 40;
-        });
-
-        setTimeout(() => {
-            clearInterval(ttt);
-        }, 1000);
-    }
 };
 
 function MonacoEditor({
@@ -194,7 +174,9 @@ function MonacoEditor({
                 });
 
                 setTimeout(() => {
-                    highlighter();
+                    try {
+                        highlighter();
+                    } catch (e) {}
                 }, 100);
 
                 editor.onDidChangeModelContent(() => {
@@ -292,12 +274,14 @@ function TRPCClientTest() {
 
                             const client = createTRPCClient<AnyRouter>({
                                 links: [
+                                    //
                                     // loggerLink({
                                     //     enabled: (op) =>
                                     //         process.env.NODE_ENV === "development" ||
                                     //         (op.direction === "down" &&
                                     //             op.result instanceof Error),
                                     // }),
+                                    //
                                     httpBatchStreamLink({
                                         transformer: SuperJSON as any,
                                         url: `${getBaseUrl()}/api/engine`,
@@ -354,6 +338,7 @@ function TRPCClientTest() {
         </>
     );
 }
+
 export function ControlPanel() {
     let appID = useGenAI((r) => r.appID);
 
@@ -398,14 +383,6 @@ export function ControlPanel() {
 
                             <div className="h-full w-[350px] overflow-x-hidden overflow-y-scroll border-r border-gray-300">
                                 {/*  */}
-
-                                {files.filter((r) =>
-                                    r.path.includes("entry/App"),
-                                ).length > 0 && (
-                                    <div className="aspect-video w-full">
-                                        <CodePod></CodePod>
-                                    </div>
-                                )}
 
                                 <TRPCClientTest></TRPCClientTest>
 
@@ -462,8 +439,6 @@ export function ControlPanel() {
                                                             className="h-full w-full py-2"
                                                             onClick={() => {
                                                                 selectFile({
-                                                                    index: i,
-                                                                    total: files.length,
                                                                     file: it,
                                                                 });
                                                             }}
@@ -484,6 +459,12 @@ export function ControlPanel() {
                                             </div>
                                         );
                                     })}
+
+                                {files && (
+                                    <div className="aspect-video w-full border-t border-b bg-gradient-to-t from-red-50 to-purple-300">
+                                        <CodePod></CodePod>
+                                    </div>
+                                )}
                             </div>
 
                             <div

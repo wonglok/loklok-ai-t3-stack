@@ -1,23 +1,22 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useGenAI } from "../../useGenAI";
-import { useFilesFrameHook } from "./useFilesFrameHook";
+import { MyFile, useTreeAI } from "../state/useTreeAI";
+import { useWebView } from "./useWebView";
 
-export function CodePod() {
-    let files = useGenAI(r => r.files) || []
-    let [myFiles, setState] = useState([])
+export function WebRuntime() {
+    let files = useTreeAI((r) => r.files) || [];
+    let [myFiles, setState] = useState([]);
 
     useEffect(() => {
-        setState(files)
-    }, [files.map(r => r.path).join('-')])
+        setState(files);
+    }, [files.map((r) => r.path).join("-")]);
 
-    return <Runner myFiles={myFiles}></Runner>
+    return <Runner myFiles={myFiles}></Runner>;
 }
 
-
 function Runner({ myFiles }) {
-    let { show } = useFilesFrameHook({
+    let { show } = useWebView({
         files: [
             ...myFiles,
             {
