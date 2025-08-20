@@ -77,6 +77,7 @@ export const WebLLMAppClient = {
                         lockInWorkers: false,
                         stopFunc: () => {},
                     });
+                    toast("Task Completed: Shutting Down Engine");
                 } finally {
                 }
             },
@@ -103,18 +104,28 @@ export const WebLLMAppClient = {
             ),
         });
 
+        let waiter = (i) => {
+            return new Promise((resolve) => {
+                setTimeout(resolve, i * 350);
+            });
+        };
         let proms = [];
+        let i = 0;
         for (let slot of enabledEngines) {
+            i++;
             let has = await hasModelInCache(slot.currentModel);
             if (has) {
+                await waiter(i);
                 proms.push(
                     makeEngineAPI({ name: slot.name }).then((api) => {
                         engineAPIMap.set(slot.name, api);
+                        toast("AI Developer Ready: " + slot.name);
                     }),
                 );
             } else {
                 let api = await makeEngineAPI({ name: slot.name });
                 engineAPIMap.set(slot.name, api);
+                toast("AI Developer Ready: " + slot.name);
             }
         }
 
@@ -148,6 +159,8 @@ export const WebLLMAppClient = {
                     });
                 },
             };
+
+            //
 
             let tasks = [
                 {
@@ -287,7 +300,7 @@ export const WebLLMAppClient = {
                                 }).length === task.deps.length
                             );
                         })
-                        .slice(0, 1);
+                        .slice(0, engineCount);
 
                     if (engineCount >= 1 && taskList.length >= 1) {
                         console.log(

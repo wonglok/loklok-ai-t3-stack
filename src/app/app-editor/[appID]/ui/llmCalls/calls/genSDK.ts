@@ -193,18 +193,17 @@ ${featuresText}
                                 {
                                     role: `user`,
                                     content: `
-Please write the latest mongoose model typescript code for "${mongoose.CollectionName}" model.
+- Write the typescript code of the mongoose model named: "${mongoose.CollectionName}"
+- Only write the typescript code block 
+- Use modules with typescript 
 
-- only write the typescript code block 
-- please use modules with typescript 
-
-- DO NOT INCLUDE "import mongoose from 'mongoose';" 
-- DO NOT EXPORT "getEachModel"
+- DO NOT INCLUDE "import mongoose from 'mongoose';"
+- DO NOT export "getEachModel" module
 
 - MUST INCLUDE this "getEachModel" typescript function:
 
-function getEachModel ({ allModels, mongoose, appID, dbInstance }) {
-    const db = dbInstance // mongoose.connection.useDb("app_development_appID", { useCache: true });
+function getEachModel ({ allModels, mongoose, dbInstance }) {
+    const db = dbInstance;
 
     const ${`${JSON.stringify(mongoose.CollectionName)}Schema`} = [...];
 

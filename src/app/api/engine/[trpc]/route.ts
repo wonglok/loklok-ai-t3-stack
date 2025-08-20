@@ -6,7 +6,7 @@ import { createTRPCContext, createTRPCRouter } from "@/server/api/trpc";
 import { z } from "zod";
 
 import { protectedProcedure, publicProcedure } from "@/server/api/trpc";
-
+import mongoose from "mongoose";
 // import { appRouter } from "@/server/api/root";
 
 /**
@@ -24,7 +24,80 @@ let post = {
     name: "Hello World",
 };
 
-let appManifst = [];
+let appManifest = {
+    databaseCollections: [
+        {
+            CollectionName: "tasks",
+            slug: "tasks",
+        },
+        {
+            CollectionName: "users",
+            slug: "users",
+        },
+    ],
+    tRPCBackEnd: [
+        {
+            procedureName: "auth.login",
+            slug: "auth-login",
+        },
+        {
+            procedureName: "auth.register",
+            slug: "auth-register",
+        },
+        {
+            procedureName: "task.create",
+            slug: "task-create",
+        },
+        {
+            procedureName: "task.getAll",
+            slug: "task-getAll",
+        },
+        {
+            procedureName: "task.update",
+            slug: "task-update",
+        },
+        {
+            procedureName: "task.delete",
+            slug: "task-delete",
+        },
+    ],
+    tRPCFrontEnd: [
+        {
+            procedureName: "auth.login",
+            slug: "auth-login",
+        },
+        {
+            procedureName: "auth.register",
+            slug: "auth-register",
+        },
+        {
+            procedureName: "task.create",
+            slug: "task-create",
+        },
+        {
+            procedureName: "task.getAll",
+            slug: "task-getAll",
+        },
+        {
+            procedureName: "task.update",
+            slug: "task-update",
+        },
+        {
+            procedureName: "task.delete",
+            slug: "task-delete",
+        },
+    ],
+    zustandFrontEnd: [
+        {
+            name: "authState",
+            defaultRawJSON: "false",
+        },
+        {
+            name: "taskState",
+            defaultRawJSON: "[]",
+        },
+    ],
+};
 
 let exampleCollectionDB = `
 
@@ -104,6 +177,9 @@ return appRouter
     );
 
     //
+    const dbInstance = mongoose.connection.useDb(`development_${appID}`, {
+        useCache: true,
+    });
 
     let appRouter = await func({
         createTRPCRouter,
@@ -111,18 +187,18 @@ return appRouter
         publicProcedure,
         z,
         post,
+        mongoose,
+        appID,
     });
 
-    console.log(appRouter);
-
-    // let myTRPCRouter = createTRPCRouter({
-    //     app: appRouter,
-    // });
+    let myTRPCRouter = createTRPCRouter({
+        app: appRouter,
+    });
 
     return fetchRequestHandler({
         endpoint: "/api/engine",
         req,
-        router: appRouter,
+        router: myTRPCRouter,
         createContext: () => {
             return createContext(req);
         },
