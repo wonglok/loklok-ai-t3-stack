@@ -43,13 +43,14 @@ export const llmRequestToFileStream = async ({
     await engine.resetChat();
     const asyncChunkGenerator = await engine.chatCompletion(request);
 
-    toast(`${slot.displayName} Begin Writing Code`, {
-        description: `File: ${path}`,
-    });
-
     let messageFragments = "";
     let i = 0;
     for await (const chunk of asyncChunkGenerator) {
+        if (i === 0) {
+            toast(`${slot.displayName} Begin Writing Code`, {
+                description: `File: ${path}`,
+            });
+        }
         i++;
 
         let str = chunk.choices[0]?.delta?.content || "";
