@@ -2,13 +2,13 @@
 
 import type * as webllm from "@mlc-ai/web-llm";
 // import { CreateWebWorkerMLCEngine } from "@mlc-ai/web-llm";
-import { EngineData, MyFile, useGenAI } from "../../../useGenAI";
+import { EngineData, useGenAI } from "../../../useGenAI";
 // @ts-ignore
 import { z } from "zod";
 
 import * as markdownit from "markdown-it";
 import * as pathUtil from "path";
-import { createInstance } from "localforage";
+// import { createInstance } from "localforage";
 import md5 from "md5";
 import { readFileObject } from "./readFileObject";
 import { writeToFile } from "./writeToFile";

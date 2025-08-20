@@ -300,8 +300,10 @@ export function ControlPanel() {
                             style={{ width: `calc(100% - 350px)` }}
                         >
                             {/* file list */}
+
                             <div className="h-full w-[350px] overflow-x-hidden overflow-y-scroll border-r border-gray-300">
                                 {/*  */}
+
                                 {/* {files.filter((r) =>
                                     r.path.includes("entry/App"),
                                 ).length > 0 && (

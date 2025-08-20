@@ -131,8 +131,8 @@ Please write the latest mongoose model typescript code for "${mongoose.collectio
 
 - MUST INCLUDE this "addModel" typescript function:
 
-export function addModel ({ appID }) {
-    const db = mongoose.connection.useDb("app_development_appID", { useCache: true });
+export function addModel ({ appID, dbInstance }) {
+    const db = dbInstance // mongoose.connection.useDb("app_development_appID", { useCache: true });
 
     const ${`${JSON.stringify(mongoose.collectionName)}Schema`} = [...];
 

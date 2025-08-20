@@ -15,6 +15,7 @@ export const genSDK = async ({
     userPrompt,
     manager,
 }) => {
+    //
     manager?.addTask({
         displayName: `Zustand Task`,
         name: "genSDK",
@@ -28,26 +29,17 @@ export const genSDK = async ({
             // let existingCode = await readFileContent({ path: specificationPath });\
 
             let schema = z.object({
-                zustandFrontEnd: z
+                databaseCollections: z
                     .array(
                         z
                             .object({
-                                dataName: z.string(),
-                                dataType: z.string(),
-                            })
-                            .describe("each data property"),
-                    )
-                    .describe("front end zustand"),
-                tRPCFrontEnd: z
-                    .array(
-                        z
-                            .object({
-                                procedureName: z.string(),
+                                CollectionName: z.string(),
                                 slug: z.string(),
                             })
-                            .describe("each Module item"),
+                            .describe("each collection"),
                     )
-                    .describe("front end tRPC"),
+                    .describe("mongoose models"),
+
                 tRPCBackEnd: z
                     .array(
                         z
@@ -58,6 +50,28 @@ export const genSDK = async ({
                             .describe("each Module item"),
                     )
                     .describe("backend tRPC"),
+
+                zustandFrontEnd: z
+                    .array(
+                        z
+                            .object({
+                                dataName: z.string(),
+                                dataType: z.string(),
+                            })
+                            .describe("each data property"),
+                    )
+                    .describe("front end zustand"),
+
+                tRPCFrontEnd: z
+                    .array(
+                        z
+                            .object({
+                                procedureName: z.string(),
+                                slug: z.string(),
+                            })
+                            .describe("each Module item"),
+                    )
+                    .describe("front end tRPC"),
             });
 
             await llmRequestToFileStream({
