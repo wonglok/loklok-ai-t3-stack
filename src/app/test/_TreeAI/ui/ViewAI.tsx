@@ -100,8 +100,7 @@ if (!domElement?.root) {
     return (
         <>
             {/*  */}
-
-            {show}
+            <div className="h-full w-full p-3">{show}</div>
 
             {/*  */}
         </>

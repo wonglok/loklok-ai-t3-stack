@@ -28,7 +28,8 @@ export function DeveloperTeam() {
     return (
         <>
             <div className="p-3">
-                {engines.map(({ name, displayName }) => {
+                {engines.map((engine) => {
+                    let { name, displayName } = engine;
                     return (
                         <div
                             key={name + "onoff"}
@@ -92,13 +93,23 @@ function AIMatcher({ name }: { name: string }) {
 
             {item.bannerText && (
                 <div
-                    onClick={() => {
-                        if (item?.bannerData && item?.bannerData?.path) {
-                            useTreeAI.setState({
-                                currentPath: item?.bannerData?.path,
-                            });
-                        }
-                    }}
+                    // onClick={() => {
+                    //     //
+                    //     let engine = item;
+
+                    //     console.log(engine?.bannerData);
+                    //     if (engine?.bannerData) {
+                    //         if (engine.bannerData.type === "tab") {
+                    //             if (engine.bannerData.topTab === "code") {
+                    //                 useTreeAI.setState({
+                    //                     topTab: engine.bannerData.topTab,
+                    //                     currentPath: engine.bannerData.filePath,
+                    //                 });
+                    //             }
+                    //         }
+                    //     }
+                    //     //
+                    // }}
                     className="mt-2 rounded-lg border p-2 text-center text-sm"
                 >
                     {item.bannerText}

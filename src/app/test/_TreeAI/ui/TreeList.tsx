@@ -28,8 +28,27 @@ export function TreeList() {
                 }}
             ></TreeItem>
 
+            {/* <TreeItem
+                key={"code-btn"}
+                itemId={"code-btn"}
+                label={<>{"🧑🏻‍💻 Code"}</>}
+                onClick={() => {
+                    useTreeAI.setState({ topTab: "code" });
+                }}
+            ></TreeItem> */}
+
             {/*  */}
-            <TreeItem itemId="/docs" label="App Docs">
+            <TreeItem
+                itemId="/docs"
+                label={`🍱 ${"App Docs"}`}
+                onClick={() => {
+                    //
+                    useTreeAI.setState({
+                        topTab: "code",
+                    });
+                    //
+                }}
+            >
                 {files
                     .filter((r) => r?.path?.startsWith("/docs"))
                     .map((r) => {
@@ -37,7 +56,7 @@ export function TreeList() {
                             <TreeItem
                                 key={r.path}
                                 itemId={r.path}
-                                label={r.path}
+                                label={`${r.path}`}
                                 onClick={() => {
                                     useTreeAI.setState({
                                         topTab: "code",
@@ -49,21 +68,35 @@ export function TreeList() {
                     })}
             </TreeItem>
 
-            {files.filter((r) => r.path.startsWith("/react"))?.length > 0 && (
-                <TreeItem itemId="react" label="React Components">
-                    {files
-                        .filter((r) => r.path.startsWith("/react"))
-                        .map((r) => {
-                            return (
-                                <TreeItem
-                                    key={r.path}
-                                    itemId={r.path}
-                                    label={r.path}
-                                />
-                            );
-                        })}
-                </TreeItem>
-            )}
+            <TreeItem
+                itemId="/react"
+                label={`🧱 ${"React Component"}`}
+                onClick={() => {
+                    //
+                    useTreeAI.setState({
+                        topTab: "code",
+                    });
+                    //
+                }}
+            >
+                {files
+                    .filter((r) => r?.path?.startsWith("/react"))
+                    .map((r) => {
+                        return (
+                            <TreeItem
+                                key={r.path}
+                                itemId={r.path}
+                                label={`${r.path}`}
+                                onClick={() => {
+                                    useTreeAI.setState({
+                                        topTab: "code",
+                                        currentPath: r.path,
+                                    });
+                                }}
+                            />
+                        );
+                    })}
+            </TreeItem>
         </SimpleTreeView>
     );
 }

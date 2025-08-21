@@ -346,5 +346,8 @@ write the result to "${SPEC_DOC_PATH}"
         });
     });
 
+    slot.bannerText = ``;
+    refreshEngineSlot(slot);
+
     await putBackFreeAIAsync({ engine: slot });
 }
