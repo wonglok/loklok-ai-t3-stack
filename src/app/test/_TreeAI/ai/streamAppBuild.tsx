@@ -1,18 +1,12 @@
-// import { OpenAICompatibleChatLanguageModel } from "@ai-sdk/openai-compatible";
 import {
     convertToModelMessages,
     streamText,
     tool,
     createUIMessageStream,
-    createUIMessageStreamResponse,
     UIMessage,
 } from "ai";
-// import { writeFileContent } from "../io/writeFileContent";
-// import { saveToBrowserDB } from "../io/saveToBrowserDB";
+import { z } from "zod";
 import { useTreeAI } from "../state/useTreeAI";
-import z from "zod";
-// import { readFileContent } from "../io/readFileContent";
-// import { writeFileContent } from "../io/writeFileContent";
 import { getUIMessages } from "./getUIMessages";
 import { bootEngines } from "./bootEngines";
 import { getFreeAIAsync } from "./getFreeAIAsync";
@@ -20,11 +14,9 @@ import { addUIMessage } from "./addUIMessage";
 import { refreshUIMessages } from "./refreshUIMessages";
 import { SPEC_DOC_PATH } from "./constants";
 import { refreshEngineSlot } from "./refreshEngines";
-import { IOTooling } from "./IOTooling";
-import { LoaderIcon } from "lucide-react";
+import { IOTooling } from "../io/IOTooling";
 import { writeFileContent } from "../io/writeFileContent";
-// import { readFileContent } from "../io/readFileContent";
-// import { writeFileContent } from "../io/writeFileContent";
+import { putBackFreeAIAsync } from "./putBackFreeAIAsync";
 
 export const streamAppBuild = async () => {
     await bootEngines();
@@ -343,4 +335,6 @@ write the result to "${SPEC_DOC_PATH}"
             }
         });
     });
+
+    await putBackFreeAIAsync({ engine: slot });
 };
