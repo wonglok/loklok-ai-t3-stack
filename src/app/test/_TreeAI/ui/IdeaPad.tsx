@@ -10,7 +10,6 @@ export function IdeaPad() {
     let atLeastOneWorkerRunning = useTreeAI((r) => r.atLeastOneWorkerRunning);
     let userPrompt = useTreeAI((r) => r.userPrompt);
     let files = useTreeAI((r) => r.files);
-    let specFile = files.find((r) => r.path === "/docs/spec.md");
     return (
         <>
             {

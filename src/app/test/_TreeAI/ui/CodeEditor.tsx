@@ -104,7 +104,7 @@ export function CodeEditor() {
         <>
             {file && file.content && (
                 <div
-                    className="h-full w-[600px] shrink-0"
+                    className="h-full w-full shrink-0"
                     onKeyDownCapture={(ev) => {
                         if ((ev.ctrlKey || ev.metaKey) && ev.key === "Escape") {
                             ev.preventDefault();
@@ -120,12 +120,14 @@ export function CodeEditor() {
                 >
                     {
                         <Editor
+                            className="overflow-hidden rounded-lg"
                             options={{
                                 fontSize: 12,
                                 lineHeight: 25.0,
                             }}
                             path={currentPath}
                             // path={path}
+                            width={"100%"}
                             height={"100%"}
                             onMount={handleEditorDidMount}
                             // defaultLanguage="typescript"

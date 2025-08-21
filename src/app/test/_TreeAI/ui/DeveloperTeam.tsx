@@ -27,13 +27,13 @@ export function DeveloperTeam() {
 
     return (
         <>
-            <div className="p-3">
+            <div className="px-3">
                 {engines.map((engine) => {
                     let { name, displayName } = engine;
                     return (
                         <div
                             key={name + "onoff"}
-                            className="mb-5 rounded-lg border p-3 shadow-sm"
+                            className="mb-3 rounded-lg border bg-white p-3 shadow-sm"
                         >
                             <div className="space-y-0.5">
                                 <div className="flex justify-between px-2">
@@ -91,7 +91,7 @@ function AIMatcher({ name }: { name: string }) {
                 </Select>
             )}
 
-            {item.bannerText && (
+            {/* {item.bannerText && (
                 <div
                     // onClick={() => {
                     //     //
@@ -114,7 +114,7 @@ function AIMatcher({ name }: { name: string }) {
                 >
                     {item.bannerText}
                 </div>
-            )}
+            )} */}
         </>
     );
 }

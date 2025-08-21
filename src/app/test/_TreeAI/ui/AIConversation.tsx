@@ -31,14 +31,14 @@ export const AIConversation = () => {
 
     return (
         <div className="h-full w-full p-3">
-            <div className="relative mx-auto size-full h-full max-w-4xl rounded-lg border">
+            <div className="relative size-full rounded-lg border bg-white">
                 <div className="flex h-full flex-col rounded-lg">
                     <RenderMessages></RenderMessages>
 
-                    <div className="py-3 pb-6">
+                    <div className="px-3 py-3 pb-3">
                         <PromptInput
                             onSubmit={handleSubmit}
-                            className="relative mx-auto mt-4 w-full max-w-2xl"
+                            className="relative mt-4 w-full"
                         >
                             {/*  */}
                             <PromptInputTextarea
@@ -81,7 +81,7 @@ function RenderMessages() {
             <ConversationContent>
                 {uiMessages.map((message) => (
                     <Message from={message.role} key={message.id}>
-                        <MessageContent>
+                        <MessageContent className="w-[250px]">
                             {message.parts.map((part, i) => {
                                 switch (part.type) {
                                     case "text": // we don't use any reasoning or tool calls in this example
@@ -107,6 +107,7 @@ function RenderMessages() {
                                                 text={part.data}
                                                 language="markdown"
                                                 height="250px"
+                                                width="220px"
                                             ></CodeEditorStream>
                                         );
 
@@ -116,6 +117,7 @@ function RenderMessages() {
                                                 text={part.data}
                                                 language="typescript"
                                                 height="250px"
+                                                width="220px"
                                                 key={`${message.id}-${i}`}
                                             ></CodeEditorStream>
                                         );

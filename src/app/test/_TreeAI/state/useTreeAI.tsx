@@ -79,11 +79,11 @@ export const useTreeAI = create<{
     engines: EngineSetting[];
     currentAIProvider: "lmstudio";
     models: MyModel[];
-    topTab: "chat" | "web" | "code";
+    topTab: "chat" | "web" | "code" | "team";
 }>((set, get) => {
     return {
         //
-        topTab: "chat",
+        topTab: "web",
         uiMessages: [
             {
                 id: `_${Math.random()}`,
@@ -122,7 +122,7 @@ export const useTreeAI = create<{
                 modelOriginalName: "openai/gpt-oss-20b",
                 modelProvider: "lmstudio",
                 status: "empty",
-                enabled: process.env.NODE_ENV === "development",
+                enabled: false,
                 bannerData: false,
                 bannerText: "",
             },
@@ -133,7 +133,7 @@ export const useTreeAI = create<{
                 modelOriginalName: "openai/gpt-oss-20b",
                 modelProvider: "lmstudio",
                 status: "empty",
-                enabled: process.env.NODE_ENV === "development",
+                enabled: false,
                 bannerData: false,
                 bannerText: "",
             },
@@ -144,7 +144,7 @@ export const useTreeAI = create<{
                 modelOriginalName: "openai/gpt-oss-20b",
                 modelProvider: "lmstudio",
                 status: "empty",
-                enabled: process.env.NODE_ENV === "development",
+                enabled: false,
                 bannerData: false,
                 bannerText: "",
             },

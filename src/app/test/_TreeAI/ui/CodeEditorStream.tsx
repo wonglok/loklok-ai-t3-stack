@@ -75,7 +75,9 @@ export function CodeEditorStream({
                     });
 
                 refClean.current.push(() => {
-                    dispose();
+                    try {
+                        dispose();
+                    } catch (e) {}
                 });
 
                 setTimeout(() => {
@@ -99,8 +101,8 @@ export function CodeEditorStream({
     return (
         <Editor
             options={{
-                fontSize: 12,
-                lineHeight: 25.0,
+                fontSize: 9,
+                lineHeight: 12,
             }}
             height={height}
             width={width}
