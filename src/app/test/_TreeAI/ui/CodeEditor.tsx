@@ -101,46 +101,50 @@ export function CodeEditor() {
     );
 
     return (
-        <div
-            className="h-full w-full"
-            onKeyDownCapture={(ev) => {
-                if ((ev.ctrlKey || ev.metaKey) && ev.key === "Escape") {
-                    ev.preventDefault();
-                    ev.stopPropagation();
+        <>
+            {file && currentPath && (
+                <div
+                    className="h-full w-[600px] shrink-0"
+                    onKeyDownCapture={(ev) => {
+                        if ((ev.ctrlKey || ev.metaKey) && ev.key === "Escape") {
+                            ev.preventDefault();
+                            ev.stopPropagation();
 
-                    window.dispatchEvent(
-                        new CustomEvent("save-editor", {
-                            detail: file,
-                        }),
-                    );
-                }
-            }}
-        >
-            {file && (
-                <Editor
-                    options={{
-                        fontSize: 12,
-                        lineHeight: 25.0,
-                    }}
-                    path={currentPath}
-                    // path={path}
-                    height={"100%"}
-                    onMount={handleEditorDidMount}
-                    // defaultLanguage="typescript"
-                    language={
-                        getLang(file.path)
-                        // llmStatus === "writing" && track && path.includes(".js")
-                        //     ? "markdown"
-                        //     : defaultLanguage
-                    }
-                    value={file.content}
-                    onChange={(v) => {
-                        if (file) {
-                            file.content = `${v}`;
+                            window.dispatchEvent(
+                                new CustomEvent("save-editor", {
+                                    detail: file,
+                                }),
+                            );
                         }
                     }}
-                ></Editor>
+                >
+                    {
+                        <Editor
+                            options={{
+                                fontSize: 12,
+                                lineHeight: 25.0,
+                            }}
+                            path={currentPath}
+                            // path={path}
+                            height={"100%"}
+                            onMount={handleEditorDidMount}
+                            // defaultLanguage="typescript"
+                            language={
+                                getLang(file.path)
+                                // llmStatus === "writing" && track && path.includes(".js")
+                                //     ? "markdown"
+                                //     : defaultLanguage
+                            }
+                            value={file.content}
+                            onChange={(v) => {
+                                if (file) {
+                                    file.content = `${v}`;
+                                }
+                            }}
+                        ></Editor>
+                    }
+                </div>
             )}
-        </div>
+        </>
     );
 }

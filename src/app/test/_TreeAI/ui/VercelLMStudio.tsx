@@ -36,6 +36,8 @@ export function VercelLMStudio() {
                 <div className="h-full w-[350px] shrink-0">
                     <TreeList></TreeList>
                 </div>
+
+                <CodeEditor></CodeEditor>
                 <div className="h-full w-[750px] shrink-0">
                     <ViewAI></ViewAI>
                 </div>
