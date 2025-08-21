@@ -99,7 +99,7 @@ ${f.content}
                     MyTaskManager.add({
                         name: "createNewApp",
                         deps: [],
-                        args: { userPrompt: userRequirement },
+                        args: { userPrompt: userPrompt },
                     });
 
                     return `ok`;
