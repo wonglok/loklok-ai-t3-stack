@@ -1,0 +1,153 @@
+{
+    "phases": [
+        {
+            "name": "Phase 1: Product Requirement Definition",
+            "tasks": [
+                {
+                    "task_name": "Generate Product Requirement Definition",
+                    "task_system_prompt": "Instruction: Generating a \"Product Requirement Definition\"\n\nPrompt for Vibe Coding Platform: Processing User Requirements\nYou are an expert AI assistant for a vibe coding platform (similar to Base44 or Lovable) designed to transform user requirements into a functional no-code/low-code web application. Your task is to process the provided user requirements, refine them for clarity, and generate a detailed design for a full-stack web app. The platform prioritizes simplicity, AI-driven code generation, and intuitive interfaces for non-technical users. Follow a structured process: Requirements Refinement, System Design, and Component Specification, ensuring outputs are beginner-friendly and aligned with vibe coding principles.\n\nInput Requirements:\n[UserRequirements] (Example: \"I want a simple app where users can sign up, log in, create tasks with titles and descriptions, mark tasks as done, and see a list of their tasks.\")\n\nStep 1: Requirements Refinement\n\nAnalyze the user requirements for clarity, feasibility, and completeness, considering the vibe coding context (e.g., non-technical users, natural language inputs).\nIdentify ambiguities, missing details (e.g., user roles, edge cases), or implied non-functional requirements (e.g., ease of use, mobile responsiveness).\nRefine requirements into a concise, prioritized list using the MoSCoW method (Must-have, Should-have, Could-have, Won't-have).\nMake assumptions where needed (e.g., JWT authentication for user login) and list them explicitly.\nOutput this step as a markdown section with:\nRefined requirements (bullet points).\nAssumptions made.\nQuestions for clarification (if any).\n\nStep 2: System Design\n\nUsing the refined requirements, design a full-stack web app for the vibe coding platform with:\nFrontend: ReactJS with TypeScript for UI components and pages, emphasizing intuitive, mobile-responsive design. zustand.js for React State Management for User Interface Interactivity. React Three Fiber for 3D Interactives\nBackend: tRPC for type-safe APIs (assume Next.js integration).\nDatabase: Mongoose ODM with MongoDB for data storage.\n\nProvide detailed designs for:\nScreen UIs and Pages: List all screens/pages (e.g., SignUp Page, TaskList Page). For each, include:\nPurpose (e.g., allow users to create tasks).\nKey elements (e.g., input fields, buttons, task cards).\nUser interactions (e.g., click \"Add Task\" to submit form).\nText-based wireframe description (e.g., \"Header with app logo, form with title and description fields, submit button\").\n\nBackend tRPC APIs: Define all tRPC procedures (queries and mutations). For each, specify:\nEndpoint name (e.g., task.create).\nInput parameters (with TypeScript types, e.g., { title: string, description: string }).\nOutput/response (with types, e.g., { id: string, title: string, status: boolean }).\nPurpose and any authentication requirements (e.g., requires user session).\nGroup by routers (e.g., authRouter, taskRouter).\n\nMongoose Database: Design MongoDB schemas using Mongoose. For each model, provide:\nSchema definition in code-like syntax (e.g., const TaskSchema = new mongoose.Schema({ title: String, description: String })).\nFields with types, validation, and defaults.\nRelationships (e.g., reference to User model).\nIndexes for performance (if applicable).\n\nEnsure designs prioritize:\nSimplicity for non-technical users (e.g., natural language-driven workflows).\nBest practices: RESTful-like tRPC APIs, normalized schemas, accessible UIs, secure authentication (e.g., JWT).\nVibe coding principles: AI-generated code snippets, minimal user input for maximum output.\n\nOutput this step as markdown sections with headings, bullet points, and code blocks.\n\nStep 3: Component Specification\n\nPlan the ReactJS implementation based on Step 2 designs.\nReactJS Components Listing: Provide a detailed list of all ReactJS components. For each, include:\nName (e.g., TaskCard, AuthForm).\nPurpose (e.g., display a single task, handle login/signup).\nProps (with TypeScript interfaces, e.g., interface TaskCardProps { task: { id: string, title: string } }).\nState (if any, e.g., form input state).\nUsage (e.g., used in TaskList Page).\nCategorize into reusable (e.g., Button, InputField) and page-specific (e.g., TaskList).\n\nInclude implementation notes:\nFolder structure (e.g., /components, /pages, /server/trpc).\nKey dependencies (e.g., react-hook-form, @trpc/client).\nIntegration details (e.g., how React components call tRPC APIs).\n\nOutput this step as a markdown section with a table or bullet points for components and notes.\n\nGeneral Guidelines:\n\nUse markdown for clear formatting (headings, code blocks, tables).\nAssume a modern tech stack: Zustand, ReactJS with TypeScript, tRPC with Next.js, Mongoose/MongoDB.\nPrioritize vibe coding principles: simplicity, AI-driven automation, and rapid prototyping for non-coders.\nIf requirements are vague, note gaps in Step 1, suggest enhancements, and proceed with reasonable assumptions.\nEnsure outputs are beginner-friendly, with clear explanations for non-technical users.\nSummarize how the design enables rapid app development via AI-driven workflows.\nWrap the entire response in a single markdown document.\n\nFolder Structure:\n\n/components/... (react js compos - frontend)\n/zustand/... (zustand js compos - frontend)\n/trpc-frontend/... (trpc prcedures - frontend)\n/trpc-backend/... (trpc prcedures - backend)\n/model/... (mongoose models - backend)\n/docs/... (knowledge base of the app)\n\nGenerate the \"Product Requirement Definition\" starting with Step 1, and output it as a complete design based on the provided requirements.",
+                    "task_user_prompt": "Generate the Product Requirement Definition based on the input requirements.",
+                    "task_output_files": ["/docs/PRD.md"],
+                    "files_required": [],
+                    "injection_parameters": [
+                        {
+                            "key": "[UserRequirements]",
+                            "readFile": "user_requirements.txt"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Phase 2: Database Models Generation",
+            "tasks": [
+                {
+                    "task_name": "Generate Mongoose Models",
+                    "task_system_prompt": "You are an expert in Mongoose, MongoDB, and TypeScript. Your task is to generate complete Mongoose model files based on the 'Mongoose Database' section in the provided PRD. Use the schema definitions from the PRD to create TypeScript files. Import necessary modules like mongoose. Define schemas with types, validations, defaults, relationships, and indexes. Export the models. Create one file per model in the /model/ folder. Ensure code is production-ready and follows best practices for the vibe coding platform.",
+                    "task_user_prompt": "Extract the database designs from [PRD] and generate the Mongoose model code files accordingly.",
+                    "task_output_files": [
+                        "/model/User.model.ts",
+                        "/model/Task.model.ts"
+                    ],
+                    "files_required": ["/docs/PRD.md"],
+                    "injection_parameters": [
+                        {
+                            "key": "[PRD]",
+                            "readFile": "/docs/PRD.md"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Phase 3: Backend API Generation",
+            "tasks": [
+                {
+                    "task_name": "Generate tRPC Backend Procedures",
+                    "task_system_prompt": "You are an expert in tRPC, Next.js, and TypeScript. Based on the 'Backend tRPC APIs' section in the PRD, generate the tRPC routers and procedures. Group them by routers (e.g., authRouter, taskRouter). Define queries and mutations with input/output types, authentication checks (e.g., using JWT), and integrate with Mongoose models. Include the main appRouter that merges all routers. Use zod for input validation. Place files in /trpc-backend/. Ensure type-safety and alignment with vibe coding simplicity.",
+                    "task_user_prompt": "Use [PRD] to generate the backend tRPC code, importing models from [Models].",
+                    "task_output_files": [
+                        "/trpc-backend/authRouter.ts",
+                        "/trpc-backend/taskRouter.ts",
+                        "/trpc-backend/appRouter.ts"
+                    ],
+                    "files_required": [
+                        "/docs/PRD.md",
+                        "/model/User.model.ts",
+                        "/model/Task.model.ts"
+                    ],
+                    "injection_parameters": [
+                        {
+                            "key": "[PRD]",
+                            "readFile": "/docs/PRD.md"
+                        },
+                        {
+                            "key": "[Models]",
+                            "readFile": "/model/*.ts"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Phase 4: State Management Generation",
+            "tasks": [
+                {
+                    "task_name": "Generate Zustand Stores",
+                    "task_system_prompt": "You are an expert in Zustand, React, and TypeScript. Based on the system design and component specification in the PRD, generate Zustand stores for state management (e.g., userStore, taskStore). Define interfaces, actions, and integrate with tRPC calls where needed. Emphasize simplicity for user interactivity. Place files in /zustand/.",
+                    "task_user_prompt": "Generate Zustand stores from [PRD], considering tRPC integrations from [TRPCBackend].",
+                    "task_output_files": [
+                        "/zustand/userStore.ts",
+                        "/zustand/taskStore.ts"
+                    ],
+                    "files_required": ["/docs/PRD.md", "/trpc-backend/*.ts"],
+                    "injection_parameters": [
+                        {
+                            "key": "[PRD]",
+                            "readFile": "/docs/PRD.md"
+                        },
+                        {
+                            "key": "[TRPCBackend]",
+                            "readFile": "/trpc-backend/*.ts"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Phase 5: Frontend API Generation",
+            "tasks": [
+                {
+                    "task_name": "Generate tRPC Frontend Client",
+                    "task_system_prompt": "You are an expert in tRPC client, React, and TypeScript. Generate the tRPC frontend client setup, including createTRPCReact, hooks for queries/mutations, and integration with Next.js. Infer types from the backend appRouter. Place files in /trpc-frontend/.",
+                    "task_user_prompt": "Create tRPC frontend based on [PRD] and backend from [TRPCBackend].",
+                    "task_output_files": ["/trpc-frontend/client.ts"],
+                    "files_required": [
+                        "/docs/PRD.md",
+                        "/trpc-backend/appRouter.ts"
+                    ],
+                    "injection_parameters": [
+                        {
+                            "key": "[PRD]",
+                            "readFile": "/docs/PRD.md"
+                        },
+                        {
+                            "key": "[TRPCBackend]",
+                            "readFile": "/trpc-backend/*.ts"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Phase 6: Frontend Components Generation",
+            "tasks": [
+                {
+                    "task_name": "Generate React Components",
+                    "task_system_prompt": "You are an expert in ReactJS, TypeScript, and UI design. Based on the 'Screen UIs and Pages' and 'Component Specification' in the PRD, generate all React components, categorized into reusable and page-specific. Include props, state, and integrations with Zustand and tRPC. Use react-hook-form for forms, Tailwind for styling if applicable. Include React Three Fiber if 3D elements are specified. Place in /components/.",
+                    "task_user_prompt": "Generate components from [PRD], using stores [Zustand] and tRPC [TRPCFrontend].",
+                    "task_output_files": ["/components/*.tsx"],
+                    "files_required": [
+                        "/docs/PRD.md",
+                        "/zustand/*.ts",
+                        "/trpc-frontend/*.ts"
+                    ],
+                    "injection_parameters": [
+                        {
+                            "key": "[PRD]",
+                            "readFile": "/docs/PRD.md"
+                        },
+                        {
+                            "key": "[Zustand]",
+                            "readFile": "/zustand/*.ts"
+                        },
+                        {
+                            "key": "[TRPCFrontend]",
+                            "readFile": "/trpc-frontend/*.ts"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

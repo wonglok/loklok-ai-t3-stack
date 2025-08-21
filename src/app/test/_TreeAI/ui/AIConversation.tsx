@@ -12,45 +12,44 @@ import {
     PromptInputSubmit,
 } from "@/components/ai-elements/prompt-input";
 
-import { useChat } from "@ai-sdk/react";
 import { Response } from "@/components/ai-elements/response";
 import { useTreeAI } from "../state/useTreeAI";
-// import { buildAppDoc } from "../ai/buildAppDoc";
-import { asyncGetFreeAI } from "../ai/getFreeAIAsync";
-import { toChatStream } from "../ai/toChatStream";
-import { bootEngines } from "../ai/bootEngines";
+import { streamAppBuild } from "../ai/streamAppBuild";
 import { CodeEditorStream } from "./CodeEditorStream";
-// import { convertToModelMessages } from "ai";
+import { useCallback, useEffect } from "react";
+import { LoaderIcon } from "lucide-react";
 
 export const AIConversation = () => {
     const userPrompt = useTreeAI((r) => r.userPrompt);
+    const atLeastOneWorkerRunning = useTreeAI((r) => r.atLeastOneWorkerRunning);
+    const uiMessages = useTreeAI((r) => r.uiMessages);
 
-    const { messages, status, setMessages } = useChat({});
-
-    console.log(messages);
-
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        await bootEngines();
-
-        //
-        let input = userPrompt.trim();
-        console.log("11");
-
-        let newUserMessage = {
-            id: `${Math.random()}`,
-            role: "user",
-            parts: [{ type: "text", text: userPrompt }],
-        } as any;
-        messages.push(newUserMessage);
-
-        setMessages(messages);
-        toChatStream({
-            model: await asyncGetFreeAI(),
-            uiMessages: messages,
-            setUIMessages: setMessages,
+    useEffect(() => {
+        if (atLeastOneWorkerRunning) {
+            return;
+        }
+        useTreeAI.setState({
+            atLeastOneWorkerRunning: false,
+            uiMessages: [
+                {
+                    id: `_${Math.random()}`,
+                    role: "assistant",
+                    parts: [
+                        {
+                            type: "data-welcome",
+                            data: ``,
+                        },
+                    ],
+                },
+            ],
         });
-    };
+    }, [atLeastOneWorkerRunning]);
+
+    const handleSubmit = useCallback(async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        streamAppBuild();
+    }, []);
 
     return (
         <div className="h-full w-full p-3">
@@ -58,7 +57,7 @@ export const AIConversation = () => {
                 <div className="flex h-full flex-col">
                     <Conversation>
                         <ConversationContent>
-                            {messages.map((message) => (
+                            {uiMessages.map((message) => (
                                 <Message from={message.role} key={message.id}>
                                     <MessageContent>
                                         {message.parts.map((part, i) => {
@@ -82,9 +81,9 @@ export const AIConversation = () => {
                                                 case "data-code-md": // we don't use any reasoning or tool calls in this example
                                                     return (
                                                         <CodeEditorStream
+                                                            key={`${message.id}-${i}`}
                                                             text={part.data}
                                                             language="markdown"
-                                                            key={`${message.id}-${i}`}
                                                         ></CodeEditorStream>
                                                     );
 
@@ -95,6 +94,53 @@ export const AIConversation = () => {
                                                             language="typescript"
                                                             key={`${message.id}-${i}`}
                                                         ></CodeEditorStream>
+                                                    );
+
+                                                case "data-loading":
+                                                    return (
+                                                        <div
+                                                            className="flex items-center justify-center"
+                                                            key={`${message.id}-${i}`}
+                                                        >
+                                                            <>
+                                                                <LoaderIcon className="mr-2 animate-spin antialiased duration-500" />
+                                                                <span>
+                                                                    {`${part.data}`}
+                                                                </span>
+                                                            </>
+                                                        </div>
+                                                    );
+
+                                                case "data-welcome": // we don't use any reasoning or tool calls in this example
+                                                    return (
+                                                        <div
+                                                            key={`${message.id}-${i}`}
+                                                        >
+                                                            <div className="mb-3">{`Hi dear, Please tell me what do you want to build: 👇`}</div>
+                                                            <div>
+                                                                <div
+                                                                    className="mb-2 cursor-pointer rounded-lg border p-3 font-mono text-sm transition-all duration-500 hover:bg-gray-100"
+                                                                    onClick={() => {
+                                                                        useTreeAI.setState(
+                                                                            {
+                                                                                userPrompt: `Build me a todo list`,
+                                                                            },
+                                                                        );
+                                                                    }}
+                                                                >{`Build me a todo list`}</div>
+
+                                                                <div
+                                                                    className="mb-2 cursor-pointer rounded-lg border p-3 font-mono text-sm transition-all duration-500 hover:bg-gray-100"
+                                                                    onClick={() => {
+                                                                        useTreeAI.setState(
+                                                                            {
+                                                                                userPrompt: `Build me a expense tracking app`,
+                                                                            },
+                                                                        );
+                                                                    }}
+                                                                >{`Build me a expense tracking app`}</div>
+                                                            </div>
+                                                        </div>
                                                     );
                                                 default:
                                                     return null;
@@ -114,6 +160,7 @@ export const AIConversation = () => {
                         <PromptInputTextarea
                             value={userPrompt}
                             placeholder="Say something..."
+                            disabled={atLeastOneWorkerRunning}
                             onChange={(ev) => {
                                 useTreeAI.setState({
                                     userPrompt: ev.target.value,
@@ -122,10 +169,13 @@ export const AIConversation = () => {
                             className="pr-12"
                         />
                         <PromptInputSubmit
+                            key={atLeastOneWorkerRunning + "bool"}
                             status={
-                                status === "streaming" ? "streaming" : "ready"
+                                atLeastOneWorkerRunning ? `submitted` : `ready`
                             }
-                            disabled={!userPrompt.trim()}
+                            disabled={
+                                !userPrompt.trim() || atLeastOneWorkerRunning
+                            }
                             className="absolute right-1 bottom-1"
                         />
                     </PromptInput>

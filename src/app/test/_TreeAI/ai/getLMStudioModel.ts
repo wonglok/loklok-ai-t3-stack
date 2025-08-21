@@ -5,6 +5,8 @@ export const getLMStudioModel = ({ name = "openai/gpt-oss-120b" }) => {
         //
         provider: `lmstudio.chat.${name}`,
         //
+        includeUsage: true,
+
         url: ({ path }) => {
             const url = new URL(`http://localhost:1234/v1${path}`);
             return url.toString();

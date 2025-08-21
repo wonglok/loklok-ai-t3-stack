@@ -31,21 +31,13 @@ export function VercelLMStudio() {
                     <DeveloperTeam></DeveloperTeam>
                 </div>
                 <div className="h-full w-[750px] shrink-0">
-                    <IdeaPad></IdeaPad>
-                </div>
-                <div className="h-full w-[750px] shrink-0">
                     <AIConversation></AIConversation>
                 </div>
                 <div className="h-full w-[350px] shrink-0">
                     <TreeList></TreeList>
                 </div>
-                <div className="relative h-full w-[650px] shrink-0">
-                    <div className="absolute top-0 left-0 h-full w-full">
-                        <CodeEditor></CodeEditor>
-                    </div>
-                    <div className="absolute top-0 left-0 h-full w-full">
-                        <ViewAI></ViewAI>
-                    </div>
+                <div className="h-full w-[750px] shrink-0">
+                    <ViewAI></ViewAI>
                 </div>
             </div>
         </>

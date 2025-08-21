@@ -42,56 +42,63 @@ export function CodeEditorStream({
 
     const refClean = useRef([]);
 
-    const handleEditorDidMount = useCallback((editor: any, monaco: any) => {
-        setEditor(editor);
+    const handleEditorDidMount = useCallback(
+        (editor: any, monaco: any) => {
+            setEditor(editor);
 
-        monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
-            jsx: monaco.languages.typescript.JsxEmit.Preserve,
-            target: monaco.languages.typescript.ScriptTarget.ES2020,
-            esModuleInterop: true,
-            // moduleResolution: "nodenext",
-            baseUrl: "./", // Or your project's base directory
-            paths: {
-                // "../types": ["./types/index.ts"], // Adjust to your actual path
-            },
-        });
-
-        try {
-            if (refClean.current) {
-                refClean.current.forEach((r) => r());
-                refClean.current = [];
+            if (atLeastOneWorkerRunning) {
+                return () => {};
             }
 
-            const monacoJsxSyntaxHighlight = new MonacoJsxSyntaxHighlight(
-                getWorker(),
-                monaco,
-            );
+            monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
+                jsx: monaco.languages.typescript.JsxEmit.Preserve,
+                target: monaco.languages.typescript.ScriptTarget.ES2020,
+                esModuleInterop: true,
+                // moduleResolution: "nodenext",
+                baseUrl: "./", // Or your project's base directory
+                paths: {
+                    // "../types": ["./types/index.ts"], // Adjust to your actual path
+                },
+            });
 
-            // editor is the result of monaco.editor.create
-            const { highlighter, dispose } =
-                monacoJsxSyntaxHighlight.highlighterBuilder({
-                    editor: editor,
+            try {
+                if (refClean.current) {
+                    refClean.current.forEach((r) => r());
+                    refClean.current = [];
+                }
+
+                const monacoJsxSyntaxHighlight = new MonacoJsxSyntaxHighlight(
+                    getWorker(),
+                    monaco,
+                );
+
+                // editor is the result of monaco.editor.create
+                const { highlighter, dispose } =
+                    monacoJsxSyntaxHighlight.highlighterBuilder({
+                        editor: editor,
+                    });
+
+                refClean.current.push(() => {
+                    dispose();
                 });
 
-            refClean.current.push(() => {
-                dispose();
-            });
+                setTimeout(() => {
+                    try {
+                        highlighter();
+                    } catch (e) {}
+                }, 100);
 
-            setTimeout(() => {
-                try {
-                    highlighter();
-                } catch (e) {}
-            }, 100);
+                editor.onDidChangeModelContent(() => {
+                    try {
+                        highlighter();
+                    } catch (e) {}
+                });
+            } catch (e) {}
 
-            editor.onDidChangeModelContent(() => {
-                try {
-                    highlighter();
-                } catch (e) {}
-            });
-        } catch (e) {}
-
-        return () => {};
-    }, []);
+            return () => {};
+        },
+        [atLeastOneWorkerRunning],
+    );
 
     return (
         <Editor
@@ -102,7 +109,7 @@ export function CodeEditorStream({
             height={height}
             width={width}
             onMount={handleEditorDidMount}
-            language={language}
+            language={atLeastOneWorkerRunning ? "text" : language}
             value={text}
         ></Editor>
     );

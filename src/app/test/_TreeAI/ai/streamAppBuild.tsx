@@ -5,64 +5,74 @@ import {
     tool,
     createUIMessageStream,
     createUIMessageStreamResponse,
+    UIMessage,
 } from "ai";
 // import { writeFileContent } from "../io/writeFileContent";
 // import { saveToBrowserDB } from "../io/saveToBrowserDB";
 import { useTreeAI } from "../state/useTreeAI";
 import z from "zod";
-import { readFileContent } from "../io/readFileContent";
-import { writeFileContent } from "../io/writeFileContent";
+// import { readFileContent } from "../io/readFileContent";
+// import { writeFileContent } from "../io/writeFileContent";
+import { getUIMessages } from "./getUIMessages";
+import { bootEngines } from "./bootEngines";
+import { getFreeAIAsync } from "./getFreeAIAsync";
+import { addUIMessage } from "./addUIMessage";
+import { refreshUIMessages } from "./refreshUIMessages";
+import { SPEC_DOC_PATH } from "./constants";
+import { refreshEngineSlot } from "./refreshEngines";
+import { IOTooling } from "./IOTooling";
+import { LoaderIcon } from "lucide-react";
 // import { readFileContent } from "../io/readFileContent";
 // import { writeFileContent } from "../io/writeFileContent";
 
-export const toChatStream = async ({
-    setUIMessages = (v: any[]) => {},
-    model,
-    userPrompt = "",
-    uiMessages = [],
-}) => {
-    // let ioTools = {
-    //     readFile: tool({
-    //         inputSchema: z.object({
-    //             filepath: z.string(),
-    //         }),
-    //         execute: async ({ filepath }) => {
-    //             return await readFileContent({ path: filepath });
-    //         },
-    //         description: `read content from file at path`,
-    //     }),
-    //     writeFile: tool({
-    //         inputSchema: z.object({
-    //             filepath: z.string(),
-    //             content: z.string(),
-    //         }),
-    //         execute: async ({ filepath, content }) => {
-    //             await writeFileContent({
-    //                 path: filepath,
-    //                 content: content,
-    //             });
-    //             return "successful";
-    //         },
-    //         description: `write content from file at path`,
-    //     }),
-    // };
+export const streamAppBuild = async () => {
+    await bootEngines();
+
+    let { model, slot } = await getFreeAIAsync();
+
+    slot.bannerText = `🧑🏻‍💻 ${SPEC_DOC_PATH}`;
+    refreshEngineSlot(slot);
+
+    // console.log(slot);
+
+    let userPrompt = useTreeAI.getState().userPrompt;
+
+    useTreeAI.setState({
+        userPrompt: "",
+    });
+
+    // let content = await readFileContent({ path: SPEC_DOC_PATH });
+
+    addUIMessage({
+        id: `${Math.random()}`,
+        role: "user",
+        parts: [{ type: "text", text: userPrompt }],
+    });
+
+    addUIMessage({
+        id: `${Math.random()}`,
+        role: "assistant",
+        parts: [
+            {
+                type: "data-loading",
+                data: `Planning the development execution plan`,
+            },
+        ],
+    });
 
     const stream = createUIMessageStream({
         execute: ({ writer }) => {
             const result = streamText({
-                model,
+                model: model,
                 messages: [
-                    ...convertToModelMessages(uiMessages),
-                    {
-                        role: "user",
-                        content: `here's the User Requirement: ${userPrompt}`,
-                    },
+                    //
+                    ...convertToModelMessages(getUIMessages()),
                 ],
                 toolChoice: "required",
                 tools: {
                     processUserRequirement: tool({
                         name: "Processing User Requirements",
-                        description: `Processing User Requirements`,
+                        description: `When user wants to build app, processing User Requirements`,
                         inputSchema: z.object({
                             userRequirement: z.string(),
                         }),
@@ -70,65 +80,28 @@ export const toChatStream = async ({
                             { userRequirement },
                             { toolCallId },
                         ) => {
+                            //
+                            //
+                            //
                             const { textStream } = streamText({
+                                tools: {
+                                    ...IOTooling,
+                                },
                                 model: model,
                                 temperature: 0,
                                 system: `
-
-Instruction of generate a "unified diff" that can be cleanly applied to modify code files:
-
-## Step-by-Step Instructions:
-
-1. Start with file headers:
-    - First line: "--- {original_file_path}"
-    - Second line: "+++ {new_file_path}"
-
-2. For each change section:
-    - Begin with "@@ ... @@" separator line without line numbers
-    - Include 2-3 lines of context before and after changes
-    - Mark removed lines with "-"
-    - Mark added lines with "+"
-    - Preserve exact indentation
-
-3. Group related changes:
-    - Keep related modifications in the same hunk
-    - Start new hunks for logically separate changes
-    - When modifying functions/methods, include the entire block
-
-## Requirements:
-
-1. MUST include exact indentation
-2. MUST include sufficient context for unique matching
-3. MUST group related changes together
-4. MUST use proper "unified diff" format
-5. MUST NOT include timestamps in file headers
-6. MUST NOT include line numbers in the @@ header
-
-## Examples:
-
-✅ Good diff (follows all requirements):
-\`\`\`diff
---- src/utils.ts
-+++ src/utils.ts
-@@ ... @@
-    def calculate_total(items):
--      total = 0
--      for item in items:
--          total += item.price
-+      return sum(item.price for item in items)
-\`\`\`
-`,
+Prompt for Vibe Coding Platform: Processing User Requirements
+You are an expert AI assistant for a vibe coding platform (similar to Base44 or Lovable) designed to transform user requirements into a functional no-code/low-code web application. Your task is to process the provided user requirements, refine them for clarity, and generate a detailed design for a full-stack web app. The platform prioritizes simplicity, AI-driven code generation, and intuitive interfaces for non-technical users. Follow a structured process: Requirements Refinement, System Design, and Component Specification, ensuring outputs are beginner-friendly and aligned with vibe coding principles.
+                                `,
                                 messages: [
                                     {
                                         role: "user",
                                         content: `
+
 Instruction: Generating a "Product Requirement Definition"
 
-Prompt for Vibe Coding Platform: Processing User Requirements
-You are an expert AI assistant for a vibe coding platform (similar to Base44 or Lovable) designed to transform user requirements into a functional no-code/low-code web application. Your task is to process the provided user requirements, refine them for clarity, and generate a detailed design for a full-stack web app. The platform prioritizes simplicity, AI-driven code generation, and intuitive interfaces for non-technical users. Follow a structured process: Requirements Refinement, System Design, and Component Specification, ensuring outputs are beginner-friendly and aligned with vibe coding principles.
-
 Input Requirements:
-${userRequirement} (Example: "I want a simple app where users can sign up, log in, create tasks with titles and descriptions, mark tasks as done, and see a list of their tasks.")
+${userRequirement} 
 
 Step 1: Requirements Refinement
 
@@ -213,9 +186,12 @@ Folder Structure:
 /docs/... (knowledge base of the app)
 
 Generate the "Product Requirement Definition" starting with Step 1, and output it as a complete design based on the provided requirements.
+
+write the result to "${SPEC_DOC_PATH}"
     `,
                                     },
                                 ],
+
                                 // schema: z.object({
                                 //     files: z.array(
                                 //         z.object({
@@ -227,7 +203,7 @@ Generate the "Product Requirement Definition" starting with Step 1, and output i
                                 // mode: "json",
                             });
 
-                            let newMessageID = `${Math.random()}`;
+                            let newMessageID = `_${Math.floor(Math.random() * 10000000)}`;
 
                             writer.write({
                                 type: "data-process-user-requirement",
@@ -286,91 +262,64 @@ Generate the "Product Requirement Definition" starting with Step 1, and output i
 
     let reader = stream.getReader();
 
-    let reasoning = {};
-    let textOutput = {};
     let canGo = true;
-    while (canGo) {
+    let thinking = {
+        id: "work_" + Math.random(),
+        role: "assistant",
+        parts: [
+            //
+            {
+                type: "text",
+                text: "Thinking...",
+            },
+        ],
+    } as UIMessage;
+
+    addUIMessage(thinking);
+
+    let run = async () => {
         let res = await reader.read();
         canGo = !res.done;
         let value = res.value;
 
-        if (value.type === "reasoning-delta") {
-            reasoning[value.id] = reasoning[value.id] || "";
-            reasoning[value.id] += value.delta;
+        if (value) {
+            if (value?.type === "data-process-user-requirement") {
+                let toolData = value.data as {
+                    id: string;
+                    status: "begin" | "in-progress" | "done";
+                    text: string;
+                };
 
-            setUIMessages([
-                ...uiMessages,
-                {
-                    id: `${value.id}`,
-                    role: "assistant",
-                    parts: [{ type: "reasoning", text: reasoning[value.id] }],
-                },
-            ]);
+                if (toolData.status === "begin") {
+                    thinking.parts[0] = {
+                        type: "data-code-md",
+                        data: "Get Set Ready...",
+                    };
+                }
+
+                //
+
+                if (toolData.status === "in-progress") {
+                    thinking.parts[0] = {
+                        type: "data-code-md",
+                        data: toolData.text,
+                    };
+                }
+
+                if (toolData.status === "in-progress") {
+                    thinking.parts[0] = {
+                        type: "data-code-md",
+                        data: toolData.text,
+                    };
+                }
+            }
+            refreshUIMessages(thinking);
         }
-
-        if (value.type === "data-process-user-requirement") {
-            let toolData = value.data as {
-                id: string;
-                status: "begin" | "in-progress" | "done";
-                text: string;
-            };
-
-            if (toolData.status === "begin") {
-                setUIMessages([
-                    ...uiMessages,
-                    {
-                        id: toolData.id,
-                        role: "assistant",
-                        parts: [
-                            //
-                            {
-                                type: "text",
-                                text: "writing file...",
-                            },
-                        ],
-                    },
-                ]);
-            }
-
-            //
-
-            if (toolData.status === "in-progress") {
-                setUIMessages([
-                    ...uiMessages,
-                    {
-                        id: toolData.id,
-                        role: "assistant",
-                        parts: [
-                            //
-                            //
-                            { type: "reasoning", text: reasoning[value.id] },
-                            {
-                                type: "data-code-md",
-                                data: toolData.text,
-                            },
-                        ],
-                    },
-                ]);
-            }
-
-            if (toolData.status === "done") {
-                setUIMessages([
-                    ...uiMessages,
-                    {
-                        id: toolData.id,
-                        role: "assistant",
-                        parts: [
-                            //
-                            //
-                            { type: "reasoning", text: reasoning[value.id] },
-                            {
-                                type: "data-code-md",
-                                data: toolData.text,
-                            },
-                        ],
-                    },
-                ]);
-            }
+        if (canGo) {
+            requestAnimationFrame(() => {
+                run();
+            });
         }
-    }
+    };
+    run();
 };
