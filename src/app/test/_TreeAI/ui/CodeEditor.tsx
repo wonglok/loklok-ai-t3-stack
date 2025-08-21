@@ -102,7 +102,7 @@ export function CodeEditor() {
 
     return (
         <>
-            {file && atLeastOneWorkerRunning && (
+            {file && file.content && (
                 <div
                     className="h-full w-[600px] shrink-0"
                     onKeyDownCapture={(ev) => {
