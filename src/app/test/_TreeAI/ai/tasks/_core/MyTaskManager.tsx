@@ -12,6 +12,10 @@ export type MyTask = {
 export const MyFuncs = {
     createNewApp: (v: any) =>
         import("../createNewApp").then((r) => r.createNewApp(v)),
+
+    createrReactApp: (v: any) =>
+        import("../createrReactApp").then((r) => r.createrReactApp(v)),
+
     receiveResponse: (v: any) =>
         import("../receiveResponse").then((r) => r.receiveResponse(v)),
 };

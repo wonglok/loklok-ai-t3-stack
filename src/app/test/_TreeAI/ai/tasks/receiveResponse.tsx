@@ -21,10 +21,7 @@ import { putBackFreeAIAsync } from "../putBackFreeAIAsync";
 import { getFreeAIAsync } from "../getFreeAIAsync";
 import { MyTask, MyTaskManager } from "./_core/MyTaskManager";
 import { getModelMessagesFromUIMessages } from "../getModelMessagesFromUIMessages";
-import md5 from "md5";
-import { putUIMessage } from "../putUIMessage";
-import { updateCamera } from "@react-three/fiber/dist/declarations/src/core/utils";
-import { refreshEngineSlot } from "../refreshEngines";
+
 import { readFileContent } from "../../io/readFileContent";
 
 export async function receiveResponse({
@@ -77,6 +74,19 @@ ${f.content}
         info.push(haventInit);
     }
 
+    let common = () => {
+        MyTaskManager.add({
+            name: "createNewApp",
+            deps: [],
+            args: { userPrompt: userPrompt },
+        });
+
+        MyTaskManager.add({
+            name: "createrReactApp",
+            deps: ["createNewApp"],
+            args: { userPrompt: userPrompt },
+        });
+    };
     // createMongoose
     await generateText({
         toolChoice: "required",
@@ -97,18 +107,7 @@ ${f.content}
 
                     console.log("createNewProject", userRequirement);
 
-                    MyTaskManager.add({
-                        name: "createNewApp",
-                        deps: [],
-                        args: { userPrompt: userPrompt },
-                    });
-
-                    MyTaskManager.add({
-                        name: "createMongoose",
-                        deps: ["createNewApp"],
-                        args: { userPrompt: userPrompt },
-                    });
-
+                    common();
                     return `ok`;
                 },
                 inputSchema: z.object({ userRequirement: z.string() }),
@@ -121,6 +120,7 @@ ${f.content}
 
                     console.log("updateExistingProject", userRequirement);
 
+                    common();
                     return `ok`;
                 },
                 inputSchema: z.object({ userRequirement: z.string() }),
