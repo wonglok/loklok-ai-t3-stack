@@ -19,27 +19,22 @@ import { putBackFreeAIAsync } from "../putBackFreeAIAsync";
 import { getFreeAIAsync } from "../getFreeAIAsync";
 import { refreshEngineSlot } from "../refreshEngines";
 import { MyTask } from "../MyTaskManager";
+import { v4 } from "uuid";
 
-export async function defineApp({ task }: { task: MyTask }) {
-    let userPrompt = useAI.getState().userPrompt;
-
-    useAI.setState({
-        userPrompt: "",
-    });
-
+export async function defineApp({ args, task }: { args: any; task: MyTask }) {
     let { model, slot } = await getFreeAIAsync();
 
     slot.bannerText = `🧑🏻‍💻 ${SPEC_DOC_PATH}`;
     refreshEngineSlot(slot);
 
     addUIMessage({
-        id: `${Math.random()}`,
+        id: `${v4()}`,
         role: "user",
-        parts: [{ type: "text", text: userPrompt }],
+        parts: [{ type: "text", text: args.userPrompt }],
     });
 
     let loaderMessage: UIMessage = {
-        id: `${Math.random()}`,
+        id: `${v4()}`,
         role: "assistant",
         parts: [
             {
@@ -49,6 +44,11 @@ export async function defineApp({ task }: { task: MyTask }) {
         ],
     };
     addUIMessage(loaderMessage);
+
+    useAI.setState({
+        topTab: "code",
+        currentPath: SPEC_DOC_PATH,
+    });
 
     const stream = createUIMessageStream({
         execute: ({ writer }) => {

@@ -1,9 +1,6 @@
 import { LanguageModel } from "ai";
 import { EngineMap } from "../state/EngineMap";
 import { EngineSetting, useAI } from "../state/useAI";
-import { MyTaskManager } from "./MyTaskManager";
-
-//  getLMStudioModel({ name: "openai/gpt-oss-20b" })
 
 export const getFreeAIAsync = async () => {
     let { model, slot }: { model: LanguageModel; slot: EngineSetting } =

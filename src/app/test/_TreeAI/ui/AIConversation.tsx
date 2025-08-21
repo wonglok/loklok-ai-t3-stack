@@ -14,11 +14,12 @@ import {
 
 import { Response } from "@/components/ai-elements/response";
 import { useAI } from "../state/useAI";
-import { streamAppBuild } from "../ai/streamAppBuild";
+// import { streamAppBuild } from "../ai/streamAppBuild";
 import { CodeEditorStream } from "./CodeEditorStream";
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
 import { LoaderIcon } from "lucide-react";
-import { onSubmitAIBox } from "../ai/onSubmitAIBox";
+import { bootEngines } from "../ai/bootEngines";
+import { MyTaskManager } from "../ai/MyTaskManager";
 
 export const AIConversation = () => {
     const userPrompt = useAI((r) => r.userPrompt);
@@ -26,8 +27,13 @@ export const AIConversation = () => {
 
     const handleSubmit = useCallback(async (e: React.FormEvent) => {
         e.preventDefault();
+        await bootEngines();
 
-        onSubmitAIBox();
+        MyTaskManager.add({
+            name: "receiveResponse",
+            deps: [],
+            args: { userPrompt },
+        });
     }, []);
 
     //

@@ -7,6 +7,7 @@ import { CodeEditor } from "./CodeEditor";
 import { bootup, SettingsBootUp } from "../ai/bootup";
 import { DeveloperTeam } from "./DeveloperTeam";
 import { AIConversation } from "./AIConversation";
+import { BootUpTaskManager } from "../ai/MyTaskManager";
 
 export function VercelLMStudio() {
     useEffect(() => {
@@ -29,6 +30,7 @@ export function VercelLMStudio() {
     return (
         <>
             <SettingsBootUp></SettingsBootUp>
+            <BootUpTaskManager></BootUpTaskManager>
             <div className="flex h-full min-w-full overflow-x-auto bg-gray-200">
                 <div
                     className="h-full"
