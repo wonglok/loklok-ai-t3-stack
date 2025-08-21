@@ -5,10 +5,8 @@ import { ViewAI } from "./ViewAI";
 import { TreeList } from "./TreeList";
 import { CodeEditor } from "./CodeEditor";
 import { bootup } from "../ai/bootup";
-import { onRun } from "../ai/onRun";
 import { DeveloperTeam } from "./DeveloperTeam";
 import { AIConversation } from "./AIConversation";
-import { IdeaPad } from "./IdeaPad";
 
 export function VercelLMStudio() {
     useEffect(() => {

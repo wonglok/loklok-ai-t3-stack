@@ -11,6 +11,7 @@ export type EngineSetting = {
     displayName: string;
     modelName: string;
     modelProvider: string;
+    modelOriginalName: string;
     enabled: boolean;
     status: "empty" | "downloading" | "working" | "free";
     bannerData: any;
@@ -18,6 +19,7 @@ export type EngineSetting = {
 };
 export type MyModel = {
     provider: string;
+    modelOriginalName: string;
     name: string;
 };
 
@@ -25,34 +27,42 @@ const Models: MyModel[] = [
     {
         provider: "lmstudio",
         name: "openai/gpt-oss-20b",
+        modelOriginalName: "openai/gpt-oss-20b",
     },
     {
         provider: "lmstudio",
         name: "openai/gpt-oss-20b:2",
+        modelOriginalName: "openai/gpt-oss-20b",
     },
     {
         provider: "lmstudio",
         name: "openai/gpt-oss-20b:3",
+        modelOriginalName: "openai/gpt-oss-20b",
     },
     {
         provider: "lmstudio",
         name: "openai/gpt-oss-20b:4",
+        modelOriginalName: "openai/gpt-oss-20b",
     },
     {
         provider: "lmstudio",
         name: "openai/gpt-oss-20b:5",
+        modelOriginalName: "openai/gpt-oss-20b",
     },
     {
         provider: "lmstudio",
         name: "openai/gpt-oss-20b:6",
+        modelOriginalName: "openai/gpt-oss-20b",
     },
     {
         provider: "lmstudio",
         name: "openai/gpt-oss-20b:7",
+        modelOriginalName: "openai/gpt-oss-20b",
     },
     {
         provider: "lmstudio",
         name: "openai/gpt-oss-120b",
+        modelOriginalName: "openai/gpt-oss-20b",
     },
 ];
 
@@ -95,6 +105,7 @@ export const useTreeAI = create<{
                 name: "#01",
                 displayName: "AI Developer 01",
                 modelName: "openai/gpt-oss-20b",
+                modelOriginalName: "openai/gpt-oss-20b",
                 modelProvider: "lmstudio",
                 status: "empty",
                 enabled: true,
@@ -105,9 +116,10 @@ export const useTreeAI = create<{
                 name: "#02",
                 displayName: "AI Developer 02",
                 modelName: "openai/gpt-oss-20b:2",
+                modelOriginalName: "openai/gpt-oss-20b",
                 modelProvider: "lmstudio",
                 status: "empty",
-                enabled: true,
+                enabled: process.env.NODE_ENV === "development",
                 bannerData: false,
                 bannerText: "",
             },
@@ -115,9 +127,10 @@ export const useTreeAI = create<{
                 name: "#03",
                 displayName: "AI Developer 03",
                 modelName: "openai/gpt-oss-20b:3",
+                modelOriginalName: "openai/gpt-oss-20b",
                 modelProvider: "lmstudio",
                 status: "empty",
-                enabled: true,
+                enabled: process.env.NODE_ENV === "development",
                 bannerData: false,
                 bannerText: "",
             },
@@ -125,9 +138,10 @@ export const useTreeAI = create<{
                 name: "#04",
                 displayName: "AI Developer 04",
                 modelName: "openai/gpt-oss-20b:4",
+                modelOriginalName: "openai/gpt-oss-20b",
                 modelProvider: "lmstudio",
                 status: "empty",
-                enabled: true,
+                enabled: process.env.NODE_ENV === "development",
                 bannerData: false,
                 bannerText: "",
             },
@@ -135,6 +149,7 @@ export const useTreeAI = create<{
                 name: "#05",
                 displayName: "AI Developer 05",
                 modelName: "openai/gpt-oss-20b:5",
+                modelOriginalName: "openai/gpt-oss-20b",
                 modelProvider: "lmstudio",
                 status: "empty",
                 enabled: false,
@@ -145,6 +160,7 @@ export const useTreeAI = create<{
                 name: "#06",
                 displayName: "AI Developer 06",
                 modelName: "openai/gpt-oss-20b:6",
+                modelOriginalName: "openai/gpt-oss-20b",
                 modelProvider: "lmstudio",
                 status: "empty",
                 enabled: false,
@@ -155,6 +171,7 @@ export const useTreeAI = create<{
                 name: "#07",
                 displayName: "AI Developer 07",
                 modelName: "openai/gpt-oss-20b:7",
+                modelOriginalName: "openai/gpt-oss-20b",
                 modelProvider: "lmstudio",
                 status: "empty",
                 enabled: false,

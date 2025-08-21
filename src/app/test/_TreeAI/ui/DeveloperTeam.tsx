@@ -1,3 +1,5 @@
+"use client";
+
 import { useTreeAI } from "../state/useTreeAI";
 
 import {
@@ -18,9 +20,11 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
+import { useEffect } from "react";
 
 export function DeveloperTeam() {
     let engines = useTreeAI((r) => r.engines);
+
     return (
         <>
             <div className="p-3">
@@ -64,7 +68,10 @@ function AIMatcher({ name }: { name: string }) {
                     disabled={atLeastOneWorkerRunning}
                     value={item.modelName}
                     onValueChange={(v) => {
+                        let model = models.find((r) => r.name === v);
                         item.modelName = v;
+                        item.modelOriginalName = model.modelOriginalName;
+
                         useTreeAI.setState({
                             engines: JSON.parse(JSON.stringify(engines)),
                         });
@@ -104,6 +111,7 @@ function AIMatcher({ name }: { name: string }) {
 function EnableSwitch({ name }: { name: string }) {
     let engines = useTreeAI((r) => r.engines);
     let item = engines.find((r) => r.name === name);
+    let itemIDX = engines.findIndex((r) => r.name === name);
     let atLeastOneWorkerRunning = useTreeAI((r) => r.atLeastOneWorkerRunning);
 
     return (
@@ -119,6 +127,7 @@ function EnableSwitch({ name }: { name: string }) {
                 checked={item.enabled}
                 onCheckedChange={(v) => {
                     item.enabled = v;
+
                     useTreeAI.setState({
                         engines: JSON.parse(JSON.stringify(engines)),
                     });
