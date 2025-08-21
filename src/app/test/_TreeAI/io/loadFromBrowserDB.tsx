@@ -7,7 +7,7 @@ export const loadFromBrowserDB = async () => {
         name: `${appID}-files`,
     });
 
-    let files = (await appFiles.getItem("files")) as MyFile[];
+    let files = ((await appFiles.getItem("files")) as MyFile[]) || [];
     useTreeAI.setState({
         files: files,
     });
