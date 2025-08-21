@@ -1,32 +1,27 @@
 import {
     convertToModelMessages,
     createUIMessageStream,
+    generateObject,
     generateText,
     ModelMessage,
     streamText,
     tool,
     UIMessage,
 } from "ai";
-import { addUIMessage } from "../addUIMessage";
-import { getUIMessages } from "../getUIMessages";
-import z from "zod";
 import { IOTooling } from "../../io/IOTooling";
 import { APP_ROOT_PATH, SPEC_DOC_PATH } from "../constants";
 import { EngineSetting, useAI } from "../../state/useAI";
 // import { refreshUIMessages } from "../refreshUIMessages";
 // import { writeFileContent } from "../../io/writeFileContent";
 // import { removeUIMessages } from "../removeUIMessages";
-import { saveToBrowserDB } from "../../io/saveToBrowserDB";
 import { putBackFreeAIAsync } from "../putBackFreeAIAsync";
 import { getFreeAIAsync } from "../getFreeAIAsync";
 import { MyTask, MyTaskManager } from "./_core/MyTaskManager";
 import { getModelMessagesFromUIMessages } from "../getModelMessagesFromUIMessages";
-import md5 from "md5";
-import { putUIMessage } from "../putUIMessage";
-import { updateCamera } from "@react-three/fiber/dist/declarations/src/core/utils";
-import { refreshEngineSlot } from "../refreshEngines";
 import { readFileContent } from "../../io/readFileContent";
 import { writeFileContent } from "../../io/writeFileContent";
+import { saveToBrowserDB } from "../../io/saveToBrowserDB";
+import z from "zod";
 
 export async function createReactAppRoot({
     userPrompt,
@@ -44,11 +39,17 @@ export async function createReactAppRoot({
 
     console.log("createReactAppRoot", content);
 
-    let response = await generateText({
-        toolChoice: "required",
-        tools: {
-            ...IOTooling,
-        },
+    let response = await generateObject({
+        schema: z.array(
+            z.object({
+                filepath: z.string(),
+                filecontent: z.string(),
+            }),
+        ),
+        // toolChoice: "required",
+        // tools: {
+        //     ...IOTooling,
+        // },
 
         messages: [
             {
@@ -56,7 +57,7 @@ export async function createReactAppRoot({
                 content: `
 You are a developer.
 
-You always use "write file" tool to write the genrated code into files accordinlg to each file.
+You always use write file tool to write the genrated code into files accordinlg to each file.
                 `,
             },
             ...getModelMessagesFromUIMessages(),
@@ -70,12 +71,11 @@ ${content}`,
             {
                 role: "user",
                 content: `
-- Implement all the react js component in the "product requirement definition" above.
-- please write to the react js component files to the /components/... folder
+Instructions:
 
-for example React Root App component:
+- only implement "/components/App.js" for the "product requirement definition":
+
 export function App () {
-
     return <>
         ...
     </>
@@ -83,9 +83,7 @@ export function App () {
 
 - Only output code, dont include markdown or text warpper
 
-- make sure you write to the correct file:
-- react js component file should be written at /components/... folder
-
+- Write files to the right file
                 `,
             },
             //
@@ -93,17 +91,13 @@ export function App () {
         model,
     });
 
-    console.log(JSON.stringify(response.toolResults));
+    console.log(response);
 
-    // let text = "";
-    // for await (let part of response.textStream) {
-    //     text += part;
-    //     console.log(text);
-    //     writeFileContent({ path: `${APP_ROOT_PATH}`, content: text });
-    // }
-
-    // await writeFileContent({ path: `${APP_ROOT_PATH}`, content: text });
-    // await saveToBrowserDB();
+    // await writeFileContent({
+    //     path: `${APP_ROOT_PATH}`,
+    //     content: response.text,
+    // });
+    await saveToBrowserDB();
 
     MyTaskManager.doneTask("createReactAppRoot");
 

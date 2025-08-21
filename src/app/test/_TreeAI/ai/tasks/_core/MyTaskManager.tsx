@@ -24,10 +24,10 @@ export const MyTaskManager = {
     taskList: [] as MyTask[],
     doneTask: (name: string) => {
         let task = MyTaskManager.taskList.find((r) => r.name === name);
-        console.log(task);
         if (task) {
             task.status = "done";
         }
+        console.log(task);
     },
     add: (a: { name: string; deps: string[]; args?: any }) => {
         MyTaskManager.taskList.push({
