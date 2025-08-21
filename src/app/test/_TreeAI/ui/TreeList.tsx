@@ -10,6 +10,25 @@ export function TreeList() {
     return (
         <SimpleTreeView expandedItems={["/docs"]} className="h-full w-full">
             {/*  */}
+            <TreeItem
+                key={"chat-btn"}
+                itemId={"chat-btn"}
+                label={"🤖 AI Chat Channel"}
+                onClick={() => {
+                    useTreeAI.setState({ topTab: "chat" });
+                }}
+            ></TreeItem>
+
+            <TreeItem
+                key={"View-btn"}
+                itemId={"view-btn"}
+                label={<>{"📲 Preview"}</>}
+                onClick={() => {
+                    useTreeAI.setState({ topTab: "web" });
+                }}
+            ></TreeItem>
+
+            {/*  */}
             <TreeItem itemId="/docs" label="App Docs">
                 {files
                     .filter((r) => r?.path?.startsWith("/docs"))
@@ -21,6 +40,7 @@ export function TreeList() {
                                 label={r.path}
                                 onClick={() => {
                                     useTreeAI.setState({
+                                        topTab: "code",
                                         currentPath: r.path,
                                     });
                                 }}

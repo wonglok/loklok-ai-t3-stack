@@ -1,6 +1,7 @@
 import { LanguageModel } from "ai";
 import { EngineMap } from "../state/EngineMap";
 import { EngineSetting, useTreeAI } from "../state/useTreeAI";
+import { MyTaskManager } from "./MyTaskManager";
 
 //  getLMStudioModel({ name: "openai/gpt-oss-20b" })
 
@@ -10,7 +11,7 @@ export const getFreeAIAsync = async () => {
             let ttt = setInterval(() => {
                 let engines = useTreeAI.getState().engines || [];
                 let eachFreeEngine = engines.filter(
-                    (r) => r.status === "free",
+                    (r) => r.status === "reserved",
                 )[0];
 
                 if (

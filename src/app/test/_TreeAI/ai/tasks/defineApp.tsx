@@ -10,13 +10,28 @@ import { getUIMessages } from "../getUIMessages";
 import z from "zod";
 import { IOTooling } from "../../io/IOTooling";
 import { SPEC_DOC_PATH } from "../constants";
-import { useTreeAI } from "../../state/useTreeAI";
+import { EngineSetting, useTreeAI } from "../../state/useTreeAI";
 import { refreshUIMessages } from "../refreshUIMessages";
 import { writeFileContent } from "../../io/writeFileContent";
 import { removeUIMessages } from "../removeUIMessages";
 import { saveToBrowserDB } from "../../io/saveToBrowserDB";
+import { putBackFreeAIAsync } from "../putBackFreeAIAsync";
+import { getFreeAIAsync } from "../getFreeAIAsync";
+import { refreshEngineSlot } from "../refreshEngines";
+import { MyTask } from "../MyTaskManager";
 
-export async function defineAPp({ userPrompt, slot, model }) {
+export async function defineApp({ task }: { task: MyTask }) {
+    let userPrompt = useTreeAI.getState().userPrompt;
+
+    useTreeAI.setState({
+        userPrompt: "",
+    });
+
+    let { model, slot } = await getFreeAIAsync();
+
+    slot.bannerText = `🧑🏻‍💻 ${SPEC_DOC_PATH}`;
+    refreshEngineSlot(slot);
+
     addUIMessage({
         id: `${Math.random()}`,
         role: "user",
@@ -37,7 +52,7 @@ export async function defineAPp({ userPrompt, slot, model }) {
 
     const stream = createUIMessageStream({
         execute: ({ writer }) => {
-            const result = streamText({
+            const controllerResult = streamText({
                 model: model,
                 messages: [
                     //
@@ -47,7 +62,7 @@ export async function defineAPp({ userPrompt, slot, model }) {
                 tools: {
                     processUserRequirement: tool({
                         name: "Processing User Requirements",
-                        description: `When user wants to build app, processing User Requirements`,
+                        description: `Process User Requirements When user wants to build app and gave you an idea.`,
                         inputSchema: z.object({
                             userRequirement: z.string(),
                         }),
@@ -57,8 +72,7 @@ export async function defineAPp({ userPrompt, slot, model }) {
                         ) => {
                             //
                             //
-                            //
-                            const result = streamText({
+                            const requirementBuilder = streamText({
                                 tools: {
                                     ...IOTooling,
                                 },
@@ -192,7 +206,7 @@ write the result to "${SPEC_DOC_PATH}"
 
                             let text = "";
                             let startTime = performance.now();
-                            for await (let fragment of result.textStream) {
+                            for await (let fragment of requirementBuilder.textStream) {
                                 if (
                                     !useTreeAI.getState()
                                         .atLeastOneWorkerRunning
@@ -212,7 +226,7 @@ write the result to "${SPEC_DOC_PATH}"
                                 });
                             }
                             let endTime = performance.now();
-                            let val = await result.usage;
+                            let val = await requirementBuilder.usage;
                             let speedOutput =
                                 val.outputTokens /
                                 ((endTime - startTime) / 1000);
@@ -244,7 +258,7 @@ write the result to "${SPEC_DOC_PATH}"
                 },
             });
 
-            writer.merge(result.toUIMessageStream());
+            writer.merge(controllerResult.toUIMessageStream());
         },
     });
 

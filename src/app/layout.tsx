@@ -1,10 +1,12 @@
 import "@/styles/globals.css";
+import "@/styles/nprogress.css";
 
 import { type Metadata } from "next";
 import { Geist } from "next/font/google";
 
 import { TRPCReactProvider } from "@/trpc/react";
 import { Toaster } from "sonner";
+import "nprogress";
 
 export const metadata: Metadata = {
     title: "AI Stack + T3 Stack",

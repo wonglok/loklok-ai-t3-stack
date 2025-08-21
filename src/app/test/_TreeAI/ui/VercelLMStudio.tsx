@@ -22,22 +22,30 @@ export function VercelLMStudio() {
         ready();
     }, []);
 
+    let topTab = useTreeAI((r) => r.topTab);
     return (
         <>
             <div className="flex h-full min-w-full overflow-x-auto">
                 <div className="h-full w-[350px] shrink-0 overflow-y-scroll">
                     <DeveloperTeam></DeveloperTeam>
                 </div>
-                <div className="h-full w-[750px] shrink-0">
-                    <AIConversation></AIConversation>
-                </div>
-                <div className="h-full w-[350px] shrink-0">
-                    <TreeList></TreeList>
+
+                <div
+                    className="h-full shrink-0 py-3 pl-3"
+                    style={{ width: "calc(250px)" }}
+                >
+                    <div className="h-full w-full rounded-lg border py-3">
+                        <TreeList></TreeList>
+                    </div>
                 </div>
 
-                <CodeEditor></CodeEditor>
-                <div className="h-full w-[750px] shrink-0">
-                    <ViewAI></ViewAI>
+                <div
+                    className="h-full shrink-0"
+                    style={{ width: "calc(100% - 350px - 250px)" }}
+                >
+                    {topTab === "chat" && <AIConversation></AIConversation>}
+                    {topTab === "code" && <CodeEditor></CodeEditor>}
+                    {topTab === "web" && <ViewAI></ViewAI>}
                 </div>
             </div>
         </>

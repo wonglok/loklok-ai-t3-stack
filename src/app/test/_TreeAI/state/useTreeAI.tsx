@@ -13,7 +13,8 @@ export type EngineSetting = {
     modelProvider: string;
     modelOriginalName: string;
     enabled: boolean;
-    status: "empty" | "downloading" | "working" | "free";
+
+    status: "empty" | "downloading" | "reserved" | "working" | "free";
     bannerData: any;
     bannerText: string;
 };
@@ -78,9 +79,11 @@ export const useTreeAI = create<{
     engines: EngineSetting[];
     currentAIProvider: "lmstudio";
     models: MyModel[];
+    topTab: "chat" | "web" | "code";
 }>((set, get) => {
     return {
         //
+        topTab: "chat",
         uiMessages: [
             {
                 id: `_${Math.random()}`,

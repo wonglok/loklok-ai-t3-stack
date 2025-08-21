@@ -5,7 +5,7 @@ import { getEngineModel } from "./getEngineModel";
 import { LMStudioClient } from "@lmstudio/sdk";
 
 //  getLMStudioModel({ name: "openai/gpt-oss-20b" })
-
+import nprogress from "nprogress";
 export const bootEngines = async () => {
     // //
     // let currentAIProvider = useTreeAI.getState().currentAIProvider;
@@ -23,6 +23,7 @@ export const bootEngines = async () => {
     }
 
     let engines = useTreeAI.getState().engines || [];
+    nprogress.start();
 
     for (let engine of engines) {
         if (engine.enabled) {
@@ -38,9 +39,10 @@ export const bootEngines = async () => {
                                 useTreeAI.setState({
                                     engines: [...engines],
                                 });
+                                nprogress.inc();
                             },
                             config: {
-                                evalBatchSize: 131070 / 2,
+                                evalBatchSize: 131070,
                                 contextLength: 131070,
                             },
                         })
@@ -69,6 +71,7 @@ export const bootEngines = async () => {
             }
         }
     }
+    nprogress.done();
 
     toast(`AI Developer Team Loaded`, {
         description: (

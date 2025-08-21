@@ -32,35 +32,40 @@ export const AIConversation = () => {
     return (
         <div className="h-full w-full p-3">
             <div className="relative mx-auto size-full h-full max-w-4xl rounded-lg border p-3">
-                <div className="flex h-full flex-col">
+                <div className="flex h-full flex-col rounded-lg border">
                     <RenderMessages></RenderMessages>
 
-                    <PromptInput
-                        onSubmit={handleSubmit}
-                        className="relative mx-auto mt-4 w-full max-w-2xl"
-                    >
-                        <PromptInputTextarea
-                            value={userPrompt}
-                            placeholder="Say something..."
-                            disabled={atLeastOneWorkerRunning}
-                            onChange={(ev) => {
-                                useTreeAI.setState({
-                                    userPrompt: ev.target.value,
-                                });
-                            }}
-                            className="pr-12"
-                        />
-                        <PromptInputSubmit
-                            key={atLeastOneWorkerRunning + "bool"}
-                            status={
-                                atLeastOneWorkerRunning ? `submitted` : `ready`
-                            }
-                            disabled={
-                                !userPrompt.trim() || atLeastOneWorkerRunning
-                            }
-                            className="absolute right-1 bottom-1"
-                        />
-                    </PromptInput>
+                    <div className="p-3">
+                        <PromptInput
+                            onSubmit={handleSubmit}
+                            className="relative mx-auto mt-4 w-full max-w-2xl"
+                        >
+                            <PromptInputTextarea
+                                value={userPrompt}
+                                placeholder="Say something..."
+                                disabled={atLeastOneWorkerRunning}
+                                onChange={(ev) => {
+                                    useTreeAI.setState({
+                                        userPrompt: ev.target.value,
+                                    });
+                                }}
+                                className="pr-12"
+                            />
+                            <PromptInputSubmit
+                                key={atLeastOneWorkerRunning + "bool"}
+                                status={
+                                    atLeastOneWorkerRunning
+                                        ? `submitted`
+                                        : `ready`
+                                }
+                                disabled={
+                                    !userPrompt.trim() ||
+                                    atLeastOneWorkerRunning
+                                }
+                                className="absolute right-1 bottom-1"
+                            />
+                        </PromptInput>
+                    </div>
                 </div>
             </div>
         </div>
