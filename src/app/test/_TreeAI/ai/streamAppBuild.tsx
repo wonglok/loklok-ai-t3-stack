@@ -331,7 +331,7 @@ write the result to "${SPEC_DOC_PATH}"
                         data: toolData.text,
                     };
                     removeUIMessages({ ...loaderMessage });
-                    removeUIMessages({ ...thinking });
+                    refreshUIMessages({ ...thinking });
                 }
             }
         }
