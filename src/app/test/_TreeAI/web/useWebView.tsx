@@ -97,7 +97,10 @@ export const useWebView = ({
         show: (
             <>
                 {frame && (
-                    <iframe className="h-full w-full" src={frame}></iframe>
+                    <iframe
+                        className="h-full w-full bg-gradient-to-tr from-white to-gray-300"
+                        src={frame}
+                    ></iframe>
                 )}
             </>
         ),
