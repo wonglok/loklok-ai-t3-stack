@@ -18,6 +18,8 @@ import { IOTooling } from "../io/IOTooling";
 import { writeFileContent } from "../io/writeFileContent";
 import { putBackFreeAIAsync } from "./putBackFreeAIAsync";
 import { saveToBrowserDB } from "../io/saveToBrowserDB";
+import { readFileContent } from "../io/readFileContent";
+import { removeUIMessages } from "./removeUIMessages";
 
 export const streamAppBuild = async () => {
     await bootEngines();
@@ -35,7 +37,7 @@ export const streamAppBuild = async () => {
         userPrompt: "",
     });
 
-    // let content = await readFileContent({ path: SPEC_DOC_PATH });
+    let content = await readFileContent({ path: SPEC_DOC_PATH });
 
     addUIMessage({
         id: `${Math.random()}`,
@@ -43,7 +45,7 @@ export const streamAppBuild = async () => {
         parts: [{ type: "text", text: userPrompt }],
     });
 
-    addUIMessage({
+    let loaderMessage: UIMessage = {
         id: `${Math.random()}`,
         role: "assistant",
         parts: [
@@ -52,7 +54,8 @@ export const streamAppBuild = async () => {
                 data: `${slot.name} Developer is writing the Development Plan.`,
             },
         ],
-    });
+    };
+    addUIMessage(loaderMessage);
 
     const stream = createUIMessageStream({
         execute: ({ writer }) => {
@@ -289,32 +292,33 @@ write the result to "${SPEC_DOC_PATH}"
                         type: "data-code-md",
                         data: "Get Set Ready...",
                     };
+                    refreshUIMessages({ ...thinking });
                 }
 
                 if (toolData.status === "in-progress") {
-                    thinking.parts[0] = {
-                        type: "data-code-md",
-                        data: toolData.text,
-                    };
-
                     await writeFileContent({
                         path: `${SPEC_DOC_PATH}`,
                         content: toolData.text,
                     });
+
+                    thinking.parts[0] = {
+                        type: "data-code-md",
+                        data: toolData.text,
+                    };
                     refreshUIMessages({ ...thinking });
                 }
 
                 if (toolData.status === "done") {
-                    thinking.parts[0] = {
-                        type: "data-code-md",
-                        data: toolData.text,
-                    };
-
                     await writeFileContent({
                         path: `${SPEC_DOC_PATH}`,
                         content: toolData.text,
                     });
-                    refreshUIMessages({ ...thinking });
+                    thinking.parts[0] = {
+                        type: "data-code-md",
+                        data: toolData.text,
+                    };
+                    removeUIMessages({ ...loaderMessage });
+                    removeUIMessages({ ...thinking });
                 }
             }
         }
@@ -338,4 +342,8 @@ write the result to "${SPEC_DOC_PATH}"
     });
 
     await putBackFreeAIAsync({ engine: slot });
+
+    //
+
+    // await putBackFreeAIAsync({ engine: slot });
 };

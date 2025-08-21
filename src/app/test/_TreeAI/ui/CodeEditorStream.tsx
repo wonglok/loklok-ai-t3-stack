@@ -105,7 +105,7 @@ export function CodeEditorStream({
             height={height}
             width={width}
             onMount={handleEditorDidMount}
-            language={language}
+            language={atLeastOneWorkerRunning ? "text" : language}
             value={text}
         ></Editor>
     );

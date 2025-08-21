@@ -99,6 +99,7 @@ function RenderMessages() {
                                                 key={`${message.id}-${i}`}
                                                 text={part.data}
                                                 language="markdown"
+                                                height="250px"
                                             ></CodeEditorStream>
                                         );
 
@@ -107,6 +108,7 @@ function RenderMessages() {
                                             <CodeEditorStream
                                                 text={part.data}
                                                 language="typescript"
+                                                height="250px"
                                                 key={`${message.id}-${i}`}
                                             ></CodeEditorStream>
                                         );
