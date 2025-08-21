@@ -285,15 +285,6 @@ write the result to "${SPEC_DOC_PATH}"
                 };
 
                 if (toolData.status === "begin") {
-                    // thinking.parts[0] = {
-                    //     type: "data-code",
-                    //     data: "Get Set Ready...",
-                    // };
-                    // thinking.parts[1] = {
-                    //     type: "data-code-btn",
-                    //     data: `${SPEC_DOC_PATH}`,
-                    // };
-                    // refreshUIMessages({ ...thinking });
                 }
 
                 if (toolData.status === "in-progress") {
@@ -303,11 +294,11 @@ write the result to "${SPEC_DOC_PATH}"
                     });
 
                     thinking.parts[0] = {
-                        type: "data-code",
+                        type: "data-codeedit",
                         data: toolData.text,
                     };
                     thinking.parts[1] = {
-                        type: "data-code-btn",
+                        type: "data-codeedit-btn",
                         data: `${SPEC_DOC_PATH}`,
                     };
                     refreshUIMessages({ ...thinking });
@@ -321,11 +312,11 @@ write the result to "${SPEC_DOC_PATH}"
                     await saveToBrowserDB();
 
                     thinking.parts[0] = {
-                        type: "data-code",
+                        type: "data-codeedit",
                         data: toolData.text,
                     };
                     thinking.parts[1] = {
-                        type: "data-code-btn",
+                        type: "data-codeedit-btn",
                         data: `${SPEC_DOC_PATH}`,
                     };
                     refreshUIMessages({ ...thinking });

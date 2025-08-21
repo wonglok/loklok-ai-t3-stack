@@ -132,7 +132,7 @@ function RenderMessages() {
                                                 {`Reasoning... ${part?.text || ""}`}
                                             </Response>
                                         );
-                                    case "data-code": // we don't use any reasoning or tool calls in this example
+                                    case "data-codeedit": // we don't use any reasoning or tool calls in this example
                                         return (
                                             <>
                                                 <CodeEditorStream
@@ -144,7 +144,7 @@ function RenderMessages() {
                                             </>
                                         );
 
-                                    case "data-code-btn": // we don't use any reasoning or tool calls in this example
+                                    case "data-codeedit-btn": // we don't use any reasoning or tool calls in this example
                                         return (
                                             <>
                                                 <div className="flex justify-end">

@@ -54,7 +54,9 @@ export async function createReactAppRoot({
             {
                 role: "system",
                 content: `
-Use "write file" tool to write the genrated code into files accordinlg to each file.
+You are a developer.
+
+You always use "write file" tool to write the genrated code into files accordinlg to each file.
                 `,
             },
             ...getModelMessagesFromUIMessages(),
@@ -69,7 +71,8 @@ ${content}`,
                 role: "user",
                 content: `
 - Implement all the react js component in the "product requirement definition" above.
-- please write to the appropriate places.
+- please write to the react js component files to the /components/... folder
+
 for example React Root App component:
 export function App () {
 
@@ -81,8 +84,7 @@ export function App () {
 - Only output code, dont include markdown or text warpper
 
 - make sure you write to the correct file:
-- this file should write at /components/App.jsx
-- other file should write at /components/...
+- react js component file should be written at /components/... folder
 
                 `,
             },
@@ -90,6 +92,8 @@ export function App () {
         ],
         model,
     });
+
+    console.log(JSON.stringify(response.toolResults));
 
     // let text = "";
     // for await (let part of response.textStream) {

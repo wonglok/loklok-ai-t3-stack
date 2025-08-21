@@ -47,20 +47,19 @@ export function MyApp () {
 
     let [output, setOutput] = useState('')
 
-    let [ppap, setApp] = React.useState(null)
+    let [outlet, setApp] = React.useState(null)
 
     React.useEffect(() => {
         let files = ${JSON.stringify(appFiles)};
 
-        if (files.some((r) => { return r.name === '/components/App.js' })) {
-            import('/components/App.js').then((myModule) =>{
+        import('/components/App.js').then((myModule) =>{
                 console.log('myModule', myModule)
                 if (myModule?.App) {
                     try {
-                        setApp(<>
+                        setApp(<div>
                             123
                             <myModule.App></myModule.App>
-                        </>)
+                        </div>)
                     } catch (e) {
                         console.log(e)
                     }
@@ -68,11 +67,10 @@ export function MyApp () {
             }).catch((e) => {
                 console.log(e)
             })
-        }
     }, [])
 
     return <div className="w-full h-full relative">
-        {ppap}
+        {outlet}
     </div>
 }
 `,
