@@ -25,6 +25,7 @@ export async function defineApp({ args, task }: { args: any; task: MyTask }) {
     let { model, slot } = await getFreeAIAsync();
 
     slot.bannerText = `🧑🏻‍💻 ${SPEC_DOC_PATH}`;
+
     refreshEngineSlot(slot);
 
     addUIMessage({
