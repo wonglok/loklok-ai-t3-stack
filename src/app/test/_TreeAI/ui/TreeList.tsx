@@ -12,7 +12,7 @@ export function TreeList() {
             {/*  */}
             <TreeItem itemId="/docs" label="App Docs">
                 {files
-                    .filter((r) => r.path.startsWith("/docs"))
+                    .filter((r) => r?.path?.startsWith("/docs"))
                     .map((r) => {
                         return (
                             <TreeItem
