@@ -41,13 +41,18 @@ import * as React from 'react'
 import { Canvas } from '@react-three/fiber'
 import { Sphere, MeshTransmissionMaterial, Environment, OrbitControls } from '@react-three/drei'
 import { useSDK } from '/ui/useSDK.js'
+import { useState } from 'react'
 
-export function MyApp () {
+export function MyApp () {  
+
+    let [output, setOutput] = useState('')
 
     let [App, setApp] = React.useState(null)
 
     React.useEffect(() => {
         let files = ${JSON.stringify(appFiles)};
+
+        setOutput(JSON.stringify(files, null, '\t'));
 
         if (files.some((r) => { return r.name === '/component/App.js' })) {
             import('/component/App.js').then((myModule) =>{
@@ -66,6 +71,7 @@ export function MyApp () {
     }, [])
 
     return <div className="w-full h-full relative">
+        <pre>{output}</pre>
         <Canvas className="w-full h-full ">
             <Sphere>
                 <MeshTransmissionMaterial color="white" thickness={1.1}></MeshTransmissionMaterial>
