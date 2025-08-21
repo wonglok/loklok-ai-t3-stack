@@ -20,6 +20,7 @@ import { refreshEngineSlot } from "../refreshEngines";
 import { MyTask } from "./_core/MyTaskManager";
 import { getModelMessagesFromUIMessages } from "../getModelMessagesFromUIMessages";
 import { v4 } from "uuid";
+import { putUIMessage } from "../putUIMessage";
 
 export async function createNewApp({
     userPrompt,
@@ -267,7 +268,7 @@ write the result to "${SPEC_DOC_PATH}"
         ],
     } as UIMessage;
 
-    addUIMessage(thinking);
+    putUIMessage(thinking);
 
     let canGo = true;
     let run = async () => {
