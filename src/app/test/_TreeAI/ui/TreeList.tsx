@@ -6,7 +6,7 @@ import { useTreeAI } from "../state/useTreeAI";
 
 export function TreeList() {
     let files = useTreeAI((r) => r.files);
-
+    files = files || [];
     return (
         <SimpleTreeView expandedItems={["/docs"]} className="h-full w-full">
             {/*  */}
