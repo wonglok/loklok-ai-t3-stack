@@ -317,6 +317,8 @@ write the result to "${SPEC_DOC_PATH}"
                         path: `${SPEC_DOC_PATH}`,
                         content: toolData.text,
                     });
+                    await saveToBrowserDB();
+
                     thinking.parts[0] = {
                         type: "data-code-md",
                         data: toolData.text,
@@ -325,15 +327,12 @@ write the result to "${SPEC_DOC_PATH}"
                         type: "data-code-md-btn",
                         data: `${SPEC_DOC_PATH}`,
                     };
-                    removeUIMessages({ ...loaderMessage });
                     refreshUIMessages({ ...thinking });
                 }
             }
         }
         if (canGo) {
-            requestAnimationFrame(() => {
-                run();
-            });
+            run();
         }
     };
     run();
