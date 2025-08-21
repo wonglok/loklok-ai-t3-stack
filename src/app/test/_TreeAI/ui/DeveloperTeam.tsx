@@ -36,7 +36,7 @@ export function DeveloperTeam() {
                         >
                             <div className="space-y-0.5">
                                 <div className="flex justify-between px-2">
-                                    <div>{`${displayName}`}</div>
+                                    <div className="text-sm">{`${displayName}`}</div>
                                     <div className="flex items-center">
                                         <EnableSwitch
                                             name={name}
@@ -99,7 +99,7 @@ function AIMatcher({ name }: { name: string }) {
                             });
                         }
                     }}
-                    className="mt-2 rounded-lg border p-2"
+                    className="mt-2 rounded-lg border p-2 text-center text-sm"
                 >
                     {item.bannerText}
                 </div>

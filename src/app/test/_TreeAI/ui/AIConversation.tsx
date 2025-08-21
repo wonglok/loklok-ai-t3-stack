@@ -40,6 +40,7 @@ export const AIConversation = () => {
                             onSubmit={handleSubmit}
                             className="relative mx-auto mt-4 w-full max-w-2xl"
                         >
+                            {/*  */}
                             <PromptInputTextarea
                                 value={userPrompt}
                                 placeholder="Say something..."
@@ -51,6 +52,7 @@ export const AIConversation = () => {
                                 }}
                                 className="pr-12"
                             />
+
                             <PromptInputSubmit
                                 key={atLeastOneWorkerRunning + "bool"}
                                 status={
