@@ -14,30 +14,37 @@ export const MyFuncs = {
         import("../createNewApp").then((r) => r.createNewApp(v)),
 
     createrReactApp: (v: any) =>
-        import("../createrReactApp").then((r) => r.createrReactApp(v)),
+        import("../createReactApp").then((r) => r.createReactApp(v)),
 
     receiveResponse: (v: any) =>
         import("../receiveResponse").then((r) => r.receiveResponse(v)),
 };
 
-let tasks: MyTask[] = [];
 export const MyTaskManager = {
-    tasks,
+    taskList: [] as MyTask[],
+    doneTask: (name: string) => {
+        let task = MyTaskManager.taskList.find((r) => r.name === name);
+        console.log(task);
+        if (task) {
+            task.status = "done";
+        }
+    },
     add: (a: { name: string; deps: string[]; args?: any }) => {
-        tasks.push({
+        MyTaskManager.taskList.push({
             name: a.name,
             deps: a.deps,
             args: a.args,
             status: "init",
         });
     },
+
     workAll: async () => {
         let doWork = async () => {
             let freeEngineSetting = useAI
                 .getState()
                 .engines.find((r) => r.status === "free");
 
-            let task = tasks.find((r) => r.status === "init");
+            let task = MyTaskManager.taskList.find((r) => r.status === "init");
             //
             let hasDeps;
 
@@ -47,7 +54,7 @@ export const MyTaskManager = {
                     let doneCount = 0;
 
                     for (let dep of task.deps) {
-                        let hasFound = !!tasks.find(
+                        let hasFound = !!MyTaskManager.taskList.find(
                             (t) => t.name === dep && t.status === "done",
                         );
                         if (hasFound) {

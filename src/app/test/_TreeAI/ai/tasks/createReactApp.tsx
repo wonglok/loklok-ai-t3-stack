@@ -28,7 +28,7 @@ import { refreshEngineSlot } from "../refreshEngines";
 import { readFileContent } from "../../io/readFileContent";
 import { writeFileContent } from "../../io/writeFileContent";
 
-export async function createrReactApp({
+export async function createReactApp({
     userPrompt,
     task,
 }: {
@@ -42,7 +42,7 @@ export async function createrReactApp({
 
     let content = await readFileContent({ path: SPEC_DOC_PATH });
 
-    console.log("createrReactApp", content);
+    console.log("createReactApp", content);
 
     let response = streamText({
         messages: [
@@ -59,14 +59,16 @@ ${content}`,
                 content: `
 Write ReactJS Component "/components/App.tsx" according to the "product requirement definition" above.
 
-- Only write the following javascript function
+- Implement the "App" javascript function, according to the "product requirement definition" above.
 
 export function App () {
 
     return <>
-        {/* ... more code here */}
+        ...
     </>
 }
+
+- Only output code, dont include markdown or text warpper
 
                 `,
             },
@@ -81,10 +83,11 @@ export function App () {
         console.log(text);
         writeFileContent({ path: `${APP_ROOT_PATH}`, content: text });
     }
+
     await writeFileContent({ path: `${APP_ROOT_PATH}`, content: text });
     await saveToBrowserDB();
 
-    await saveToBrowserDB();
+    MyTaskManager.doneTask("createReactApp");
 
     await putBackFreeAIAsync({ engine: slot });
 }

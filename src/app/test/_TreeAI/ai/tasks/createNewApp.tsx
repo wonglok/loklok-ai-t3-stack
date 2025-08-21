@@ -17,7 +17,7 @@ import { saveToBrowserDB } from "../../io/saveToBrowserDB";
 import { putBackFreeAIAsync } from "../putBackFreeAIAsync";
 import { getFreeAIAsync } from "../getFreeAIAsync";
 import { refreshEngineSlot } from "../refreshEngines";
-import { MyTask } from "./_core/MyTaskManager";
+import { MyTask, MyTaskManager } from "./_core/MyTaskManager";
 import { getModelMessagesFromUIMessages } from "../getModelMessagesFromUIMessages";
 import { v4 } from "uuid";
 import { putUIMessage } from "../putUIMessage";
@@ -336,9 +336,11 @@ write the result to "${SPEC_DOC_PATH}"
             run();
         }
     };
-    run();
+    await run();
 
     await saveToBrowserDB();
+
+    MyTaskManager.doneTask("createNewApp");
 
     await new Promise((resolve) => {
         let tttt = setInterval(() => {

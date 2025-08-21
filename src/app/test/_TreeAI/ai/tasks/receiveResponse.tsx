@@ -74,19 +74,7 @@ ${f.content}
         info.push(haventInit);
     }
 
-    let common = () => {
-        MyTaskManager.add({
-            name: "createNewApp",
-            deps: [],
-            args: { userPrompt: userPrompt },
-        });
-
-        MyTaskManager.add({
-            name: "createrReactApp",
-            deps: ["createNewApp"],
-            args: { userPrompt: userPrompt },
-        });
-    };
+    let common = () => {};
     // createMongoose
     await generateText({
         toolChoice: "required",
@@ -106,8 +94,12 @@ ${f.content}
                     //
 
                     console.log("createNewProject", userRequirement);
+                    MyTaskManager.add({
+                        name: "createNewApp",
+                        deps: [],
+                        args: { userPrompt: userPrompt },
+                    });
 
-                    common();
                     return `ok`;
                 },
                 inputSchema: z.object({ userRequirement: z.string() }),
@@ -120,7 +112,12 @@ ${f.content}
 
                     console.log("updateExistingProject", userRequirement);
 
-                    common();
+                    MyTaskManager.add({
+                        name: "createrReactApp",
+                        deps: [],
+                        args: { userPrompt: userPrompt },
+                    });
+
                     return `ok`;
                 },
                 inputSchema: z.object({ userRequirement: z.string() }),

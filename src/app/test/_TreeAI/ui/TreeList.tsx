@@ -82,11 +82,11 @@ export function TreeList() {
             </TreeItem>
 
             <TreeItem
-                itemId="/react"
+                itemId="/components"
                 label={
                     <>
                         📂
-                        {` React Component`}
+                        {` React Components`}
                     </>
                 }
                 onClick={() => {
@@ -98,7 +98,7 @@ export function TreeList() {
                 }}
             >
                 {files
-                    .filter((r) => r?.path?.startsWith("/react"))
+                    .filter((r) => r?.path?.startsWith("/components"))
                     .map((r) => {
                         return (
                             <TreeItem
