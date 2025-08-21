@@ -24,6 +24,11 @@ import { writeFileContent } from "../../io/writeFileContent";
 import { saveToBrowserDB } from "../../io/saveToBrowserDB";
 import z from "zod";
 import { XMLParser, XMLBuilder, XMLValidator } from "fast-xml-parser";
+import {
+    LokLokParseError,
+    parseCodeBlocks,
+    parseMyDearLoklokCode,
+} from "./_core/LokLokParser";
 
 export async function createReactAppRoot({
     userPrompt,
@@ -43,6 +48,19 @@ export async function createReactAppRoot({
             role: "user",
             content: `Here's the "product requirement definition": 
 ${content}`,
+        });
+    }
+
+    if (files?.length > 0) {
+        files.forEach((ff) => {
+            info.push({
+                role: "assistant",
+                content: `
+--------[file: ${ff.path}][begin]---------
+${ff.content}
+--------[file: ${ff.path}][end]---------
+                `,
+            });
         });
     }
 
@@ -82,7 +100,7 @@ ${content}`,
                 content: `
 Instructions:
 
-- Memorise the "product requirement definition", identify React Component modules and implement them in this format, use only javascript ".js" files:
+- Memorise the "product requirement definition", identify React Component modules and implement them in this format, use only typescript ".ts" files:
 - DO NOT WRAP THE CODE WITH markdown
 - ONLY WRITE PURE CODE FOR {file_1_code} etc
 - the folder for components is at "/components/*"
@@ -92,14 +110,19 @@ export function App () {...}
 - include the following lines:
 import * as React from 'react';
 
-- write the App component to "/components/App.js"
-- write the other components to "/components/*.js"
+- when write the App component, write file to "/components/App.tsx"
+- when write the other components, write file to "/components/*.tsx"
 
+- for formatting follow this:
 
-- format please follow this:
-<x-mydearloklokcode file="{file_1_name}">
+[mydearloklokcode file="{file_1_name}"]
 {file_1_code}
-<x-mydearloklokcode>
+[/mydearloklokcode]
+
+[mydearloklokcode file="{file_2_name}"]
+{file_2_code}
+[/mydearloklokcode]
+
                 `,
             },
             //
@@ -113,25 +136,34 @@ import * as React from 'react';
         console.log(text);
     }
 
-    let divDoc = document.createElement("div");
-    divDoc.innerHTML = text;
+    try {
+        const blocks = parseCodeBlocks(`${text}`);
+        console.log("Parsed blocks:", JSON.stringify(blocks, null, 2));
 
-    let allCodes = divDoc.querySelectorAll("x-mydearloklokcode");
+        for (let block of blocks) {
+            if (block.fileName.startsWith("/")) {
+            } else {
+                block.fileName = `/${block.fileName}`;
+            }
 
-    for (let i = 0; i < allCodes.length; i++) {
-        let path = allCodes[i].attributes[0]?.value;
-        let content = allCodes[i].innerHTML;
-
-        if (path.startsWith("/")) {
-        } else {
-            path = `/${path}`;
+            await writeFileContent({
+                path: `${block.fileName}`,
+                content: block.code,
+            });
         }
-
-        await writeFileContent({
-            path: `${path}`,
-            content: content,
-        });
+    } catch (e) {
+        if (e instanceof LokLokParseError) {
+            console.error(`Parse error: ${e.message}`);
+        } else {
+            console.error(e);
+        }
     }
+
+    // for (let i = 0; i < allCodes.length; i++) {
+    //     let path = allCodes[i].attributes[0]?.value;
+    //     let content = allCodes[i].innerHTML;
+
+    // }
 
     // console.log(await response.object);
 
