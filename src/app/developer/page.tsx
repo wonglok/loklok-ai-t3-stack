@@ -1,9 +1,9 @@
 "use client";
 
-import { useFilesFrameHook } from "../app-editor/[appID]/ui/util/useFilesFrameHook";
+import { useWebView } from "../test/_TreeAI/web/useWebView";
 
 export default function Page() {
-    let { show } = useFilesFrameHook({
+    let { show } = useWebView({
         files: [
             {
                 path: `/src/main.js`,
