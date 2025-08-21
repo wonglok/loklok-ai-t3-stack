@@ -132,7 +132,7 @@ function RenderMessages() {
                                                 {`Reasoning... ${part?.text || ""}`}
                                             </Response>
                                         );
-                                    case "data-code-md": // we don't use any reasoning or tool calls in this example
+                                    case "data-code": // we don't use any reasoning or tool calls in this example
                                         return (
                                             <>
                                                 <CodeEditorStream
@@ -144,7 +144,7 @@ function RenderMessages() {
                                             </>
                                         );
 
-                                    case "data-code-md-btn": // we don't use any reasoning or tool calls in this example
+                                    case "data-code-btn": // we don't use any reasoning or tool calls in this example
                                         return (
                                             <>
                                                 <div className="flex justify-end">
@@ -204,6 +204,15 @@ function RenderMessages() {
                                                             });
                                                         }}
                                                     >{`Build me a expense tracking app`}</div>
+
+                                                    <div
+                                                        className="mb-2 cursor-pointer rounded-lg border p-3 font-mono text-sm transition-all duration-500 hover:bg-gray-100"
+                                                        onClick={() => {
+                                                            useAI.setState({
+                                                                userPrompt: `Build me a hello world app`,
+                                                            });
+                                                        }}
+                                                    >{`Build me a hello world app`}</div>
                                                 </div>
                                             </div>
                                         );

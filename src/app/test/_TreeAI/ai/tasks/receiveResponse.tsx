@@ -94,9 +94,15 @@ ${f.content}
                     //
 
                     console.log("createNewProject", userRequirement);
+
                     MyTaskManager.add({
                         name: "createNewApp",
                         deps: [],
+                        args: { userPrompt: userPrompt },
+                    });
+                    MyTaskManager.add({
+                        name: "createReactAppRoot",
+                        deps: ["createNewApp"],
                         args: { userPrompt: userPrompt },
                     });
 

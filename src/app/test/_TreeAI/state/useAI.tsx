@@ -96,7 +96,7 @@ export const useAI = create<{
                 ],
             },
         ],
-        userPrompt: "build a todo list",
+        userPrompt: "",
         currentPath: "",
         appID: "myApp001",
         files: [],

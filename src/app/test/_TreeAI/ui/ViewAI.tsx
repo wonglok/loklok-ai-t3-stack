@@ -47,19 +47,22 @@ export function MyApp () {
 
     let [output, setOutput] = useState('')
 
-    let [App, setApp] = React.useState(null)
+    let [ppap, setApp] = React.useState(null)
 
     React.useEffect(() => {
         let files = ${JSON.stringify(appFiles)};
 
-        if (files.some((r) => { return r.name === '/component/App.js' })) {
-            import('/component/App.js').then((myModule) =>{
+        if (files.some((r) => { return r.name === '/components/App.js' })) {
+            import('/components/App.js').then((myModule) =>{
                 console.log('myModule', myModule)
                 if (myModule?.App) {
                     try {
-                        setApp(<myModule.App></myModule.App>)
+                        setApp(<>
+                            123
+                            <myModule.App></myModule.App>
+                        </>)
                     } catch (e) {
-
+                        console.log(e)
                     }
                 }
             }).catch((e) => {
@@ -69,17 +72,18 @@ export function MyApp () {
     }, [])
 
     return <div className="w-full h-full relative">
-        <pre className="whitespace-pre-wrap text-xs">{output}</pre>
-        <Canvas className="w-full h-full">
-            <Sphere>
-                <MeshTransmissionMaterial color="white" thickness={1.1}></MeshTransmissionMaterial>
-            </Sphere>
-            <Environment preset="lobby" background></Environment>
-            <OrbitControls></OrbitControls>
-        </Canvas> 
+        {ppap}
     </div>
 }
 `,
+
+                //  <Canvas className="w-full h-full">
+                //             <Sphere>
+                //                 <MeshTransmissionMaterial color="white" thickness={1.1}></MeshTransmissionMaterial>
+                //             </Sphere>
+                //             <Environment preset="lobby" background></Environment>
+                //             <OrbitControls></OrbitControls>
+                //         </Canvas>
             },
             {
                 path: `/src/main.js`,

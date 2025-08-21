@@ -44,7 +44,12 @@ export async function createReactAppRoot({
 
     console.log("createReactAppRoot", content);
 
-    let response = streamText({
+    let response = await generateText({
+        toolChoice: "required",
+        tools: {
+            ...IOTooling,
+        },
+
         messages: [
             ...getModelMessagesFromUIMessages(),
             //
@@ -57,10 +62,8 @@ ${content}`,
             {
                 role: "user",
                 content: `
-Write ReactJS Component "/components/App.tsx" according to the "product requirement definition" above.
-
-- Implement the "App" javascript function, according to the "product requirement definition" above.
-
+- Implement all the react js components function, according to the "product requirement definition" above.
+for example:
 export function App () {
 
     return <>
@@ -70,6 +73,9 @@ export function App () {
 
 - Only output code, dont include markdown or text warpper
 
+- make sure you write to the correct file:
+- this file should write at /components/App.jsx
+- other file should write at /components/...
                 `,
             },
             //
@@ -77,15 +83,15 @@ export function App () {
         model,
     });
 
-    let text = "";
-    for await (let part of response.textStream) {
-        text += part;
-        console.log(text);
-        writeFileContent({ path: `${APP_ROOT_PATH}`, content: text });
-    }
+    // let text = "";
+    // for await (let part of response.textStream) {
+    //     text += part;
+    //     console.log(text);
+    //     writeFileContent({ path: `${APP_ROOT_PATH}`, content: text });
+    // }
 
-    await writeFileContent({ path: `${APP_ROOT_PATH}`, content: text });
-    await saveToBrowserDB();
+    // await writeFileContent({ path: `${APP_ROOT_PATH}`, content: text });
+    // await saveToBrowserDB();
 
     MyTaskManager.doneTask("createReactAppRoot");
 

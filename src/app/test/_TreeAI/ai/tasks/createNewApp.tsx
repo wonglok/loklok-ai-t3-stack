@@ -101,8 +101,8 @@ Questions for clarification (if any).
 Step 2: System Design
 
 Using the refined requirements, design a full-stack web app for the vibe coding platform with:
-Frontend: ReactJS with TypeScript for UI components and pages, emphasizing intuitive, mobile-responsive design. zustand.js for React State Management for User Interface Interactivity. React Three Fiber for 3D Interactives
-Backend: tRPC for type-safe APIs (assume Next.js integration).
+Frontend: ReactJS with TypeScript for UI components and pages, emphasizing intuitive, mobile-responsive design. zustand.js for React State Management for User Interface Interactivity. React Three Fiber for 3D Interactives. wouter hash rotuer for react
+Backend: tRPC for type-safe APIs (assume react.js integration).
 Database: Mongoose ODM with MongoDB for data storage.
 
 Provide detailed designs for:
@@ -145,15 +145,15 @@ Categorize into reusable (e.g., Button, InputField) and page-specific (e.g., Tas
 
 Include implementation notes:
 Folder structure (e.g., /components, /pages, /server/trpc).
-Key dependencies (e.g., react-hook-form, @trpc/client).
-Integration details (e.g., how React components call tRPC APIs).
+Key dependencies (e.g., react-hook-form, wouter hash rotuer for react, @trpc/client).
+Integration details (e.g., how React components call tRPC APIs, wouter hash rotuer for react rotuer).
 
 Output this step as a markdown section with a table or bullet points for components and notes.
 
 General Guidelines:
 
 Use markdown for clear formatting (headings, code blocks, tables).
-Assume a modern tech stack: Zustand, ReactJS with TypeScript, tRPC with Next.js, Mongoose/MongoDB.
+Assume a modern tech stack: Zustand, ReactJS with TypeScript, tRPC with React.js, Mongoose/MongoDB.
 Prioritize vibe coding principles: simplicity, AI-driven automation, and rapid prototyping for non-coders.
 If requirements are vague, note gaps in Step 1, suggest enhancements, and proceed with reasonable assumptions.
 Ensure outputs are beginner-friendly, with clear explanations for non-technical users.
@@ -286,11 +286,11 @@ write the result to "${SPEC_DOC_PATH}"
 
                 if (toolData.status === "begin") {
                     // thinking.parts[0] = {
-                    //     type: "data-code-md",
+                    //     type: "data-code",
                     //     data: "Get Set Ready...",
                     // };
                     // thinking.parts[1] = {
-                    //     type: "data-code-md-btn",
+                    //     type: "data-code-btn",
                     //     data: `${SPEC_DOC_PATH}`,
                     // };
                     // refreshUIMessages({ ...thinking });
@@ -303,11 +303,11 @@ write the result to "${SPEC_DOC_PATH}"
                     });
 
                     thinking.parts[0] = {
-                        type: "data-code-md",
+                        type: "data-code",
                         data: toolData.text,
                     };
                     thinking.parts[1] = {
-                        type: "data-code-md-btn",
+                        type: "data-code-btn",
                         data: `${SPEC_DOC_PATH}`,
                     };
                     refreshUIMessages({ ...thinking });
@@ -321,11 +321,11 @@ write the result to "${SPEC_DOC_PATH}"
                     await saveToBrowserDB();
 
                     thinking.parts[0] = {
-                        type: "data-code-md",
+                        type: "data-code",
                         data: toolData.text,
                     };
                     thinking.parts[1] = {
-                        type: "data-code-md-btn",
+                        type: "data-code-btn",
                         data: `${SPEC_DOC_PATH}`,
                     };
                     refreshUIMessages({ ...thinking });

@@ -27,10 +27,10 @@ export function CodeEditor() {
     }, [editor]);
 
     useEffect(() => {
-        if (atLeastOneWorkerRunning) {
+        if (atLeastOneWorkerRunning && currentPath === sortedFiles[0]?.path) {
             if (track) {
                 if (editor) {
-                    editor.revealLine(editor.getModel().getLineCount());
+                    // editor.revealLine(editor.getModel().getLineCount());
                     return () => {};
                 }
             } else {
