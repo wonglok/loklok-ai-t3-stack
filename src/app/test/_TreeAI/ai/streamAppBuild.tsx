@@ -22,6 +22,7 @@ import { SPEC_DOC_PATH } from "./constants";
 import { refreshEngineSlot } from "./refreshEngines";
 import { IOTooling } from "./IOTooling";
 import { LoaderIcon } from "lucide-react";
+import { writeFileContent } from "../io/writeFileContent";
 // import { readFileContent } from "../io/readFileContent";
 // import { writeFileContent } from "../io/writeFileContent";
 
@@ -55,7 +56,7 @@ export const streamAppBuild = async () => {
         parts: [
             {
                 type: "data-loading",
-                data: `Planning the development execution plan`,
+                data: `Writing the development execution plan`,
             },
         ],
     });
@@ -304,13 +305,23 @@ write the result to "${SPEC_DOC_PATH}"
                         type: "data-code-md",
                         data: toolData.text,
                     };
+
+                    await writeFileContent({
+                        path: `${SPEC_DOC_PATH}`,
+                        content: toolData.text,
+                    });
                 }
 
-                if (toolData.status === "in-progress") {
+                if (toolData.status === "done") {
                     thinking.parts[0] = {
                         type: "data-code-md",
                         data: toolData.text,
                     };
+
+                    await writeFileContent({
+                        path: `${SPEC_DOC_PATH}`,
+                        content: toolData.text,
+                    });
                 }
             }
             refreshUIMessages(thinking);
