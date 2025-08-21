@@ -17,6 +17,7 @@ import { refreshEngineSlot } from "./refreshEngines";
 import { IOTooling } from "../io/IOTooling";
 import { writeFileContent } from "../io/writeFileContent";
 import { putBackFreeAIAsync } from "./putBackFreeAIAsync";
+import { saveToBrowserDB } from "../io/saveToBrowserDB";
 
 export const streamAppBuild = async () => {
     await bootEngines();
@@ -290,8 +291,6 @@ write the result to "${SPEC_DOC_PATH}"
                     };
                 }
 
-                //
-
                 if (toolData.status === "in-progress") {
                     thinking.parts[0] = {
                         type: "data-code-md",
@@ -326,6 +325,8 @@ write the result to "${SPEC_DOC_PATH}"
         }
     };
     run();
+
+    await saveToBrowserDB();
 
     await new Promise((resolve) => {
         let tttt = setInterval(() => {

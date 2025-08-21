@@ -71,7 +71,18 @@ export const useTreeAI = create<{
 }>((set, get) => {
     return {
         //
-        uiMessages: [],
+        uiMessages: [
+            {
+                id: `_${Math.random()}`,
+                role: "assistant",
+                parts: [
+                    {
+                        type: "data-welcome",
+                        data: ``,
+                    },
+                ],
+            },
+        ],
         userPrompt: "build a todo list",
         currentPath: "",
         appID: "myApp001",

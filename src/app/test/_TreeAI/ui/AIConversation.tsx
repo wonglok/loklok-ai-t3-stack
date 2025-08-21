@@ -23,27 +23,6 @@ export const AIConversation = () => {
     const userPrompt = useTreeAI((r) => r.userPrompt);
     const atLeastOneWorkerRunning = useTreeAI((r) => r.atLeastOneWorkerRunning);
 
-    useEffect(() => {
-        if (atLeastOneWorkerRunning) {
-            return;
-        }
-        useTreeAI.setState({
-            atLeastOneWorkerRunning: false,
-            uiMessages: [
-                {
-                    id: `_${Math.random()}`,
-                    role: "assistant",
-                    parts: [
-                        {
-                            type: "data-welcome",
-                            data: ``,
-                        },
-                    ],
-                },
-            ],
-        });
-    }, [atLeastOneWorkerRunning]);
-
     const handleSubmit = useCallback(async (e: React.FormEvent) => {
         e.preventDefault();
 
