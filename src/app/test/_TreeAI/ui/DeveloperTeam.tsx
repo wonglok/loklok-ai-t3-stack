@@ -23,26 +23,30 @@ export function DeveloperTeam() {
     let engines = useTreeAI((r) => r.engines);
     return (
         <>
-            {engines.map(({ name, displayName }) => {
-                return (
-                    <div
-                        key={name + "onoff"}
-                        className="mb-5 rounded-lg border p-3 shadow-sm"
-                    >
-                        <div className="space-y-0.5">
-                            <div className="flex justify-between px-2">
-                                <div>{`${displayName}`}</div>
-                                <div className="flex items-center">
-                                    <EnableSwitch name={name}></EnableSwitch>
+            <div className="p-3">
+                {engines.map(({ name, displayName }) => {
+                    return (
+                        <div
+                            key={name + "onoff"}
+                            className="mb-5 rounded-lg border p-3 shadow-sm"
+                        >
+                            <div className="space-y-0.5">
+                                <div className="flex justify-between px-2">
+                                    <div>{`${displayName}`}</div>
+                                    <div className="flex items-center">
+                                        <EnableSwitch
+                                            name={name}
+                                        ></EnableSwitch>
+                                    </div>
+                                </div>
+                                <div>
+                                    <AIMatcher name={name}></AIMatcher>
                                 </div>
                             </div>
-                            <div>
-                                <AIMatcher name={name}></AIMatcher>
-                            </div>
                         </div>
-                    </div>
-                );
-            })}
+                    );
+                })}
+            </div>
         </>
     );
 }

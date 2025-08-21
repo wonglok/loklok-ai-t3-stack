@@ -9,8 +9,6 @@ import {
 import { getLang } from "./func/getLang";
 
 export function CodeEditor() {
-    //
-    //
     // let ref = useRef<any>(null);
 
     let atLeastOneWorkerRunning = useTreeAI((r) => r.atLeastOneWorkerRunning);

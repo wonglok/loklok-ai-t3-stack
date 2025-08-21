@@ -4,9 +4,9 @@ import { writeFileContent } from "../io/writeFileContent";
 import { saveToBrowserDB } from "../io/saveToBrowserDB";
 import { useTreeAI } from "../state/useTreeAI";
 
-export const buildAppDoc = async ({ model }) => {
+export const buildAppDoc = async ({ model, userPrompt = "" }) => {
     let userRequirements = `
-I want to build a todo app
+${userPrompt}
         `;
 
     let files = useTreeAI.getState().files;
@@ -108,11 +108,12 @@ Summarize how the design enables rapid app development via AI-driven workflows.
 Wrap the entire response in a single markdown document.
 
 Folder Structure:
-/components/... (react js compos - front end)
-/store/... (zustand js compos - front end)
-/trpc-front-end/... (trpc prcedures - front end)
-/trpc-back-end/... (trpc prcedures - back end)
-/model/... (mongoose models - back end)
+
+/components/... (react js compos - frontend)
+/zustand/... (zustand js compos - frontend)
+/trpc-frontend/... (trpc prcedures - frontend)
+/trpc-backend/... (trpc prcedures - backend)
+/model/... (mongoose models - backend)
 
 Existing Files:
 ${files.map((r) => r.path).join(`\n`)}

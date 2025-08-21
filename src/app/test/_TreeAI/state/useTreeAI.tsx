@@ -34,6 +34,8 @@ const Models: MyModel[] = [
 export const FSCache = {};
 
 export const useTreeAI = create<{
+    showIdeaPadType: string;
+    userPrompt: string;
     files: MyFile[];
     appID: string;
     currentPath: string;
@@ -44,6 +46,8 @@ export const useTreeAI = create<{
 }>((set, get) => {
     return {
         //
+        showIdeaPadType: "ideapad",
+        userPrompt: "build a todo list",
         currentPath: "",
         appID: "myApp001",
         files: [],

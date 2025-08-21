@@ -16,7 +16,10 @@ export const bootEngines = async () => {
     let engines = useTreeAI.getState().engines || [];
 
     for (let engine of engines) {
-        if (!EngineMap.has(`${engine.name}${engine.modelName}`)) {
+        if (
+            !EngineMap.has(`${engine.name}${engine.modelName}`) &&
+            engine.enabled
+        ) {
             let engineInstance = await buildEngineModel({ info: engine });
 
             EngineMap.set(`${engine.name}${engine.modelName}`, engineInstance);
@@ -28,6 +31,8 @@ export const bootEngines = async () => {
     }
 
     toast(`AI Developer Team Loaded`, {
-        description: <>{`Total: ${engines.length} AI Engineers`}</>,
+        description: (
+            <>{`Total: ${engines.filter((r) => r.enabled).length} AI Engineers`}</>
+        ),
     });
 };

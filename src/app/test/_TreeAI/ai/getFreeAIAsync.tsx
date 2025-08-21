@@ -1,9 +1,10 @@
+import { LanguageModel } from "ai";
 import { EngineMap } from "../state/EngineMap";
 import { useTreeAI } from "../state/useTreeAI";
 
 //  getLMStudioModel({ name: "openai/gpt-oss-20b" })
 
-export const asyncGetFreeAI = async () => {
+export const getFreeAIAsync = async () => {
     let engineConfig = await new Promise((resolve) => {
         let ttt = setInterval(() => {
             let engines = useTreeAI.getState().engines || [];
@@ -23,5 +24,5 @@ export const asyncGetFreeAI = async () => {
         });
     });
 
-    return engineConfig;
+    return engineConfig as LanguageModel;
 };

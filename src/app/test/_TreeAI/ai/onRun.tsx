@@ -1,4 +1,5 @@
-import { asyncGetFreeAI } from "./asyncGetFreeAI";
+import { asyncGetFreeAI } from "./getFreeAIAsync";
+import { bootEngines } from "./bootEngines";
 import { buildAppDoc } from "./buildAppDoc";
 
 export async function onRun(
@@ -7,16 +8,18 @@ export async function onRun(
         //
     },
 ) {
-    let yo = await new Promise((resolve) => {
+    await bootEngines();
+
+    let yolo = await new Promise((resolve) => {
         let tt = setInterval(() => {
             //
-            let yo = true;
-            if (yo) {
-                resolve(yo);
+            let yolo = true;
+            if (yolo) {
+                resolve(yolo);
                 clearInterval(tt);
             }
         });
     });
 
-    console.log(yo);
+    console.log(yolo);
 }
