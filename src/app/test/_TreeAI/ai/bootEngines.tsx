@@ -15,8 +15,12 @@ export const bootEngines = async () => {
     //
 
     const client = new LMStudioClient();
-    let loaded = await client.llm.listLoaded();
-    console.log(loaded);
+    let loadedEngines = [];
+    try {
+        loadedEngines = await client.llm.listLoaded();
+    } catch (e) {
+        console.log(e);
+    }
 
     let engines = useTreeAI.getState().engines || [];
 
@@ -25,7 +29,7 @@ export const bootEngines = async () => {
             !EngineMap.has(`${engine.name}${engine.modelName}`) &&
             engine.enabled
         ) {
-            if (loaded.some((r) => r.identifier === engine.modelName)) {
+            if (loadedEngines.some((r) => r.identifier === engine.modelName)) {
             } else {
                 try {
                     await client?.llm
