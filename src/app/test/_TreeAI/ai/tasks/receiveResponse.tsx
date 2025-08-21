@@ -77,6 +77,7 @@ ${f.content}
         info.push(haventInit);
     }
 
+    // createMongoose
     await generateText({
         toolChoice: "required",
         messages: [
@@ -99,6 +100,12 @@ ${f.content}
                     MyTaskManager.add({
                         name: "createNewApp",
                         deps: [],
+                        args: { userPrompt: userPrompt },
+                    });
+
+                    MyTaskManager.add({
+                        name: "createMongoose",
+                        deps: ["createNewApp"],
                         args: { userPrompt: userPrompt },
                     });
 
