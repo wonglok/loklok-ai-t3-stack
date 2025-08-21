@@ -26,7 +26,7 @@ export function VercelLMStudio() {
     return (
         <>
             <div className="flex h-full min-w-full overflow-x-auto">
-                <div className="h-full w-[350px] shrink-0 overflow-y-scroll">
+                <div className="h-full w-[275px] shrink-0 overflow-y-scroll">
                     <DeveloperTeam></DeveloperTeam>
                 </div>
 
@@ -41,7 +41,7 @@ export function VercelLMStudio() {
 
                 <div
                     className="h-full shrink-0"
-                    style={{ width: "calc(100% - 350px - 250px)" }}
+                    style={{ width: "calc(100% - 275px - 250px)" }}
                 >
                     {topTab === "chat" && <AIConversation></AIConversation>}
                     {topTab === "code" && <CodeEditor></CodeEditor>}
@@ -51,3 +51,6 @@ export function VercelLMStudio() {
         </>
     );
 }
+//
+//
+//
