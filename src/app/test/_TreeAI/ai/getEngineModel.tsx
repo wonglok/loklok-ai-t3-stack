@@ -1,7 +1,7 @@
 import { EngineSetting } from "../state/useTreeAI";
 import { getLMStudioModel } from "./getLMStudioModel";
 
-export const buildEngineModel = ({ info }: { info: EngineSetting }) => {
+export const getEngineModel = ({ info }: { info: EngineSetting }) => {
     //
     //
     if (info.modelProvider === "lmstudio") {

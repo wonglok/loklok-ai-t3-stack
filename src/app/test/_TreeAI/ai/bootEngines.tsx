@@ -1,7 +1,7 @@
 import { toast } from "sonner";
 import { EngineMap } from "../state/EngineMap";
 import { useTreeAI } from "../state/useTreeAI";
-import { buildEngineModel } from "./buildEngineModel";
+import { getEngineModel } from "./getEngineModel";
 import { LMStudioClient } from "@lmstudio/sdk";
 
 //  getLMStudioModel({ name: "openai/gpt-oss-20b" })
@@ -25,10 +25,7 @@ export const bootEngines = async () => {
     let engines = useTreeAI.getState().engines || [];
 
     for (let engine of engines) {
-        if (
-            !EngineMap.has(`${engine.name}${engine.modelName}`) &&
-            engine.enabled
-        ) {
+        if (engine.enabled) {
             if (loadedEngines.some((r) => r.identifier === engine.modelName)) {
             } else {
                 try {
@@ -37,24 +34,39 @@ export const bootEngines = async () => {
                             identifier: engine.modelName,
                             onProgress: (ev) => {
                                 console.log(ev);
+                                engine.bannerText = `✨ Loading ✨`;
+                                useTreeAI.setState({
+                                    engines: [...engines],
+                                });
                             },
                             config: {
+                                evalBatchSize: 16384,
                                 contextLength: 131070,
                             },
                         })
                         .catch((e) => {
                             console.log(e);
                         });
+
+                    engine.bannerText = ``;
+                    useTreeAI.setState({
+                        engines: [...engines],
+                    });
                 } catch (e) {
                     console.log(e);
                 }
             }
 
-            let engineInstance = await buildEngineModel({ info: engine });
+            if (!EngineMap.has(`${engine.name}${engine.modelName}`)) {
+                let engineInstance = await getEngineModel({ info: engine });
 
-            EngineMap.set(`${engine.name}${engine.modelName}`, engineInstance);
+                EngineMap.set(
+                    `${engine.name}${engine.modelName}`,
+                    engineInstance,
+                );
 
-            engine.status = "free";
+                engine.status = "free";
+            }
         }
     }
 
