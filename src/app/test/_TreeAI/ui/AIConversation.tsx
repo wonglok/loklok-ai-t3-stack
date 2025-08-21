@@ -29,6 +29,8 @@ export const AIConversation = () => {
         streamAppBuild();
     }, []);
 
+    //
+
     return (
         <div className="h-full w-full p-3">
             <div className="relative size-full rounded-lg border bg-white">
@@ -102,24 +104,37 @@ function RenderMessages() {
                                         );
                                     case "data-code-md": // we don't use any reasoning or tool calls in this example
                                         return (
-                                            <CodeEditorStream
-                                                key={`${message.id}-${i}`}
-                                                text={part.data}
-                                                language="markdown"
-                                                height="250px"
-                                                width="220px"
-                                            ></CodeEditorStream>
+                                            <>
+                                                <CodeEditorStream
+                                                    key={`${message.id}-${i}`}
+                                                    text={part.data}
+                                                    language="markdown"
+                                                    width="calc(250px - 30px)"
+                                                ></CodeEditorStream>
+                                            </>
                                         );
 
-                                    case "data-code-ts": // we don't use any reasoning or tool calls in this example
+                                    case "data-code-md-btn": // we don't use any reasoning or tool calls in this example
                                         return (
-                                            <CodeEditorStream
-                                                text={part.data}
-                                                language="typescript"
-                                                height="250px"
-                                                width="220px"
-                                                key={`${message.id}-${i}`}
-                                            ></CodeEditorStream>
+                                            <>
+                                                <div className="flex justify-end">
+                                                    <button
+                                                        className="mt-3 cursor-pointer rounded-lg bg-gray-200 p-3"
+                                                        onClick={() => {
+                                                            //
+                                                            useTreeAI.setState({
+                                                                //
+                                                                currentPath: `${part.data}`,
+                                                                topTab: "code",
+                                                                //
+                                                            });
+                                                            //
+                                                        }}
+                                                    >
+                                                        Open File
+                                                    </button>
+                                                </div>
+                                            </>
                                         );
 
                                     case "data-loading":

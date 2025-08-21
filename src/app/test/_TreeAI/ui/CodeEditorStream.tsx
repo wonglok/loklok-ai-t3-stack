@@ -8,7 +8,7 @@ import {
 
 export function CodeEditorStream({
     width = "500px",
-    height = "500px",
+    height = "250px",
     text,
     language = "markdown",
 }) {

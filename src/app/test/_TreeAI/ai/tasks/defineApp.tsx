@@ -297,6 +297,10 @@ write the result to "${SPEC_DOC_PATH}"
                         type: "data-code-md",
                         data: "Get Set Ready...",
                     };
+                    thinking.parts[1] = {
+                        type: "data-code-md-btn",
+                        data: `${SPEC_DOC_PATH}`,
+                    };
                     refreshUIMessages({ ...thinking });
                 }
 
@@ -310,6 +314,10 @@ write the result to "${SPEC_DOC_PATH}"
                         type: "data-code-md",
                         data: toolData.text,
                     };
+                    thinking.parts[1] = {
+                        type: "data-code-md-btn",
+                        data: `${SPEC_DOC_PATH}`,
+                    };
                     refreshUIMessages({ ...thinking });
                 }
 
@@ -321,6 +329,10 @@ write the result to "${SPEC_DOC_PATH}"
                     thinking.parts[0] = {
                         type: "data-code-md",
                         data: toolData.text,
+                    };
+                    thinking.parts[1] = {
+                        type: "data-code-md-btn",
+                        data: `${SPEC_DOC_PATH}`,
                     };
                     removeUIMessages({ ...loaderMessage });
                     refreshUIMessages({ ...thinking });
