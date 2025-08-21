@@ -207,7 +207,7 @@ write the result to "${SPEC_DOC_PATH}"
                             let newMessageID = `_${Math.floor(Math.random() * 10000000)}`;
 
                             writer.write({
-                                type: "data-process-user-requirement",
+                                type: "data-user-requirements",
                                 id: toolCallId,
                                 data: {
                                     id: newMessageID,
@@ -227,7 +227,7 @@ write the result to "${SPEC_DOC_PATH}"
                                 text += fragment;
 
                                 writer.write({
-                                    type: "data-process-user-requirement",
+                                    type: "data-user-requirements",
                                     id: toolCallId,
                                     data: {
                                         id: newMessageID,
@@ -238,7 +238,7 @@ write the result to "${SPEC_DOC_PATH}"
                             }
 
                             writer.write({
-                                type: "data-process-user-requirement",
+                                type: "data-user-requirements",
                                 id: toolCallId,
                                 data: {
                                     id: newMessageID,
@@ -284,7 +284,7 @@ write the result to "${SPEC_DOC_PATH}"
         let value = res.value;
 
         if (value) {
-            if (value?.type === "data-process-user-requirement") {
+            if (value?.type === "data-user-requirements") {
                 let toolData = value.data as {
                     id: string;
                     status: "begin" | "in-progress" | "done";
@@ -323,8 +323,8 @@ write the result to "${SPEC_DOC_PATH}"
                         content: toolData.text,
                     });
                 }
+                refreshUIMessages({ ...thinking });
             }
-            refreshUIMessages(thinking);
         }
         if (canGo) {
             requestAnimationFrame(() => {

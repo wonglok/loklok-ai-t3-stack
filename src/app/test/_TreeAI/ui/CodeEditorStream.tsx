@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTreeAI } from "../state/useTreeAI";
-import { sortDate } from "./func/sortDate";
 import { Editor } from "@monaco-editor/react";
 import {
     getWorker,
@@ -22,6 +21,7 @@ export function CodeEditorStream({
     useEffect(() => {
         if (editor) {
             editor.updateOptions({ wordWrap: false });
+            editor.revealLine(0);
         }
     }, [editor]);
 
@@ -32,10 +32,6 @@ export function CodeEditorStream({
                 return () => {};
             }
         } else {
-            if (editor) {
-                editor.revealLine(0);
-                return () => {};
-            }
             //
         }
     }, [atLeastOneWorkerRunning, text]);
@@ -109,7 +105,7 @@ export function CodeEditorStream({
             height={height}
             width={width}
             onMount={handleEditorDidMount}
-            language={atLeastOneWorkerRunning ? "text" : language}
+            language={language}
             value={text}
         ></Editor>
     );
