@@ -1,11 +1,11 @@
-import { useTreeAI } from "../state/useTreeAI";
+import { useAI } from "../state/useAI";
 
 export const addUIMessage = (uiMessage) => {
-    let uiMessages = useTreeAI.getState().uiMessages;
+    let uiMessages = useAI.getState().uiMessages;
 
     uiMessages.push(uiMessage);
 
-    useTreeAI.setState({
+    useAI.setState({
         uiMessages: JSON.parse(JSON.stringify(uiMessages)),
     });
 };

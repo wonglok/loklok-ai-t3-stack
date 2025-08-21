@@ -1,5 +1,5 @@
 import { toast } from "sonner";
-import { useTreeAI } from "../state/useTreeAI";
+import { useAI } from "../state/useAI";
 
 export type MyTask = {
     name: string;
@@ -15,7 +15,7 @@ export const MyTaskManager = {
     },
     workAll: async () => {
         let doWork = async () => {
-            let freeEngineSetting = useTreeAI
+            let freeEngineSetting = useAI
                 .getState()
                 .engines.find((r) => r.status === "free");
 

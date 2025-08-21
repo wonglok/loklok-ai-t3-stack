@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useTreeAI } from "../state/useTreeAI";
+import { useAI } from "../state/useAI";
 import { Editor } from "@monaco-editor/react";
 import {
     getWorker,
@@ -14,7 +14,7 @@ export function CodeEditorStream({
 }) {
     // let ref = useRef<any>(null);
 
-    let atLeastOneWorkerRunning = useTreeAI((r) => r.atLeastOneWorkerRunning);
+    let atLeastOneWorkerRunning = useAI((r) => r.atLeastOneWorkerRunning);
 
     let [editor, setEditor] = useState<any>();
 

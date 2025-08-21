@@ -6,7 +6,7 @@
 //     UIMessage,
 // } from "ai";
 // import { z } from "zod";
-// import { useTreeAI } from "../state/useTreeAI";
+// import { useAI } from "../state/useAI";
 // import { getUIMessages } from "./getUIMessages";
 import { bootEngines } from "./bootEngines";
 // import { getFreeAIAsync } from "./getFreeAIAsync";
@@ -37,7 +37,7 @@ export const streamAppBuild = async () => {
     window.addEventListener("work-task", ({ detail }: any) => {
         let { task, engineSetting } = detail;
 
-        console.log(task, engineSetting);
+        // console.log(task, engineSetting);
 
         MyFuncs[task.name]({ task });
     });

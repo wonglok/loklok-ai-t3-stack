@@ -69,7 +69,7 @@ const Models: MyModel[] = [
 
 export const FSCache = {};
 
-export const useTreeAI = create<{
+export const useAI = create<{
     uiMessages: UIMessage[];
     userPrompt: string;
     files: MyFile[];

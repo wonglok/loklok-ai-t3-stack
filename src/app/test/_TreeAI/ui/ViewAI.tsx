@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { useWebView } from "../web/useWebView";
-import { useTreeAI } from "../state/useTreeAI";
+import { useAI } from "../state/useAI";
 
 export function ViewAI({}) {
-    let files = useTreeAI((r) => r.files);
+    let files = useAI((r) => r.files);
     let [appFiles, setFiles] = useState([]);
 
     useEffect(() => {

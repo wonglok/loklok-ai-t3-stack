@@ -1,6 +1,6 @@
 import { toast } from "sonner";
 import { EngineMap } from "../state/EngineMap";
-import { useTreeAI } from "../state/useTreeAI";
+import { useAI } from "../state/useAI";
 import { getEngineModel } from "./getEngineModel";
 import { LMStudioClient } from "@lmstudio/sdk";
 
@@ -8,7 +8,7 @@ import { LMStudioClient } from "@lmstudio/sdk";
 import nprogress from "nprogress";
 export const bootEngines = async () => {
     // //
-    // let currentAIProvider = useTreeAI.getState().currentAIProvider;
+    // let currentAIProvider = useAI.getState().currentAIProvider;
     // if (currentAIProvider === "lmstudio") {
     //     getLMStudioModel({ name: "openai/gpt-oss-20b" });
     // }
@@ -22,7 +22,7 @@ export const bootEngines = async () => {
         console.log(e);
     }
 
-    let engines = useTreeAI.getState().engines || [];
+    let engines = useAI.getState().engines || [];
     nprogress.start();
 
     for (let engine of engines) {
@@ -36,7 +36,7 @@ export const bootEngines = async () => {
                             onProgress: (ev) => {
                                 console.log(ev);
                                 engine.bannerText = `✨ Loading ✨`;
-                                useTreeAI.setState({
+                                useAI.setState({
                                     engines: [...engines],
                                 });
                                 nprogress.inc();
@@ -51,7 +51,7 @@ export const bootEngines = async () => {
                         });
 
                     engine.bannerText = ``;
-                    useTreeAI.setState({
+                    useAI.setState({
                         engines: [...engines],
                     });
                 } catch (e) {

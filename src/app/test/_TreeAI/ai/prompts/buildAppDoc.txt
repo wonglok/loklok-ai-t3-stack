@@ -2,14 +2,14 @@
 // import { streamText } from "ai";
 // import { writeFileContent } from "../io/writeFileContent";
 // import { saveToBrowserDB } from "../io/saveToBrowserDB";
-// import { useTreeAI } from "../state/useTreeAI";
+// import { useAI } from "../state/useAI";
 
 // export const buildAppDoc = async ({ model, userPrompt = "" }) => {
 //     let userRequirements = `
 // ${userPrompt}
 //         `;
 
-//     let files = useTreeAI.getState().files;
+//     let files = useAI.getState().files;
 
 //     const { textStream } = await streamText({
 //         model: model,
@@ -129,15 +129,15 @@
 
 //     let text = "";
 //     for await (let fragment of textStream) {
-//         if (!useTreeAI.getState().atLeastOneWorkerRunning) {
-//             useTreeAI.getState().atLeastOneWorkerRunning = true;
+//         if (!useAI.getState().atLeastOneWorkerRunning) {
+//             useAI.getState().atLeastOneWorkerRunning = true;
 //         }
 //         text += fragment;
 
 //         await writeFileContent({ path: `/docs/prd.txt`, content: text });
 //     }
-//     if (useTreeAI.getState().atLeastOneWorkerRunning) {
-//         useTreeAI.getState().atLeastOneWorkerRunning = false;
+//     if (useAI.getState().atLeastOneWorkerRunning) {
+//         useAI.getState().atLeastOneWorkerRunning = false;
 //     }
 
 //     await writeFileContent({ path: `/docs/prd.txt`, content: text });

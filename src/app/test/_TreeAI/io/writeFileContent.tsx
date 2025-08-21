@@ -1,7 +1,7 @@
-import { useTreeAI } from "../state/useTreeAI";
+import { useAI } from "../state/useAI";
 
 export const writeFileContent = async ({ path, content }) => {
-    let files = useTreeAI.getState().files;
+    let files = useAI.getState().files;
 
     let file = files.find((r) => r.path === path);
 
@@ -15,7 +15,7 @@ export const writeFileContent = async ({ path, content }) => {
 
     file.content = content;
 
-    useTreeAI.setState({
+    useAI.setState({
         files: JSON.parse(JSON.stringify(files)),
     });
 };

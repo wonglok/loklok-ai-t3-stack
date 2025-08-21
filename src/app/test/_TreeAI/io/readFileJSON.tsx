@@ -1,7 +1,7 @@
-import { useTreeAI } from "../state/useTreeAI";
+import { useAI } from "../state/useAI";
 
 export const readFileContent = async ({ path }) => {
-    let files = useTreeAI.getState().files;
+    let files = useAI.getState().files;
 
     let file = files.find((r) => r.path === path);
 

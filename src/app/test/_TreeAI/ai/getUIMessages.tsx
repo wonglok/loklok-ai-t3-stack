@@ -1,7 +1,7 @@
-import { useTreeAI } from "../state/useTreeAI";
+import { useAI } from "../state/useAI";
 
 export const getUIMessages = () => {
-    let uiMessages = useTreeAI.getState().uiMessages;
+    let uiMessages = useAI.getState().uiMessages;
 
     return uiMessages;
 };

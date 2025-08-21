@@ -1,6 +1,6 @@
 "use client";
 
-import { useTreeAI } from "../state/useTreeAI";
+import { useAI } from "../state/useAI";
 
 import {
     GlassWaterIcon,
@@ -23,7 +23,7 @@ import { Switch } from "@/components/ui/switch";
 // import { useEffect } from "react";
 
 export function DeveloperTeam() {
-    let engines = useTreeAI((r) => r.engines);
+    let engines = useAI((r) => r.engines);
 
     return (
         <>
@@ -57,10 +57,10 @@ export function DeveloperTeam() {
 }
 
 function AIMatcher({ name }: { name: string }) {
-    let models = useTreeAI((r) => r.models);
-    let engines = useTreeAI((r) => r.engines);
+    let models = useAI((r) => r.models);
+    let engines = useAI((r) => r.engines);
     let item = engines.find((r) => r.name === name);
-    let atLeastOneWorkerRunning = useTreeAI((r) => r.atLeastOneWorkerRunning);
+    let atLeastOneWorkerRunning = useAI((r) => r.atLeastOneWorkerRunning);
 
     return (
         <>
@@ -73,7 +73,7 @@ function AIMatcher({ name }: { name: string }) {
                         item.modelName = v;
                         item.modelOriginalName = model.modelOriginalName;
 
-                        useTreeAI.setState({
+                        useAI.setState({
                             engines: JSON.parse(JSON.stringify(engines)),
                         });
                     }}
@@ -101,7 +101,7 @@ function AIMatcher({ name }: { name: string }) {
                     //     if (engine?.bannerData) {
                     //         if (engine.bannerData.type === "tab") {
                     //             if (engine.bannerData.topTab === "code") {
-                    //                 useTreeAI.setState({
+                    //                 useAI.setState({
                     //                     topTab: engine.bannerData.topTab,
                     //                     currentPath: engine.bannerData.filePath,
                     //                 });
@@ -120,10 +120,10 @@ function AIMatcher({ name }: { name: string }) {
 }
 
 function EnableSwitch({ name }: { name: string }) {
-    let engines = useTreeAI((r) => r.engines);
+    let engines = useAI((r) => r.engines);
     let item = engines.find((r) => r.name === name);
     let itemIDX = engines.findIndex((r) => r.name === name);
-    let atLeastOneWorkerRunning = useTreeAI((r) => r.atLeastOneWorkerRunning);
+    let atLeastOneWorkerRunning = useAI((r) => r.atLeastOneWorkerRunning);
 
     return (
         <>
@@ -139,7 +139,7 @@ function EnableSwitch({ name }: { name: string }) {
                 onCheckedChange={(v) => {
                     item.enabled = v;
 
-                    useTreeAI.setState({
+                    useAI.setState({
                         engines: JSON.parse(JSON.stringify(engines)),
                     });
                 }}

@@ -3,13 +3,13 @@ import {
     PromptInputSubmit,
     PromptInputTextarea,
 } from "@/components/ai-elements/prompt-input";
-import { useTreeAI } from "../state/useTreeAI";
+import { useAI } from "../state/useAI";
 import { Wand2Icon } from "lucide-react";
 
 export function IdeaPad() {
-    let atLeastOneWorkerRunning = useTreeAI((r) => r.atLeastOneWorkerRunning);
-    let userPrompt = useTreeAI((r) => r.userPrompt);
-    let files = useTreeAI((r) => r.files);
+    let atLeastOneWorkerRunning = useAI((r) => r.atLeastOneWorkerRunning);
+    let userPrompt = useAI((r) => r.userPrompt);
+    let files = useAI((r) => r.files);
     return (
         <>
             {
@@ -26,7 +26,7 @@ export function IdeaPad() {
                                         <div
                                             className="mb-2 cursor-pointer rounded-lg border p-3 font-mono text-sm transition-all duration-500 hover:bg-gray-100"
                                             onClick={() => {
-                                                useTreeAI.setState({
+                                                useAI.setState({
                                                     userPrompt: `Build me a todo list`,
                                                 });
                                             }}
@@ -35,7 +35,7 @@ export function IdeaPad() {
                                         <div
                                             className="mb-2 cursor-pointer rounded-lg border p-3 font-mono text-sm transition-all duration-500 hover:bg-gray-100"
                                             onClick={() => {
-                                                useTreeAI.setState({
+                                                useAI.setState({
                                                     userPrompt: `Build me a expense tracking app`,
                                                 });
                                             }}
@@ -60,7 +60,7 @@ export function IdeaPad() {
                                     value={userPrompt}
                                     placeholder="Say something..."
                                     onChange={(ev) => {
-                                        useTreeAI.setState({
+                                        useAI.setState({
                                             userPrompt: ev.target.value,
                                         });
                                     }}

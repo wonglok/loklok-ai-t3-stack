@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { MyFile, useTreeAI } from "../state/useTreeAI";
+import { MyFile, useAI } from "../state/useAI";
 import { useWebView } from "./useWebView";
 
 export function WebRuntime() {
-    let files = useTreeAI((r) => r.files) || [];
+    let files = useAI((r) => r.files) || [];
     let [myFiles, setState] = useState([]);
 
     useEffect(() => {

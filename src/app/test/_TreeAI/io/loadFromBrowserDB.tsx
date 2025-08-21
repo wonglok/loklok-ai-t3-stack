@@ -1,14 +1,14 @@
 import { createInstance } from "localforage";
-import { MyFile, useTreeAI } from "../state/useTreeAI";
+import { MyFile, useAI } from "../state/useAI";
 
 export const loadFromBrowserDB = async () => {
-    const appID = useTreeAI.getState().appID;
+    const appID = useAI.getState().appID;
     const appFiles = createInstance({
         name: `${appID}-files`,
     });
 
     let files = ((await appFiles.getItem("files")) as MyFile[]) || [];
-    useTreeAI.setState({
+    useAI.setState({
         files: files,
     });
 };

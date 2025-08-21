@@ -1,10 +1,10 @@
 import { createInstance } from "localforage";
-import { useTreeAI } from "../state/useTreeAI";
+import { useAI } from "../state/useAI";
 
 export const saveToBrowserDB = async () => {
     //
-    const appID = useTreeAI.getState().appID;
-    const files = useTreeAI.getState().files;
+    const appID = useAI.getState().appID;
+    const files = useAI.getState().files;
     const appFiles = createInstance({
         name: `${appID}-files`,
     });

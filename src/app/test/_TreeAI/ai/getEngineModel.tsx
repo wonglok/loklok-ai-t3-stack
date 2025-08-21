@@ -1,4 +1,4 @@
-import { EngineSetting } from "../state/useTreeAI";
+import { EngineSetting } from "../state/useAI";
 import { getLMStudioModel } from "./getLMStudioModel";
 
 export const getEngineModel = ({ info }: { info: EngineSetting }) => {

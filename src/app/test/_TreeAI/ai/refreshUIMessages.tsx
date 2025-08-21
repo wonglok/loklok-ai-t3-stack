@@ -1,9 +1,9 @@
 import { UIMessage } from "ai";
-import { useTreeAI } from "../state/useTreeAI";
+import { useAI } from "../state/useAI";
 
 export const refreshUIMessages = (uiMessage: UIMessage) => {
-    let uiMessages = useTreeAI.getState().uiMessages;
-    useTreeAI.setState({
+    let uiMessages = useAI.getState().uiMessages;
+    useAI.setState({
         uiMessages: JSON.parse(
             JSON.stringify(
                 uiMessages.map((msg) => {

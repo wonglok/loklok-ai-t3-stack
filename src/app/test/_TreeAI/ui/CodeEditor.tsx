@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useTreeAI } from "../state/useTreeAI";
+import { useAI } from "../state/useAI";
 import { sortDate } from "./func/sortDate";
 import { Editor } from "@monaco-editor/react";
 import {
@@ -11,10 +11,10 @@ import { getLang } from "./func/getLang";
 export function CodeEditor() {
     // let ref = useRef<any>(null);
 
-    let atLeastOneWorkerRunning = useTreeAI((r) => r.atLeastOneWorkerRunning);
-    let files = useTreeAI((r) => r.files);
+    let atLeastOneWorkerRunning = useAI((r) => r.atLeastOneWorkerRunning);
+    let files = useAI((r) => r.files);
     let sortedFiles = files?.slice().sort(sortDate).reverse();
-    let currentPath = useTreeAI((r) => r.currentPath);
+    let currentPath = useAI((r) => r.currentPath);
     let file = files.find((r) => r.path === currentPath);
     let track = sortedFiles[0]?.content === file?.content;
 

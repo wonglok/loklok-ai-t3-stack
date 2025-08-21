@@ -1,26 +1,48 @@
-import {
-    convertToModelMessages,
-    createUIMessageStream,
-    streamText,
-    tool,
-    UIMessage,
-} from "ai";
-import { addUIMessage } from "../addUIMessage";
-import { getUIMessages } from "../getUIMessages";
+import { convertToModelMessages, generateText, tool } from "ai";
+import { useAI } from "../state/useAI";
+import { getFreeAIAsync } from "./getFreeAIAsync";
+import { createUIMessageStream, streamText, UIMessage } from "ai";
+import { addUIMessage } from "./addUIMessage";
+import { getUIMessages } from "./getUIMessages";
 import z from "zod";
-import { IOTooling } from "../../io/IOTooling";
-import { SPEC_DOC_PATH } from "../constants";
-import { EngineSetting, useAI } from "../../state/useAI";
-import { refreshUIMessages } from "../refreshUIMessages";
-import { writeFileContent } from "../../io/writeFileContent";
-import { removeUIMessages } from "../removeUIMessages";
-import { saveToBrowserDB } from "../../io/saveToBrowserDB";
-import { putBackFreeAIAsync } from "../putBackFreeAIAsync";
-import { getFreeAIAsync } from "../getFreeAIAsync";
-import { refreshEngineSlot } from "../refreshEngines";
-import { MyTask } from "../MyTaskManager";
+import { IOTooling } from "./../io/IOTooling";
+import { SPEC_DOC_PATH } from "./constants";
+import { refreshUIMessages } from "./refreshUIMessages";
+import { writeFileContent } from "./../io/writeFileContent";
+import { removeUIMessages } from "./removeUIMessages";
+import { saveToBrowserDB } from "./../io/saveToBrowserDB";
+import { putBackFreeAIAsync } from "./putBackFreeAIAsync";
+import { refreshEngineSlot } from "./refreshEngines";
+import { getModelMessagesFromUIMessages } from "./getModelMessagesFromUIMessages";
+import { bootEngines } from "./bootEngines";
+import { MyTaskManager } from "./MyTaskManager";
 
-export async function defineApp({ task }: { task: MyTask }) {
+const MyFuncs = {
+    defineApp: (v: any) => onSubmitAIBox(v),
+};
+
+export async function onSubmitAIBox() {
+    await bootEngines();
+
+    // console.log(slot);
+
+    // let content = await readFileContent({ path: SPEC_DOC_PATH });
+    window.addEventListener("work-task", ({ detail }: any) => {
+        let { task, engineSetting } = detail;
+
+        // console.log(task, engineSetting);
+
+        MyFuncs[task.name]({ task });
+    });
+
+    MyTaskManager.add({
+        status: "init",
+        name: "defineApp",
+        deps: [],
+    });
+
+    await MyTaskManager.workAll();
+
     let userPrompt = useAI.getState().userPrompt;
 
     useAI.setState({
@@ -54,12 +76,94 @@ export async function defineApp({ task }: { task: MyTask }) {
         execute: ({ writer }) => {
             const controllerResult = streamText({
                 model: model,
-                messages: [
-                    //
-                    ...convertToModelMessages(getUIMessages()),
-                ],
+                system: `You are an AI Developer, you can help people build app or to modify app. you always reply to user`,
+                messages: getModelMessagesFromUIMessages(),
                 toolChoice: "required",
                 tools: {
+                    reply: tool({
+                        name: "Processing User Requirements",
+                        description: `Process User Requirements When user wants to build app and gave you an idea.`,
+                        inputSchema: z.object({
+                            userPrompt: z.string().describe("user prompt"),
+                        }),
+                        execute: async ({ userPrompt }, { toolCallId }) => {
+                            //
+                            //
+                            const textStreamResult = streamText({
+                                tools: {
+                                    ...IOTooling,
+                                },
+                                model: model,
+                                temperature: 0,
+                                messages: [
+                                    ...getModelMessagesFromUIMessages(),
+                                    {
+                                        role: "user",
+                                        content: `${userPrompt}`,
+                                    },
+                                ],
+                            });
+
+                            let newMessageID = `_${Math.floor(Math.random() * 10000000)}`;
+
+                            writer.write({
+                                type: "data-reply-user",
+                                id: toolCallId,
+                                data: {
+                                    id: newMessageID,
+                                    status: "begin",
+                                    text: "",
+                                },
+                            });
+
+                            let text = "";
+                            let startTime = performance.now();
+                            for await (let fragment of textStreamResult.textStream) {
+                                if (!useAI.getState().atLeastOneWorkerRunning) {
+                                    useAI.getState().atLeastOneWorkerRunning = true;
+                                }
+                                text += fragment;
+
+                                writer.write({
+                                    type: "data-reply-user",
+                                    id: toolCallId,
+                                    data: {
+                                        id: newMessageID,
+                                        status: "in-progress",
+                                        text: text,
+                                    },
+                                });
+                            }
+                            let endTime = performance.now();
+                            let val = await textStreamResult.usage;
+                            let speedOutput =
+                                val.outputTokens /
+                                ((endTime - startTime) / 1000);
+
+                            console.log(
+                                "speedOutput",
+                                speedOutput,
+                                "duartion",
+                                endTime - startTime,
+                            );
+
+                            writer.write({
+                                type: "data-reply-user",
+                                id: toolCallId,
+                                data: {
+                                    id: newMessageID,
+                                    status: "done",
+                                    text: text,
+                                },
+                            });
+
+                            if (useAI.getState().atLeastOneWorkerRunning) {
+                                useAI.getState().atLeastOneWorkerRunning = false;
+                            }
+
+                            // return e.g. custom status for tool call
+                        },
+                    }),
                     processUserRequirement: tool({
                         name: "Processing User Requirements",
                         description: `Process User Requirements When user wants to build app and gave you an idea.`,
@@ -283,6 +387,60 @@ write the result to "${SPEC_DOC_PATH}"
 
         if (value) {
             if (value?.type === "data-user-requirements") {
+                let toolData = value.data as {
+                    id: string;
+                    status: "begin" | "in-progress" | "done";
+                    text: string;
+                };
+
+                if (toolData.status === "begin") {
+                    thinking.parts[0] = {
+                        type: "data-code-md",
+                        data: "Get Set Ready...",
+                    };
+                    thinking.parts[1] = {
+                        type: "data-code-md-btn",
+                        data: `${SPEC_DOC_PATH}`,
+                    };
+                    refreshUIMessages({ ...thinking });
+                }
+
+                if (toolData.status === "in-progress") {
+                    await writeFileContent({
+                        path: `${SPEC_DOC_PATH}`,
+                        content: toolData.text,
+                    });
+
+                    thinking.parts[0] = {
+                        type: "data-code-md",
+                        data: toolData.text,
+                    };
+                    thinking.parts[1] = {
+                        type: "data-code-md-btn",
+                        data: `${SPEC_DOC_PATH}`,
+                    };
+                    refreshUIMessages({ ...thinking });
+                }
+
+                if (toolData.status === "done") {
+                    await writeFileContent({
+                        path: `${SPEC_DOC_PATH}`,
+                        content: toolData.text,
+                    });
+                    thinking.parts[0] = {
+                        type: "data-code-md",
+                        data: toolData.text,
+                    };
+                    thinking.parts[1] = {
+                        type: "data-code-md-btn",
+                        data: `${SPEC_DOC_PATH}`,
+                    };
+                    removeUIMessages({ ...loaderMessage });
+                    refreshUIMessages({ ...thinking });
+                }
+            }
+
+            if (value?.type === "data-reply-user") {
                 let toolData = value.data as {
                     id: string;
                     status: "begin" | "in-progress" | "done";

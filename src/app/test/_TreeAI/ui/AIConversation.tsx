@@ -13,20 +13,21 @@ import {
 } from "@/components/ai-elements/prompt-input";
 
 import { Response } from "@/components/ai-elements/response";
-import { useTreeAI } from "../state/useTreeAI";
+import { useAI } from "../state/useAI";
 import { streamAppBuild } from "../ai/streamAppBuild";
 import { CodeEditorStream } from "./CodeEditorStream";
 import { useCallback, useEffect } from "react";
 import { LoaderIcon } from "lucide-react";
+import { onSubmitAIBox } from "../ai/onSubmitAIBox";
 
 export const AIConversation = () => {
-    const userPrompt = useTreeAI((r) => r.userPrompt);
-    const atLeastOneWorkerRunning = useTreeAI((r) => r.atLeastOneWorkerRunning);
+    const userPrompt = useAI((r) => r.userPrompt);
+    const atLeastOneWorkerRunning = useAI((r) => r.atLeastOneWorkerRunning);
 
     const handleSubmit = useCallback(async (e: React.FormEvent) => {
         e.preventDefault();
 
-        streamAppBuild();
+        onSubmitAIBox();
     }, []);
 
     //
@@ -48,7 +49,7 @@ export const AIConversation = () => {
                                 placeholder="Say something..."
                                 disabled={atLeastOneWorkerRunning}
                                 onChange={(ev) => {
-                                    useTreeAI.setState({
+                                    useAI.setState({
                                         userPrompt: ev.target.value,
                                     });
                                 }}
@@ -77,13 +78,16 @@ export const AIConversation = () => {
 };
 
 function RenderMessages() {
-    const uiMessages = useTreeAI((r) => r.uiMessages);
+    const uiMessages = useAI((r) => r.uiMessages);
     return (
         <Conversation>
             <ConversationContent>
-                {uiMessages.map((message) => (
+                {uiMessages.map((message, ii) => (
                     <Message from={message.role} key={message.id}>
-                        <MessageContent className="w-[250px]">
+                        <MessageContent
+                            key={message.id + ii}
+                            className="w-[320px]"
+                        >
                             {message.parts.map((part, i) => {
                                 switch (part.type) {
                                     case "text": // we don't use any reasoning or tool calls in this example
@@ -109,7 +113,7 @@ function RenderMessages() {
                                                     key={`${message.id}-${i}`}
                                                     text={part.data}
                                                     language="markdown"
-                                                    width="calc(250px - 30px)"
+                                                    width="calc(320px - 30px)"
                                                 ></CodeEditorStream>
                                             </>
                                         );
@@ -122,7 +126,7 @@ function RenderMessages() {
                                                         className="mt-3 cursor-pointer rounded-lg bg-gray-200 p-3"
                                                         onClick={() => {
                                                             //
-                                                            useTreeAI.setState({
+                                                            useAI.setState({
                                                                 //
                                                                 currentPath: `${part.data}`,
                                                                 topTab: "code",
@@ -160,7 +164,7 @@ function RenderMessages() {
                                                     <div
                                                         className="mb-2 cursor-pointer rounded-lg border p-3 font-mono text-sm transition-all duration-500 hover:bg-gray-100"
                                                         onClick={() => {
-                                                            useTreeAI.setState({
+                                                            useAI.setState({
                                                                 userPrompt: `Build me a todo list`,
                                                             });
                                                         }}
@@ -169,7 +173,7 @@ function RenderMessages() {
                                                     <div
                                                         className="mb-2 cursor-pointer rounded-lg border p-3 font-mono text-sm transition-all duration-500 hover:bg-gray-100"
                                                         onClick={() => {
-                                                            useTreeAI.setState({
+                                                            useAI.setState({
                                                                 userPrompt: `Build me a expense tracking app`,
                                                             });
                                                         }}

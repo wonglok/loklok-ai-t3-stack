@@ -1,6 +1,6 @@
 "use client";
 import { useEffect } from "react";
-import { useTreeAI } from "../state/useTreeAI";
+import { useAI } from "../state/useAI";
 import { ViewAI } from "./ViewAI";
 import { TreeList } from "./TreeList";
 import { CodeEditor } from "./CodeEditor";
@@ -10,7 +10,7 @@ import { AIConversation } from "./AIConversation";
 
 export function VercelLMStudio() {
     useEffect(() => {
-        useTreeAI.setState({
+        useAI.setState({
             appID: `myApp001`,
         });
     }, []);
@@ -24,7 +24,7 @@ export function VercelLMStudio() {
 
     //
 
-    let topTab = useTreeAI((r) => r.topTab);
+    let topTab = useAI((r) => r.topTab);
 
     return (
         <>
@@ -32,7 +32,7 @@ export function VercelLMStudio() {
             <div className="flex h-full min-w-full overflow-x-auto bg-gray-200">
                 <div
                     className="h-full"
-                    style={{ width: "calc((100% - 240px) * 0.5)" }}
+                    style={{ width: "calc((100% - 280px) * 0.5)" }}
                 >
                     <div className="h-full w-full p-3 pr-0">
                         <div className="size-full rounded-lg bg-white">
@@ -43,7 +43,7 @@ export function VercelLMStudio() {
 
                 <div
                     className="h-full shrink-0 py-3 pl-3"
-                    style={{ width: "calc(240px)" }}
+                    style={{ width: "calc(280px)" }}
                 >
                     <div
                         style={{ height: `calc(100% - 300px)` }}
@@ -63,7 +63,7 @@ export function VercelLMStudio() {
 
                 <div
                     className="h-full"
-                    style={{ width: "calc((100% - 240px) * 0.5)" }}
+                    style={{ width: "calc((100% - 280px) * 0.5)" }}
                 >
                     <div className="h-full w-full p-3">
                         <div className="size-full rounded-lg bg-white">

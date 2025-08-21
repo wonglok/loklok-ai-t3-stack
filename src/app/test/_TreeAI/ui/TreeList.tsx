@@ -2,22 +2,29 @@ import * as React from "react";
 // import Box from "@mui/material/Box";
 import { SimpleTreeView } from "@mui/x-tree-view/SimpleTreeView";
 import { TreeItem } from "@mui/x-tree-view/TreeItem";
-import { useTreeAI } from "../state/useTreeAI";
+import { useAI } from "../state/useAI";
+import { basename } from "path";
 // import { DeveloperTeam } from "./DeveloperTeam";
 
 export function TreeList() {
-    let files = useTreeAI((r) => r.files);
+    let files = useAI((r) => r.files);
     files = files || [];
+    let currentPath = useAI((r) => r.currentPath);
 
+    let opened = [];
+
+    if (currentPath.includes("/docs")) {
+        opened = ["/docs"];
+    }
     return (
-        <SimpleTreeView className="h-full w-full">
+        <SimpleTreeView expandedItems={opened} className="h-full w-full">
             {/*  */}
             {/* <TreeItem
                 key={"team-btn"}
                 itemId={"team-btn"}
                 label={"👫 AI Team"}
                 onClick={() => {
-                    useTreeAI.setState({ topTab: "team" });
+                    useAI.setState({ topTab: "team" });
                 }}
             ></TreeItem> */}
 
@@ -26,7 +33,7 @@ export function TreeList() {
                 itemId={"chat-btn"}
                 label={"🤖 AI Chat Channel"}
                 onClick={() => {
-                    useTreeAI.setState({ topTab: "chat" });
+                    useAI.setState({ topTab: "chat" });
                 }}
             ></TreeItem> */}
 
@@ -35,7 +42,7 @@ export function TreeList() {
                 itemId={"view-btn"}
                 label={<>{"📲 Preview"}</>}
                 onClick={() => {
-                    useTreeAI.setState({ topTab: "web" });
+                    useAI.setState({ topTab: "web" });
                 }}
             ></TreeItem>
 
@@ -44,7 +51,7 @@ export function TreeList() {
                 itemId={"code-btn"}
                 label={<>{"🧑🏻‍💻 Code"}</>}
                 onClick={() => {
-                    useTreeAI.setState({ topTab: "code" });
+                    useAI.setState({ topTab: "code" });
                 }}
             ></TreeItem> */}
 
@@ -54,7 +61,7 @@ export function TreeList() {
                 label={`🍱 ${"App Docs"}`}
                 onClick={() => {
                     //
-                    useTreeAI.setState({
+                    useAI.setState({
                         topTab: "code",
                     });
                     //
@@ -69,7 +76,7 @@ export function TreeList() {
                                 itemId={r.path}
                                 label={`${r.path}`}
                                 onClick={() => {
-                                    useTreeAI.setState({
+                                    useAI.setState({
                                         topTab: "code",
                                         currentPath: r.path,
                                     });
@@ -89,7 +96,7 @@ export function TreeList() {
                 }
                 onClick={() => {
                     //
-                    useTreeAI.setState({
+                    useAI.setState({
                         topTab: "code",
                     });
                     //
@@ -104,7 +111,7 @@ export function TreeList() {
                                 itemId={r.path}
                                 label={`${r.path}`}
                                 onClick={() => {
-                                    useTreeAI.setState({
+                                    useAI.setState({
                                         topTab: "code",
                                         currentPath: r.path,
                                     });

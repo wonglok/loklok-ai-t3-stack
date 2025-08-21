@@ -1,8 +1,8 @@
-import { EngineSetting, useTreeAI } from "../state/useTreeAI";
+import { EngineSetting, useAI } from "../state/useAI";
 
 export const refreshEngineSlot = (slot: EngineSetting) => {
-    let engines = useTreeAI.getState().engines;
-    useTreeAI.setState({
+    let engines = useAI.getState().engines;
+    useAI.setState({
         engines: JSON.parse(
             JSON.stringify(
                 engines.map((entry) => {

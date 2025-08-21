@@ -1,4 +1,4 @@
-import { EngineSetting, useTreeAI } from "../state/useTreeAI";
+import { EngineSetting, useAI } from "../state/useAI";
 
 //  getLMStudioModel({ name: "openai/gpt-oss-20b" })
 
@@ -8,8 +8,8 @@ export const putBackFreeAIAsync = async ({
     engine: EngineSetting;
 }) => {
     engine.status = "free";
-    useTreeAI.setState({
-        engines: useTreeAI.getState().engines.map((r) => {
+    useAI.setState({
+        engines: useAI.getState().engines.map((r) => {
             if (r.name === engine.name) {
                 return { ...engine };
             }
