@@ -40,7 +40,7 @@ export const bootEngines = async () => {
                                 });
                             },
                             config: {
-                                evalBatchSize: 16384,
+                                evalBatchSize: 131070,
                                 contextLength: 131070,
                             },
                         })
