@@ -1,19 +1,19 @@
 import { toast } from "sonner";
-import { useAI } from "../state/useAI";
+import { useAI } from "../../../state/useAI";
 import { useEffect } from "react";
 
 export type MyTask = {
     name: string;
     deps: string[];
-    args: any;
+    args: Record<string, any>;
     status: "init" | "reserved" | "working" | "done";
 };
 
 export const MyFuncs = {
-    defineApp: (v: any) =>
-        import("../ai/tasks/defineApp").then((r) => r.defineApp(v)),
+    createNewApp: (v: any) =>
+        import("../createNewApp").then((r) => r.createNewApp(v)),
     receiveResponse: (v: any) =>
-        import("../ai/tasks/receiveResponse").then((r) => r.receiveResponse(v)),
+        import("../receiveResponse").then((r) => r.receiveResponse(v)),
 };
 
 let tasks: MyTask[] = [];
@@ -67,7 +67,7 @@ export const MyTaskManager = {
                 let func = MyFuncs[task.name];
                 if (func) {
                     try {
-                        func({ task: task, args: task.args });
+                        func({ task: task, ...task.args });
                     } catch (e) {
                         console.log(e);
                     }

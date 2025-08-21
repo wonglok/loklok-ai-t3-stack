@@ -15,11 +15,14 @@ import {
 import { Response } from "@/components/ai-elements/response";
 import { useAI } from "../state/useAI";
 // import { streamAppBuild } from "../ai/streamAppBuild";
+
 import { CodeEditorStream } from "./CodeEditorStream";
 import { useCallback } from "react";
 import { LoaderIcon } from "lucide-react";
 import { bootEngines } from "../ai/bootEngines";
-import { MyTaskManager } from "../ai/MyTaskManager";
+import { MyTaskManager } from "../ai/tasks/_core/MyTaskManager";
+import { putUIMessage } from "../ai/putUIMessage";
+import { v4 } from "uuid";
 
 export const AIConversation = () => {
     const userPrompt = useAI((r) => r.userPrompt);
@@ -27,6 +30,23 @@ export const AIConversation = () => {
 
     const handleSubmit = useCallback(async (e: React.FormEvent) => {
         e.preventDefault();
+
+        let userPrompt = useAI.getState().userPrompt;
+        useAI.setState({
+            userPrompt: "",
+        });
+        putUIMessage({
+            id: v4(),
+            role: "user",
+            parts: [
+                {
+                    id: v4(),
+                    type: "text",
+                    text: userPrompt,
+                },
+            ],
+        });
+
         await bootEngines();
 
         MyTaskManager.add({

@@ -22,7 +22,7 @@ import { bootEngines } from "./bootEngines";
 // import { readFileContent } from "../io/readFileContent";
 // import { removeUIMessages } from "./removeUIMessages";
 // import { defineApp } from "./tasks/defineApp";
-import { MyTaskManager } from "./MyTaskManager";
+import { MyTaskManager } from "./tasks/_core/MyTaskManager";
 import { useAI } from "../state/useAI";
 import { getModelMessagesFromUIMessages } from "./getModelMessagesFromUIMessages";
 

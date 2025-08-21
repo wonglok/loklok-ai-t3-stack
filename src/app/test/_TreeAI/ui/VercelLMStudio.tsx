@@ -7,7 +7,7 @@ import { CodeEditor } from "./CodeEditor";
 import { bootup, SettingsBootUp } from "../ai/bootup";
 import { DeveloperTeam } from "./DeveloperTeam";
 import { AIConversation } from "./AIConversation";
-import { BootUpTaskManager } from "../ai/MyTaskManager";
+import { BootUpTaskManager } from "../ai/tasks/_core/MyTaskManager";
 
 export function VercelLMStudio() {
     useEffect(() => {

@@ -11,13 +11,8 @@ export function TreeList() {
     files = files || [];
     let currentPath = useAI((r) => r.currentPath);
 
-    let opened = [];
-
-    if (currentPath.includes("/docs")) {
-        opened = ["/docs"];
-    }
     return (
-        <SimpleTreeView expandedItems={opened} className="h-full w-full">
+        <SimpleTreeView className="h-full w-full">
             {/*  */}
             {/* <TreeItem
                 key={"team-btn"}

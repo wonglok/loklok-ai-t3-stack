@@ -2,6 +2,7 @@ import {
     convertToModelMessages,
     createUIMessageStream,
     generateText,
+    ModelMessage,
     streamText,
     tool,
     UIMessage,
@@ -18,40 +19,63 @@ import { EngineSetting, useAI } from "../../state/useAI";
 import { saveToBrowserDB } from "../../io/saveToBrowserDB";
 import { putBackFreeAIAsync } from "../putBackFreeAIAsync";
 import { getFreeAIAsync } from "../getFreeAIAsync";
-import { refreshEngineSlot } from "../refreshEngines";
-import { MyTask, MyTaskManager } from "../MyTaskManager";
+import { MyTask, MyTaskManager } from "./_core/MyTaskManager";
 import { getModelMessagesFromUIMessages } from "../getModelMessagesFromUIMessages";
 import md5 from "md5";
 import { putUIMessage } from "../putUIMessage";
-import { v4 } from "uuid";
+import { updateCamera } from "@react-three/fiber/dist/declarations/src/core/utils";
+import { refreshEngineSlot } from "../refreshEngines";
+import { readFileContent } from "../../io/readFileContent";
 
 export async function receiveResponse({
-    args,
+    userPrompt,
     task,
 }: {
-    args: { userPrompt: string };
+    userPrompt: string;
     task: MyTask;
 }) {
-    let userPrompt = useAI.getState().userPrompt;
-
-    useAI.setState({
-        userPrompt: "",
-    });
-
-    let replyMessage = {
-        id: `_${md5(`${Math.random()}`)}`,
-        role: "user",
-        parts: [
-            {
-                type: "text",
-                text: `${args.userPrompt}`,
-            },
-        ],
-    };
-
-    putUIMessage(replyMessage as UIMessage);
-
     let { model, slot } = await getFreeAIAsync();
+    let files = useAI.getState().files;
+
+    let info = [];
+
+    let content = await readFileContent({ path: SPEC_DOC_PATH });
+    let hasSpec = typeof content === "string" && content.length > 0;
+
+    if (hasSpec) {
+        let hasCode: ModelMessage = {
+            role: `assistant`,
+            content: `
+        we had an existing proejct.
+        Here are the files:
+
+${files
+    .map((f) => {
+        return `
+--------- <${f.path}> file begin----------
+file path "${f.path}"
+
+content: 
+${f.content}
+--------- <${f.path}> file end----------
+        `;
+    })
+    .join("\n")}
+
+        `,
+        };
+
+        info.push(hasCode);
+    } else {
+        let haventInit: ModelMessage = {
+            role: `assistant`,
+            content: `
+                we havent had existing proejct.
+                we need to start a new software project.
+            `,
+        };
+        info.push(haventInit);
+    }
 
     await generateText({
         toolChoice: "required",
@@ -60,31 +84,37 @@ export async function receiveResponse({
                 role: `system`,
                 content: `You are a polite senior developer.`,
             },
-            {
-                role: `assistant`,
-                content: `
-                we havent had existing proejct.
-                we need to start a new software project.
-                `,
-            },
+            ...info,
             ...getModelMessagesFromUIMessages(),
         ],
-        system: `You help user start a new software project, or update feature`,
+        system: `Your either create new project or update exsting project`,
         tools: {
-            startNewProject: tool({
-                description: "start a new software project",
+            createNewProject: tool({
+                description: "create a new software project",
                 execute: async ({ userRequirement }) => {
                     //
 
-                    console.log("userRequirement", userRequirement);
+                    console.log("createNewProject", userRequirement);
 
                     MyTaskManager.add({
-                        name: "defineApp",
+                        name: "createNewApp",
                         deps: [],
                         args: { userPrompt: userRequirement },
                     });
 
-                    return `${userRequirement}`;
+                    return `ok`;
+                },
+                inputSchema: z.object({ userRequirement: z.string() }),
+                outputSchema: z.string(),
+            }),
+            updateExistingProject: tool({
+                description: "update existing software project",
+                execute: async ({ userRequirement }) => {
+                    //
+
+                    console.log("updateExistingProject", userRequirement);
+
+                    return `ok`;
                 },
                 inputSchema: z.object({ userRequirement: z.string() }),
                 outputSchema: z.string(),
@@ -94,9 +124,6 @@ export async function receiveResponse({
     });
 
     await saveToBrowserDB();
-
-    slot.bannerText = ``;
-    refreshEngineSlot(slot);
 
     await putBackFreeAIAsync({ engine: slot });
 }

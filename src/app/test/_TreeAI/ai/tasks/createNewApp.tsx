@@ -6,11 +6,10 @@ import {
     UIMessage,
 } from "ai";
 import { addUIMessage } from "../addUIMessage";
-import { getUIMessages } from "../getUIMessages";
 import z from "zod";
 import { IOTooling } from "../../io/IOTooling";
 import { SPEC_DOC_PATH } from "../constants";
-import { EngineSetting, useAI } from "../../state/useAI";
+import { useAI } from "../../state/useAI";
 import { refreshUIMessages } from "../refreshUIMessages";
 import { writeFileContent } from "../../io/writeFileContent";
 import { removeUIMessages } from "../removeUIMessages";
@@ -18,33 +17,30 @@ import { saveToBrowserDB } from "../../io/saveToBrowserDB";
 import { putBackFreeAIAsync } from "../putBackFreeAIAsync";
 import { getFreeAIAsync } from "../getFreeAIAsync";
 import { refreshEngineSlot } from "../refreshEngines";
-import { MyTask } from "../MyTaskManager";
+import { MyTask } from "./_core/MyTaskManager";
+import { getModelMessagesFromUIMessages } from "../getModelMessagesFromUIMessages";
 import { v4 } from "uuid";
 
-export async function defineApp({ args, task }: { args: any; task: MyTask }) {
+export async function createNewApp({
+    userPrompt,
+    task,
+}: {
+    userPrompt?: string;
+    task: MyTask;
+}) {
     let { model, slot } = await getFreeAIAsync();
 
-    slot.bannerText = `🧑🏻‍💻 ${SPEC_DOC_PATH}`;
-
-    refreshEngineSlot(slot);
-
-    addUIMessage({
-        id: `${v4()}`,
-        role: "user",
-        parts: [{ type: "text", text: args.userPrompt }],
-    });
-
-    let loaderMessage: UIMessage = {
-        id: `${v4()}`,
-        role: "assistant",
-        parts: [
-            {
-                type: "data-loading",
-                data: `${slot.name} Developer is writing the Development Plan.`,
-            },
-        ],
-    };
-    addUIMessage(loaderMessage);
+    // let loaderMessage: UIMessage = {
+    //     id: `${v4()}`,
+    //     role: "assistant",
+    //     parts: [
+    //         {
+    //             type: "data-loading",
+    //             data: `${slot.name} Developer is writing the Development Plan.`,
+    //         },
+    //     ],
+    // };
+    // addUIMessage(loaderMessage);
 
     useAI.setState({
         topTab: "code",
@@ -55,10 +51,7 @@ export async function defineApp({ args, task }: { args: any; task: MyTask }) {
         execute: ({ writer }) => {
             const controllerResult = streamText({
                 model: model,
-                messages: [
-                    //
-                    ...convertToModelMessages(getUIMessages()),
-                ],
+                messages: getModelMessagesFromUIMessages(),
                 toolChoice: "required",
                 tools: {
                     processUserRequirement: tool({
@@ -91,7 +84,7 @@ You are an expert AI assistant for a vibe coding platform (similar to Base44 or 
 Instruction: Generating a "Product Requirement Definition"
 
 Input Requirements:
-${userRequirement} 
+${userPrompt} 
 
 Step 1: Requirements Refinement
 
@@ -291,15 +284,15 @@ write the result to "${SPEC_DOC_PATH}"
                 };
 
                 if (toolData.status === "begin") {
-                    thinking.parts[0] = {
-                        type: "data-code-md",
-                        data: "Get Set Ready...",
-                    };
-                    thinking.parts[1] = {
-                        type: "data-code-md-btn",
-                        data: `${SPEC_DOC_PATH}`,
-                    };
-                    refreshUIMessages({ ...thinking });
+                    // thinking.parts[0] = {
+                    //     type: "data-code-md",
+                    //     data: "Get Set Ready...",
+                    // };
+                    // thinking.parts[1] = {
+                    //     type: "data-code-md-btn",
+                    //     data: `${SPEC_DOC_PATH}`,
+                    // };
+                    // refreshUIMessages({ ...thinking });
                 }
 
                 if (toolData.status === "in-progress") {
