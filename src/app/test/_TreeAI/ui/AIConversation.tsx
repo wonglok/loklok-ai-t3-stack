@@ -19,6 +19,75 @@ import { CodeEditorStream } from "./CodeEditorStream";
 import { useCallback, useEffect } from "react";
 import { LoaderIcon } from "lucide-react";
 
+export const AIConversation = () => {
+    const userPrompt = useTreeAI((r) => r.userPrompt);
+    const atLeastOneWorkerRunning = useTreeAI((r) => r.atLeastOneWorkerRunning);
+
+    useEffect(() => {
+        if (atLeastOneWorkerRunning) {
+            return;
+        }
+        useTreeAI.setState({
+            atLeastOneWorkerRunning: false,
+            uiMessages: [
+                {
+                    id: `_${Math.random()}`,
+                    role: "assistant",
+                    parts: [
+                        {
+                            type: "data-welcome",
+                            data: ``,
+                        },
+                    ],
+                },
+            ],
+        });
+    }, [atLeastOneWorkerRunning]);
+
+    const handleSubmit = useCallback(async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        streamAppBuild();
+    }, []);
+
+    return (
+        <div className="h-full w-full p-3">
+            <div className="relative mx-auto size-full h-full max-w-4xl rounded-lg border p-3">
+                <div className="flex h-full flex-col">
+                    <RenderMessages></RenderMessages>
+
+                    <PromptInput
+                        onSubmit={handleSubmit}
+                        className="relative mx-auto mt-4 w-full max-w-2xl"
+                    >
+                        <PromptInputTextarea
+                            value={userPrompt}
+                            placeholder="Say something..."
+                            disabled={atLeastOneWorkerRunning}
+                            onChange={(ev) => {
+                                useTreeAI.setState({
+                                    userPrompt: ev.target.value,
+                                });
+                            }}
+                            className="pr-12"
+                        />
+                        <PromptInputSubmit
+                            key={atLeastOneWorkerRunning + "bool"}
+                            status={
+                                atLeastOneWorkerRunning ? `submitted` : `ready`
+                            }
+                            disabled={
+                                !userPrompt.trim() || atLeastOneWorkerRunning
+                            }
+                            className="absolute right-1 bottom-1"
+                        />
+                    </PromptInput>
+                </div>
+            </div>
+        </div>
+    );
+};
+
 function RenderMessages() {
     const uiMessages = useTreeAI((r) => r.uiMessages);
     return (
@@ -115,71 +184,3 @@ function RenderMessages() {
         </Conversation>
     );
 }
-export const AIConversation = () => {
-    const userPrompt = useTreeAI((r) => r.userPrompt);
-    const atLeastOneWorkerRunning = useTreeAI((r) => r.atLeastOneWorkerRunning);
-
-    useEffect(() => {
-        if (atLeastOneWorkerRunning) {
-            return;
-        }
-        useTreeAI.setState({
-            atLeastOneWorkerRunning: false,
-            uiMessages: [
-                {
-                    id: `_${Math.random()}`,
-                    role: "assistant",
-                    parts: [
-                        {
-                            type: "data-welcome",
-                            data: ``,
-                        },
-                    ],
-                },
-            ],
-        });
-    }, [atLeastOneWorkerRunning]);
-
-    const handleSubmit = useCallback(async (e: React.FormEvent) => {
-        e.preventDefault();
-
-        streamAppBuild();
-    }, []);
-
-    return (
-        <div className="h-full w-full p-3">
-            <div className="relative mx-auto size-full h-full max-w-4xl rounded-lg border p-3">
-                <div className="flex h-full flex-col">
-                    <RenderMessages></RenderMessages>
-
-                    <PromptInput
-                        onSubmit={handleSubmit}
-                        className="relative mx-auto mt-4 w-full max-w-2xl"
-                    >
-                        <PromptInputTextarea
-                            value={userPrompt}
-                            placeholder="Say something..."
-                            disabled={atLeastOneWorkerRunning}
-                            onChange={(ev) => {
-                                useTreeAI.setState({
-                                    userPrompt: ev.target.value,
-                                });
-                            }}
-                            className="pr-12"
-                        />
-                        <PromptInputSubmit
-                            key={atLeastOneWorkerRunning + "bool"}
-                            status={
-                                atLeastOneWorkerRunning ? `submitted` : `ready`
-                            }
-                            disabled={
-                                !userPrompt.trim() || atLeastOneWorkerRunning
-                            }
-                            className="absolute right-1 bottom-1"
-                        />
-                    </PromptInput>
-                </div>
-            </div>
-        </div>
-    );
-};

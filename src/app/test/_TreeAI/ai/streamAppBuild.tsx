@@ -56,7 +56,7 @@ export const streamAppBuild = async () => {
         parts: [
             {
                 type: "data-loading",
-                data: `Writing the development execution plan`,
+                data: `${slot.name} Developer is writing the Development Plan.`,
             },
         ],
     });
@@ -263,7 +263,6 @@ write the result to "${SPEC_DOC_PATH}"
 
     let reader = stream.getReader();
 
-    let canGo = true;
     let thinking = {
         id: "work_" + Math.random(),
         role: "assistant",
@@ -278,6 +277,7 @@ write the result to "${SPEC_DOC_PATH}"
 
     addUIMessage(thinking);
 
+    let canGo = true;
     let run = async () => {
         let res = await reader.read();
         canGo = !res.done;
@@ -310,6 +310,7 @@ write the result to "${SPEC_DOC_PATH}"
                         path: `${SPEC_DOC_PATH}`,
                         content: toolData.text,
                     });
+                    refreshUIMessages({ ...thinking });
                 }
 
                 if (toolData.status === "done") {
@@ -322,8 +323,8 @@ write the result to "${SPEC_DOC_PATH}"
                         path: `${SPEC_DOC_PATH}`,
                         content: toolData.text,
                     });
+                    refreshUIMessages({ ...thinking });
                 }
-                refreshUIMessages({ ...thinking });
             }
         }
         if (canGo) {
@@ -333,4 +334,13 @@ write the result to "${SPEC_DOC_PATH}"
         }
     };
     run();
+
+    await new Promise((resolve) => {
+        let tttt = setInterval(() => {
+            if (!canGo) {
+                resolve(null);
+                clearInterval(tttt);
+            }
+        });
+    });
 };

@@ -40,6 +40,18 @@ const Models: MyModel[] = [
     },
     {
         provider: "lmstudio",
+        name: "openai/gpt-oss-20b:5",
+    },
+    {
+        provider: "lmstudio",
+        name: "openai/gpt-oss-20b:6",
+    },
+    {
+        provider: "lmstudio",
+        name: "openai/gpt-oss-20b:7",
+    },
+    {
+        provider: "lmstudio",
         name: "openai/gpt-oss-120b",
     },
 ];
