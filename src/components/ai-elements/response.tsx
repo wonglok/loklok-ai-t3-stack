@@ -206,7 +206,7 @@ const components: Options["components"] = {
     ),
     a: ({ node, children, className, ...props }) => (
         <a
-            className={cn("font-medium text-primary underline", className)}
+            className={cn("text-primary font-medium underline", className)}
             rel="noreferrer"
             target="_blank"
             {...props}
@@ -216,7 +216,7 @@ const components: Options["components"] = {
     ),
     h1: ({ node, children, className, ...props }) => (
         <h1
-            className={cn("mt-6 mb-2 font-semibold text-3xl", className)}
+            className={cn("mt-6 mb-2 text-3xl font-semibold", className)}
             {...props}
         >
             {children}
@@ -224,7 +224,7 @@ const components: Options["components"] = {
     ),
     h2: ({ node, children, className, ...props }) => (
         <h2
-            className={cn("mt-6 mb-2 font-semibold text-2xl", className)}
+            className={cn("mt-6 mb-2 text-2xl font-semibold", className)}
             {...props}
         >
             {children}
@@ -232,7 +232,7 @@ const components: Options["components"] = {
     ),
     h3: ({ node, children, className, ...props }) => (
         <h3
-            className={cn("mt-6 mb-2 font-semibold text-xl", className)}
+            className={cn("mt-6 mb-2 text-xl font-semibold", className)}
             {...props}
         >
             {children}
@@ -240,7 +240,7 @@ const components: Options["components"] = {
     ),
     h4: ({ node, children, className, ...props }) => (
         <h4
-            className={cn("mt-6 mb-2 font-semibold text-lg", className)}
+            className={cn("mt-6 mb-2 text-lg font-semibold", className)}
             {...props}
         >
             {children}
@@ -248,7 +248,7 @@ const components: Options["components"] = {
     ),
     h5: ({ node, children, className, ...props }) => (
         <h5
-            className={cn("mt-6 mb-2 font-semibold text-base", className)}
+            className={cn("mt-6 mb-2 text-base font-semibold", className)}
             {...props}
         >
             {children}
@@ -256,7 +256,7 @@ const components: Options["components"] = {
     ),
     h6: ({ node, children, className, ...props }) => (
         <h6
-            className={cn("mt-6 mb-2 font-semibold text-sm", className)}
+            className={cn("mt-6 mb-2 text-sm font-semibold", className)}
             {...props}
         >
             {children}
@@ -307,7 +307,9 @@ export const Response = memo(
         parseIncompleteMarkdown: shouldParseIncompleteMarkdown = true,
         ...props
     }: ResponseProps) => {
+        //
         // Parse the children to remove incomplete markdown tokens if enabled
+        //
         const parsedChildren =
             typeof children === "string" && shouldParseIncompleteMarkdown
                 ? parseIncompleteMarkdown(children)
@@ -317,7 +319,7 @@ export const Response = memo(
             <div
                 className={cn(
                     "size-full [&>*:first-child]:mt-0 [&>*:last-child]:mb-0",
-                    className
+                    className,
                 )}
                 {...props}
             >
@@ -335,5 +337,5 @@ export const Response = memo(
             </div>
         );
     },
-    (prevProps, nextProps) => prevProps.children === nextProps.children
+    (prevProps, nextProps) => prevProps.children === nextProps.children,
 );

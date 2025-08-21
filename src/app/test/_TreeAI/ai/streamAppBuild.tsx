@@ -80,7 +80,7 @@ export const streamAppBuild = async () => {
                             //
                             //
                             //
-                            const { textStream } = streamText({
+                            const result = streamText({
                                 tools: {
                                     ...IOTooling,
                                 },
@@ -213,7 +213,8 @@ write the result to "${SPEC_DOC_PATH}"
                             });
 
                             let text = "";
-                            for await (let fragment of textStream) {
+                            let startTime = performance.now();
+                            for await (let fragment of result.textStream) {
                                 if (
                                     !useTreeAI.getState()
                                         .atLeastOneWorkerRunning
@@ -232,6 +233,18 @@ write the result to "${SPEC_DOC_PATH}"
                                     },
                                 });
                             }
+                            let endTime = performance.now();
+                            let val = await result.usage;
+                            let speedOutput =
+                                val.outputTokens /
+                                ((endTime - startTime) / 1000);
+
+                            console.log(
+                                "speedOutput",
+                                speedOutput,
+                                "duartion",
+                                endTime - startTime,
+                            );
 
                             writer.write({
                                 type: "data-user-requirements",
