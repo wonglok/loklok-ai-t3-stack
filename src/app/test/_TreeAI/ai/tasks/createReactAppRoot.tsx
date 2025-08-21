@@ -51,6 +51,12 @@ export async function createReactAppRoot({
         },
 
         messages: [
+            {
+                role: "system",
+                content: `
+Use "write file" tool to write the genrated code into files accordinlg to each file.
+                `,
+            },
             ...getModelMessagesFromUIMessages(),
             //
             {
@@ -62,8 +68,9 @@ ${content}`,
             {
                 role: "user",
                 content: `
-- Implement all the react js components function, according to the "product requirement definition" above.
-for example:
+- Implement all the react js component in the "product requirement definition" above.
+- please write to the appropriate places.
+for example React Root App component:
 export function App () {
 
     return <>
@@ -76,6 +83,7 @@ export function App () {
 - make sure you write to the correct file:
 - this file should write at /components/App.jsx
 - other file should write at /components/...
+
                 `,
             },
             //
