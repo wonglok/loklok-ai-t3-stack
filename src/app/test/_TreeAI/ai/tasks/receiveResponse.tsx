@@ -113,8 +113,13 @@ ${f.content}
                     console.log("updateExistingProject", userRequirement);
 
                     MyTaskManager.add({
-                        name: "createrReactApp",
+                        name: "createNewApp",
                         deps: [],
+                        args: { userPrompt: userPrompt },
+                    });
+                    MyTaskManager.add({
+                        name: "createReactAppRoot",
+                        deps: ["createNewApp"],
                         args: { userPrompt: userPrompt },
                     });
 

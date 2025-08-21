@@ -28,7 +28,7 @@ import { refreshEngineSlot } from "../refreshEngines";
 import { readFileContent } from "../../io/readFileContent";
 import { writeFileContent } from "../../io/writeFileContent";
 
-export async function createReactApp({
+export async function createReactAppRoot({
     userPrompt,
     task,
 }: {
@@ -42,7 +42,7 @@ export async function createReactApp({
 
     let content = await readFileContent({ path: SPEC_DOC_PATH });
 
-    console.log("createReactApp", content);
+    console.log("createReactAppRoot", content);
 
     let response = streamText({
         messages: [
@@ -87,7 +87,7 @@ export function App () {
     await writeFileContent({ path: `${APP_ROOT_PATH}`, content: text });
     await saveToBrowserDB();
 
-    MyTaskManager.doneTask("createReactApp");
+    MyTaskManager.doneTask("createReactAppRoot");
 
     await putBackFreeAIAsync({ engine: slot });
 }
