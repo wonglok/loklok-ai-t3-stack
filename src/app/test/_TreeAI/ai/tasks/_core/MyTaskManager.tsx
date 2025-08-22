@@ -32,13 +32,6 @@ export const MyTaskManager = {
             args: a.args,
             status: "init",
         });
-
-        useAI.setState({
-            atLeastOneWorkerRunning:
-                MyTaskManager.taskList.filter((r) => {
-                    return r.status === "working" || r.status === "reserved";
-                }).length > 0,
-        });
     },
 
     workAll: async () => {
@@ -84,6 +77,22 @@ export const MyTaskManager = {
                 if (func) {
                     try {
                         func({ task: task, ...task.args });
+
+                        useAI.setState({
+                            engines: useAI.getState().engines.map((en) => {
+                                if (en.name === freeEngineSetting.name) {
+                                    return { ...freeEngineSetting };
+                                }
+                                return en;
+                            }),
+                            atLeastOneWorkerRunning:
+                                MyTaskManager.taskList.filter((r) => {
+                                    return (
+                                        r.status === "working" ||
+                                        r.status === "reserved"
+                                    );
+                                }).length > 0,
+                        });
                     } catch (e) {
                         console.log(e);
                     }
