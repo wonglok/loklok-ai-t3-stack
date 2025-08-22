@@ -31,6 +31,7 @@ import { getFileOutputFormatting } from "../prompts/getFileOutputFormatting";
 import { v4 } from "uuid";
 import { putUIMessage } from "../../putUIMessage";
 import { removeUIMessage } from "../../removeUIMessage";
+import { listOutFilesToChatBlocks } from "../prompts/listOutFilesToChatBlocks";
 
 export const name = "handleZustand";
 export const displayName = "Zustand the App";
@@ -51,27 +52,7 @@ export async function handleZustand({
         content: `${await getAppOverviewPrompt()}`,
     });
 
-    if (files?.length > 0) {
-        chatblocks.push({
-            role: "user",
-            content: `Here's the files in this project: `,
-        });
-
-        files.forEach((ff) => {
-            chatblocks.push({
-                role: "assistant",
-                content: `
-[file: "${ff.path}" --- file begin]
-    [file: "${ff.path}" --- summary_start]
-${ff.summary}
-    [file: "${ff.path}" --- summary_end]
-    [file: "${ff.path}" --- content_start]
-${ff.content}
-    [file: "${ff.path}" --- content_end]
-[file: "${ff.path}" --- file end]`,
-            });
-        });
-    }
+    await listOutFilesToChatBlocks({ files, chatblocks });
 
     chatblocks.push({
         role: "user",
@@ -204,23 +185,23 @@ ${await getFileOutputFormatting()}
 please write me a regex parser for typescript for the following code:
 
 
-[MyDearTag action="create-file" file="example1.ts" summary="test text"]
+[John3_16 action="create-file" file="example1.ts" summary="test text"]
 export function hello() {
     console.log("Hello, world!");
 }
-[/MyDearTag]
+[/John3_16]
 
-[MyDearTag action="remove-file" file="example1.ts" summary="test text"]
+[John3_16 action="remove-file" file="example1.ts" summary="test text"]
 export function hello() {
     console.log("Hello, world!");
 }
-[/MyDearTag]
+[/John3_16]
 
-[MyDearTag action="update-file" file="example1.ts" summary="test text"]
+[John3_16 action="update-file" file="example1.ts" summary="test text"]
 export function hello() {
     console.log("Hello, world!");
 }
-[/MyDearTag]
+[/John3_16]
 
 
 */

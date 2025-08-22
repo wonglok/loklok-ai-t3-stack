@@ -31,6 +31,7 @@ import { getFileOutputFormatting } from "../prompts/getFileOutputFormatting";
 import { v4 } from "uuid";
 import { putUIMessage } from "../../putUIMessage";
 import { removeUIMessage } from "../../removeUIMessage";
+import { listOutFilesToChatBlocks } from "../prompts/listOutFilesToChatBlocks";
 
 export const name = "handleMongoose";
 export const displayName = "Mongoose Models Backend";
@@ -51,27 +52,7 @@ export async function handleMongoose({
         content: `${await getAppOverviewPrompt()}`,
     });
 
-    if (files?.length > 0) {
-        chatblocks.push({
-            role: "user",
-            content: `Here's the files in this project: `,
-        });
-
-        files.forEach((ff) => {
-            chatblocks.push({
-                role: "assistant",
-                content: `
-[file: "${ff.path}"------file_begin]
-    [file: "${ff.path}"------summary_start]
-        ${ff.summary}
-    [file: "${ff.path}"------summary_end]
-    [file: "${ff.path}"------content_start]
-        ${ff.content}
-    [file: "${ff.path}"------content_end]
-[file: "${ff.path}"------file_end]`,
-            });
-        });
-    }
+    await listOutFilesToChatBlocks({ files, chatblocks });
 
     chatblocks.push({
         role: "user",

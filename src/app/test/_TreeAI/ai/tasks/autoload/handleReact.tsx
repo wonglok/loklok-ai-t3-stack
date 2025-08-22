@@ -33,6 +33,7 @@ import { v4 } from "uuid";
 import { refreshUIMessages } from "../../refreshUIMessages";
 import { metadata } from "@/app/layout";
 import { removeUIMessage } from "../../removeUIMessage";
+import { listOutFilesToChatBlocks } from "../prompts/listOutFilesToChatBlocks";
 
 export const name = "handleReact";
 export const displayName = "React JS front end of the App";
@@ -53,27 +54,7 @@ export async function handleReact({
         content: `${await getAppOverviewPrompt()}`,
     });
 
-    if (files?.length > 0) {
-        chatblocks.push({
-            role: "user",
-            content: `Here's are the files:`,
-        });
-
-        files.forEach((ff) => {
-            chatblocks.push({
-                role: "assistant",
-                content: `
-[file: "${ff.path}"][begin]
-    [file: "${ff.path}"][summary_start]
-${ff.summary}
-    [file: "${ff.path}"][summary_end]
-    [file: "${ff.path}"][content_start]
-${ff.content}
-    [file: "${ff.path}"][content_end]
-[file: "${ff.path}"][end]`,
-            });
-        });
-    }
+    await listOutFilesToChatBlocks({ files, chatblocks });
 
     chatblocks.push({
         role: "user",
@@ -203,23 +184,23 @@ ${await getFileOutputFormatting()}
 please write me a regex parser for typescript for the following code:
 
 
-[MyDearTag action="create-file" file="example1.ts" summary="test text"]
+[John3_16 action="create-file" file="example1.ts" summary="test text"]
 export function hello() {
     console.log("Hello, world!");
 }
-[/MyDearTag]
+[/John3_16]
 
-[MyDearTag action="remove-file" file="example1.ts" summary="test text"]
+[John3_16 action="remove-file" file="example1.ts" summary="test text"]
 export function hello() {
     console.log("Hello, world!");
 }
-[/MyDearTag]
+[/John3_16]
 
-[MyDearTag action="update-file" file="example1.ts" summary="test text"]
+[John3_16 action="update-file" file="example1.ts" summary="test text"]
 export function hello() {
     console.log("Hello, world!");
 }
-[/MyDearTag]
+[/John3_16]
 
 
 */
