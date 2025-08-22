@@ -46,8 +46,6 @@ export const AIConversation = () => {
         });
     }, []);
 
-    //
-
     return (
         <div className="h-full w-full p-3">
             <div className="relative size-full rounded-lg border bg-white">
@@ -59,7 +57,6 @@ export const AIConversation = () => {
                             onSubmit={handleSubmit}
                             className="relative mt-4 w-full"
                         >
-                            {/*  */}
                             <PromptInputTextarea
                                 value={userPrompt}
                                 placeholder="Say something..."

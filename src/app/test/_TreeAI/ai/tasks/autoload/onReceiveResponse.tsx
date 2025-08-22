@@ -1,18 +1,18 @@
-import {
-    convertToModelMessages,
-    createUIMessageStream,
-    generateText,
-    ModelMessage,
-    streamText,
-    tool,
-    UIMessage,
-} from "ai";
-import { addUIMessage } from "../../addUIMessage";
-import { getUIMessages } from "../../getUIMessages";
-import z from "zod";
-import { IOTooling } from "../../../io/IOTooling";
-import { SPEC_DOC_PATH } from "../../constants";
-import { EngineSetting, useAI } from "../../../state/useAI";
+// import {
+//     convertToModelMessages,
+//     createUIMessageStream,
+//     generateText,
+//     ModelMessage,
+//     streamText,
+//     tool,
+//     UIMessage,
+// } from "ai";
+// import { addUIMessage } from "../../addUIMessage";
+// import { getUIMessages } from "../../getUIMessages";
+// import z from "zod";
+// import { IOTooling } from "../../../io/IOTooling";
+// import { SPEC_DOC_PATH } from "../../constants";
+// import { EngineSetting, useAI } from "../../../state/useAI";
 // import { refreshUIMessages } from "../refreshUIMessages";
 // import { writeFileContent } from "../../io/writeFileContent";
 // import { removeUIMessages } from "../removeUIMessages";
@@ -51,22 +51,22 @@ export async function onReceiveResponse({
         ],
     });
 
-    MyTaskManager.add({
-        waitFor: [task.name],
-        name: "handleAppSpec",
-        args: { userPrompt: userPrompt },
-    });
+    // MyTaskManager.add({
+    //     waitFor: [task.name],
+    //     name: "handleAppSpec",
+    //     args: { userPrompt: userPrompt },
+    // });
 
     // parallels
     MyTaskManager.add({
-        waitFor: ["handleAppSpec"],
+        waitFor: [],
         name: "handleReactAppRoot",
         args: { userPrompt: userPrompt },
     });
 
     // parallels
     MyTaskManager.add({
-        waitFor: ["handleAppSpec"],
+        waitFor: [],
         name: "handleZustand",
         args: { userPrompt: userPrompt },
     });

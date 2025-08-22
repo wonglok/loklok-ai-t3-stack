@@ -122,7 +122,7 @@ import { create } from 'zustand';
                 `,
     });
 
-    console.log("handleReactAppRoot", chatblocks);
+    console.log("chatblocks", chatblocks);
 
     let response = streamText({
         // schema: z
@@ -160,7 +160,7 @@ import { create } from 'zustand';
 
     //
 
-    let lastFile = "";
+    // let lastFile = "";
     let parseText = async (text) => {
         try {
             const blocks = parseCodeBlocksGen3(`${text}`);
@@ -172,13 +172,13 @@ import { create } from 'zustand';
                 //     block.fileName = `/${block.fileName}`;
                 // }
 
-                if (lastFile !== block.fileName) {
-                    useAI.setState({
-                        topTab: "code",
-                        currentPath: block.fileName,
-                    });
-                    lastFile = block.fileName;
-                }
+                // if (lastFile !== block.fileName) {
+                //     useAI.setState({
+                //         topTab: "code",
+                //         currentPath: block.fileName,
+                //     });
+                //     lastFile = block.fileName;
+                // }
 
                 if (block.action === "create-file") {
                     await writeFileContent({
