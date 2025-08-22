@@ -25,9 +25,12 @@ const handler = async (req: NextRequest) => {
 
     console.log(appID);
 
-    const dbPlatform = mongoose.connection.useDb(`platform_app_meta_${appID}`, {
-        useCache: true,
-    });
+    const dbPlatform = mongoose.connection.useDb(
+        `platform_app_meta_${process.env.NODE_ENV}_${appID}`,
+        {
+            useCache: true,
+        },
+    );
 
     const CodeKVStore = new mongoose.Schema({
         key: { type: String, required: true },
@@ -156,7 +159,7 @@ return appRouter
         //
 
         const dbAppInstance = mongoose.connection.useDb(
-            `development_${appID}`,
+            `app_${process.env.NODE_ENV}_${appID}`,
             {
                 useCache: true,
             },

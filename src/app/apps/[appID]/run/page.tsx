@@ -5,7 +5,7 @@ import { LokLokSDK } from "@/app/test/_TreeAI/web/LokLokSDK";
 import { useParams } from "next/navigation";
 import { rollupCode } from "@/app/test/_TreeAI/web/rollupCode";
 // import { RuntimeCore } from "@/app/test/_TreeAI/web/RuntimeCore";
-import { LokRuntimeCore } from "./_run/LokRuntimeCore";
+// import { LokRuntimeCore } from "./_run/LokRuntimeCore";
 import * as React19 from "react";
 import { NPMCacheTasks } from "@/app/test/_TreeAI/web/npm-globals";
 
