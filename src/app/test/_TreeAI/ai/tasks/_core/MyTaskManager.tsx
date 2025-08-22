@@ -9,23 +9,6 @@ export type MyTask = {
     status: "init" | "reserved" | "working" | "done";
 };
 
-export const MyFuncs = TaskFunctions;
-
-// {
-//     handleAppSpec: (v: any) =>
-//         import("../autoload/handleAppSpec").then((r) => r.handleAppSpec(v)),
-
-//     handleReactAppRoot: (v: any) =>
-//         import("../autoload/handleReactAppRoot").then((r) =>
-//             r.handleReactAppRoot(v),
-//         ),
-
-//     onReceiveResponse: (v: any) =>
-//         import("../autoload/onReceiveResponse").then((r) =>
-//             r.onReceiveResponse(v),
-//         ),
-// };
-
 export const MyTaskManager = {
     taskList: [] as MyTask[],
     doneTask: (name: string) => {
@@ -79,9 +62,11 @@ export const MyTaskManager = {
             if (freeEngineSetting && task && noMoreWaiting) {
                 task.status = "reserved";
                 freeEngineSetting.status = "reserved";
-                toast(`Begin work: ${task.name}`);
 
-                let func = MyFuncs[task.name];
+                let mod = TaskFunctions[task.name];
+                let func = mod["action"];
+
+                toast(`Task: ${mod.displayName}`);
                 if (func) {
                     try {
                         func({ task: task, ...task.args });

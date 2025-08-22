@@ -10,7 +10,11 @@ const TaskFunctions = {}
 componentContext.keys().forEach((key) => {
     const module = componentContext(key);
 
-    TaskFunctions[module.name] = module[module.name]
+    TaskFunctions[module.name] = {
+        name: module.name,
+        displayName: module.displayName,
+        action: module[module.name],
+    }
     // Do something with the imported module
 });
 

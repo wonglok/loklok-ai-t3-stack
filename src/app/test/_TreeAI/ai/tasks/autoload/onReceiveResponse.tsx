@@ -21,10 +21,14 @@ import { putBackFreeAIAsync } from "../../putBackFreeAIAsync";
 import { getFreeAIAsync } from "../../getFreeAIAsync";
 import { MyTask, MyTaskManager } from "../_core/MyTaskManager";
 import { getModelMessagesFromUIMessages } from "../../getModelMessagesFromUIMessages";
+import { putUIMessage } from "../../putUIMessage";
+import { v4 } from "uuid";
 
 // import { readFileContent } from "../../io/readFileContent";
 
 export const name = "onReceiveResponse";
+export const displayName = "Let us begin to work!";
+
 export async function onReceiveResponse({
     userPrompt,
     task,
@@ -33,96 +37,22 @@ export async function onReceiveResponse({
     task: MyTask;
 }) {
     let { model, engineSettingData: slot } = await getFreeAIAsync();
-    // let files = useAI.getState().files;
 
-    // let info = [];
+    console.log("onReceiveResponse", userPrompt, task);
 
-    //     // let content = await readFileContent({ path: SPEC_DOC_PATH });
-    //     // let hasSpec = typeof content === "string" && content.length > 0;
+    putUIMessage({
+        id: v4(),
+        role: "user",
+        parts: [
+            {
+                id: v4(),
+                type: "text",
+                text: userPrompt,
+            },
+        ],
+    });
 
-    //     if (files?.length > 0) {
-    //         info.push({
-    //             role: "user",
-    //             content: `Here are the existing code files in the following messages`,
-    //         });
-
-    //         files.forEach((ff) => {
-    //             info.push({
-    //                 role: "assistant",
-    //                 content: `
-    // [file: "${ff.path}"][begin]
-    //     [file: "${ff.path}"][summary_start]
-    // ${ff.summary}
-    //     [file: "${ff.path}"][summary_end]
-    //     [file: "${ff.path}"][content_start]
-    // ${ff.content}
-    //     [file: "${ff.path}"][content_end]
-    // [file: "${ff.path}"][end]`,
-    //             });
-    //         });
-    //     } else {
-    //         let haventInit: ModelMessage = {
-    //             role: `assistant`,
-    //             content: `
-    //                 we havent had existing proejct.
-    //                 we need to start a new software project.
-    //             `,
-    //         };
-    //         info.push(haventInit);
-    //     }
-
-    // // createMongoose
-    // await generateText({
-    //     toolChoice: "required",
-    //     messages: [
-    //         {
-    //             role: `system`,
-    //             content: `You are a polite senior developer.`,
-    //         },
-    //         ...info,
-    //         ...getModelMessagesFromUIMessages(),
-    //     ],
-    //     system: `Your either create new project or update exsting project`,
-    //     tools: {
-    //         createNewProject: tool({
-    //             description: "create a new software project",
-    //             execute: async ({ userRequirement }) => {
-    //                 //
-
-    //                 console.log("createNewProject", userRequirement);
-
-    //                 MyTaskManager.add({
-    //                     name: "handleAppSpec",
-    //                     waitFor: ["receiveResponse"],
-    //                     args: { userPrompt: userPrompt },
-    //                 });
-
-    //                 MyTaskManager.add({
-    //                     name: "handleReactAppRoot",
-    //                     waitFor: ["handleAppSpec"],
-    //                     args: { userPrompt: userPrompt },
-    //                 });
-
-    //                 return `ok`;
-    //             },
-    //             inputSchema: z.object({ userRequirement: z.string() }),
-    //             outputSchema: z.string(),
-    //         }),
-    //         updateExistingProject: tool({
-    //             description: "update existing software project",
-    //             execute: async ({ userRequirement }) => {
-    //                 //
-
-    //                 return `ok`;
-    //             },
-    //             inputSchema: z.object({ userRequirement: z.string() }),
-    //             outputSchema: z.string(),
-    //         }),
-    //     },
-    //     model: model,
-    // });
-
-    console.log("updateExistingProject", userPrompt, task);
+    //
 
     MyTaskManager.add({
         waitFor: [task.name],
@@ -130,6 +60,7 @@ export async function onReceiveResponse({
         args: { userPrompt: userPrompt },
     });
 
+    // parallels
     MyTaskManager.add({
         waitFor: ["handleAppSpec"],
         name: "handleReactAppRoot",

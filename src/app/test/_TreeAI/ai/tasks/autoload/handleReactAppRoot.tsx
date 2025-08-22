@@ -29,6 +29,8 @@ import { removeFile } from "../../../io/removeFile";
 import { parseCodeBlocksGen3 } from "../_core/LokLokParser3";
 
 export const name = "handleReactAppRoot";
+export const displayName = "React JS front end of the App";
+
 export async function handleReactAppRoot({
     userPrompt,
     task,

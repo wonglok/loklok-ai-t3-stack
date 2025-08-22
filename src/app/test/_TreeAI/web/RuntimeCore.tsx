@@ -66,9 +66,7 @@ export function RuntimeCore() {
             // @ts-ignore
             window
                 // @ts-ignore
-                .importHttpModule(
-                    `/npm-globals/es-module-shims/es-module-shims.js`,
-                )
+                .importHttpModule(`/es-module-shims/es-module-shims.js`)
                 .then(() => {
                     // @ts-ignore
                     window.importShim("/src/main.js");

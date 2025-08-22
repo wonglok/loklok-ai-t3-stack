@@ -30,6 +30,7 @@ import { parseCodeBlocksGen3 } from "../_core/LokLokParser3";
 import { refreshEngineSlot } from "../../refreshEngines";
 
 export const name = "handleAppSpec";
+export const displayName = "Description of the App";
 export async function handleAppSpec({
     userPrompt,
     task,
@@ -70,18 +71,18 @@ ${ff.content}
     }
 
     chatblocks.push({
-        role: `assistant`,
+        role: `user`,
 
         content: `
 Prompt for Vibe Coding Platform: Processing User Requirements
 You are an expert AI assistant for a vibe coding platform (similar to Base44 or Lovable) designed to transform user requirements into a functional no-code/low-code web application. Your task is to process the provided user requirements, refine them for clarity, and generate a detailed design for a full-stack web app. The platform prioritizes simplicity, AI-driven code generation, and intuitive interfaces for non-technical users. Follow a structured process: Requirements Refinement, System Design, and Component Specification, ensuring outputs are beginner-friendly and aligned with vibe coding principles.
 
-Instruction: Generating a "Product Requirement Definition"
+Instruction: Generating a Product Requirement Definition
 
-Input Requirements:
-${userPrompt} 
+User Requirements Collected:
+"${userPrompt}"
 
-Step 1: Requirements Refinement
+Step 1: User Requirements Refinement
 
 Analyze the user requirements for clarity, feasibility, and completeness, considering the vibe coding context (e.g., non-technical users, natural language inputs).
 Identify ambiguities, missing details (e.g., user roles, edge cases), or implied non-functional requirements (e.g., ease of use, mobile responsiveness).
@@ -162,37 +163,37 @@ Folder Structure:
 /model/... (mongoose models - backend)
 /docs/... (knowledge base of the app)
 
-Generate the "Product Requirement Definition"
+Generate the "Product Requirement Definition" Starting at "Step 1: User Requirements Refinement"
 `,
     });
 
-    chatblocks.push({
-        role: "user",
-        content: `
-## Output:
+    //     chatblocks.push({
+    //         role: "user",
+    //         content: `
+    // ## Output:
 
-- if you want to create file
-[mydearlokloktag action="create-file" file="{file_path_name}" summary="{file_summary}"]
-{file_content}
-[/mydearlokloktag]
+    // - if you want to create file
+    // [mydearlokloktag action="create-file" file="{file_path_name}" summary="{file_summary}"]
+    // {file_content}
+    // [/mydearlokloktag]
 
-- if you want to remove file
-[mydearlokloktag action="remove-file" file="{file_path_name}" summary="{file_summary}"][/mydearlokloktag]
+    // - if you want to remove file
+    // [mydearlokloktag action="remove-file" file="{file_path_name}" summary="{file_summary}"][/mydearlokloktag]
 
-- if you want to update file
-[mydearlokloktag action="update-file" file="{file_path_name}" summary="{file_summary}"]
-{file_content}
-[/mydearlokloktag]
+    // - if you want to update file
+    // [mydearlokloktag action="update-file" file="{file_path_name}" summary="{file_summary}"]
+    // {file_content}
+    // [/mydearlokloktag]
 
-- {file_path_name} is the file's path name
-- {file_summary} is the file's overview, purpose and summary of the content
-- {file_content} is the file's content
+    // - {file_path_name} is the file's path name
+    // - {file_summary} is the file's overview, purpose and summary of the content
+    // - {file_content} is the file's content
 
-- if there is an existing file, then you can use [mydearlokloktag action="update-file" ...]
-- if there is no existing file, then you can [mydearlokloktag action="create-file" ...]
-- if you need to remove existing file, then you can [mydearlokloktag action="remove-file" ...]
-        `,
-    });
+    // - if there is an existing file, then you can use [mydearlokloktag action="update-file" ...]
+    // - if there is no existing file, then you can [mydearlokloktag action="create-file" ...]
+    // - if you need to remove existing file, then you can [mydearlokloktag action="remove-file" ...]
+    //         `,
+    //     });
 
     let resp = await streamText({
         model: model,

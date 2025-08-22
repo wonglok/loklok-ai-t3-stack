@@ -34,17 +34,7 @@ export const AIConversation = () => {
         let userPrompt = useAI.getState().userPrompt;
         useAI.setState({
             userPrompt: "",
-        });
-        putUIMessage({
-            id: v4(),
-            role: "user",
-            parts: [
-                {
-                    id: v4(),
-                    type: "text",
-                    text: userPrompt,
-                },
-            ],
+            lastUserPrompt: userPrompt,
         });
 
         await bootEngines();

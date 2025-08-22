@@ -2,6 +2,7 @@
 
 import { transform } from "sucrase";
 import path from "path";
+import { NPMCacheTasks } from "@/app/test/_TreeAI/web/npm-globals";
 
 export const rollupCode = async ({ files = [] }) => {
     const CodePrefix = `dynamic-code:`;
@@ -33,32 +34,45 @@ export const rollupCode = async ({ files = [] }) => {
                     if (!parentBaseURL) {
                         return moduleName;
                     }
-                    if (moduleName === "zustand") {
-                        return `${NetworkPrefix}/npm-globals/zustand.js`;
+
+                    // console.log(moduleName, NPMCacheTasks);
+                    let mod = NPMCacheTasks.find(
+                        (r) => `${r.name}` === `npm-${moduleName}`,
+                    );
+
+                    console.log(moduleName);
+                    if (mod) {
+                        console.log(mod);
+                        return `${NetworkPrefix}${mod.output}`;
                     }
-                    if (moduleName === "wouter") {
-                        return `${NetworkPrefix}/npm-globals/wouter.js`;
-                    }
-                    if (moduleName === "wouter/use-hash-location") {
-                        return `${NetworkPrefix}/npm-globals/wouter-hash-location.js`;
-                    }
-                    if (moduleName === "react-dom") {
-                        return `${NetworkPrefix}/npm-globals/react-dom19.js`;
-                    }
-                    if (moduleName === "react") {
-                        return `${NetworkPrefix}/npm-globals/react19.js`;
-                    }
-                    if (moduleName === "@react-three/fiber") {
-                        return `${NetworkPrefix}/npm-globals/@react-three/fiber.js`;
-                    }
-                    if (moduleName === "@react-three/drei") {
-                        return `${NetworkPrefix}/npm-globals/@react-three/drei.js`;
-                    }
-                    if (moduleName === "three") {
-                        return `${NetworkPrefix}/npm-globals/three.js-r179/three/build/three.module.js`;
-                    }
+
+                    // if (moduleName === "zustand") {
+                    //     return `${NetworkPrefix}/npm-globals/zustand.js`;
+                    // }
+                    // if (moduleName === "wouter") {
+                    //     return `${NetworkPrefix}/npm-globals/wouter.js`;
+                    // }
+                    // if (moduleName === "wouter/use-hash-location") {
+                    //     return `${NetworkPrefix}/npm-globals/wouter-hash-location.js`;
+                    // }
+                    // if (moduleName === "react-dom") {
+                    //     return `${NetworkPrefix}/npm-globals/react-dom19.js`;
+                    // }
+                    // if (moduleName === "react") {
+                    //     return `${NetworkPrefix}/npm-globals/react19.js`;
+                    // }
+                    // if (moduleName === "@react-three/fiber") {
+                    //     return `${NetworkPrefix}/npm-globals/@react-three/fiber.js`;
+                    // }
+                    // if (moduleName === "@react-three/drei") {
+                    //     return `${NetworkPrefix}/npm-globals/@react-three/drei.js`;
+                    // }
+                    // if (moduleName === "three") {
+                    //     return `${NetworkPrefix}/npm-globals/three.js-r179/three/build/three.module.js`;
+                    // }
+
                     if (moduleName.indexOf("three/examples/") === 0) {
-                        return `${NetworkPrefix}/npm-globals/three.js-r179/three/examples/${moduleName.replace("three/examples/", "")}`;
+                        return `${NetworkPrefix}/vendor/three.js-r179/three/examples/${moduleName.replace("three/examples/", "")}`;
                     }
 
                     return new URL(moduleName, parentBaseURL).href;

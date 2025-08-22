@@ -3,7 +3,39 @@
  * for Docker builds.
  */
 import "./src/env.js";
-import './npm-globals.js'
+
+import fs from 'fs'
+import path from 'path'
+import { NPMCacheTasks } from "./src/app/test/_TreeAI/web/npm-globals.js";
+
+NPMCacheTasks.filter(r => r.output).map((tsk) => {
+
+    let taskName = JSON.stringify(tsk.name)
+
+    let textString = `
+// @ts-ignore
+window.NPM_CACHE = window.NPM_CACHE || {};
+// @ts-ignore
+const NPM_CACHE = window.NPM_CACHE;
+
+NPM_CACHE[${taskName}] = NPM_CACHE[${taskName}] || {}; 
+`
+    for (let propName in tsk?.importVaraible) {
+        if (propName !== 'default') {
+            textString += `
+export const ${propName} = NPM_CACHE[${taskName}]['${propName}'];
+`
+        } else {
+            textString += `
+export default NPM_CACHE[${taskName}]['${propName}'];
+`
+        }
+    }
+
+    let dir = path.dirname(`${import.meta.dirname}/public${tsk.output}`)
+    fs.mkdirSync(dir, { recursive: true })
+    fs.writeFileSync(`${import.meta.dirname}/public${tsk.output}`, textString)
+})
 
 const nextConfig = {
     eslint: { ignoreDuringBuilds: !!process.env.CI },

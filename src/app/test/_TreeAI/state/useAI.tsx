@@ -94,6 +94,7 @@ export const factortyReset = async () => {
 export const useAI = create<{
     uiMessages: UIMessage[];
     userPrompt: string;
+    lastUserPrompt: string;
     files: MyFile[];
     appID: string;
     currentPath: string;
@@ -119,6 +120,7 @@ export const useAI = create<{
             },
         ],
         userPrompt: "",
+        lastUserPrompt: "",
         currentPath: "",
         appID: "myApp001",
         files: [],

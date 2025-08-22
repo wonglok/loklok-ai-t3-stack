@@ -107,7 +107,11 @@ export function TreeList() {
                             <TreeItem
                                 key={r.path}
                                 itemId={r.path}
-                                label={`${r.path}`}
+                                label={
+                                    <div className="h-full w-full overflow-x-auto">
+                                        {r.path}
+                                    </div>
+                                }
                                 onClick={() => {
                                     useAI.setState({
                                         topTab: "code",
@@ -118,6 +122,22 @@ export function TreeList() {
                         );
                     })}
             </TreeItem>
+
+            {/* {files.map((r) => {
+                return (
+                    <TreeItem
+                        key={r.path + "any"}
+                        itemId={r.path + "itemid"}
+                        label={`${r.path}`}
+                        onClick={() => {
+                            useAI.setState({
+                                topTab: "code",
+                                currentPath: r.path,
+                            });
+                        }}
+                    />
+                );
+            })} */}
         </SimpleTreeView>
     );
 }
