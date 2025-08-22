@@ -12,7 +12,10 @@ export function TreeList() {
     let currentPath = useAI((r) => r.currentPath);
 
     return (
-        <SimpleTreeView className="h-full w-full">
+        <SimpleTreeView
+            defaultExpandedItems={["/docs", "/components"]}
+            className="h-full w-full"
+        >
             {/*  */}
             {/* <TreeItem
                 key={"team-btn"}
@@ -69,7 +72,7 @@ export function TreeList() {
                             <TreeItem
                                 key={r.path}
                                 itemId={r.path}
-                                label={`${r.path}`}
+                                label={`${r.path} ${r.path === currentPath ? "✍🏻✨" : ""}`}
                                 onClick={() => {
                                     useAI.setState({
                                         topTab: "code",

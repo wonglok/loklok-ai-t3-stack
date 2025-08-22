@@ -164,6 +164,7 @@ import * as React from 'react';
 
     //
 
+    let lastFile = "";
     let parseText = async (text) => {
         try {
             const blocks = parseCodeBlocksGen3(`${text}`);
@@ -173,6 +174,14 @@ import * as React from 'react';
                 if (block.fileName.startsWith("/")) {
                 } else {
                     block.fileName = `/${block.fileName}`;
+                }
+
+                if (lastFile !== block.fileName) {
+                    useAI.setState({
+                        topTab: "code",
+                        currentPath: block.fileName,
+                    });
+                    lastFile = block.fileName;
                 }
 
                 if (block.action === "create-file") {
