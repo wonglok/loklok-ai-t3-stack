@@ -27,6 +27,7 @@ import { saveToBrowserDB } from "../../io/saveToBrowserDB";
 // import { parseCodeBlocksActionType } from "./_core/LokLokParser2";
 import { removeFile } from "../../io/removeFile";
 import { parseCodeBlocksGen3 } from "./_core/LokLokParser3";
+import { refreshEngineSlot } from "../refreshEngines";
 
 export async function handleAppSpec({
     userPrompt,
@@ -35,19 +36,13 @@ export async function handleAppSpec({
     userPrompt?: string;
     task: MyTask;
 }) {
-    let { model, engineSettingData: slot } = await getFreeAIAsync();
+    let { model, engineSettingData } = await getFreeAIAsync();
 
-    //
+    let chatblocks = [];
 
-    let oldSpec = "";
-
-    oldSpec = await readFileContent({ path: `${SPEC_DOC_PATH}` });
-
-    let chatblocks = [
-        {
-            role: "system",
-            content: `
-
+    chatblocks.push({
+        role: "system",
+        content: `
 # Output Format:
 
 - if you want to create file
@@ -73,8 +68,7 @@ export async function handleAppSpec({
 
 
         `,
-        },
-    ];
+    });
 
     let files = useAI.getState().files;
     if (files?.length > 0) {
@@ -195,13 +189,6 @@ Folder Structure:
 /docs/... (knowledge base of the app)
 
 Generate the "Product Requirement Definition" starting with Step 1, and output it as a complete design based on the provided requirements.
-Each Step is a unique file.
-
-- Write to /docs/step1.md
-- Write to /docs/step2.md
-- Write to /docs/step3.md
-...
-
 `,
     });
 
@@ -209,8 +196,6 @@ Each Step is a unique file.
         model: model,
         messages: [
             //
-            ...getModelMessagesFromUIMessages(),
-
             ...chatblocks,
         ],
     });
@@ -221,11 +206,16 @@ Each Step is a unique file.
         txt += part;
 
         console.log(txt);
+        engineSettingData.bannerText = `Working: ${task.name}`;
+        refreshEngineSlot(engineSettingData);
     }
+
+    engineSettingData.bannerText = ``;
+    refreshEngineSlot(engineSettingData);
 
     console.log("txt", txt);
     console.log("userPrompt", userPrompt);
 
     await MyTaskManager.doneTask(task.name);
-    await putBackFreeAIAsync({ engine: slot });
+    await putBackFreeAIAsync({ engine: engineSettingData });
 }

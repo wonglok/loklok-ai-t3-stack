@@ -34,41 +34,41 @@ export async function receiveResponse({
     let { model, engineSettingData: slot } = await getFreeAIAsync();
     let files = useAI.getState().files;
 
-    let info = [];
+    // let info = [];
 
-    // let content = await readFileContent({ path: SPEC_DOC_PATH });
-    // let hasSpec = typeof content === "string" && content.length > 0;
+    //     // let content = await readFileContent({ path: SPEC_DOC_PATH });
+    //     // let hasSpec = typeof content === "string" && content.length > 0;
 
-    if (files?.length > 0) {
-        info.push({
-            role: "user",
-            content: `Here are the existing code files in the following messages`,
-        });
+    //     if (files?.length > 0) {
+    //         info.push({
+    //             role: "user",
+    //             content: `Here are the existing code files in the following messages`,
+    //         });
 
-        files.forEach((ff) => {
-            info.push({
-                role: "assistant",
-                content: `
-[file: "${ff.path}"][begin]
-    [file: "${ff.path}"][summary_start]
-${ff.summary}
-    [file: "${ff.path}"][summary_end]
-    [file: "${ff.path}"][content_start]
-${ff.content}
-    [file: "${ff.path}"][content_end]
-[file: "${ff.path}"][end]`,
-            });
-        });
-    } else {
-        let haventInit: ModelMessage = {
-            role: `assistant`,
-            content: `
-                we havent had existing proejct.
-                we need to start a new software project.
-            `,
-        };
-        info.push(haventInit);
-    }
+    //         files.forEach((ff) => {
+    //             info.push({
+    //                 role: "assistant",
+    //                 content: `
+    // [file: "${ff.path}"][begin]
+    //     [file: "${ff.path}"][summary_start]
+    // ${ff.summary}
+    //     [file: "${ff.path}"][summary_end]
+    //     [file: "${ff.path}"][content_start]
+    // ${ff.content}
+    //     [file: "${ff.path}"][content_end]
+    // [file: "${ff.path}"][end]`,
+    //             });
+    //         });
+    //     } else {
+    //         let haventInit: ModelMessage = {
+    //             role: `assistant`,
+    //             content: `
+    //                 we havent had existing proejct.
+    //                 we need to start a new software project.
+    //             `,
+    //         };
+    //         info.push(haventInit);
+    //     }
 
     // // createMongoose
     // await generateText({
