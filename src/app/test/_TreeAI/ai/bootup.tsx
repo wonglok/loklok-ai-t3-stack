@@ -8,7 +8,7 @@ import { LokLokSDK } from "../web/LokLokSDK";
 export const bootup = async ({ appID }) => {
     let sdk = new LokLokSDK({ appID });
     let files =
-        (await sdk.setupPlatform({
+        (await sdk.publicRPC({
             procedure: "getFiles",
             input: {},
         })) || [];

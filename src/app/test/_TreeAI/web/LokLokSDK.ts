@@ -48,7 +48,16 @@ export class LokLokSDK {
         return (this.client["platform"][procedure] as any)
             .mutate(input)
             .then((data) => {
-                console.log("setup-platform", data);
+                console.log("setup-platform-call", data);
+                return data;
+            });
+    }
+
+    async publicRPC({ procedure = "getFiles", input }) {
+        return (this.client["public"][procedure] as any)
+            .mutate(input)
+            .then((data) => {
+                console.log("getFiles", data);
                 return data;
             });
     }

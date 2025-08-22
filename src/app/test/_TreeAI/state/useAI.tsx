@@ -1,6 +1,7 @@
 import { UIMessage } from "ai";
 import { create } from "zustand";
 import { saveToBrowserDB } from "../io/saveToBrowserDB";
+import { LokLokSDK } from "../web/LokLokSDK";
 
 export type MyFile = {
     path: string;
@@ -87,8 +88,16 @@ export const factortyReset = async () => {
             },
         ],
     });
+
     await saveToBrowserDB();
 
+    let appID = useAI.getState().appID;
+
+    let sdk = new LokLokSDK({ appID });
+    await sdk.setupPlatform({
+        procedure: `reset`,
+        input: {},
+    });
     location.reload();
 };
 export const useAI = create<{

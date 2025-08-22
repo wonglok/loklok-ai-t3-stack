@@ -26,7 +26,7 @@ const handler = async (req: NextRequest) => {
     console.log(appID);
 
     const dbPlatform = mongoose.connection.useDb(
-        `platform_app_meta_${process.env.NODE_ENV}_${appID}`,
+        `platform_${process.env.NODE_ENV}_${appID}`,
         {
             useCache: true,
         },
@@ -64,10 +64,7 @@ const handler = async (req: NextRequest) => {
         });
 
     console.log(defineBackendProcedures?.value, defineMongooseModels?.value);
-    let post = {
-        id: 1,
-        name: "Hello World",
-    };
+
     let appRouter = createTRPCRouter({
         hello: publicProcedure
             .input(z.object({ text: z.string() }))
@@ -120,20 +117,20 @@ try {
                 };
             }),
 
-        create: protectedProcedure
-            .input(z.object({ name: z.string().min(1) }))
-            .mutation(async ({ input }) => {
-                post = { id: post.id + 1, name: input.name };
-                return post;
-            }),
+        // create: protectedProcedure
+        //     .input(z.object({ name: z.string().min(1) }))
+        //     .mutation(async ({ input }) => {
+        //         post = { id: post.id + 1, name: input.name };
+        //         return post;
+        //     }),
 
-        getLatest: protectedProcedure.mutation(() => {
-            return post;
-        }),
+        // getLatest: protectedProcedure.mutation(() => {
+        //     return post;
+        // }),
 
-        getSecretMessage: protectedProcedure.mutation(() => {
-            return "you can now see this secret message!";
-        }),
+        // getSecretMessage: protectedProcedure.mutation(() => {
+        //     return "you can now see this secret message!";
+        // }),
 
         
 
@@ -183,7 +180,8 @@ return appRouter
     let platformRouter = createTRPCRouter({
         //publicProcedure
         // setKV: protectedProcedure
-        setKV: publicProcedure
+        //
+        setKV: protectedProcedure
             .input(z.object({ key: z.string(), value: z.string() }))
             .mutation(async ({ input }) => {
                 await dbPlatform.model("CodeKVStore").findOneAndUpdate(
@@ -199,13 +197,13 @@ return appRouter
 
                 return { ok: "deployed", path: input.key, value: input.value };
             }),
-        reset: publicProcedure
+        reset: protectedProcedure
             .input(z.object({}))
             .mutation(async ({ input }) => {
                 await dbPlatform.model("CodeKVStore").deleteMany({});
                 return { ok: "reset" };
             }),
-        getFiles: publicProcedure
+        getFiles: protectedProcedure
             .input(z.object({}))
             .mutation(async ({ input }) => {
                 let files = await dbPlatform.model("CodeKVStore").find();
@@ -220,6 +218,19 @@ return appRouter
 
     let myTRPCRouter = createTRPCRouter({
         app: appRouter,
+        public: createTRPCRouter({
+            getFiles: publicProcedure
+                .input(z.object({}))
+                .mutation(async ({ input }) => {
+                    let files = await dbPlatform.model("CodeKVStore").find();
+                    return files.map((r: any) => {
+                        return {
+                            path: r.key,
+                            content: r.value,
+                        };
+                    });
+                }),
+        }),
         platform: platformRouter,
     });
 
