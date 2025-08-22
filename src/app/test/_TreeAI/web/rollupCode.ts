@@ -40,7 +40,7 @@ export const rollupCode = async ({ files = [] }) => {
                         return moduleName;
                     }
 
-                    // console.log(moduleName, NPMCacheTasks);
+                    console.log("moduleName", moduleName);
                     let mod = NPMCacheTasks.find(
                         (r) => `${r.name}` === `npm-${moduleName}`,
                     );
@@ -48,13 +48,9 @@ export const rollupCode = async ({ files = [] }) => {
                         return `${NetworkPrefix}${mod.output}`;
                     }
 
-                    // if (moduleName === "three") {
-                    //     return `${NetworkPrefix}/npm-globals/three.js-r179/three/build/three.module.js`;
+                    // if (moduleName.indexOf("three/examples/") === 0) {
+                    //     return `${NetworkPrefix}/vendor/three.js-r179/three/examples/${moduleName.replace("three/examples/", "")}`;
                     // }
-
-                    if (moduleName.indexOf("three/examples/") === 0) {
-                        return `${NetworkPrefix}/vendor/three.js-r179/three/examples/${moduleName.replace("three/examples/", "")}`;
-                    }
 
                     return new URL(moduleName, parentBaseURL).href;
                 },

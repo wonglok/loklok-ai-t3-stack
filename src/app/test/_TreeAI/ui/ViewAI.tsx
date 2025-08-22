@@ -24,19 +24,19 @@ function CoreRunner({ appFiles }) {
         runPage: "/test/run",
         files: [
             ...appFiles,
-            {
-                path: `/ui/useSDK.js`,
-                content: `
-import { create } from 'zustand'
+            //             {
+            //                 path: `/ui/useSDK.js`,
+            //                 content: `
+            // import { create } from 'zustand'
 
-export const useSDK = create((set, get) =>{
-    return {
-        //
-        //
-    }
-})
-                `,
-            },
+            // export const useSDK = create((set, get) =>{
+            //     return {
+            //         //
+            //         //
+            //     }
+            // })
+            //                 `,
+            //             },
             {
                 path: `/src/App.js`,
                 content: `
@@ -96,12 +96,17 @@ import * as ReactDOM from 'react-dom'
 import * as React from 'react'
 
 
-let domElement = document.querySelector('#run_code_div')
+let ttt = setInterval(() => {
+    let domElement = document.querySelector('#run_code_div')
 
-if (!domElement?.root) {
-    domElement.root = ReactDOM.createRoot(domElement)
-    domElement.root.render(<MyApp></MyApp>)
-}
+    if (domElement) {
+        clearInterval(ttt)
+        if (!domElement?.root) {
+            domElement.root = ReactDOM.createRoot(domElement)
+            domElement.root.render(<MyApp></MyApp>)
+        }
+    }
+}, 0);
 
 `,
             },

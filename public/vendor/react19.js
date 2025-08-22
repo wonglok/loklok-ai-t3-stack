@@ -4,88 +4,88 @@ window.NPM_CACHE = window.NPM_CACHE || {};
 // @ts-ignore
 const NPM_CACHE = window.NPM_CACHE;
 
-NPM_CACHE["npm-react19"] = NPM_CACHE["npm-react19"] || {};
+NPM_CACHE["npm-react"] = NPM_CACHE["npm-react"] || {}; 
 
-export const Children = NPM_CACHE["npm-react19"]['Children'];
+export const Children = NPM_CACHE["npm-react"]['Children'];
 
-export const Component = NPM_CACHE["npm-react19"]['Component'];
+export const Component = NPM_CACHE["npm-react"]['Component'];
 
-export const Fragment = NPM_CACHE["npm-react19"]['Fragment'];
+export const Fragment = NPM_CACHE["npm-react"]['Fragment'];
 
-export const Profiler = NPM_CACHE["npm-react19"]['Profiler'];
+export const Profiler = NPM_CACHE["npm-react"]['Profiler'];
 
-export const PureComponent = NPM_CACHE["npm-react19"]['PureComponent'];
+export const PureComponent = NPM_CACHE["npm-react"]['PureComponent'];
 
-export const StrictMode = NPM_CACHE["npm-react19"]['StrictMode'];
+export const StrictMode = NPM_CACHE["npm-react"]['StrictMode'];
 
-export const Suspense = NPM_CACHE["npm-react19"]['Suspense'];
+export const Suspense = NPM_CACHE["npm-react"]['Suspense'];
 
-export const __CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE = NPM_CACHE["npm-react19"]['__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE'];
+export const __CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE = NPM_CACHE["npm-react"]['__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE'];
 
-export const __COMPILER_RUNTIME = NPM_CACHE["npm-react19"]['__COMPILER_RUNTIME'];
+export const __COMPILER_RUNTIME = NPM_CACHE["npm-react"]['__COMPILER_RUNTIME'];
 
-export const act = NPM_CACHE["npm-react19"]['act'];
+export const act = NPM_CACHE["npm-react"]['act'];
 
-export const cache = NPM_CACHE["npm-react19"]['cache'];
+export const cache = NPM_CACHE["npm-react"]['cache'];
 
-export const captureOwnerStack = NPM_CACHE["npm-react19"]['captureOwnerStack'];
+export const captureOwnerStack = NPM_CACHE["npm-react"]['captureOwnerStack'];
 
-export const cloneElement = NPM_CACHE["npm-react19"]['cloneElement'];
+export const cloneElement = NPM_CACHE["npm-react"]['cloneElement'];
 
-export const createContext = NPM_CACHE["npm-react19"]['createContext'];
+export const createContext = NPM_CACHE["npm-react"]['createContext'];
 
-export const createElement = NPM_CACHE["npm-react19"]['createElement'];
+export const createElement = NPM_CACHE["npm-react"]['createElement'];
 
-export const createRef = NPM_CACHE["npm-react19"]['createRef'];
+export const createRef = NPM_CACHE["npm-react"]['createRef'];
 
-export default NPM_CACHE["npm-react19"]['default'];
+export default NPM_CACHE["npm-react"]['default'];
 
-export const forwardRef = NPM_CACHE["npm-react19"]['forwardRef'];
+export const forwardRef = NPM_CACHE["npm-react"]['forwardRef'];
 
-export const isValidElement = NPM_CACHE["npm-react19"]['isValidElement'];
+export const isValidElement = NPM_CACHE["npm-react"]['isValidElement'];
 
-export const lazy = NPM_CACHE["npm-react19"]['lazy'];
+export const lazy = NPM_CACHE["npm-react"]['lazy'];
 
-export const memo = NPM_CACHE["npm-react19"]['memo'];
+export const memo = NPM_CACHE["npm-react"]['memo'];
 
-export const startTransition = NPM_CACHE["npm-react19"]['startTransition'];
+export const startTransition = NPM_CACHE["npm-react"]['startTransition'];
 
-export const unstable_useCacheRefresh = NPM_CACHE["npm-react19"]['unstable_useCacheRefresh'];
+export const unstable_useCacheRefresh = NPM_CACHE["npm-react"]['unstable_useCacheRefresh'];
 
-export const use = NPM_CACHE["npm-react19"]['use'];
+export const use = NPM_CACHE["npm-react"]['use'];
 
-export const useActionState = NPM_CACHE["npm-react19"]['useActionState'];
+export const useActionState = NPM_CACHE["npm-react"]['useActionState'];
 
-export const useCallback = NPM_CACHE["npm-react19"]['useCallback'];
+export const useCallback = NPM_CACHE["npm-react"]['useCallback'];
 
-export const useContext = NPM_CACHE["npm-react19"]['useContext'];
+export const useContext = NPM_CACHE["npm-react"]['useContext'];
 
-export const useDebugValue = NPM_CACHE["npm-react19"]['useDebugValue'];
+export const useDebugValue = NPM_CACHE["npm-react"]['useDebugValue'];
 
-export const useDeferredValue = NPM_CACHE["npm-react19"]['useDeferredValue'];
+export const useDeferredValue = NPM_CACHE["npm-react"]['useDeferredValue'];
 
-export const useEffect = NPM_CACHE["npm-react19"]['useEffect'];
+export const useEffect = NPM_CACHE["npm-react"]['useEffect'];
 
-export const useId = NPM_CACHE["npm-react19"]['useId'];
+export const useId = NPM_CACHE["npm-react"]['useId'];
 
-export const useImperativeHandle = NPM_CACHE["npm-react19"]['useImperativeHandle'];
+export const useImperativeHandle = NPM_CACHE["npm-react"]['useImperativeHandle'];
 
-export const useInsertionEffect = NPM_CACHE["npm-react19"]['useInsertionEffect'];
+export const useInsertionEffect = NPM_CACHE["npm-react"]['useInsertionEffect'];
 
-export const useLayoutEffect = NPM_CACHE["npm-react19"]['useLayoutEffect'];
+export const useLayoutEffect = NPM_CACHE["npm-react"]['useLayoutEffect'];
 
-export const useMemo = NPM_CACHE["npm-react19"]['useMemo'];
+export const useMemo = NPM_CACHE["npm-react"]['useMemo'];
 
-export const useOptimistic = NPM_CACHE["npm-react19"]['useOptimistic'];
+export const useOptimistic = NPM_CACHE["npm-react"]['useOptimistic'];
 
-export const useReducer = NPM_CACHE["npm-react19"]['useReducer'];
+export const useReducer = NPM_CACHE["npm-react"]['useReducer'];
 
-export const useRef = NPM_CACHE["npm-react19"]['useRef'];
+export const useRef = NPM_CACHE["npm-react"]['useRef'];
 
-export const useState = NPM_CACHE["npm-react19"]['useState'];
+export const useState = NPM_CACHE["npm-react"]['useState'];
 
-export const useSyncExternalStore = NPM_CACHE["npm-react19"]['useSyncExternalStore'];
+export const useSyncExternalStore = NPM_CACHE["npm-react"]['useSyncExternalStore'];
 
-export const useTransition = NPM_CACHE["npm-react19"]['useTransition'];
+export const useTransition = NPM_CACHE["npm-react"]['useTransition'];
 
-export const version = NPM_CACHE["npm-react19"]['version'];
+export const version = NPM_CACHE["npm-react"]['version'];

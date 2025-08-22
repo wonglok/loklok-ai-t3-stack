@@ -6,6 +6,7 @@ import * as ReactThreeFiber from "@react-three/fiber";
 import * as Zustand from "zustand";
 import * as WouterBase from "wouter";
 import * as WouterHash from "wouter/use-hash-location";
+import { NPMCacheTasks } from "./npm-globals";
 
 export function RuntimeCore() {
     React19.useEffect(() => {
@@ -21,13 +22,17 @@ export function RuntimeCore() {
 
             // @ts-ignore
             const NPM_CACHE = window.NPM_CACHE;
-            NPM_CACHE["npm-react-dom19"] = ReactDOM19;
-            NPM_CACHE["npm-react19"] = React19;
+            NPM_CACHE["npm-react-dom"] = ReactDOM19;
+            NPM_CACHE["npm-react"] = React19;
             NPM_CACHE["npm-@react-three/drei"] = ReactThreeDrei;
             NPM_CACHE["npm-@react-three/fiber"] = ReactThreeFiber;
             NPM_CACHE["npm-zustand"] = Zustand;
             NPM_CACHE["npm-wouter"] = WouterBase;
             NPM_CACHE["npm-wouter/use-hash-location"] = WouterHash;
+
+            NPMCacheTasks.forEach((cacheNpm) => {
+                NPM_CACHE[cacheNpm.name] = cacheNpm.importVaraible;
+            });
 
             // @ts-ignore
             window.esmsInitOptions = {
