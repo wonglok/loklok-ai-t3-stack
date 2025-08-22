@@ -59,6 +59,13 @@ export async function onReceiveResponse({
         args: { userPrompt: userPrompt },
     });
 
+    // parallels
+    MyTaskManager.add({
+        waitFor: ["handleAppSpec", "handleZustand"],
+        name: "handleBackendTRPC",
+        args: { userPrompt: userPrompt },
+    });
+
     await MyTaskManager.doneTask(task.name);
 
     await saveToBrowserDB();
