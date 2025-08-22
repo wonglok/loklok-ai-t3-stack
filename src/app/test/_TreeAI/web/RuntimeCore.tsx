@@ -15,6 +15,7 @@ export function RuntimeCore() {
 
             let fileList = (await fetch(blobURL).then((r) => r.json())) || [];
 
+            window.React = React19;
             // @ts-ignore
             window.NPM_CACHE = window.NPM_CACHE || {};
 

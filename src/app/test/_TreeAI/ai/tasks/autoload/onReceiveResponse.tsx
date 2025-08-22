@@ -51,22 +51,22 @@ export async function onReceiveResponse({
         ],
     });
 
-    // MyTaskManager.add({
-    //     waitFor: [task.name],
-    //     name: "handleAppSpec",
-    //     args: { userPrompt: userPrompt },
-    // });
+    MyTaskManager.add({
+        waitFor: [task.name],
+        name: "handleAppSpec",
+        args: { userPrompt: userPrompt },
+    });
 
     // parallels
     MyTaskManager.add({
-        waitFor: [],
+        waitFor: ["handleAppSpec"],
         name: "handleReactAppRoot",
         args: { userPrompt: userPrompt },
     });
 
     // parallels
     MyTaskManager.add({
-        waitFor: [],
+        waitFor: ["handleAppSpec"],
         name: "handleZustand",
         args: { userPrompt: userPrompt },
     });

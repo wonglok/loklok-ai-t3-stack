@@ -29,6 +29,8 @@ export const rollupCode = async ({ files = [] }) => {
                         "wanted by",
                         parentBaseURL,
                     );
+
+                    //
                     //
                     if (moduleName.startsWith("@/")) {
                         moduleName = moduleName.replace("@/", "/");
@@ -42,34 +44,10 @@ export const rollupCode = async ({ files = [] }) => {
                     let mod = NPMCacheTasks.find(
                         (r) => `${r.name}` === `npm-${moduleName}`,
                     );
-
-                    console.log(moduleName);
                     if (mod) {
-                        console.log(mod);
                         return `${NetworkPrefix}${mod.output}`;
                     }
 
-                    // if (moduleName === "zustand") {
-                    //     return `${NetworkPrefix}/npm-globals/zustand.js`;
-                    // }
-                    // if (moduleName === "wouter") {
-                    //     return `${NetworkPrefix}/npm-globals/wouter.js`;
-                    // }
-                    // if (moduleName === "wouter/use-hash-location") {
-                    //     return `${NetworkPrefix}/npm-globals/wouter-hash-location.js`;
-                    // }
-                    // if (moduleName === "react-dom") {
-                    //     return `${NetworkPrefix}/npm-globals/react-dom19.js`;
-                    // }
-                    // if (moduleName === "react") {
-                    //     return `${NetworkPrefix}/npm-globals/react19.js`;
-                    // }
-                    // if (moduleName === "@react-three/fiber") {
-                    //     return `${NetworkPrefix}/npm-globals/@react-three/fiber.js`;
-                    // }
-                    // if (moduleName === "@react-three/drei") {
-                    //     return `${NetworkPrefix}/npm-globals/@react-three/drei.js`;
-                    // }
                     // if (moduleName === "three") {
                     //     return `${NetworkPrefix}/npm-globals/three.js-r179/three/build/three.module.js`;
                     // }

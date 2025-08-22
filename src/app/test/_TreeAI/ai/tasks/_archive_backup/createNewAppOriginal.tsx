@@ -82,10 +82,10 @@ You are an expert AI assistant for a vibe coding platform (similar to Base44 or 
                                         role: "user",
                                         content: `
 
-Instruction: Generating a "Product Requirement Definition"
-
 Input Requirements:
 ${userPrompt} 
+
+Instruction: Generating a "Product Requirement Definition"
 
 Step 1: Requirements Refinement
 

@@ -44,7 +44,7 @@ import * as ReactDOM from 'react-dom'
 import * as React from 'react'
 import { Canvas } from '@react-three/fiber'
 import { Sphere, MeshTransmissionMaterial, Environment, OrbitControls } from '@react-three/drei'
-import { useSDK } from '/ui/useSDK.js'
+// import { useSDK } from '@/ui/useSDK.js'
 import { useState } from 'react'
 
 export function MyApp () {  
@@ -54,7 +54,7 @@ export function MyApp () {
     let [outlet, setApp] = React.useState(null)
 
     React.useEffect(() => {
-        import('/components/App.js').then((myModule) =>{
+        import('/components/App.tsx').then((myModule) =>{
                 console.log('myModule', myModule)
                 if (myModule?.App) {
                     try {

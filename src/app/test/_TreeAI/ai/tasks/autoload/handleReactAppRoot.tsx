@@ -27,6 +27,7 @@ import { saveToBrowserDB } from "../../../io/saveToBrowserDB";
 // import { parseCodeBlocksActionType } from "./_core/LokLokParser2";
 import { removeFile } from "../../../io/removeFile";
 import { parseCodeBlocksGen3 } from "../_core/LokLokParser3";
+import { getAppOverviewPrompt } from "../prompts/getAppOverviewPrompt";
 
 export const name = "handleReactAppRoot";
 export const displayName = "React JS front end of the App";
@@ -53,6 +54,11 @@ ${content}
 `,
         });
     }
+
+    chatblocks.push({
+        role: "system",
+        content: `${await getAppOverviewPrompt()}`,
+    });
 
     if (files?.length > 0) {
         chatblocks.push({
@@ -87,7 +93,7 @@ ${!!content ? `- Memorise the "product requirement definition" and refer to it w
 - Identify React Component modules and implement them in this format, use only typescript ".ts" files:
 - DO NOT WRAP THE CODE WITH markdown
 - ONLY WRITE PURE CODE FOR {code} etc
-- the folder for components is at "@/components/*"
+- the folder for components is at "/components/*"
 
 - use named export for "App" Component like the following: 
 export function App () {...}
@@ -95,8 +101,8 @@ export function App () {...}
 - include the following lines:
 import * as React from 'react';
 
-- when write the App component, write file to "@/components/App.tsx"
-- when write the other components, write file to "@/components/*.tsx"
+- when write the App component, write file to "/components/App.tsx"
+- when write the other components, write file to "/components/*.tsx"
 
 - for formatting follow this:
 - if you want to create file
