@@ -19,14 +19,14 @@ export function RuntimeCore({ files = [] }) {
         });
 
         window.trpcSDK = sdk;
-        window.trpcSDK
-            .runTRPC({
-                procedure: "hello",
-                input: { text: "sure been good" },
-            })
-            .then((here) => {
-                console.log(here);
-            });
+        // window.trpcSDK
+        //     .runTRPC({
+        //         procedure: "hello",
+        //         input: { text: "sure been good" },
+        //     })
+        //     .then((here) => {
+        //         console.log(here);
+        //     });
 
         //
     }, [appID]);
@@ -111,7 +111,7 @@ export function RuntimeCore({ files = [] }) {
                 });
         };
         run();
-    }, []);
+    }, [files]);
 
     return (
         <div className="h-full w-full">

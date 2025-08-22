@@ -45,8 +45,6 @@ export function TreeList() {
                             },
                         });
                     }
-
-                    // useAI.setState({ topTab: "team" });
                 }}
             ></TreeItem>
 
@@ -108,6 +106,8 @@ export function TreeList() {
                     })}
             </TreeItem>
 
+            */}
+
             <TreeItem
                 itemId="/components"
                 label={
@@ -145,9 +145,128 @@ export function TreeList() {
                             />
                         );
                     })}
-            </TreeItem> */}
 
-            {files.map((r) => {
+                {/*  */}
+            </TreeItem>
+
+            <TreeItem
+                itemId="/models"
+                label={
+                    <>
+                        📂
+                        {` Mongoose models`}
+                    </>
+                }
+                onClick={() => {
+                    //
+                    useAI.setState({
+                        topTab: "code",
+                    });
+                    //
+                }}
+            >
+                {files
+                    .filter((r) => r?.path?.startsWith("/models"))
+                    .map((r) => {
+                        return (
+                            <TreeItem
+                                key={r.path}
+                                itemId={r.path}
+                                label={
+                                    <div className="h-full w-full overflow-x-auto">
+                                        {r.path}
+                                    </div>
+                                }
+                                onClick={() => {
+                                    useAI.setState({
+                                        topTab: "code",
+                                        currentPath: r.path,
+                                    });
+                                }}
+                            />
+                        );
+                    })}
+            </TreeItem>
+
+            <TreeItem
+                itemId="/store"
+                label={
+                    <>
+                        📂
+                        {` Mongoose store`}
+                    </>
+                }
+                onClick={() => {
+                    //
+                    useAI.setState({
+                        topTab: "code",
+                    });
+                    //
+                }}
+            >
+                {files
+                    .filter((r) => r?.path?.startsWith("/store"))
+                    .map((r) => {
+                        return (
+                            <TreeItem
+                                key={r.path}
+                                itemId={r.path}
+                                label={
+                                    <div className="h-full w-full overflow-x-auto">
+                                        {r.path}
+                                    </div>
+                                }
+                                onClick={() => {
+                                    useAI.setState({
+                                        topTab: "code",
+                                        currentPath: r.path,
+                                    });
+                                }}
+                            />
+                        );
+                    })}
+            </TreeItem>
+
+            <TreeItem
+                itemId="/trpc"
+                label={
+                    <>
+                        📂
+                        {` TRPC models`}
+                    </>
+                }
+                onClick={() => {
+                    //
+                    useAI.setState({
+                        topTab: "code",
+                    });
+                    //
+                }}
+            >
+                {files
+                    .filter((r) => r?.path?.startsWith("/trpc"))
+                    .map((r) => {
+                        return (
+                            <TreeItem
+                                key={r.path}
+                                itemId={r.path}
+                                label={
+                                    <div className="h-full w-full overflow-x-auto">
+                                        {r.path}
+                                    </div>
+                                }
+                                onClick={() => {
+                                    useAI.setState({
+                                        topTab: "code",
+                                        currentPath: r.path,
+                                    });
+                                }}
+                            />
+                        );
+                    })}
+            </TreeItem>
+
+            {/* {files.map((r) => {
                 return (
                     <TreeItem
                         key={r.path + "any"}
@@ -161,7 +280,7 @@ export function TreeList() {
                         }}
                     />
                 );
-            })}
+            })} */}
         </SimpleTreeView>
     );
 }

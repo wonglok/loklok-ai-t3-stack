@@ -78,6 +78,8 @@ window.trpcSDK
         console.log(result); // result is obtained via async functuin call
     });
 
+- Never Impport "@/types"
+
 ${await getFileOutputFormatting()}
 
                 `,
