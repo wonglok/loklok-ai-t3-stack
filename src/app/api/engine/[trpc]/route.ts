@@ -191,7 +191,7 @@ return appRouter
                     { upsert: true },
                 );
 
-                return post;
+                return { ok: "deployed", path: input.key };
             }),
     });
 

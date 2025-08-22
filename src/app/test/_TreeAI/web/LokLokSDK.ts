@@ -32,8 +32,6 @@ export class LokLokSDK {
             ],
         });
 
-        //
-
         this.client = client;
     }
 
@@ -41,7 +39,7 @@ export class LokLokSDK {
         return (this.client["app"][procedure] as any)
             .mutate(input)
             .then((data) => {
-                console.log("data", data);
+                // console.log("data", data);
                 return data;
             });
     }
@@ -50,7 +48,7 @@ export class LokLokSDK {
         return (this.client["platform"][procedure] as any)
             .mutate(input)
             .then((data) => {
-                console.log("data", data);
+                console.log("setup-platform", data);
                 return data;
             });
     }
