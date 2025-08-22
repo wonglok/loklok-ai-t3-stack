@@ -28,6 +28,8 @@ import { removeFile } from "../../../io/removeFile";
 import { parseCodeBlocksGen3 } from "../_core/LokLokParser3";
 import { getAppOverviewPrompt } from "../prompts/getAppOverviewPrompt";
 import { getFileOutputFormatting } from "../prompts/getFileOutputFormatting";
+import { v4 } from "uuid";
+import { putUIMessage } from "../../putUIMessage";
 
 export const name = "handleZustand";
 export const displayName = "Zustand the App";
@@ -83,12 +85,12 @@ Instructions:
 import { create } from 'zustand';
 
 
-- The app has a global variable window.trpcSDK as a custom tRPC Frontend Client.
+- The app has a Global variable window.trpcSDK as a custom tRPC Frontend Client.
 
 window.trpcSDK
     .runTRPC({
-        procedure: "hello", // "hello" is the procedure name
-        input: { text: "sure been good" },// "input" is the input paramter
+        procedure: "hello", // [hello] is the procedure name
+        input: { text: "sure been good" },// [input] is the input paramter
     })
     .then((result) => {
         console.log(result); // result is obtained via async functuin call
@@ -187,6 +189,21 @@ ${await getFileOutputFormatting()}
         }
     };
 
+    let appMessage = {
+        //
+        id: `${v4()}`,
+        role: "assistant",
+        metadata: {},
+        parts: [
+            {
+                id: `${v4()}`,
+                type: "data-loading",
+                data: ``,
+            },
+        ],
+    };
+    putUIMessage(appMessage as UIMessage);
+
     let text = "";
     for await (let part of response.textStream) {
         text += part;
@@ -195,6 +212,8 @@ ${await getFileOutputFormatting()}
         parseText(text);
 
         //
+        putUIMessage(appMessage as UIMessage);
+
         //
     }
     parseText(text);

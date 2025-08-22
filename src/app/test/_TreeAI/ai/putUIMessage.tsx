@@ -15,7 +15,6 @@ export const putUIMessage = (msg: UIMessage) => {
     } else {
         uiMessages.push({
             ...msg,
-            id: `${v4()}`,
         });
     }
 

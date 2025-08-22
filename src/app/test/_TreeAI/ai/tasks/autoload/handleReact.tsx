@@ -192,21 +192,6 @@ ${await getFileOutputFormatting()}
         }
     };
 
-    let appMessage = {
-        //
-        id: `${v4()}`,
-        role: "assistant",
-        metadata: {},
-        parts: [
-            {
-                id: `${v4()}`,
-                type: "data-loading",
-                data: ``,
-            },
-        ],
-    };
-    putUIMessage(appMessage as UIMessage);
-
     let text = "";
     for await (let part of response.textStream) {
         text += part;
@@ -214,15 +199,11 @@ ${await getFileOutputFormatting()}
 
         parseText(text);
 
-        refreshUIMessages(appMessage as UIMessage);
-
         //
     }
     parseText(text);
 
     await saveToBrowserDB();
-
-    removeUIMessage(appMessage as UIMessage);
 
     useAI.setState({
         topTab: "web",
