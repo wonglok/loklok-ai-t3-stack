@@ -17,6 +17,13 @@ export const MyTaskManager = {
             task.status = "done";
         }
         console.log("done-task", task);
+
+        useAI.setState({
+            atLeastOneWorkerRunning:
+                MyTaskManager.taskList.filter((r) => {
+                    return r.status === "working" || r.status === "reserved";
+                }).length > 0,
+        });
     },
     add: (a: { name: string; waitFor: string[]; args?: any }) => {
         MyTaskManager.taskList.push({
@@ -24,6 +31,13 @@ export const MyTaskManager = {
             waitFor: a.waitFor,
             args: a.args,
             status: "init",
+        });
+
+        useAI.setState({
+            atLeastOneWorkerRunning:
+                MyTaskManager.taskList.filter((r) => {
+                    return r.status === "working" || r.status === "reserved";
+                }).length > 0,
         });
     },
 

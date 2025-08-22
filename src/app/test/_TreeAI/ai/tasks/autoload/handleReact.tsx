@@ -84,6 +84,7 @@ Instructions:
 - DO NOT WRAP THE CODE WITH markdown
 - ONLY WRITE PURE CODE FOR {code} etc
 - the folder for components is at "/components/*"
+- the folder for util is at "/util/*"
 
 - use named export for "App" Component like the following: 
 export function App () {...}

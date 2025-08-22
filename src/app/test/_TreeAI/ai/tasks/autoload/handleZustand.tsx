@@ -177,21 +177,6 @@ ${await getFileOutputFormatting()}
         }
     };
 
-    let appMessage = {
-        //
-        id: `${v4()}`,
-        role: "assistant",
-        metadata: {},
-        parts: [
-            {
-                id: `${v4()}`,
-                type: "data-loading",
-                data: ``,
-            },
-        ],
-    };
-    putUIMessage(appMessage as UIMessage);
-
     let text = "";
     for await (let part of response.textStream) {
         text += part;
@@ -200,13 +185,10 @@ ${await getFileOutputFormatting()}
         parseText(text);
 
         //
-        putUIMessage(appMessage as UIMessage);
 
         //
     }
     parseText(text);
-
-    removeUIMessage(appMessage as UIMessage);
 
     await saveToBrowserDB();
 
