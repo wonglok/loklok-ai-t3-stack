@@ -47,12 +47,44 @@ export const SettingsBootUp = () => {
         if (!appID) {
             return;
         }
+
         let db = createInstance({
             name: `chatDB-${appID}`,
+        });
+
+        db.getItem("ui-message").then((msg) => {
+            if (msg instanceof Array) {
+                useAI.setState({
+                    uiMessages: msg,
+                });
+            }
         });
         return useAI.subscribe((now, before) => {
             if (now.uiMessages !== before.uiMessages) {
                 db.setItem("ui-message", now.uiMessages);
+            }
+        });
+    }, [appID]);
+
+    useEffect(() => {
+        if (!appID) {
+            return;
+        }
+
+        let db = createInstance({
+            name: `engines-${appID}`,
+        });
+
+        db.getItem("engine-settings").then((msg) => {
+            if (msg instanceof Array) {
+                useAI.setState({
+                    engines: msg,
+                });
+            }
+        });
+        return useAI.subscribe((now, before) => {
+            if (now.engines !== before.engines) {
+                db.setItem("engine-settings", now.engines);
             }
         });
     }, [appID]);
