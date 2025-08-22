@@ -16,6 +16,12 @@ import { AnyRouter } from "@trpc/server";
 import SuperJSON from "superjson";
 import { useAI } from "../state/useAI";
 
+declare global {
+    interface Window {
+        tRPCSDK?: LokSDK;
+    }
+}
+
 export function RuntimeCore() {
     let appID = useAI((r) => r.appID);
 
@@ -24,12 +30,16 @@ export function RuntimeCore() {
             appID: appID,
         });
 
+        window.tRPCSDK = sdk;
+
         sdk.runTRPC({
             procedure: "hello",
             input: { text: "sure been good" },
         }).then((here) => {
             console.log(here);
         });
+
+        //
     }, [appID]);
 
     React19.useEffect(() => {
