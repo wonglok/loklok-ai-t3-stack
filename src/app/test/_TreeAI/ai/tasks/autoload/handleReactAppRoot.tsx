@@ -85,10 +85,9 @@ Instructions:
 ${!!content ? `- Memorise the "product requirement definition" and refer to it when you implement the react code` : ``}
 
 - Identify React Component modules and implement them in this format, use only typescript ".ts" files:
-- use tailwind css to style the elements
 - DO NOT WRAP THE CODE WITH markdown
-- ONLY WRITE PURE CODE FOR {file_1_code} etc
-- the folder for components is at "/components/*"
+- ONLY WRITE PURE CODE FOR {code} etc
+- the folder for components is at "@/components/*"
 
 - use named export for "App" Component like the following: 
 export function App () {...}
@@ -96,13 +95,13 @@ export function App () {...}
 - include the following lines:
 import * as React from 'react';
 
-- when write the App component, write file to "/components/App.tsx"
-- when write the other components, write file to "/components/*.tsx"
+- when write the App component, write file to "@/components/App.tsx"
+- when write the other components, write file to "@/components/*.tsx"
 
 - for formatting follow this:
 - if you want to create file
 [mydearlokloktag action="create-file" file="{file_path_name}" summary="{file_summary}"]
-{code}
+{file_content}
 [/mydearlokloktag]
 
 - if you want to remove file
@@ -110,20 +109,21 @@ import * as React from 'react';
 
 - if you want to update file
 [mydearlokloktag action="update-file" file="{file_path_name}" summary="{file_summary}"]
-{code}
+{file_content}
 [/mydearlokloktag]
 
-- {file_path_name} is the file path name
-- {file_summary} is the overview, purpose and summary of the code file
-- {code} is the code of the file
-
-- use some rounded-lg 
-- use some shadow-inner 
-- use some border for shadow-inner items
+- {file_path_name} is the path of the file
+- {file_content} is the content of the file
+- {file_summary} is the overview, purpose and summary of the file
 
 - if there is an existing file, then you can use [mydearlokloktag action="update-file" ...]
 - if there is no existing file, then you can [mydearlokloktag action="create-file" ...]
 - if you need to remove existing file, then you can [mydearlokloktag action="remove-file" ...]
+
+- use tailwind css to style the elements
+- use some rounded-lg 
+- use some shadow-inner 
+- use some border for shadow-inner items
 
                 `,
     });

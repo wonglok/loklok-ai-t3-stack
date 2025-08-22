@@ -147,7 +147,7 @@ function EnableSwitch({ name }: { name: string }) {
             )}
 
             <Switch
-                disabled={atLeastOneWorkerRunning}
+                disabled={!(item.status === "free" || item.status === "empty")}
                 checked={item.enabled}
                 onCheckedChange={(v) => {
                     item.enabled = v;

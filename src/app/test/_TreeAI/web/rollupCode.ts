@@ -22,7 +22,7 @@ export const rollupCode = async ({ files = [] }) => {
         plugins: [
             {
                 name: "loklok-runner",
-                async resolveId(moduleName, parentBaseURL) {
+                async resolveId(moduleName: string, parentBaseURL) {
                     console.log(
                         "resolving module: ",
                         moduleName,
@@ -30,6 +30,9 @@ export const rollupCode = async ({ files = [] }) => {
                         parentBaseURL,
                     );
                     //
+                    if (moduleName.startsWith("@/")) {
+                        moduleName = moduleName.replace("@/", "/");
+                    }
 
                     if (!parentBaseURL) {
                         return moduleName;
