@@ -92,12 +92,6 @@ ${!!content ? `- Memorise the "product requirement definition" and refer to it w
 - Identify Zustand stores and implement them, use only typescript ".ts" files:
 - DO NOT WRAP THE CODE WITH markdown
 - ONLY WRITE PURE CODE FOR
-- The folder for store is at "/store/*"
-- when write the useMyStore store, write file to "/store/useMyStore.tsx"
-- when write the other stores, write file to "/store/*.tsx"
-
-- use named export for "useMyStore" Component like the following: 
-export function useMyStore () {...}
 
 - include the following lines:
 import { create } from 'zustand';
