@@ -4,9 +4,6 @@ import { useEffect, useState } from "react";
 import { LokLokSDK } from "@/app/test/_TreeAI/web/LokLokSDK";
 import { useParams } from "next/navigation";
 import { useWebView } from "@/app/test/_TreeAI/web/useWebView";
-import { ViewAI } from "@/app/test/_TreeAI/ui/ViewAI";
-
-//. src/app/apps/[appID]/sim/page.tsx
 
 export default function WebRuntime() {
     let [files, setState] = useState([]);
@@ -17,12 +14,12 @@ export default function WebRuntime() {
         if (!appID) {
             return;
         }
-        console.log("appID", appID);
         let sdk = new LokLokSDK({ appID: appID });
         sdk.setupPlatform({
             procedure: "getFiles",
             input: {},
         }).then((files) => {
+            console.log("appID", appID);
             console.log("getFiles", files);
             setState(files);
         });
@@ -41,6 +38,7 @@ export default function WebRuntime() {
 }
 
 export function CoreRunner({ files, runPage }) {
+    console.log("CoreRunner", files);
     let { show } = useWebView({
         runPage: runPage,
         files: [
@@ -62,7 +60,7 @@ export function MyApp () {
     let [outlet, setApp] = React.useState(null)
 
     React.useEffect(() => {
-        import('/components/App.tsx').then((myModule) =>{
+        import("/components/App.tsx").then((myModule) =>{
                 console.log('myModule', myModule)
                 if (myModule?.App) {
                     try {

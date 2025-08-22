@@ -43,9 +43,7 @@ export function TreeList() {
                             procedure: "setKV",
                             input: {
                                 key: file.path,
-                                value: await readFileContent({
-                                    path: file.path,
-                                }),
+                                value: file.content,
                             },
                         });
                     }

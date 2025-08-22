@@ -183,17 +183,18 @@ return appRouter
         setKV: publicProcedure
             .input(z.object({ key: z.string(), value: z.string() }))
             .mutation(async ({ input }) => {
-                await dbPlatform.model("CodeKVStore").updateOne(
+                await dbPlatform.model("CodeKVStore").findOneAndUpdate(
                     {
                         key: input.key,
                     },
                     {
+                        key: input.key,
                         value: input.value,
                     },
                     { upsert: true },
                 );
 
-                return { ok: "deployed", path: input.key };
+                return { ok: "deployed", path: input.key, value: input.value };
             }),
         reset: publicProcedure
             .input(z.object({}))
