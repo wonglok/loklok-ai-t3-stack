@@ -69,6 +69,12 @@ export async function onReceiveResponse({
         args: { userPrompt: userPrompt },
     });
 
+    // MyTaskManager.add({
+    //     waitFor: [""]
+    //     name: "handleDeploy",
+    //     args: {}
+    // })
+
     await MyTaskManager.doneTask(task.name);
 
     await saveToBrowserDB();

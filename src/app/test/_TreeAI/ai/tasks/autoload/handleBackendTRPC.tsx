@@ -219,19 +219,6 @@ ${await getFileOutputFormatting()}
 
     await MyTaskManager.doneTask(task.name);
 
-    let sdk = new LokLokSDK({
-        appID: useAI.getState().appID,
-    });
-
-    await sdk.setupPlatform({
-        input: {
-            key: `/trpc/defineBackendProcedures.js`,
-            value: await readFileContent({
-                path: `/trpc/defineBackendProcedures.js`,
-            }),
-        },
-    });
-
     //  platform
 
     await putBackFreeAIAsync({ engine: slot });

@@ -185,19 +185,6 @@ ${await getFileOutputFormatting()}
 
     await saveToBrowserDB();
 
-    let sdk = new LokLokSDK({
-        appID: useAI.getState().appID,
-    });
-
-    await sdk.setupPlatform({
-        input: {
-            key: `/models/defineMongooseModels.js`,
-            value: await readFileContent({
-                path: `/models/defineMongooseModels.js`,
-            }),
-        },
-    });
-
     await MyTaskManager.doneTask(task.name);
 
     await putBackFreeAIAsync({ engine: slot });
