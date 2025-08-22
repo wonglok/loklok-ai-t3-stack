@@ -67,7 +67,7 @@ export async function onReceiveResponse({
     // parallels
     MyTaskManager.add({
         waitFor: ["handleAppSpec", "handleZustand"],
-        name: "handleReactAppRoot",
+        name: "handleReact",
         args: { userPrompt: userPrompt },
     });
 

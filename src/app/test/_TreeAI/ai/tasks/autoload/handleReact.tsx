@@ -30,10 +30,10 @@ import { parseCodeBlocksGen3 } from "../_core/LokLokParser3";
 import { getAppOverviewPrompt } from "../prompts/getAppOverviewPrompt";
 import { getFileOutputFormatting } from "../prompts/getFileOutputFormatting";
 
-export const name = "handleReactAppRoot";
+export const name = "handleReact";
 export const displayName = "React JS front end of the App";
 
-export async function handleReactAppRoot({
+export async function handleReact({
     userPrompt,
     task,
 }: {

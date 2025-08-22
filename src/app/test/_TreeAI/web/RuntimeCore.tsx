@@ -7,8 +7,31 @@ import * as React19 from "react";
 // import * as WouterBase from "wouter";
 // import * as WouterHash from "wouter/use-hash-location";
 import { NPMCacheTasks } from "./npm-globals";
+import {
+    createTRPCClient,
+    httpBatchStreamLink,
+    TRPCClient,
+} from "@trpc/client";
+import { AnyRouter } from "@trpc/server";
+import SuperJSON from "superjson";
+import { useAI } from "../state/useAI";
 
 export function RuntimeCore() {
+    let appID = useAI((r) => r.appID);
+
+    React19.useEffect(() => {
+        let sdk = new LokSDK({
+            appID: appID,
+        });
+
+        sdk.runTRPC({
+            procedure: "hello",
+            input: { text: "sure been good" },
+        }).then((here) => {
+            console.log(here);
+        });
+    }, [appID]);
+
     React19.useEffect(() => {
         let run = async () => {
             let urlSelf = new URL(window.location.href);
@@ -104,4 +127,45 @@ export function RuntimeCore() {
             <div className="h-full w-full" id="run_code_div"></div>
         </div>
     );
+}
+
+class LokSDK {
+    public client: TRPCClient<AnyRouter>;
+
+    constructor({ appID }) {
+        function getBaseUrl() {
+            if (typeof window !== "undefined") return window.location.origin;
+            if (process.env.VERCEL_URL)
+                return "https://" + process.env.VERCEL_URL;
+            return "http://localhost:" + (process.env.PORT || 3000);
+        }
+
+        const client = createTRPCClient<AnyRouter>({
+            links: [
+                httpBatchStreamLink({
+                    transformer: SuperJSON as any,
+                    url: `${getBaseUrl()}/api/engine`,
+                    headers: () => {
+                        const headers = new Headers();
+                        headers.set("x-trpc-source", "nextjs-react");
+                        headers.set("app-id", appID);
+                        return headers;
+                    },
+                }),
+            ],
+        });
+
+        //
+
+        this.client = client;
+
+        //
+    }
+
+    async runTRPC({ procedure = "hello", input }) {
+        return (this.client[procedure] as any).mutate(input).then((data) => {
+            console.log("data", data);
+            return data;
+        });
+    }
 }
