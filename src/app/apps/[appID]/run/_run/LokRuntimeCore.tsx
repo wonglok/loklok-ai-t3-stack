@@ -1,4 +1,6 @@
 "use client";
+import { LokLokSDK } from "@/app/test/_TreeAI/web/LokLokSDK";
+import { NPMCacheTasks } from "@/app/test/_TreeAI/web/npm-globals";
 // import ReactDOM19 from "react-dom/client";
 import * as React19 from "react";
 // import * as ReactThreeDrei from "@react-three/drei";
@@ -6,10 +8,10 @@ import * as React19 from "react";
 // import * as Zustand from "zustand";
 // import * as WouterBase from "wouter";
 // import * as WouterHash from "wouter/use-hash-location";
-import { NPMCacheTasks } from "./npm-globals";
-import { LokLokSDK } from "./LokLokSDK";
+// import { NPMCacheTasks } from "./npm-globals";
+// import { LokLokSDK } from "./LokLokSDK";
 
-export function RuntimeCore({ files = [], appID = "" }) {
+export function LokRuntimeCore({ files = [], appID = "" }) {
     React19.useEffect(() => {
         if (!appID) {
             return;
@@ -34,18 +36,7 @@ export function RuntimeCore({ files = [], appID = "" }) {
 
     React19.useEffect(() => {
         let run = async () => {
-            let urlSelf = new URL(window.location.href);
-            let blobURL = urlSelf.searchParams.get("blob");
-
-            let fileList = [];
-            if (files.length > 0) {
-                fileList = files;
-            } else {
-                fileList =
-                    (await fetch(blobURL)
-                        .then((r) => r.json())
-                        .catch((r) => [])) || [];
-            }
+            let fileList = files;
 
             window.React = React19;
             // @ts-ignore
@@ -100,21 +91,22 @@ export function RuntimeCore({ files = [], appID = "" }) {
                 },
             };
 
-            // @ts-ignore
-            window.importHttpModule = window.importHttpModule || (() => {});
-            // @ts-ignore
-            window
+            let yolo = setInterval(() => {
                 // @ts-ignore
-                .importHttpModule(`/es-module-shims/es-module-shims.js`)
-                .then(() => {
+                let importer = window.importHttpModule2;
+                if (importer) {
+                    clearInterval(yolo);
+
                     // @ts-ignore
+                    console.log(window.importHttpModule2);
+                    // @ts-ignore
+
                     window.importShim("/src/main.js");
-                });
+                }
+            });
         };
-        setTimeout(() => {
-            run();
-        }, 100);
-    }, []);
+        run();
+    }, [files]);
 
     return (
         <div className="h-full w-full">
@@ -123,7 +115,7 @@ export function RuntimeCore({ files = [], appID = "" }) {
                 dangerouslySetInnerHTML={{
                     __html: `
         <script>
-            window.importHttpModule = async (value) => {
+            window.importHttpModule2 = async (value) => {
                 return import(value);
             };
         </script>

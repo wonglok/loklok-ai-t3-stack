@@ -5,7 +5,7 @@ import path from "path";
 import { NPMCacheTasks } from "@/app/test/_TreeAI/web/npm-globals";
 
 export const rollupCode = async ({ files = [] }) => {
-    const CodePrefix = `dynamic-code:`;
+    const CodePrefix = `loklokcode:`;
     const NetworkPrefix = `${location.origin}`;
 
     //

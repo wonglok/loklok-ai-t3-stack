@@ -11,12 +11,6 @@ import { BootUpTaskManager } from "../ai/tasks/_core/MyTaskManager";
 
 export function VercelLMStudio({ appID }: { appID: string }) {
     useEffect(() => {
-        useAI.setState({
-            appID: `${appID}`,
-        });
-    }, [appID]);
-
-    useEffect(() => {
         let ready = async () => {
             await bootup();
         };
@@ -30,6 +24,7 @@ export function VercelLMStudio({ appID }: { appID: string }) {
     if (!appID) {
         return <>No App ID</>;
     }
+
     return (
         <>
             <SettingsBootUp></SettingsBootUp>
