@@ -75,8 +75,6 @@ ${ff.content}
         content: `
 Instructions:
 
-${!!content ? `- Memorise the "product requirement definition" and refer to it when you implement the react code` : ``}
-
 - Identify Zustand stores and implement them, use only typescript ".ts" files:
 - DO NOT WRAP THE CODE WITH markdown
 - ONLY WRITE PURE CODE FOR

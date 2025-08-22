@@ -51,8 +51,7 @@ export async function handleReact({
     if (files?.length > 0) {
         chatblocks.push({
             role: "user",
-            content: `Here's the "file system of existing code": 
-${content}`,
+            content: `Here's are the files:`,
         });
 
         files.forEach((ff) => {
@@ -75,8 +74,6 @@ ${ff.content}
         role: "user",
         content: `
 Instructions:
-
-${!!content ? `- Memorise the "product requirement definition" and refer to it when you implement the react code` : ``}
 
 - Identify React Component modules and implement them in this format, use only typescript ".ts" files:
 - DO NOT WRAP THE CODE WITH markdown
@@ -151,6 +148,8 @@ ${await getFileOutputFormatting()}
             console.log("Parsed blocks:", JSON.stringify(blocks, null, 2));
 
             for (let block of blocks) {
+                //
+
                 // if (block.fileName.startsWith("/")) {
                 // } else {
                 //     block.fileName = `/${block.fileName}`;
