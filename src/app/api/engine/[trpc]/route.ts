@@ -178,7 +178,9 @@ return appRouter
     }
 
     let platformRouter = createTRPCRouter({
-        setKV: protectedProcedure
+        //publicProcedure
+        // setKV: protectedProcedure
+        setKV: publicProcedure
             .input(z.object({ key: z.string(), value: z.string() }))
             .mutation(async ({ input }) => {
                 await dbPlatform.model("CodeKVStore").updateOne(
