@@ -70,7 +70,7 @@ const Models: MyModel[] = [
 ];
 
 export const FSCache = {};
-export const factortyReset = () => {
+export const factortyReset = async () => {
     useAI.setState({
         userPrompt: "",
         files: [],
@@ -87,7 +87,9 @@ export const factortyReset = () => {
             },
         ],
     });
-    saveToBrowserDB();
+    await saveToBrowserDB();
+
+    location.reload();
 };
 export const useAI = create<{
     uiMessages: UIMessage[];

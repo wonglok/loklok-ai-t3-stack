@@ -92,7 +92,7 @@ ${ff.content}
 
                     MyTaskManager.add({
                         name: "createNewApp",
-                        deps: [],
+                        deps: ["receiveResponse"],
                         args: { userPrompt: userPrompt },
                     });
 
@@ -101,8 +101,6 @@ ${ff.content}
                         deps: ["createNewApp"],
                         args: { userPrompt: userPrompt },
                     });
-
-                    MyTaskManager.doneTask("receiveResponse");
 
                     return `ok`;
                 },
@@ -118,7 +116,7 @@ ${ff.content}
 
                     MyTaskManager.add({
                         name: "createNewApp",
-                        deps: [],
+                        deps: ["receiveResponse"],
                         args: { userPrompt: userPrompt },
                     });
 
@@ -127,8 +125,6 @@ ${ff.content}
                         deps: ["createNewApp"],
                         args: { userPrompt: userPrompt },
                     });
-
-                    MyTaskManager.doneTask("receiveResponse");
 
                     return `ok`;
                 },
@@ -142,4 +138,6 @@ ${ff.content}
     await saveToBrowserDB();
 
     await putBackFreeAIAsync({ engine: slot });
+
+    MyTaskManager.doneTask("receiveResponse");
 }

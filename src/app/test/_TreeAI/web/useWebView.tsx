@@ -11,6 +11,7 @@ export const useWebView = ({
     files = [
         {
             path: `/src/main.js`,
+            summary: "",
             content: /* javascript */ `
                 import * as lok from '../src/lok.js'
                 import ReactDOM from 'react-dom'
@@ -22,6 +23,7 @@ export const useWebView = ({
         },
         {
             path: `/src/lok.js`,
+            summary: "",
             content: /* javascript */ `
                 export const yo = 'loklok'
             `,
@@ -82,7 +84,7 @@ export const useWebView = ({
             //
             run();
             //
-        }, 1000);
+        }, 500);
         let save = () => {
             run();
         };
@@ -91,7 +93,7 @@ export const useWebView = ({
         return () => {
             window.removeEventListener("save-editor", save);
         };
-    }, [files.map((r) => r.content + r.path).join("_")]);
+    }, [files.map((r) => r.content + r.summary + r.path).join("_")]);
 
     return {
         show: (

@@ -22,9 +22,9 @@ import { getModelMessagesFromUIMessages } from "../getModelMessagesFromUIMessage
 import { readFileContent } from "../../io/readFileContent";
 import { writeFileContent } from "../../io/writeFileContent";
 import { saveToBrowserDB } from "../../io/saveToBrowserDB";
-import z from "zod";
-import { parseCodeBlocks } from "./_core/LokLokParser";
-import { parseCodeBlocksActionType } from "./_core/LokLokParser2";
+// import z from "zod";
+// import { parseCodeBlocks } from "./_core/LokLokParser";
+// import { parseCodeBlocksActionType } from "./_core/LokLokParser2";
 import { removeFile } from "../../io/removeFile";
 import { parseCodeBlocksGen3 } from "./_core/LokLokParser3";
 
@@ -41,11 +41,13 @@ export async function handleReactAppRoot({
     let chatblocks = [];
 
     let content = await readFileContent({ path: SPEC_DOC_PATH });
-    if (content) {
+    console.log("content", content);
+    if (!!content) {
         chatblocks.push({
             role: "user",
             content: `Here's the "product requirement definition": 
-${content}`,
+${content}
+`,
         });
     }
 
@@ -72,67 +74,14 @@ ${ff.content}
         });
     }
 
-    //     chatblocks.push({
-    //         role: "user",
-    //         content: `
-    // Instructions:
-
-    // - Memorise the "product requirement definition", identify React Component modules and implement them in this format, use only typescript ".ts" files:
-    // - use tailwind css to style the elements
-    // - DO NOT WRAP THE CODE WITH markdown
-    // - ONLY WRITE PURE CODE FOR {file_1_code} etc
-    // - the folder for components is at "/components/*"
-
-    // - use named export for "App" Component like the following:
-    // export function App () {...}
-
-    // - include the following lines:
-    // import * as React from 'react';
-
-    // - when write the App component, write file to "/components/App.tsx"
-    // - when write the other components, write file to "/components/*.tsx"
-
-    // - for formatting follow this:
-    // - if you want to create file
-    // [mydearloklokcode action="create-file" file="example-file.ts" summary="{file_summary}"]
-    // export function hello() {
-    //     console.log("Hello, world!");
-    // }
-    // [/mydearloklokcode]
-
-    // - if you want to remove file
-    // [mydearloklokcode action="remove-file" file="example-file.ts" summary="{file_summary}"]
-    // export function hello() {
-    //     console.log("Hello, world!");
-    // }
-    // [/mydearloklokcode]
-
-    // - if you want to update file
-    // [mydearloklokcode action="update-file" file="example-file.ts" summary="{file_summary}"]
-    // export function hello() {
-    //     console.log("Hello, world!");
-    // }
-    // [/mydearloklokcode]
-
-    // - {file_summary} is the overview, purpose and summary of the code file
-
-    // - use some rounded-lg
-    // - use some shadow-inner
-    // - use some border for shadow-inner items
-
-    // - if there is an existing file, then you can use [mydearloklokcode action="update-file" ...]
-    // - if there is no existing file, then you can [mydearloklokcode action="create-file" ...]
-    // - if you need to remove existing file, then you can [mydearloklokcode action="remove-file" ...]
-
-    //                 `,
-    //     });
-
     chatblocks.push({
         role: "user",
         content: `
 Instructions:
 
-- Memorise the "product requirement definition", identify React Component modules and implement them in this format, use only typescript ".ts" files:
+${!!content ? `- Memorise the "product requirement definition" and refer to it when you implement the react code` : ``}
+
+- Identify React Component modules and implement them in this format, use only typescript ".ts" files:
 - use tailwind css to style the elements
 - DO NOT WRAP THE CODE WITH markdown
 - ONLY WRITE PURE CODE FOR {file_1_code} etc
@@ -149,18 +98,21 @@ import * as React from 'react';
 
 - for formatting follow this:
 - if you want to create file
-[mydearloklokcode action="create-file" file="example-file.ts" summary="{file_summary}"]
+[mydearloklokcode action="create-file" file="{file_path_name}" summary="{file_summary}"]
+{code}
 [/mydearloklokcode]
 
 - if you want to remove file
-[mydearloklokcode action="remove-file" file="example-file.ts" summary="{file_summary}"]
-[/mydearloklokcode]
+[mydearloklokcode action="remove-file" file="{file_path_name}" summary="{file_summary}"][/mydearloklokcode]
 
 - if you want to update file
-[mydearloklokcode action="update-file" file="example-file.ts" summary="{file_summary}"]
+[mydearloklokcode action="update-file" file="{file_path_name}" summary="{file_summary}"]
+{code}
 [/mydearloklokcode]
 
+- {file_path_name} is the file path name
 - {file_summary} is the overview, purpose and summary of the code file
+- {code} is the code of the file
 
 - use some rounded-lg 
 - use some shadow-inner 
@@ -268,7 +220,7 @@ import * as React from 'react';
 
     await saveToBrowserDB();
 
-    MyTaskManager.doneTask("handleReactAppRoot");
+    MyTaskManager.doneTask("createNewApp");
 
     await putBackFreeAIAsync({ engine: slot });
 }
