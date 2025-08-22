@@ -100,7 +100,7 @@ let appManifest = {
 };
 
 let exampleCollectionDB = `
-function addModel ({ Schema, appID, dbInstance, mongoose }) {
+function defineMongooseModels ({ Schema, appID, dbInstance, mongoose }) {
     const db = dbInstance // use your connection instance
 
     /* ---------- User Schema ----------
@@ -291,7 +291,7 @@ const Schema = args.Schema
 ${exampleCollectionDB}
 ${exampleRouter}
 
-let models = addModel({ appID, dbInstance, Schema, mongoose });
+let models = defineMongooseModels({ appID, dbInstance, Schema, mongoose });
 
 let addons = defineBackendProcedures({ models, otherProcedures: {}, publicProcedure, protectedProcedure })
 

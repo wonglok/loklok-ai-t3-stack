@@ -94,15 +94,16 @@ window.trpcSDK
         console.log(result); // result is obtained via async functuin call
     });
 
-- please write the backend trpc procedures in this folder: "/trpc/*.js"
+- please write the backend trpc procedures in this file: "/trpc/defineBackendProcedures.js"
 
 - There are 2 global varaibles: "protectedProcedure" and "publicProcedure" for private and public access for appRouter
 
-- DO NOT CHANGE defineBackendProcedures
+- DO NOT EXPORT "defineBackendProcedures"
+
+- DO NOT CHANGE "defineBackendProcedures" function input arguments
 
 function defineBackendProcedures({ models, otherProcedures, publicProcedure, protectedProcedure }) {
-
-    let mongooseModles = models;
+    const { User... } = models;
 
     return {
         ...otherProcedures,

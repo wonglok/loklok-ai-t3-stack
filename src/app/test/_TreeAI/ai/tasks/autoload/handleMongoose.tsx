@@ -78,24 +78,25 @@ export async function handleMongoose({
         content: `
 Instructions:
 
-- Identify mongoose models for backend and implement it in "getAllModesl", use only javascript ".js" files:
+- Identify mongoose models for backend and implement it in "defineMongooseModels", use only javascript ".js" files:
 - DO NOT WRAP THE CODE WITH markdown
 - ONLY WRITE PURE CODE FOR
 - Dont import anything
 
-- please write the backend trpc procedures in this folder: "/models/*.js"
+- please write the backend trpc procedures in this file: "/models/defineMongooseModels.js"
 
 Mongoose Database: Design MongoDB schemas using Mongoose. For each model, provide:  
 Schema definition in code-like syntax (e.g., const TaskSchema = new mongoose.Schema({ title: String, description: String })).  
 Fields with types, validation, and defaults.  
 
 
-- MUST INCLUDE this "getAllModesl" typescript function:
+- MUST INCLUDE this "defineMongooseModels" typescript function:
 - for eaxmple the Example Schema and Models
 - Dont change "getAllModesl"
-- Only Implement "getAllModesl" function
+- Only Implement "defineMongooseModels" function
+- DONT EXPORT "defineMongooseModels"
 
-export function getAllModesl ({ appID, dbInstance }) {
+function defineMongooseModels({ appID, dbInstance, Schema, mongoose }) {
     const db = dbInstance // mongoose.connection.useDb("app_development_appID", { useCache: true });
 
     {
