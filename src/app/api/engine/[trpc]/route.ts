@@ -34,10 +34,30 @@ const handler = async (req: NextRequest) => {
         },
     );
 
-    const CodeKVStore = new mongoose.Schema({
-        key: { type: String, required: true },
-        value: { type: String },
-    });
+    const VersionStore = new mongoose.Schema(
+        {
+            appID: { type: String, required: false },
+            note: { type: String, required: false },
+        },
+        {
+            timestamps: true,
+        },
+    );
+
+    if (!dbPlatform.models["VersionStore"]) {
+        dbPlatform.model("VersionStore", VersionStore);
+    }
+
+    const CodeKVStore = new mongoose.Schema(
+        {
+            versionID: { type: String, required: false },
+            key: { type: String, required: true },
+            value: { type: String },
+        },
+        {
+            timestamps: true,
+        },
+    );
 
     if (!dbPlatform.models["CodeKVStore"]) {
         dbPlatform.model("CodeKVStore", CodeKVStore);
