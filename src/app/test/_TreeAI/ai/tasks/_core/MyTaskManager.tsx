@@ -1,7 +1,7 @@
 import { toast } from "sonner";
 import { useAI } from "../../../state/useAI";
 import { useEffect } from "react";
-
+import { TaskFunctions } from "./TaskFunctions";
 export type MyTask = {
     name: string;
     waitFor: string[];
@@ -9,20 +9,22 @@ export type MyTask = {
     status: "init" | "reserved" | "working" | "done";
 };
 
-export const MyFuncs = {
-    handleAppSpec: (v: any) =>
-        import("../routes/handleAppSpec").then((r) => r.handleAppSpec(v)),
+export const MyFuncs = TaskFunctions;
 
-    handleReactAppRoot: (v: any) =>
-        import("../routes/handleReactAppRoot").then((r) =>
-            r.handleReactAppRoot(v),
-        ),
+// {
+//     handleAppSpec: (v: any) =>
+//         import("../autoload/handleAppSpec").then((r) => r.handleAppSpec(v)),
 
-    receiveResponse: (v: any) =>
-        import("../routes/onReceiveResponse").then((r) =>
-            r.onReceiveResponse(v),
-        ),
-};
+//     handleReactAppRoot: (v: any) =>
+//         import("../autoload/handleReactAppRoot").then((r) =>
+//             r.handleReactAppRoot(v),
+//         ),
+
+//     onReceiveResponse: (v: any) =>
+//         import("../autoload/onReceiveResponse").then((r) =>
+//             r.onReceiveResponse(v),
+//         ),
+// };
 
 export const MyTaskManager = {
     taskList: [] as MyTask[],

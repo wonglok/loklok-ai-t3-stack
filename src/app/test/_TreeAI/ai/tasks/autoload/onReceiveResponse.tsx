@@ -24,6 +24,7 @@ import { getModelMessagesFromUIMessages } from "../../getModelMessagesFromUIMess
 
 // import { readFileContent } from "../../io/readFileContent";
 
+export const name = "onReceiveResponse";
 export async function onReceiveResponse({
     userPrompt,
     task,
@@ -121,9 +122,7 @@ export async function onReceiveResponse({
     //     model: model,
     // });
 
-    console.log("updateExistingProject", userPrompt);
-
-    await MyTaskManager.doneTask(task.name);
+    console.log("updateExistingProject", userPrompt, task);
 
     MyTaskManager.add({
         waitFor: [task.name],
@@ -136,6 +135,8 @@ export async function onReceiveResponse({
         name: "handleReactAppRoot",
         args: { userPrompt: userPrompt },
     });
+
+    await MyTaskManager.doneTask(task.name);
 
     await saveToBrowserDB();
 

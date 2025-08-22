@@ -28,6 +28,7 @@ import { saveToBrowserDB } from "../../../io/saveToBrowserDB";
 import { removeFile } from "../../../io/removeFile";
 import { parseCodeBlocksGen3 } from "../_core/LokLokParser3";
 
+export const name = "handleReactAppRoot";
 export async function handleReactAppRoot({
     userPrompt,
     task,

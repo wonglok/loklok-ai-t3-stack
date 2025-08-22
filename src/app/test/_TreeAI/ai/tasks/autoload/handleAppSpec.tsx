@@ -29,6 +29,7 @@ import { removeFile } from "../../../io/removeFile";
 import { parseCodeBlocksGen3 } from "../_core/LokLokParser3";
 import { refreshEngineSlot } from "../../refreshEngines";
 
+export const name = "handleAppSpec";
 export async function handleAppSpec({
     userPrompt,
     task,
@@ -47,7 +48,7 @@ export async function handleAppSpec({
 
 - if you want to create file
 [mydearlokloktag action="create-file" file="{file_path_name}" summary="{file_summary}"]
-{content}
+{file_content}
 [/mydearlokloktag]
 
 - if you want to remove file
@@ -55,12 +56,12 @@ export async function handleAppSpec({
 
 - if you want to update file
 [mydearlokloktag action="update-file" file="{file_path_name}" summary="{file_summary}"]
-{content}
+{file_content}
 [/mydearlokloktag]
 
-- {file_path_name} is the file path name
-- {file_summary} is the overview, purpose and summary of the code file
-- {content} is the output content
+- {file_path_name} is the file's path name
+- {file_summary} is the file's overview, purpose and summary of the content
+- {file_content} is the file's content
 
 - if there is an existing file, then you can use [mydearlokloktag action="update-file" ...]
 - if there is no existing file, then you can [mydearlokloktag action="create-file" ...]
