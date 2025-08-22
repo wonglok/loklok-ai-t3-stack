@@ -195,7 +195,7 @@ export function TreeList() {
                 label={
                     <>
                         📂
-                        {` Mongoose store`}
+                        {` Zustand store`}
                     </>
                 }
                 onClick={() => {

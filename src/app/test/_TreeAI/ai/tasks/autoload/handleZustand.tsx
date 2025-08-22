@@ -66,6 +66,7 @@ Instructions:
 - include the following lines:
 import { create } from 'zustand';
 
+- all zustand trpc frontend method must exist in trpc backend
 
 - The app has a Global variable window.trpcSDK as a custom tRPC Frontend Client.
 
