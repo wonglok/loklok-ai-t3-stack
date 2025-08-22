@@ -106,7 +106,7 @@ export const useAI = create<{
         topTab: "web",
         uiMessages: [
             {
-                id: `_${Math.random()}`,
+                id: `welcome_message`,
                 role: "assistant",
                 parts: [
                     {

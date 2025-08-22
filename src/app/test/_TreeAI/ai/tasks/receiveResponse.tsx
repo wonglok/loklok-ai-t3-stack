@@ -36,33 +36,29 @@ export async function receiveResponse({
 
     let info = [];
 
-    let content = await readFileContent({ path: SPEC_DOC_PATH });
-    let hasSpec = typeof content === "string" && content.length > 0;
+    // let content = await readFileContent({ path: SPEC_DOC_PATH });
+    // let hasSpec = typeof content === "string" && content.length > 0;
 
-    if (hasSpec) {
-        let hasCode: ModelMessage = {
-            role: `assistant`,
-            content: `
-        we had an existing proejct.
-        Here are the files:
+    if (files?.length > 0) {
+        info.push({
+            role: "user",
+            content: `Here are the existing code files in the following messages`,
+        });
 
-${files
-    .map((f) => {
-        return `
---------- <${f.path}> file begin----------
-file path "${f.path}"
-
-content: 
-${f.content}
---------- <${f.path}> file end----------
-        `;
-    })
-    .join("\n")}
-
-        `,
-        };
-
-        info.push(hasCode);
+        files.forEach((ff) => {
+            info.push({
+                role: "assistant",
+                content: `
+[file: "${ff.path}"][begin]
+    [file: "${ff.path}"][summary_start]
+${ff.summary}
+    [file: "${ff.path}"][summary_end]
+    [file: "${ff.path}"][content_start]
+${ff.content}
+    [file: "${ff.path}"][content_end]
+[file: "${ff.path}"][end]`,
+            });
+        });
     } else {
         let haventInit: ModelMessage = {
             role: `assistant`,
