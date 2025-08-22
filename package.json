@@ -74,6 +74,7 @@
         "date-fns": "^4.1.0",
         "diff-apply": "^1.0.6",
         "embla-carousel-react": "^8.6.0",
+        "es-module-shims": "^2.6.2",
         "express": "^5.1.0",
         "fast-xml-parser": "^5.2.5",
         "file-loader": "^6.2.0",

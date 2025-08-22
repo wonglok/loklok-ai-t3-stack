@@ -4,23 +4,33 @@ import { useEffect, useState } from "react";
 import { LokLokSDK } from "@/app/test/_TreeAI/web/LokLokSDK";
 import { useParams } from "next/navigation";
 import { rollupCode } from "@/app/test/_TreeAI/web/rollupCode";
-import { RuntimeCore } from "@/app/test/_TreeAI/web/RuntimeCore";
+// import { RuntimeCore } from "@/app/test/_TreeAI/web/RuntimeCore";
 import { LokRuntimeCore } from "./_run/LokRuntimeCore";
+import * as React19 from "react";
+import { NPMCacheTasks } from "@/app/test/_TreeAI/web/npm-globals";
 
-export default function WebRuntime() {
+export default function AppRun() {
     let { appID } = useParams();
-    let [compiled, setCompiled] = useState([]);
     useEffect(() => {
         if (!appID) {
             return;
         }
         let sdk = new LokLokSDK({ appID: appID });
+        window.trpcSDK = sdk;
+
         sdk.setupPlatform({
             procedure: "getFiles",
             input: {
                 //
             },
         }).then((files) => {
+            files = files.map((item) => {
+                return {
+                    path: item.key,
+                    content: item.value,
+                };
+            });
+
             console.log("appID", appID);
             console.log("getFiles", files);
 
@@ -30,7 +40,7 @@ export default function WebRuntime() {
 
                     {
                         path: `/src/MyApp.js`,
-                        content: /* js */ `
+                        content: `
 import * as ReactDOM from 'react-dom'
 import * as React from 'react'
 import { Canvas } from '@react-three/fiber'
@@ -46,7 +56,8 @@ export function MyApp () {
 
     React.useEffect(() => {
         import('/components/App.tsx').then((myModule) =>{
-                console.log('myModule', myModule)
+                console.log(myModule)
+                console.log('yoyo', myModule)
                 if (myModule?.App) {
                     try {
                         setApp(<myModule.App></myModule.App>)
@@ -55,7 +66,7 @@ export function MyApp () {
                     }
                 } else {
                     try {
-                        setApp(<div className="w-full h-full from-orange-100 to-yellow-300 bg-gradient-to-t flex items-center justify-center">Pr111eview Box</div>)
+                        setApp(<div className="w-full h-full from-orange-100 to-yellow-300 bg-gradient-to-t flex items-center justify-center">Loading...</div>)
                     } catch (e) {
                         console.log(e)
                     }
@@ -88,6 +99,7 @@ import * as React from 'react'
 
 
 let ttt = setInterval(() => {
+    
     let domElement = document.querySelector('#run_code_div')
 
     if (domElement) {
@@ -102,8 +114,69 @@ let ttt = setInterval(() => {
                     },
                 ],
             })
-                .then((fileArray) => {
-                    setCompiled(fileArray);
+                .then(async (fileList) => {
+                    window.React = React19;
+
+                    // @ts-ignore
+                    window.NPM_CACHE = window.NPM_CACHE || {};
+
+                    // @ts-ignore
+                    const NPM_CACHE = window.NPM_CACHE;
+
+                    // NPM_CACHE["npm-react-dom"] = ReactDOM19;
+                    // NPM_CACHE["npm-react"] = React19;
+                    // NPM_CACHE["npm-@react-three/drei"] = ReactThreeDrei;
+                    // NPM_CACHE["npm-@react-three/fiber"] = ReactThreeFiber;
+                    // NPM_CACHE["npm-zustand"] = Zustand;
+                    // NPM_CACHE["npm-wouter"] = WouterBase;
+                    // NPM_CACHE["npm-wouter/use-hash-location"] = WouterHash;
+
+                    NPMCacheTasks.forEach((cacheNpm) => {
+                        NPM_CACHE[cacheNpm.name] = cacheNpm.importVaraible;
+                    });
+
+                    // @ts-ignore
+                    window.esmsInitOptions = {
+                        shimMode: true,
+                        enforceIntegrity: false,
+                        resolve: (id, parentUrl, resolve) => {
+                            let removeTSJS = (pathname = "") => {
+                                // if (pathname.endsWith(".ts")) {
+                                //     return pathname.replace(".ts", "");
+                                // }
+                                // if (pathname.endsWith(".tsx")) {
+                                //     return pathname.replace(".tsx", "");
+                                // }
+                                // if (pathname.endsWith(".jsx")) {
+                                //     return pathname.replace(".jsx", "");
+                                // }
+                                // if (pathname.endsWith(".js")) {
+                                //     return pathname.replace(".js", "");
+                                // }
+                                return pathname;
+                            };
+
+                            console.log(id);
+
+                            let fileEntry = fileList.find((it) => {
+                                return removeTSJS(it.path) === removeTSJS(id);
+                            });
+
+                            return URL.createObjectURL(
+                                new Blob([fileEntry?.code || ""], {
+                                    type: "application/javascript",
+                                }),
+                            );
+                        },
+                    };
+
+                    // @ts-ignore
+                    await window.importHttpModule2(
+                        `/es-module-shims/es-module-shims.js`,
+                    );
+
+                    // @ts-ignore
+                    window.importShim("/src/main.js");
                 })
                 .catch((e) => {
                     console.log("front end build failed...");
@@ -112,16 +185,31 @@ let ttt = setInterval(() => {
         });
     }, [appID]);
 
-    console.log(compiled);
-
     return (
         <>
-            {compiled.length > 0 && appID && (
-                <LokRuntimeCore
-                    appID={appID as string}
-                    files={compiled}
-                ></LokRuntimeCore>
-            )}
+            <div className="h-full w-full">
+                <div
+                    className="hidden"
+                    dangerouslySetInnerHTML={{
+                        __html: `
+        <script>
+            window.importHttpModule2 = async (value) => {
+                return import(value);
+            };
+        </script>
+`,
+                    }}
+                ></div>
+
+                <link
+                    rel="stylesheet"
+                    href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind-experimental.min.css"
+                    integrity="sha512-wnea99uKIC3TJF7v4eKk4Y+lMz2Mklv18+r4na2Gn1abDRPPOeef95xTzdwGD9e6zXJBteMIhZ1+68QC5byJZw=="
+                    crossOrigin="anonymous"
+                    referrerPolicy="no-referrer"
+                />
+                <div className="h-full w-full" id="run_code_div"></div>
+            </div>
         </>
     );
 }
