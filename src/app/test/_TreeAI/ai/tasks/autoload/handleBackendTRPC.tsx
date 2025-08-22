@@ -90,6 +90,8 @@ window.trpcSDK
 
 - DO NOT IMPORT ANYTHING
 
+- ALWAYS USE .mutation({...})
+- NEVER USE .query({...})
 
 - Prefer Mongoose naming "_id" instead of "id"
 - ALWAYS USE "_id" instead of "id" 
