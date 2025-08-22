@@ -98,8 +98,9 @@ window.trpcSDK
 
 - There are 2 global varaibles: "protectedProcedure" and "publicProcedure" for private and public access for appRouter
 
+- DO NOT CHANGE defineBackendProcedures
 
-export function defineBackendProcedures({ models, otherProcedures, publicProcedure, protectedProcedure }) {
+function defineBackendProcedures({ models, otherProcedures, publicProcedure, protectedProcedure }) {
 
     let mongooseModles = models;
 

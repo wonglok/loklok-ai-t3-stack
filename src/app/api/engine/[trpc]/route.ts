@@ -100,9 +100,7 @@ let appManifest = {
 };
 
 let exampleCollectionDB = `
-const { Schema } = require("mongoose");
-
-export function addModel ({ appID, dbInstance }) {
+function addModel ({ Schema, appID, dbInstance, mongoose }) {
     const db = dbInstance // use your connection instance
 
     /* ---------- User Schema ----------
@@ -145,11 +143,11 @@ export function addModel ({ appID, dbInstance }) {
 
     /* ---------- Expense Schema ----------
        Fields:
-         - amount: number, required
-         - date: Date, default now
-         - description: string
-         - category: ObjectId reference to Category
-         - user: ObjectId reference to User
+            - amount: number, required
+            - date: Date, default now
+            - description: string
+            - category: ObjectId reference to Category
+            - user: ObjectId reference to User
     */
     {
         const ExpenseSchema = new Schema({
@@ -175,9 +173,8 @@ export function addModel ({ appID, dbInstance }) {
 `;
 
 let exampleRouter = `
-export function defineBackendProcedures({ otherProcedures, publicProcedure, protectedProcedure }) {
-    const db = window.dbInstance; // Assume a global database instance
-    const { User, Category, Expense } = db.models;
+function defineBackendProcedures({ models, otherProcedures, publicProcedure, protectedProcedure }) {
+    const { User, Category, Expense } = models;
 
     return {
         ...otherProcedures,
@@ -289,11 +286,12 @@ const post = args.post;
 const mongoose = args.mongoose;
 const appID = args.appID;
 const dbInstance = args.dbInstance;
+const Schema = args.Schema
 
 ${exampleCollectionDB}
 ${exampleRouter}
 
-let models = addModel({ appID, dbInstance })
+let models = addModel({ appID, dbInstance, Schema, mongoose });
 
 let addons = defineBackendProcedures({ models, otherProcedures: {}, publicProcedure, protectedProcedure })
 
@@ -346,6 +344,7 @@ return appRouter
         mongoose,
         appID,
         dbInstance,
+        Schema: mongoose.Schema,
     });
 
     let myTRPCRouter = createTRPCRouter({

@@ -78,7 +78,7 @@ export async function handleMongoose({
         content: `
 Instructions:
 
-- Identify mongoose models for backend and implement them, use only javascript ".js" files:
+- Identify mongoose models for backend and implement it in "getAllModesl", use only javascript ".js" files:
 - DO NOT WRAP THE CODE WITH markdown
 - ONLY WRITE PURE CODE FOR
 - Dont import anything
@@ -90,10 +90,12 @@ Schema definition in code-like syntax (e.g., const TaskSchema = new mongoose.Sch
 Fields with types, validation, and defaults.  
 
 
-- MUST INCLUDE this "addModel" typescript function:
+- MUST INCLUDE this "getAllModesl" typescript function:
 - for eaxmple the Example Schema and Models
+- Dont change "getAllModesl"
+- Only Implement "getAllModesl" function
 
-export function addModel ({ appID, dbInstance }) {
+export function getAllModesl ({ appID, dbInstance }) {
     const db = dbInstance // mongoose.connection.useDb("app_development_appID", { useCache: true });
 
     {
