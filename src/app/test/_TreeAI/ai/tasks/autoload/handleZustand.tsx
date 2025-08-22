@@ -28,6 +28,7 @@ import { saveToBrowserDB } from "../../../io/saveToBrowserDB";
 import { removeFile } from "../../../io/removeFile";
 import { parseCodeBlocksGen3 } from "../_core/LokLokParser3";
 import { getAppOverviewPrompt } from "../prompts/getAppOverviewPrompt";
+import { getFileOutputFormatting } from "../prompts/getFileOutputFormatting";
 
 export const name = "handleZustand";
 export const displayName = "Zustand the App";
@@ -95,6 +96,9 @@ ${!!content ? `- Memorise the "product requirement definition" and refer to it w
 
 - include the following lines:
 import { create } from 'zustand';
+
+
+${await getFileOutputFormatting()}
 
                 `,
     });

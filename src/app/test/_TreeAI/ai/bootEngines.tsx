@@ -18,8 +18,13 @@ export const bootEngines = async () => {
     let loadedEngines = [];
     try {
         loadedEngines = await client.llm.listLoaded();
+        for (let engine of loadedEngines) {
+            await engine.unload();
+        }
     } catch (e) {
         console.log(e);
+    } finally {
+        loadedEngines = [];
     }
 
     let engines = useAI.getState().engines || [];
