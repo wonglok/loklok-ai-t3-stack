@@ -1,19 +1,20 @@
 import { v4 } from "uuid";
 import { useAI } from "../state/useAI";
+import { UIMessage } from "ai";
 
-export const putUIMessage = (uiMessage) => {
+export const putUIMessage = (msg: UIMessage) => {
     let uiMessages = useAI.getState().uiMessages;
 
-    if (uiMessages.some((r) => r.id === uiMessage.id)) {
-        uiMessages = uiMessages.map((msg) => {
-            if (msg.id === uiMessage.id) {
-                return { ...uiMessage };
+    if (uiMessages.some((r) => r.id === msg.id)) {
+        uiMessages = uiMessages.map((thisMsg) => {
+            if (thisMsg.id === msg.id) {
+                return { ...msg };
             }
-            return msg;
+            return thisMsg;
         });
     } else {
         uiMessages.push({
-            ...uiMessage,
+            ...msg,
             id: `${v4()}`,
         });
     }

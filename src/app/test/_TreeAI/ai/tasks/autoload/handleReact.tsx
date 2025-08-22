@@ -28,6 +28,11 @@ import { removeFile } from "../../../io/removeFile";
 import { parseCodeBlocksGen3 } from "../_core/LokLokParser3";
 import { getAppOverviewPrompt } from "../prompts/getAppOverviewPrompt";
 import { getFileOutputFormatting } from "../prompts/getFileOutputFormatting";
+import { putUIMessage } from "../../putUIMessage";
+import { v4 } from "uuid";
+import { refreshUIMessages } from "../../refreshUIMessages";
+import { metadata } from "@/app/layout";
+import { removeUIMessage } from "../../removeUIMessage";
 
 export const name = "handleReact";
 export const displayName = "React JS front end of the App";
@@ -98,10 +103,6 @@ ${await getFileOutputFormatting()}
 
                 `,
     });
-
-    /*
-    
-    */
 
     console.log("chatblocks", chatblocks);
 
@@ -191,6 +192,21 @@ ${await getFileOutputFormatting()}
         }
     };
 
+    let appMessage = {
+        //
+        id: `${v4()}`,
+        role: "assistant",
+        metadata: {},
+        parts: [
+            {
+                id: `${v4()}`,
+                type: "data-loading",
+                data: ``,
+            },
+        ],
+    };
+    putUIMessage(appMessage as UIMessage);
+
     let text = "";
     for await (let part of response.textStream) {
         text += part;
@@ -198,13 +214,15 @@ ${await getFileOutputFormatting()}
 
         parseText(text);
 
-        //
+        refreshUIMessages(appMessage as UIMessage);
 
         //
     }
     parseText(text);
 
     await saveToBrowserDB();
+
+    removeUIMessage(appMessage as UIMessage);
 
     useAI.setState({
         topTab: "web",
