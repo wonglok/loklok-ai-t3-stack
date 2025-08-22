@@ -32,10 +32,10 @@ import { v4 } from "uuid";
 import { putUIMessage } from "../../putUIMessage";
 import { removeUIMessage } from "../../removeUIMessage";
 
-export const name = "handleBackendTRPC";
-export const displayName = "TRPC Backend";
+export const name = "handleMongoose";
+export const displayName = "Mongoose Models Backend";
 
-export async function handleBackendTRPC({
+export async function handleMongoose({
     userPrompt,
     task,
 }: {
@@ -78,56 +78,41 @@ export async function handleBackendTRPC({
         content: `
 Instructions:
 
-- Identify trpc procedures for backend and implement them, use only javascript ".js" files:
+- Identify mongoose models for backend and implement them, use only javascript ".js" files:
 - DO NOT WRAP THE CODE WITH markdown
 - ONLY WRITE PURE CODE FOR
-
-- The app has a Global variable window.trpcSDK as a custom tRPC Frontend Client.
 - Dont import anything
 
-window.trpcSDK
-    .runTRPC({
-        procedure: "hello", // [hello] is the procedure name
-        input: { text: "sure been good" },// [input] is the input paramter
-    })
-    .then((result) => {
-        console.log(result); // result is obtained via async functuin call
-    });
+- please write the backend trpc procedures in this folder: "/models/*.js"
 
-- please write the backend trpc procedures in this folder: "/trpc/*.js"
+Mongoose Database: Design MongoDB schemas using Mongoose. For each model, provide:  
+Schema definition in code-like syntax (e.g., const TaskSchema = new mongoose.Schema({ title: String, description: String })).  
+Fields with types, validation, and defaults.  
 
-- There are 2 global varaibles: "protectedProcedure" and "publicProcedure" for private and public access for appRouter
 
-export function defineBackendProcedures({ otherProcedures, publicProcedure, protectedProcedure }) {
-    return {
-        ...otherProcedures,
+- MUST INCLUDE this "addModel" typescript function:
+- for eaxmple the Example Schema and Models
 
-        hello: publicProcedure
-            .input(z.object({ text: z.string() }))
-            .mutation(({ input }) => {
-                return {
-                    greeting: input.text,
-                };
-            }),
+export function addModel ({ appID, dbInstance }) {
+    const db = dbInstance // mongoose.connection.useDb("app_development_appID", { useCache: true });
 
-        create: protectedProcedure
-            .input(z.object({ name: z.string().min(1) }))
-            .mutation(async ({ input }) => {
-                post = { id: post.id + 1, name: input.name };
-                return post;
-            }),
+    {
+        const ExampleSchema = new Schema({
+            ...
+        });
 
-        getLatest: protectedProcedure.mutation(() => {
-            return post;
-        }),
-
-        getSecretMessage: protectedProcedure.mutation(() => {
-            return "you can now see this secret message!";
-        }),
-
-        // ... develop more code here
+        if (!db.models["Example"]) {
+            db.model("Example"}, ExampleSchema);
+        }
     }
+    ... // add more models
+
+    return {
+        ["Example"]: db.model("Example"),
+        ...
+    };
 }
+
 
 ${await getFileOutputFormatting()}
 

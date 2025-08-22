@@ -20,8 +20,8 @@ import { saveToBrowserDB } from "../../../io/saveToBrowserDB";
 import { putBackFreeAIAsync } from "../../putBackFreeAIAsync";
 import { getFreeAIAsync } from "../../getFreeAIAsync";
 import { MyTask, MyTaskManager } from "../_core/MyTaskManager";
-import { putUIMessage } from "../../putUIMessage";
-import { v4 } from "uuid";
+// import { putUIMessage } from "../../putUIMessage";
+// import { v4 } from "uuid";
 
 // import { readFileContent } from "../../io/readFileContent";
 
@@ -47,7 +47,21 @@ export async function onReceiveResponse({
 
     // parallels
     MyTaskManager.add({
-        waitFor: ["handleAppSpec"],
+        waitFor: ["handleAppSpec", "handleZustand"],
+        name: "handleMongoose",
+        args: { userPrompt: userPrompt },
+    });
+
+    // parallels
+    MyTaskManager.add({
+        waitFor: ["handleAppSpec", "handleZustand", "handleMongoose"],
+        name: "handleBackendTRPC",
+        args: { userPrompt: userPrompt },
+    });
+
+    // parallels
+    MyTaskManager.add({
+        waitFor: ["handleAppSpec", "handleBackendTRPC"],
         name: "handleZustand",
         args: { userPrompt: userPrompt },
     });
@@ -56,13 +70,6 @@ export async function onReceiveResponse({
     MyTaskManager.add({
         waitFor: ["handleAppSpec", "handleZustand"],
         name: "handleReact",
-        args: { userPrompt: userPrompt },
-    });
-
-    // parallels
-    MyTaskManager.add({
-        waitFor: ["handleAppSpec", "handleZustand"],
-        name: "handleBackendTRPC",
         args: { userPrompt: userPrompt },
     });
 

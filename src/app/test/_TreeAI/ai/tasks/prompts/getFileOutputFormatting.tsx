@@ -24,7 +24,7 @@ export async function getFileOutputFormatting() {
 - if there is no existing file, then you can [MyDearTag action="create-file" ...]
 - if you need to remove existing file, then you can [MyDearTag action="remove-file" ...]
 
-Remove any React.js Files that are not used.
+Remove files that are orphaned and not used by anything.
 
 `;
 }
