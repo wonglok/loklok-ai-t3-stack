@@ -28,23 +28,16 @@ export function TreeList() {
                         appID: useAI.getState().appID,
                     });
 
-                    await sdk.setupPlatform({
-                        input: {
-                            key: `/trpc/defineBackendProcedures.js`,
-                            value: await readFileContent({
-                                path: `/trpc/defineBackendProcedures.js`,
-                            }),
-                        },
-                    });
-
-                    await sdk.setupPlatform({
-                        input: {
-                            key: `/models/defineMongooseModels.js`,
-                            value: await readFileContent({
-                                path: `/models/defineMongooseModels.js`,
-                            }),
-                        },
-                    });
+                    for (let file of files) {
+                        await sdk.setupPlatform({
+                            input: {
+                                key: file.path,
+                                value: await readFileContent({
+                                    path: file.content,
+                                }),
+                            },
+                        });
+                    }
 
                     // useAI.setState({ topTab: "team" });
                 }}
