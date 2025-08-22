@@ -9,12 +9,12 @@ import { DeveloperTeam } from "./DeveloperTeam";
 import { AIConversation } from "./AIConversation";
 import { BootUpTaskManager } from "../ai/tasks/_core/MyTaskManager";
 
-export function VercelLMStudio() {
+export function VercelLMStudio({ appID }: { appID: string }) {
     useEffect(() => {
         useAI.setState({
-            appID: `myApp001`,
+            appID: `${appID}`,
         });
-    }, []);
+    }, [appID]);
 
     useEffect(() => {
         let ready = async () => {
@@ -27,6 +27,9 @@ export function VercelLMStudio() {
 
     let topTab = useAI((r) => r.topTab);
 
+    if (!appID) {
+        return <>No App ID</>;
+    }
     return (
         <>
             <SettingsBootUp></SettingsBootUp>

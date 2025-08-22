@@ -122,7 +122,7 @@ export const useAI = create<{
         userPrompt: "",
         lastUserPrompt: "",
         currentPath: "",
-        appID: "myApp001",
+        appID: "~",
         files: [],
         currentAIProvider: "lmstudio",
         models: Models,

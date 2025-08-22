@@ -16,14 +16,14 @@ export function ViewAI({}) {
         engines.map((r) => `${r.status}${r.modelName}`).join("-"),
     ]);
 
-    return <CoreRunner appFiles={appFiles}></CoreRunner>;
+    return <CoreRunner files={appFiles}></CoreRunner>;
 }
 
-export function CoreRunner({ appFiles }) {
+export function CoreRunner({ files }) {
     let { show } = useWebView({
         runPage: "/test/run",
         files: [
-            ...appFiles,
+            ...files,
             {
                 path: `/src/App.js`,
                 content: `

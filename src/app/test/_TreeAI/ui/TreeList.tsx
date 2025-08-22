@@ -11,7 +11,10 @@ import { readFileContent } from "../io/readFileContent";
 export function TreeList() {
     let files = useAI((r) => r.files);
     files = files || [];
-    let currentPath = useAI((r) => r.currentPath);
+
+    console.log(files);
+
+    // let currentPath = useAI((r) => r.currentPath);
 
     return (
         <SimpleTreeView
@@ -37,6 +40,7 @@ export function TreeList() {
 
                     for (let file of files) {
                         await sdk.setupPlatform({
+                            procedure: "setKV",
                             input: {
                                 key: file.path,
                                 value: await readFileContent({
