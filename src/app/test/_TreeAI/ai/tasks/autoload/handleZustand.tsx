@@ -30,6 +30,7 @@ import { getAppOverviewPrompt } from "../prompts/getAppOverviewPrompt";
 import { getFileOutputFormatting } from "../prompts/getFileOutputFormatting";
 import { v4 } from "uuid";
 import { putUIMessage } from "../../putUIMessage";
+import { removeUIMessage } from "../../removeUIMessage";
 
 export const name = "handleZustand";
 export const displayName = "Zustand the App";
@@ -217,6 +218,8 @@ ${await getFileOutputFormatting()}
         //
     }
     parseText(text);
+
+    removeUIMessage(appMessage as UIMessage);
 
     await saveToBrowserDB();
 
