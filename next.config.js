@@ -21,13 +21,17 @@ const NPM_CACHE = window.NPM_CACHE;
 NPM_CACHE[${taskName}] = NPM_CACHE[${taskName}] || {}; 
 `
     for (let propName in tsk?.importVaraible) {
-        if (propName !== 'default') {
-            textString += `
-export const ${propName} = NPM_CACHE[${taskName}]['${propName}'];
-`
-        } else {
+        if (propName === '__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE') {
+
+        } else if (propName !== 'default') {
+
             textString += `
 export default NPM_CACHE[${taskName}]['${propName}'];
+`
+        } else {
+
+            textString += `
+export const ${propName} = NPM_CACHE[${taskName}]['${propName}'];
 `
         }
     }
