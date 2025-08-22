@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { loadFromBrowserDB } from "../io/loadFromBrowserDB";
 import { useAI } from "../state/useAI";
+import { createInstance } from "localforage";
 // import { bootEngines } from "./bootEngines";
 
 export const bootup = async () => {
@@ -39,6 +40,22 @@ export const SettingsBootUp = () => {
             }
         });
     }, []);
+
+    let appID = useAI((r) => r.appID);
+
+    useEffect(() => {
+        if (!appID) {
+            return;
+        }
+        let db = createInstance({
+            name: `chatDB-${appID}`,
+        });
+        return useAI.subscribe((now, before) => {
+            if (now.uiMessages !== before.uiMessages) {
+                db.setItem("ui-message", now.uiMessages);
+            }
+        });
+    }, [appID]);
 
     return <></>;
 };

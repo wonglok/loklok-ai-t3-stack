@@ -74,7 +74,6 @@ ${f.content}
         info.push(haventInit);
     }
 
-    let common = () => {};
     // createMongoose
     await generateText({
         toolChoice: "required",
@@ -100,13 +99,15 @@ ${f.content}
                     //     deps: [],
                     //     args: { userPrompt: userPrompt },
                     // });
+
                     MyTaskManager.add({
-                        name: "createReactAppRoot",
+                        name: "handleReactAppRoot",
                         deps: [],
                         args: { userPrompt: userPrompt },
                     });
 
                     MyTaskManager.doneTask("receiveResponse");
+
                     return `ok`;
                 },
                 inputSchema: z.object({ userRequirement: z.string() }),
@@ -125,9 +126,9 @@ ${f.content}
                     //     args: { userPrompt: userPrompt },
                     // });
                     MyTaskManager.add({
-                        name: "createReactAppRoot",
+                        name: "handleReactAppRoot",
                         deps: [],
-                        args: { userPrompt: userPrompt },
+                        args: { userPrompt: userRequirement },
                     });
 
                     MyTaskManager.doneTask("receiveResponse");

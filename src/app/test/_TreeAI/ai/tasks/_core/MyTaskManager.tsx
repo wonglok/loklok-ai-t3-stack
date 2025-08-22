@@ -13,8 +13,8 @@ export const MyFuncs = {
     createNewApp: (v: any) =>
         import("../createNewApp").then((r) => r.createNewApp(v)),
 
-    createReactAppRoot: (v: any) =>
-        import("../createReactAppRoot").then((r) => r.createReactAppRoot(v)),
+    handleReactAppRoot: (v: any) =>
+        import("../handleReactAppRoot").then((r) => r.handleReactAppRoot(v)),
 
     receiveResponse: (v: any) =>
         import("../receiveResponse").then((r) => r.receiveResponse(v)),

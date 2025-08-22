@@ -1,6 +1,6 @@
 "use client";
 
-import { useAI } from "../state/useAI";
+import { factortyReset, useAI } from "../state/useAI";
 
 import {
     GlassWaterIcon,
@@ -20,6 +20,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
+import { Button } from "@/components/ui/button";
 // import { useEffect } from "react";
 
 export function DeveloperTeam() {
@@ -28,6 +29,18 @@ export function DeveloperTeam() {
     return (
         <>
             <div className="px-3">
+                <div className="mb-3 rounded-lg border bg-white p-3 shadow-sm">
+                    <Button
+                        variant="destructive"
+                        onClick={() => {
+                            if (confirm("Factory Reset?")) {
+                                factortyReset();
+                            }
+                        }}
+                    >
+                        Factory Reset
+                    </Button>
+                </div>
                 {engines.map((engine) => {
                     let { name, displayName } = engine;
                     return (

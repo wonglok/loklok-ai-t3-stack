@@ -124,7 +124,7 @@ export const rollupCode = async ({ files = [] }) => {
                     if (file?.content) {
                         try {
                             let es6 = transform(file.content || "", {
-                                transforms: ["jsx"],
+                                transforms: ["jsx", "typescript"],
                                 preserveDynamicImport: true,
                                 production: false,
                                 jsxPragma: "React.createElement",

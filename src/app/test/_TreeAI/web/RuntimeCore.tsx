@@ -89,6 +89,13 @@ export function RuntimeCore() {
 `,
                 }}
             ></div>
+            <link
+                rel="stylesheet"
+                href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind-experimental.min.css"
+                integrity="sha512-wnea99uKIC3TJF7v4eKk4Y+lMz2Mklv18+r4na2Gn1abDRPPOeef95xTzdwGD9e6zXJBteMIhZ1+68QC5byJZw=="
+                crossOrigin="anonymous"
+                referrerPolicy="no-referrer"
+            />
             <div className="h-full w-full" id="run_code_div"></div>
         </div>
     );

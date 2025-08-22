@@ -6,11 +6,15 @@ import { useAI } from "../state/useAI";
 
 export function ViewAI({}) {
     let files = useAI((r) => r.files);
+    let engines = useAI((r) => r.engines);
     let [appFiles, setFiles] = useState([]);
 
     useEffect(() => {
         setFiles(files);
-    }, [files.map((r) => r.path).join("-")]);
+    }, [
+        files.map((r) => r.path).join("-"),
+        engines.map((r) => `${r.status}${r.modelName}`).join("-"),
+    ]);
 
     return <CoreRunner appFiles={appFiles}></CoreRunner>;
 }
@@ -56,10 +60,7 @@ export function MyApp () {
                 console.log('myModule', myModule)
                 if (myModule?.App) {
                     try {
-                        setApp(<div>
-                            123
-                            <myModule.App></myModule.App>
-                        </div>)
+                        setApp(<myModule.App></myModule.App>)
                     } catch (e) {
                         console.log(e)
                     }

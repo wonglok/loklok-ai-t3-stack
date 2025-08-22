@@ -1,9 +1,11 @@
 import { UIMessage } from "ai";
 import { create } from "zustand";
+import { saveToBrowserDB } from "../io/saveToBrowserDB";
 
 export type MyFile = {
     path: string;
     content: string;
+    summary: string;
 };
 
 export type EngineSetting = {
@@ -68,7 +70,25 @@ const Models: MyModel[] = [
 ];
 
 export const FSCache = {};
-
+export const factortyReset = () => {
+    useAI.setState({
+        userPrompt: "",
+        files: [],
+        uiMessages: [
+            {
+                id: `_${Math.random()}`,
+                role: "assistant",
+                parts: [
+                    {
+                        type: "data-welcome",
+                        data: ``,
+                    },
+                ],
+            },
+        ],
+    });
+    saveToBrowserDB();
+};
 export const useAI = create<{
     uiMessages: UIMessage[];
     userPrompt: string;
