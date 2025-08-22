@@ -83,6 +83,17 @@ Instructions:
 import { create } from 'zustand';
 
 
+- The app has a global variable window.trpcSDK as a custom tRPC Frontend Client.
+
+window.trpcSDK
+    .runTRPC({
+        procedure: "hello", // "hello" is the procedure name
+        input: { text: "sure been good" },// "input" is the input paramter
+    })
+    .then((result) => {
+        console.log(result); // result is obtained via async functuin call
+    });
+
 ${await getFileOutputFormatting()}
 
                 `,

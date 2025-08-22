@@ -184,12 +184,12 @@ function RenderMessages() {
                                     case "data-welcome": // we don't use any reasoning or tool calls in this example
                                         return (
                                             <div key={`${message.id}-${i}`}>
-                                                {uiMessages.length === 0 ? (
+                                                {uiMessages.length === 1 ? (
                                                     <>
                                                         <div className="mb-3">{`Hi dear, Please tell me what do you want to build: 👇`}</div>
                                                         <div>
                                                             <div
-                                                                className="mb-2 cursor-pointer rounded-lg border p-3 font-mono text-sm transition-all duration-500 hover:bg-gray-100"
+                                                                className="mb-2 cursor-pointer rounded-lg border bg-white p-3 font-mono text-sm transition-all duration-500 hover:bg-gray-100"
                                                                 onClick={() => {
                                                                     useAI.setState(
                                                                         {
@@ -200,7 +200,7 @@ function RenderMessages() {
                                                             >{`Build me a todo list`}</div>
 
                                                             <div
-                                                                className="mb-2 cursor-pointer rounded-lg border p-3 font-mono text-sm transition-all duration-500 hover:bg-gray-100"
+                                                                className="mb-2 cursor-pointer rounded-lg border bg-white p-3 font-mono text-sm transition-all duration-500 hover:bg-gray-100"
                                                                 onClick={() => {
                                                                     useAI.setState(
                                                                         {
@@ -211,7 +211,7 @@ function RenderMessages() {
                                                             >{`Build me a expense tracking app`}</div>
 
                                                             <div
-                                                                className="mb-2 cursor-pointer rounded-lg border p-3 font-mono text-sm transition-all duration-500 hover:bg-gray-100"
+                                                                className="mb-2 cursor-pointer rounded-lg border bg-white p-3 font-mono text-sm transition-all duration-500 hover:bg-gray-100"
                                                                 onClick={() => {
                                                                     useAI.setState(
                                                                         {
