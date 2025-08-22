@@ -39,18 +39,6 @@ export async function onReceiveResponse({
 
     console.log("onReceiveResponse", userPrompt, task);
 
-    await putUIMessage({
-        id: v4(),
-        role: "user",
-        parts: [
-            {
-                id: v4(),
-                type: "text",
-                text: userPrompt,
-            },
-        ],
-    });
-
     MyTaskManager.add({
         waitFor: [task.name],
         name: "handleAppSpec",

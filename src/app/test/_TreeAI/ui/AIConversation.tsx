@@ -37,6 +37,18 @@ export const AIConversation = () => {
             lastUserPrompt: userPrompt,
         });
 
+        await putUIMessage({
+            id: v4(),
+            role: "user",
+            parts: [
+                {
+                    id: v4(),
+                    type: "text",
+                    text: userPrompt,
+                },
+            ],
+        });
+
         await bootEngines();
 
         MyTaskManager.add({
