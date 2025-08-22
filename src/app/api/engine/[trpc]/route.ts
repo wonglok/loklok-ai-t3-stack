@@ -195,6 +195,18 @@ return appRouter
 
                 return { ok: "deployed", path: input.key };
             }),
+        reset: publicProcedure
+            .input(z.object({}))
+            .mutation(async ({ input }) => {
+                await dbPlatform.model("CodeKVStore").deleteMany({});
+                return { ok: "reset" };
+            }),
+        getFiles: publicProcedure
+            .input(z.object({}))
+            .mutation(async ({ input }) => {
+                let files = await dbPlatform.model("CodeKVStore").find();
+                return files;
+            }),
     });
 
     let myTRPCRouter = createTRPCRouter({

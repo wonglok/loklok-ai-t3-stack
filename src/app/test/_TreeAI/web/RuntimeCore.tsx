@@ -10,7 +10,7 @@ import { NPMCacheTasks } from "./npm-globals";
 import { useAI } from "../state/useAI";
 import { LokLokSDK } from "./LokLokSDK";
 
-export function RuntimeCore() {
+export function RuntimeCore({ files = [] }) {
     let appID = useAI((r) => r.appID);
 
     React19.useEffect(() => {
@@ -36,7 +36,15 @@ export function RuntimeCore() {
             let urlSelf = new URL(window.location.href);
             let blobURL = urlSelf.searchParams.get("blob");
 
-            let fileList = (await fetch(blobURL).then((r) => r.json())) || [];
+            let fileList = [];
+            if (files.length > 0) {
+                fileList = files;
+            } else {
+                fileList =
+                    (await fetch(blobURL)
+                        .then((r) => r.json())
+                        .catch((r) => [])) || [];
+            }
 
             window.React = React19;
             // @ts-ignore
@@ -79,6 +87,7 @@ export function RuntimeCore() {
                     };
 
                     console.log(id);
+
                     let fileEntry = fileList.find((it) => {
                         return removeTSJS(it.path) === removeTSJS(id);
                     });

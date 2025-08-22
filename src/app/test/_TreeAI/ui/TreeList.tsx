@@ -28,12 +28,19 @@ export function TreeList() {
                         appID: useAI.getState().appID,
                     });
 
+                    await sdk.setupPlatform({
+                        procedure: "reset",
+                        input: {
+                            empty: 123,
+                        },
+                    });
+
                     for (let file of files) {
                         await sdk.setupPlatform({
                             input: {
                                 key: file.path,
                                 value: await readFileContent({
-                                    path: file.content,
+                                    path: file.path,
                                 }),
                             },
                         });

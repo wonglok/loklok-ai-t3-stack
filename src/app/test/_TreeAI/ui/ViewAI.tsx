@@ -19,24 +19,11 @@ export function ViewAI({}) {
     return <CoreRunner appFiles={appFiles}></CoreRunner>;
 }
 
-function CoreRunner({ appFiles }) {
+export function CoreRunner({ appFiles }) {
     let { show } = useWebView({
         runPage: "/test/run",
         files: [
             ...appFiles,
-            //             {
-            //                 path: `/ui/useSDK.js`,
-            //                 content: `
-            // import { create } from 'zustand'
-
-            // export const useSDK = create((set, get) =>{
-            //     return {
-            //         //
-            //         //
-            //     }
-            // })
-            //                 `,
-            //             },
             {
                 path: `/src/App.js`,
                 content: `
