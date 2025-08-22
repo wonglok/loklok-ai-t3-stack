@@ -81,15 +81,15 @@ Fields with types, validation, and defaults.
 function defineMongooseModels({ appID, dbInstance, Schema, mongoose }) {
     const db = dbInstance // mongoose.connection.useDb("app_development_appID", { useCache: true });
 
-    {
-        const ExampleSchema = new Schema({
-            ...
-        });
+    // {
+    //     const ExampleSchema = new Schema({
+    //         ...
+    //     });
+    //     if (!db.models["Example"]) {
+    //         db.model("Example"}, ExampleSchema);
+    //     }
+    // }
 
-        if (!db.models["Example"]) {
-            db.model("Example"}, ExampleSchema);
-        }
-    }
     ... // add more models
 
     return {
