@@ -206,7 +206,12 @@ return appRouter
             .input(z.object({}))
             .mutation(async ({ input }) => {
                 let files = await dbPlatform.model("CodeKVStore").find();
-                return files;
+                return files.map((r: any) => {
+                    return {
+                        path: r.key,
+                        content: r.value,
+                    };
+                });
             }),
     });
 

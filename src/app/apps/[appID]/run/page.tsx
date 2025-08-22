@@ -24,12 +24,12 @@ export default function AppRun() {
                 //
             },
         }).then((files) => {
-            files = files.map((item) => {
-                return {
-                    path: item.key,
-                    content: item.value,
-                };
-            });
+            // files = files.map((item) => {
+            //     return {
+            //         path: item.key,
+            //         content: item.value,
+            //     };
+            // });
 
             console.log("appID", appID);
             console.log("getFiles", files);
