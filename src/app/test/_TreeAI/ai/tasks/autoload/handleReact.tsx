@@ -31,7 +31,6 @@ import { getFileOutputFormatting } from "../prompts/getFileOutputFormatting";
 import { putUIMessage } from "../../putUIMessage";
 import { v4 } from "uuid";
 import { refreshUIMessages } from "../../refreshUIMessages";
-import { metadata } from "@/app/layout";
 import { removeUIMessage } from "../../removeUIMessage";
 import { listOutFilesToChatBlocks } from "../prompts/listOutFilesToChatBlocks";
 
@@ -67,6 +66,9 @@ Instructions:
 - the folder for components is at "/components/*"
 - the folder for util is at "/util/*"
 
+- DO NOT USE '@/...' to import modules
+- ALWAYS USE '/...' to import modules
+
 - use named export for "App" Component like the following: 
 export function App () {...}
 
@@ -80,6 +82,7 @@ import * as React from 'react';
 - use some "border" "rounded-lg" together with "shadow-inner" but dont overuse them dear
 - use some "p-3" padding spacing 
 - uses Zustand state management files located at "/store/*.ts" folder
+
 
 ${await getFileOutputFormatting()}
 

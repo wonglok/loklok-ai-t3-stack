@@ -14,7 +14,6 @@ import {
 
 import { Response } from "@/components/ai-elements/response";
 import { useAI } from "../state/useAI";
-// import { streamAppBuild } from "../ai/streamAppBuild";
 
 import { CodeEditorStream } from "./CodeEditorStream";
 import { useCallback } from "react";

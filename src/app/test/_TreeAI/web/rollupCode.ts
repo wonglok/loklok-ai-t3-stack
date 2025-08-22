@@ -30,12 +30,6 @@ export const rollupCode = async ({ files = [] }) => {
                         parentBaseURL,
                     );
 
-                    //
-                    //
-                    if (moduleName.startsWith("@/")) {
-                        moduleName = moduleName.replace("@/", "/");
-                    }
-
                     if (!parentBaseURL) {
                         return moduleName;
                     }

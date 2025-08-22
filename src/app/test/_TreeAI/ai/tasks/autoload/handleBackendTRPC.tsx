@@ -90,6 +90,7 @@ window.trpcSDK
 
 - DO NOT IMPORT ANYTHING
 
+
 - Prefer Mongoose naming "_id" instead of "id"
 - ALWAYS USE "_id" instead of "id" 
 - Example: USE "{ _id, ...updates }" instead of { id, ...updates } 
@@ -208,9 +209,6 @@ ${await getFileOutputFormatting()}
         console.log(text);
 
         parseText(text);
-
-        //
-
         //
     }
     parseText(text);
