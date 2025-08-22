@@ -22,14 +22,14 @@ import { getModelMessagesFromUIMessages } from "../getModelMessagesFromUIMessage
 import { v4 } from "uuid";
 import { putUIMessage } from "../putUIMessage";
 
-export async function createNewAppOriginal({
+export async function handleAppSpecOriginal({
     userPrompt,
     task,
 }: {
     userPrompt?: string;
     task: MyTask;
 }) {
-    let { model, slot } = await getFreeAIAsync();
+    let { model, engineSettingData: slot } = await getFreeAIAsync();
 
     // let loaderMessage: UIMessage = {
     //     id: `${v4()}`,
@@ -340,7 +340,7 @@ write the result to "${SPEC_DOC_PATH}"
         });
     });
 
-    MyTaskManager.doneTask("createNewApp");
+    MyTaskManager.doneTask("handleAppSpec");
 
     slot.bannerText = ``;
     refreshEngineSlot(slot);

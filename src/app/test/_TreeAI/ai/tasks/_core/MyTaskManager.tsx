@@ -10,8 +10,8 @@ export type MyTask = {
 };
 
 export const MyFuncs = {
-    createNewApp: (v: any) =>
-        import("../createNewApp").then((r) => r.createNewApp(v)),
+    handleAppSpec: (v: any) =>
+        import("../handleAppSpec").then((r) => r.handleAppSpec(v)),
 
     handleReactAppRoot: (v: any) =>
         import("../handleReactAppRoot").then((r) => r.handleReactAppRoot(v)),
@@ -27,7 +27,7 @@ export const MyTaskManager = {
         if (task) {
             task.status = "done";
         }
-        console.log(task);
+        console.log("done-task", task);
     },
     add: (a: { name: string; deps: string[]; args?: any }) => {
         MyTaskManager.taskList.push({

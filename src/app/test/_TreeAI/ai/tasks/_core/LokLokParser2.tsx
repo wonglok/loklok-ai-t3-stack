@@ -1,6 +1,6 @@
-// Regex to match [mydearloklokcode] tags, capturing action, file name, and code content
+// Regex to match [mydearlokloktag] tags, capturing action, file name, and code content
 const regex =
-    /\[mydearloklokcode\s+action="([^"]+)"\s+file="([^"]+)"\]([\s\S]*?)\[\/mydearloklokcode\]/g;
+    /\[mydearlokloktag\s+action="([^"]+)"\s+file="([^"]+)"\]([\s\S]*?)\[\/mydearlokloktag\]/g;
 
 interface CodeBlock {
     action: string;

@@ -64,6 +64,12 @@ export function MyApp () {
                     } catch (e) {
                         console.log(e)
                     }
+                } else {
+                    try {
+                        setApp(<div className="w-full h-full bg-gray-200 flex items-center justify-center">Preparing Preview</div>)
+                    } catch (e) {
+                        console.log(e)
+                    }
                 }
             }).catch((e) => {
                 console.log(e)

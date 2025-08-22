@@ -35,7 +35,7 @@ export async function handleReactAppRoot({
     userPrompt: string;
     task: MyTask;
 }) {
-    let { model, slot } = await getFreeAIAsync();
+    let { model, engineSettingData: slot } = await getFreeAIAsync();
     let files = useAI.getState().files;
 
     let chatblocks = [];
@@ -98,17 +98,17 @@ import * as React from 'react';
 
 - for formatting follow this:
 - if you want to create file
-[mydearloklokcode action="create-file" file="{file_path_name}" summary="{file_summary}"]
+[mydearlokloktag action="create-file" file="{file_path_name}" summary="{file_summary}"]
 {code}
-[/mydearloklokcode]
+[/mydearlokloktag]
 
 - if you want to remove file
-[mydearloklokcode action="remove-file" file="{file_path_name}" summary="{file_summary}"][/mydearloklokcode]
+[mydearlokloktag action="remove-file" file="{file_path_name}" summary="{file_summary}"][/mydearlokloktag]
 
 - if you want to update file
-[mydearloklokcode action="update-file" file="{file_path_name}" summary="{file_summary}"]
+[mydearlokloktag action="update-file" file="{file_path_name}" summary="{file_summary}"]
 {code}
-[/mydearloklokcode]
+[/mydearlokloktag]
 
 - {file_path_name} is the file path name
 - {file_summary} is the overview, purpose and summary of the code file
@@ -118,9 +118,9 @@ import * as React from 'react';
 - use some shadow-inner 
 - use some border for shadow-inner items
 
-- if there is an existing file, then you can use [mydearloklokcode action="update-file" ...]
-- if there is no existing file, then you can [mydearloklokcode action="create-file" ...]
-- if you need to remove existing file, then you can [mydearloklokcode action="remove-file" ...]
+- if there is an existing file, then you can use [mydearlokloktag action="update-file" ...]
+- if there is no existing file, then you can [mydearlokloktag action="create-file" ...]
+- if you need to remove existing file, then you can [mydearlokloktag action="remove-file" ...]
 
                 `,
     });
@@ -206,21 +206,18 @@ import * as React from 'react';
     for await (let part of response.textStream) {
         text += part;
         console.log(text);
+
         parseText(text);
+
+        //
+
+        //
     }
     parseText(text);
 
-    // for (let i = 0; i < allCodes.length; i++) {
-    //     let path = allCodes[i].attributes[0]?.value;
-    //     let content = allCodes[i].innerHTML;
-
-    // }
-
-    // console.log(await response.object);
-
     await saveToBrowserDB();
 
-    MyTaskManager.doneTask("createNewApp");
+    await MyTaskManager.doneTask(task.name);
 
     await putBackFreeAIAsync({ engine: slot });
 }
@@ -232,23 +229,23 @@ import * as React from 'react';
 please write me a regex parser for typescript for the following code:
 
 
-[mydearloklokcode action="create-file" file="example1.ts" summary="test text"]
+[mydearlokloktag action="create-file" file="example1.ts" summary="test text"]
 export function hello() {
     console.log("Hello, world!");
 }
-[/mydearloklokcode]
+[/mydearlokloktag]
 
-[mydearloklokcode action="remove-file" file="example1.ts" summary="test text"]
+[mydearlokloktag action="remove-file" file="example1.ts" summary="test text"]
 export function hello() {
     console.log("Hello, world!");
 }
-[/mydearloklokcode]
+[/mydearlokloktag]
 
-[mydearloklokcode action="update-file" file="example1.ts" summary="test text"]
+[mydearlokloktag action="update-file" file="example1.ts" summary="test text"]
 export function hello() {
     console.log("Hello, world!");
 }
-[/mydearloklokcode]
+[/mydearlokloktag]
 
 
 */

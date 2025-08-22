@@ -31,6 +31,6 @@ export const getFreeAIAsync = async () => {
 
     return {
         model: model as LanguageModel,
-        slot: slot as EngineSetting,
+        engineSettingData: slot as EngineSetting,
     };
 };

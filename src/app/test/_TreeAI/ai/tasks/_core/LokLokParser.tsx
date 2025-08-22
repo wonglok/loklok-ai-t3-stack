@@ -1,8 +1,8 @@
 import { readFileSync } from "fs";
 
-// Regex to match [mydearloklokcode] tags, capturing file name and code content
+// Regex to match [mydearlokloktag] tags, capturing file name and code content
 const regex =
-    /\[mydearloklokcode\s+file="([^"]+)"\]([\s\S]*?)\[\/mydearloklokcode\]/g;
+    /\[mydearlokloktag\s+file="([^"]+)"\]([\s\S]*?)\[\/mydearlokloktag\]/g;
 
 export interface CodeBlock {
     fileName: string;
@@ -26,23 +26,23 @@ function parseCodeBlocks(input: string): CodeBlock[] {
 
 // // Example usage
 // const input = `
-// [mydearloklokcode file="example1.ts"]
+// [mydearlokloktag file="example1.ts"]
 // export function hello() {
 //     console.log("Hello, world!");
 // }
-// [/mydearloklokcode]
+// [/mydearlokloktag]
 
-// [mydearloklokcode file="example2.ts"]
+// [mydearlokloktag file="example2.ts"]
 // export function hello() {
 //     console.log("Hello, world!");
 // }
-// [/mydearloklokcode]
+// [/mydearlokloktag]
 
-// [mydearloklokcode file="example3.ts"]
+// [mydearlokloktag file="example3.ts"]
 // export function hello() {
 //     console.log("Hello, world!");
 // }
-// [/mydearloklokcode]
+// [/mydearlokloktag]
 // `;
 
 // const codeBlocks = parseCodeBlocks(input);

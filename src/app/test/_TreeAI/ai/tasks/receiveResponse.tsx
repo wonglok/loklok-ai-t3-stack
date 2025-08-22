@@ -31,7 +31,7 @@ export async function receiveResponse({
     userPrompt: string;
     task: MyTask;
 }) {
-    let { model, slot } = await getFreeAIAsync();
+    let { model, engineSettingData: slot } = await getFreeAIAsync();
     let files = useAI.getState().files;
 
     let info = [];
@@ -70,74 +70,74 @@ ${ff.content}
         info.push(haventInit);
     }
 
-    // createMongoose
-    await generateText({
-        toolChoice: "required",
-        messages: [
-            {
-                role: `system`,
-                content: `You are a polite senior developer.`,
-            },
-            ...info,
-            ...getModelMessagesFromUIMessages(),
-        ],
-        system: `Your either create new project or update exsting project`,
-        tools: {
-            createNewProject: tool({
-                description: "create a new software project",
-                execute: async ({ userRequirement }) => {
-                    //
+    // // createMongoose
+    // await generateText({
+    //     toolChoice: "required",
+    //     messages: [
+    //         {
+    //             role: `system`,
+    //             content: `You are a polite senior developer.`,
+    //         },
+    //         ...info,
+    //         ...getModelMessagesFromUIMessages(),
+    //     ],
+    //     system: `Your either create new project or update exsting project`,
+    //     tools: {
+    //         createNewProject: tool({
+    //             description: "create a new software project",
+    //             execute: async ({ userRequirement }) => {
+    //                 //
 
-                    console.log("createNewProject", userRequirement);
+    //                 console.log("createNewProject", userRequirement);
 
-                    MyTaskManager.add({
-                        name: "createNewApp",
-                        deps: ["receiveResponse"],
-                        args: { userPrompt: userPrompt },
-                    });
+    //                 MyTaskManager.add({
+    //                     name: "handleAppSpec",
+    //                     deps: ["receiveResponse"],
+    //                     args: { userPrompt: userPrompt },
+    //                 });
 
-                    MyTaskManager.add({
-                        name: "handleReactAppRoot",
-                        deps: ["createNewApp"],
-                        args: { userPrompt: userPrompt },
-                    });
+    //                 MyTaskManager.add({
+    //                     name: "handleReactAppRoot",
+    //                     deps: ["handleAppSpec"],
+    //                     args: { userPrompt: userPrompt },
+    //                 });
 
-                    return `ok`;
-                },
-                inputSchema: z.object({ userRequirement: z.string() }),
-                outputSchema: z.string(),
-            }),
-            updateExistingProject: tool({
-                description: "update existing software project",
-                execute: async ({ userRequirement }) => {
-                    //
+    //                 return `ok`;
+    //             },
+    //             inputSchema: z.object({ userRequirement: z.string() }),
+    //             outputSchema: z.string(),
+    //         }),
+    //         updateExistingProject: tool({
+    //             description: "update existing software project",
+    //             execute: async ({ userRequirement }) => {
+    //                 //
 
-                    console.log("updateExistingProject", userRequirement);
+    //                 return `ok`;
+    //             },
+    //             inputSchema: z.object({ userRequirement: z.string() }),
+    //             outputSchema: z.string(),
+    //         }),
+    //     },
+    //     model: model,
+    // });
 
-                    MyTaskManager.add({
-                        name: "createNewApp",
-                        deps: ["receiveResponse"],
-                        args: { userPrompt: userPrompt },
-                    });
+    console.log("updateExistingProject", userPrompt);
 
-                    MyTaskManager.add({
-                        name: "handleReactAppRoot",
-                        deps: ["createNewApp"],
-                        args: { userPrompt: userPrompt },
-                    });
+    MyTaskManager.add({
+        name: "handleAppSpec",
+        deps: [task.name],
+        args: { userPrompt: userPrompt },
+    });
 
-                    return `ok`;
-                },
-                inputSchema: z.object({ userRequirement: z.string() }),
-                outputSchema: z.string(),
-            }),
-        },
-        model: model,
+    MyTaskManager.add({
+        name: "handleReactAppRoot",
+        deps: ["handleAppSpec"],
+        args: { userPrompt: userPrompt },
     });
 
     await saveToBrowserDB();
 
     await putBackFreeAIAsync({ engine: slot });
 
-    MyTaskManager.doneTask("receiveResponse");
+    await MyTaskManager.doneTask(task.name);
 }
