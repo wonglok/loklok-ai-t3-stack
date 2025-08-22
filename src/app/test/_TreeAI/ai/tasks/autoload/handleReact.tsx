@@ -10,7 +10,6 @@ import {
     UIMessage,
 } from "ai";
 import { IOTooling } from "../../../io/IOTooling";
-import { APP_ROOT_PATH, SPEC_DOC_PATH } from "../../constants";
 import { EngineSetting, useAI } from "../../../state/useAI";
 // import { refreshUIMessages } from "../refreshUIMessages";
 // import { writeFileContent } from "../../io/writeFileContent";
@@ -48,17 +47,6 @@ export async function handleReact({
         role: "system",
         content: `${await getAppOverviewPrompt()}`,
     });
-
-    let content = await readFileContent({ path: SPEC_DOC_PATH });
-    console.log("content", content);
-    if (!!content) {
-        chatblocks.push({
-            role: "user",
-            content: `Here's the "product requirement definition": 
-${content}
-`,
-        });
-    }
 
     if (files?.length > 0) {
         chatblocks.push({
