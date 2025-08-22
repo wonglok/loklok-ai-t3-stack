@@ -218,6 +218,10 @@ import * as React from 'react';
 
     await saveToBrowserDB();
 
+    useAI.setState({
+        topTab: "web",
+    });
+
     await MyTaskManager.doneTask(task.name);
 
     await putBackFreeAIAsync({ engine: slot });

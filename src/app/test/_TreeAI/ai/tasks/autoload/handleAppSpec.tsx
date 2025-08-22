@@ -39,35 +39,12 @@ export async function handleAppSpec({
 }) {
     let { model, engineSettingData } = await getFreeAIAsync();
 
-    let chatblocks = [];
-
-    chatblocks.push({
-        role: "system",
-        content: `
-# Output Format:
-
-- if you want to create file
-[mydearlokloktag action="create-file" file="{file_path_name}" summary="{file_summary}"]
-{file_content}
-[/mydearlokloktag]
-
-- if you want to remove file
-[mydearlokloktag action="remove-file" file="{file_path_name}" summary="{file_summary}"][/mydearlokloktag]
-
-- if you want to update file
-[mydearlokloktag action="update-file" file="{file_path_name}" summary="{file_summary}"]
-{file_content}
-[/mydearlokloktag]
-
-- {file_path_name} is the file's path name
-- {file_summary} is the file's overview, purpose and summary of the content
-- {file_content} is the file's content
-
-- if there is an existing file, then you can use [mydearlokloktag action="update-file" ...]
-- if there is no existing file, then you can [mydearlokloktag action="create-file" ...]
-- if you need to remove existing file, then you can [mydearlokloktag action="remove-file" ...]
-        `,
-    });
+    let chatblocks = [
+        //
+        //
+        //
+        ...getModelMessagesFromUIMessages(),
+    ];
 
     let files = useAI.getState().files;
     if (files?.length > 0) {
@@ -185,8 +162,36 @@ Folder Structure:
 /model/... (mongoose models - backend)
 /docs/... (knowledge base of the app)
 
-Generate the "Product Requirement Definition" starting with Step 1, and create a new file called "/docs/spec.md"
+Generate the "Product Requirement Definition"
 `,
+    });
+
+    chatblocks.push({
+        role: "user",
+        content: `
+## Output:
+
+- if you want to create file
+[mydearlokloktag action="create-file" file="{file_path_name}" summary="{file_summary}"]
+{file_content}
+[/mydearlokloktag]
+
+- if you want to remove file
+[mydearlokloktag action="remove-file" file="{file_path_name}" summary="{file_summary}"][/mydearlokloktag]
+
+- if you want to update file
+[mydearlokloktag action="update-file" file="{file_path_name}" summary="{file_summary}"]
+{file_content}
+[/mydearlokloktag]
+
+- {file_path_name} is the file's path name
+- {file_summary} is the file's overview, purpose and summary of the content
+- {file_content} is the file's content
+
+- if there is an existing file, then you can use [mydearlokloktag action="update-file" ...]
+- if there is no existing file, then you can [mydearlokloktag action="create-file" ...]
+- if you need to remove existing file, then you can [mydearlokloktag action="remove-file" ...]
+        `,
     });
 
     let resp = await streamText({
@@ -198,6 +203,11 @@ Generate the "Product Requirement Definition" starting with Step 1, and create a
     });
 
     let txt = "";
+
+    useAI.setState({
+        topTab: "code",
+        currentPath: `${SPEC_DOC_PATH}`,
+    });
 
     for await (let part of resp.textStream) {
         txt += part;
