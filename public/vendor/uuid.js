@@ -6,30 +6,30 @@ const NPM_CACHE = window.NPM_CACHE;
 
 NPM_CACHE["npm-uuid"] = NPM_CACHE["npm-uuid"] || {}; 
 
-export default NPM_CACHE["npm-uuid"]['MAX'];
+export const MAX = NPM_CACHE["npm-uuid"]['MAX'];
 
-export default NPM_CACHE["npm-uuid"]['NIL'];
+export const NIL = NPM_CACHE["npm-uuid"]['NIL'];
 
-export default NPM_CACHE["npm-uuid"]['parse'];
+export const parse = NPM_CACHE["npm-uuid"]['parse'];
 
-export default NPM_CACHE["npm-uuid"]['stringify'];
+export const stringify = NPM_CACHE["npm-uuid"]['stringify'];
 
-export default NPM_CACHE["npm-uuid"]['v1'];
+export const v1 = NPM_CACHE["npm-uuid"]['v1'];
 
-export default NPM_CACHE["npm-uuid"]['v1ToV6'];
+export const v1ToV6 = NPM_CACHE["npm-uuid"]['v1ToV6'];
 
-export default NPM_CACHE["npm-uuid"]['v3'];
+export const v3 = NPM_CACHE["npm-uuid"]['v3'];
 
-export default NPM_CACHE["npm-uuid"]['v4'];
+export const v4 = NPM_CACHE["npm-uuid"]['v4'];
 
-export default NPM_CACHE["npm-uuid"]['v5'];
+export const v5 = NPM_CACHE["npm-uuid"]['v5'];
 
-export default NPM_CACHE["npm-uuid"]['v6'];
+export const v6 = NPM_CACHE["npm-uuid"]['v6'];
 
-export default NPM_CACHE["npm-uuid"]['v6ToV1'];
+export const v6ToV1 = NPM_CACHE["npm-uuid"]['v6ToV1'];
 
-export default NPM_CACHE["npm-uuid"]['v7'];
+export const v7 = NPM_CACHE["npm-uuid"]['v7'];
 
-export default NPM_CACHE["npm-uuid"]['validate'];
+export const validate = NPM_CACHE["npm-uuid"]['validate'];
 
-export default NPM_CACHE["npm-uuid"]['version'];
+export const version = NPM_CACHE["npm-uuid"]['version'];

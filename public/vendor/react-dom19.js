@@ -6,10 +6,10 @@ const NPM_CACHE = window.NPM_CACHE;
 
 NPM_CACHE["npm-react-dom"] = NPM_CACHE["npm-react-dom"] || {}; 
 
-export default NPM_CACHE["npm-react-dom"]['createRoot'];
+export const createRoot = NPM_CACHE["npm-react-dom"]['createRoot'];
 
-export const default = NPM_CACHE["npm-react-dom"]['default'];
+export default NPM_CACHE["npm-react-dom"]['default'];
 
-export default NPM_CACHE["npm-react-dom"]['hydrateRoot'];
+export const hydrateRoot = NPM_CACHE["npm-react-dom"]['hydrateRoot'];
 
-export default NPM_CACHE["npm-react-dom"]['version'];
+export const version = NPM_CACHE["npm-react-dom"]['version'];
