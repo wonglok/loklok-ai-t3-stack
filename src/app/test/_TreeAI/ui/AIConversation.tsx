@@ -23,6 +23,7 @@ import { bootEngines } from "../ai/bootEngines";
 import { MyTaskManager } from "../ai/tasks/_core/MyTaskManager";
 import { putUIMessage } from "../ai/putUIMessage";
 import { v4 } from "uuid";
+import { UIMessage } from "ai";
 
 export const AIConversation = () => {
     const userPrompt = useAI((r) => r.userPrompt);
@@ -38,16 +39,15 @@ export const AIConversation = () => {
         });
 
         await putUIMessage({
-            id: v4(),
+            id: `${v4()}`,
             role: "user",
             parts: [
                 {
-                    id: v4(),
                     type: "text",
                     text: userPrompt,
                 },
             ],
-        });
+        } as UIMessage);
 
         await bootEngines();
 

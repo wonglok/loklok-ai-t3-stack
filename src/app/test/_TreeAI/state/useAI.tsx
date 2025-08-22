@@ -102,7 +102,7 @@ export const useAI = create<{
     engines: EngineSetting[];
     currentAIProvider: "lmstudio";
     models: MyModel[];
-    topTab: "chat" | "web" | "code" | "team";
+    topTab: "chat" | "web" | "code";
 }>((set, get) => {
     return {
         //

@@ -147,19 +147,6 @@ ${await getFileOutputFormatting()}
             console.log("Parsed blocks:", JSON.stringify(blocks, null, 2));
 
             for (let block of blocks) {
-                // if (block.fileName.startsWith("/")) {
-                // } else {
-                //     block.fileName = `/${block.fileName}`;
-                // }
-
-                // if (lastFile !== block.fileName) {
-                //     useAI.setState({
-                //         topTab: "code",
-                //         currentPath: block.fileName,
-                //     });
-                //     lastFile = block.fileName;
-                // }
-
                 if (block.action === "create-file") {
                     await writeFileContent({
                         summary: `${block.summary}`,
@@ -222,10 +209,6 @@ ${await getFileOutputFormatting()}
     removeUIMessage(appMessage as UIMessage);
 
     await saveToBrowserDB();
-
-    useAI.setState({
-        topTab: "web",
-    });
 
     await MyTaskManager.doneTask(task.name);
 

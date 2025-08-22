@@ -45,28 +45,24 @@ export async function onReceiveResponse({
         args: { userPrompt: userPrompt },
     });
 
-    // parallels
     MyTaskManager.add({
-        waitFor: ["handleAppSpec", "handleZustand"],
+        waitFor: ["handleAppSpec"],
         name: "handleMongoose",
         args: { userPrompt: userPrompt },
     });
 
-    // parallels
     MyTaskManager.add({
-        waitFor: ["handleAppSpec", "handleZustand", "handleMongoose"],
+        waitFor: ["handleAppSpec", "handleMongoose"],
         name: "handleBackendTRPC",
         args: { userPrompt: userPrompt },
     });
 
-    // parallels
     MyTaskManager.add({
         waitFor: ["handleAppSpec", "handleBackendTRPC"],
         name: "handleZustand",
         args: { userPrompt: userPrompt },
     });
 
-    // parallels
     MyTaskManager.add({
         waitFor: ["handleAppSpec", "handleZustand"],
         name: "handleReact",

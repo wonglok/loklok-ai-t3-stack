@@ -105,26 +105,7 @@ function AIMatcher({ name }: { name: string }) {
             )}
 
             {item.bannerText && (
-                <div
-                    // onClick={() => {
-                    //     //
-                    //     let engine = item;
-
-                    //     console.log(engine?.bannerData);
-                    //     if (engine?.bannerData) {
-                    //         if (engine.bannerData.type === "tab") {
-                    //             if (engine.bannerData.topTab === "code") {
-                    //                 useAI.setState({
-                    //                     topTab: engine.bannerData.topTab,
-                    //                     currentPath: engine.bannerData.filePath,
-                    //                 });
-                    //             }
-                    //         }
-                    //     }
-                    //     //
-                    // }}
-                    className="mt-2 rounded-lg border p-2 text-center text-sm"
-                >
+                <div className="mt-2 rounded-lg border p-2 text-center text-sm">
                     {item.bannerText}
                 </div>
             )}
