@@ -21,6 +21,7 @@ const createContext = async (req: NextRequest) => {
 
 const handler = async (req: NextRequest) => {
     let appID = req.headers.get("app-id");
+    await mongoose.connect(`${process.env.MONGO_DEVELOP}`);
 
     console.log(appID);
 
@@ -154,7 +155,6 @@ return appRouter
 
         //
 
-        await mongoose.connect(`${process.env.MONGO_DEVELOP}`);
         const dbAppInstance = mongoose.connection.useDb(
             `development_${appID}`,
             {
