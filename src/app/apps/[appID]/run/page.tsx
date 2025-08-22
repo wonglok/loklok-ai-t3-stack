@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { LokLokSDK } from "@/app/test/_TreeAI/web/LokLokSDK";
 import { useParams } from "next/navigation";
 import { useWebView } from "@/app/test/_TreeAI/web/useWebView";
+import { ViewAI } from "@/app/test/_TreeAI/ui/ViewAI";
 
 //. src/app/apps/[appID]/sim/page.tsx
 
@@ -12,7 +13,6 @@ export default function WebRuntime() {
 
     let { appID } = useParams();
 
-    console.log("appID", appID);
     useEffect(() => {
         if (!appID) {
             return;
@@ -31,15 +31,18 @@ export default function WebRuntime() {
     return (
         <>
             {files.length > 0 && appID && (
-                <CoreRunner appID={appID} files={files}></CoreRunner>
+                <CoreRunner
+                    runPage={`/apps/${appID}/sim`}
+                    files={files}
+                ></CoreRunner>
             )}
         </>
     );
 }
 
-function CoreRunner({ files, appID }) {
+export function CoreRunner({ files, runPage }) {
     let { show } = useWebView({
-        runPage: `/apps/${appID}/sim`,
+        runPage: runPage,
         files: [
             ...files,
             {
@@ -121,7 +124,7 @@ let ttt = setInterval(() => {
     return (
         <>
             {/*  */}
-            <div className="h-full w-full">{show}</div>
+            <div className="h-full w-full p-3">{show}</div>
 
             {/*  */}
         </>
