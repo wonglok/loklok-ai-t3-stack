@@ -22,7 +22,7 @@ import { getFreeAIAsync } from "../getFreeAIAsync";
 import { MyTask, MyTaskManager } from "./_core/MyTaskManager";
 import { getModelMessagesFromUIMessages } from "../getModelMessagesFromUIMessages";
 
-import { readFileContent } from "../../io/readFileContent";
+// import { readFileContent } from "../../io/readFileContent";
 
 export async function receiveResponse({
     userPrompt,
@@ -90,15 +90,15 @@ ${ff.content}
 
                     console.log("createNewProject", userRequirement);
 
-                    // MyTaskManager.add({
-                    //     name: "createNewApp",
-                    //     deps: [],
-                    //     args: { userPrompt: userPrompt },
-                    // });
+                    MyTaskManager.add({
+                        name: "createNewApp",
+                        deps: [],
+                        args: { userPrompt: userPrompt },
+                    });
 
                     MyTaskManager.add({
                         name: "handleReactAppRoot",
-                        deps: [],
+                        deps: ["createNewApp"],
                         args: { userPrompt: userPrompt },
                     });
 
@@ -116,15 +116,16 @@ ${ff.content}
 
                     console.log("updateExistingProject", userRequirement);
 
-                    // MyTaskManager.add({
-                    //     name: "createNewApp",
-                    //     deps: [],
-                    //     args: { userPrompt: userPrompt },
-                    // });
+                    MyTaskManager.add({
+                        name: "createNewApp",
+                        deps: [],
+                        args: { userPrompt: userPrompt },
+                    });
+
                     MyTaskManager.add({
                         name: "handleReactAppRoot",
-                        deps: [],
-                        args: { userPrompt: userRequirement },
+                        deps: ["createNewApp"],
+                        args: { userPrompt: userPrompt },
                     });
 
                     MyTaskManager.doneTask("receiveResponse");

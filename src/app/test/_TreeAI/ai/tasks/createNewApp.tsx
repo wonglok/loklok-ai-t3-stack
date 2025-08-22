@@ -331,8 +331,6 @@ write the result to "${SPEC_DOC_PATH}"
 
     await saveToBrowserDB();
 
-    MyTaskManager.doneTask("createNewApp");
-
     await new Promise((resolve) => {
         let tttt = setInterval(() => {
             if (!canGo) {
@@ -341,6 +339,8 @@ write the result to "${SPEC_DOC_PATH}"
             }
         });
     });
+
+    MyTaskManager.doneTask("createNewApp");
 
     slot.bannerText = ``;
     refreshEngineSlot(slot);
