@@ -173,10 +173,10 @@ import * as React from 'react';
             console.log("Parsed blocks:", JSON.stringify(blocks, null, 2));
 
             for (let block of blocks) {
-                if (block.fileName.startsWith("/")) {
-                } else {
-                    block.fileName = `/${block.fileName}`;
-                }
+                // if (block.fileName.startsWith("/")) {
+                // } else {
+                //     block.fileName = `/${block.fileName}`;
+                // }
 
                 if (lastFile !== block.fileName) {
                     useAI.setState({

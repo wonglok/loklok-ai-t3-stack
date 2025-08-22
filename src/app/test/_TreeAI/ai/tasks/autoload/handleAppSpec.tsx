@@ -30,7 +30,7 @@ import { parseCodeBlocksGen3 } from "../_core/LokLokParser3";
 import { refreshEngineSlot } from "../../refreshEngines";
 
 export const name = "handleAppSpec";
-export const displayName = "Description of the App";
+export const displayName = "Application Specification";
 export async function handleAppSpec({
     userPrompt,
     task,
@@ -217,7 +217,7 @@ Generate the "Product Requirement Definition" Starting at "Step 1: User Requirem
         engineSettingData.bannerText = `Working: ${task.name}`;
         refreshEngineSlot(engineSettingData);
 
-        writeFileContent({
+        await writeFileContent({
             path: SPEC_DOC_PATH,
             content: txt,
         });

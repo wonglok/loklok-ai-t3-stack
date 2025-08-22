@@ -104,7 +104,7 @@ function AIMatcher({ name }: { name: string }) {
                 </Select>
             )}
 
-            {/* {item.bannerText && (
+            {item.bannerText && (
                 <div
                     // onClick={() => {
                     //     //
@@ -127,7 +127,7 @@ function AIMatcher({ name }: { name: string }) {
                 >
                     {item.bannerText}
                 </div>
-            )} */}
+            )}
         </>
     );
 }

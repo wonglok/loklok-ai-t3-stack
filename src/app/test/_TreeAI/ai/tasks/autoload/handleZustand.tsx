@@ -167,10 +167,10 @@ import { create } from 'zustand';
             console.log("Parsed blocks:", JSON.stringify(blocks, null, 2));
 
             for (let block of blocks) {
-                if (block.fileName.startsWith("/")) {
-                } else {
-                    block.fileName = `/${block.fileName}`;
-                }
+                // if (block.fileName.startsWith("/")) {
+                // } else {
+                //     block.fileName = `/${block.fileName}`;
+                // }
 
                 if (lastFile !== block.fileName) {
                     useAI.setState({
@@ -186,12 +186,14 @@ import { create } from 'zustand';
                         path: `${block.fileName}`,
                         content: block.code,
                     });
+                    await saveToBrowserDB();
                 } else if (block.action === "update-file") {
                     await writeFileContent({
                         summary: `${block.summary}`,
                         path: `${block.fileName}`,
                         content: block.code,
                     });
+                    await saveToBrowserDB();
                 } else if (block.action === "remove-file") {
                     await removeFile({
                         path: `${block.fileName}`,

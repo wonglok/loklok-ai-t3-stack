@@ -48,14 +48,14 @@ export function VercelLMStudio() {
                     style={{ width: "calc(280px)" }}
                 >
                     <div
-                        style={{ height: `calc(100% - 300px)` }}
+                        style={{ height: `calc(100% - 350px)` }}
                         className="w-full rounded-lg border bg-white py-3"
                     >
                         <TreeList></TreeList>
                     </div>
                     <div
                         style={{
-                            height: `calc(300px - var(--spacing) * 3)`,
+                            height: `calc(350px - var(--spacing) * 3)`,
                         }}
                         className="mt-3 w-full overflow-y-auto rounded-lg border bg-white py-3"
                     >
