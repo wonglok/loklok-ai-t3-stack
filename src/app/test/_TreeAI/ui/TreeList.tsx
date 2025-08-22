@@ -54,7 +54,7 @@ export function TreeList() {
             ></TreeItem> */}
 
             {/*  */}
-            <TreeItem
+            {/* <TreeItem
                 itemId="/docs"
                 label={`🍱 ${"App Docs"}`}
                 onClick={() => {
@@ -121,9 +121,9 @@ export function TreeList() {
                             />
                         );
                     })}
-            </TreeItem>
+            </TreeItem> */}
 
-            {/* {files.map((r) => {
+            {files.map((r) => {
                 return (
                     <TreeItem
                         key={r.path + "any"}
@@ -137,7 +137,7 @@ export function TreeList() {
                         }}
                     />
                 );
-            })} */}
+            })}
         </SimpleTreeView>
     );
 }

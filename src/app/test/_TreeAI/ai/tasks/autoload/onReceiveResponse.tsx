@@ -64,6 +64,13 @@ export async function onReceiveResponse({
         args: { userPrompt: userPrompt },
     });
 
+    // parallels
+    MyTaskManager.add({
+        waitFor: ["handleAppSpec"],
+        name: "handleZustand",
+        args: { userPrompt: userPrompt },
+    });
+
     await MyTaskManager.doneTask(task.name);
 
     await saveToBrowserDB();
