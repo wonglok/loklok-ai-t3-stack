@@ -54,8 +54,6 @@ export function MyApp () {
     let [outlet, setApp] = React.useState(null)
 
     React.useEffect(() => {
-        let files = ${JSON.stringify(appFiles)};
-
         import('/components/App.js').then((myModule) =>{
                 console.log('myModule', myModule)
                 if (myModule?.App) {
@@ -66,7 +64,7 @@ export function MyApp () {
                     }
                 } else {
                     try {
-                        setApp(<div className="w-full h-full bg-gray-200 flex items-center justify-center">Preparing Preview</div>)
+                        setApp(<div className="w-full h-full from-orange-100 to-yellow-300 bg-gradient-to-t flex items-center justify-center">Preview Box</div>)
                     } catch (e) {
                         console.log(e)
                     }

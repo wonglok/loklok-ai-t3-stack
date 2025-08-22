@@ -7,24 +7,24 @@ import {
     tool,
     UIMessage,
 } from "ai";
-import { addUIMessage } from "../addUIMessage";
-import { getUIMessages } from "../getUIMessages";
+import { addUIMessage } from "../../addUIMessage";
+import { getUIMessages } from "../../getUIMessages";
 import z from "zod";
-import { IOTooling } from "../../io/IOTooling";
-import { SPEC_DOC_PATH } from "../constants";
-import { EngineSetting, useAI } from "../../state/useAI";
+import { IOTooling } from "../../../io/IOTooling";
+import { SPEC_DOC_PATH } from "../../constants";
+import { EngineSetting, useAI } from "../../../state/useAI";
 // import { refreshUIMessages } from "../refreshUIMessages";
 // import { writeFileContent } from "../../io/writeFileContent";
 // import { removeUIMessages } from "../removeUIMessages";
-import { saveToBrowserDB } from "../../io/saveToBrowserDB";
-import { putBackFreeAIAsync } from "../putBackFreeAIAsync";
-import { getFreeAIAsync } from "../getFreeAIAsync";
-import { MyTask, MyTaskManager } from "./_core/MyTaskManager";
-import { getModelMessagesFromUIMessages } from "../getModelMessagesFromUIMessages";
+import { saveToBrowserDB } from "../../../io/saveToBrowserDB";
+import { putBackFreeAIAsync } from "../../putBackFreeAIAsync";
+import { getFreeAIAsync } from "../../getFreeAIAsync";
+import { MyTask, MyTaskManager } from "../_core/MyTaskManager";
+import { getModelMessagesFromUIMessages } from "../../getModelMessagesFromUIMessages";
 
 // import { readFileContent } from "../../io/readFileContent";
 
-export async function receiveResponse({
+export async function onReceiveResponse({
     userPrompt,
     task,
 }: {
@@ -32,7 +32,7 @@ export async function receiveResponse({
     task: MyTask;
 }) {
     let { model, engineSettingData: slot } = await getFreeAIAsync();
-    let files = useAI.getState().files;
+    // let files = useAI.getState().files;
 
     // let info = [];
 
@@ -92,13 +92,13 @@ export async function receiveResponse({
 
     //                 MyTaskManager.add({
     //                     name: "handleAppSpec",
-    //                     deps: ["receiveResponse"],
+    //                     waitFor: ["receiveResponse"],
     //                     args: { userPrompt: userPrompt },
     //                 });
 
     //                 MyTaskManager.add({
     //                     name: "handleReactAppRoot",
-    //                     deps: ["handleAppSpec"],
+    //                     waitFor: ["handleAppSpec"],
     //                     args: { userPrompt: userPrompt },
     //                 });
 
@@ -123,21 +123,21 @@ export async function receiveResponse({
 
     console.log("updateExistingProject", userPrompt);
 
+    await MyTaskManager.doneTask(task.name);
+
     MyTaskManager.add({
+        waitFor: [task.name],
         name: "handleAppSpec",
-        deps: [task.name],
         args: { userPrompt: userPrompt },
     });
 
     MyTaskManager.add({
+        waitFor: ["handleAppSpec"],
         name: "handleReactAppRoot",
-        deps: ["handleAppSpec"],
         args: { userPrompt: userPrompt },
     });
 
     await saveToBrowserDB();
 
     await putBackFreeAIAsync({ engine: slot });
-
-    await MyTaskManager.doneTask(task.name);
 }

@@ -4,20 +4,24 @@ import { useEffect } from "react";
 
 export type MyTask = {
     name: string;
-    deps: string[];
+    waitFor: string[];
     args: Record<string, any>;
     status: "init" | "reserved" | "working" | "done";
 };
 
 export const MyFuncs = {
     handleAppSpec: (v: any) =>
-        import("../handleAppSpec").then((r) => r.handleAppSpec(v)),
+        import("../routes/handleAppSpec").then((r) => r.handleAppSpec(v)),
 
     handleReactAppRoot: (v: any) =>
-        import("../handleReactAppRoot").then((r) => r.handleReactAppRoot(v)),
+        import("../routes/handleReactAppRoot").then((r) =>
+            r.handleReactAppRoot(v),
+        ),
 
     receiveResponse: (v: any) =>
-        import("../receiveResponse").then((r) => r.receiveResponse(v)),
+        import("../routes/onReceiveResponse").then((r) =>
+            r.onReceiveResponse(v),
+        ),
 };
 
 export const MyTaskManager = {
@@ -29,10 +33,10 @@ export const MyTaskManager = {
         }
         console.log("done-task", task);
     },
-    add: (a: { name: string; deps: string[]; args?: any }) => {
+    add: (a: { name: string; waitFor: string[]; args?: any }) => {
         MyTaskManager.taskList.push({
             name: a.name,
-            deps: a.deps,
+            waitFor: a.waitFor,
             args: a.args,
             status: "init",
         });
@@ -46,14 +50,14 @@ export const MyTaskManager = {
 
             let task = MyTaskManager.taskList.find((r) => r.status === "init");
             //
-            let hasDeps;
+            let noMoreWaiting;
 
             if (task) {
-                hasDeps = await new Promise((resolve) => {
-                    let howManyDeps = task.deps.length;
+                noMoreWaiting = await new Promise((resolve) => {
+                    let howManyDeps = task.waitFor.length;
                     let doneCount = 0;
 
-                    for (let dep of task.deps) {
+                    for (let dep of task.waitFor) {
                         let hasFound = !!MyTaskManager.taskList.find(
                             (t) => t.name === dep && t.status === "done",
                         );
@@ -70,7 +74,7 @@ export const MyTaskManager = {
                 });
             }
 
-            if (freeEngineSetting && task && hasDeps) {
+            if (freeEngineSetting && task && noMoreWaiting) {
                 task.status = "reserved";
                 freeEngineSetting.status = "reserved";
                 toast(`Begin work: ${task.name}`);

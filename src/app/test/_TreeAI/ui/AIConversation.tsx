@@ -50,8 +50,8 @@ export const AIConversation = () => {
         await bootEngines();
 
         MyTaskManager.add({
-            name: "receiveResponse",
-            deps: [],
+            waitFor: [],
+            name: "onReceiveResponse",
             args: { userPrompt },
         });
     }, []);

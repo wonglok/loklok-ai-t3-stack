@@ -5,22 +5,22 @@ import {
     tool,
     UIMessage,
 } from "ai";
-import { addUIMessage } from "../addUIMessage";
+import { addUIMessage } from "../../addUIMessage";
 import z from "zod";
-import { IOTooling } from "../../io/IOTooling";
-import { SPEC_DOC_PATH } from "../constants";
-import { useAI } from "../../state/useAI";
-import { refreshUIMessages } from "../refreshUIMessages";
-import { writeFileContent } from "../../io/writeFileContent";
-import { removeUIMessages } from "../removeUIMessages";
-import { saveToBrowserDB } from "../../io/saveToBrowserDB";
-import { putBackFreeAIAsync } from "../putBackFreeAIAsync";
-import { getFreeAIAsync } from "../getFreeAIAsync";
-import { refreshEngineSlot } from "../refreshEngines";
-import { MyTask, MyTaskManager } from "./_core/MyTaskManager";
-import { getModelMessagesFromUIMessages } from "../getModelMessagesFromUIMessages";
+import { IOTooling } from "../../../io/IOTooling";
+import { SPEC_DOC_PATH } from "../../constants";
+import { useAI } from "../../../state/useAI";
+import { refreshUIMessages } from "../../refreshUIMessages";
+import { writeFileContent } from "../../../io/writeFileContent";
+import { removeUIMessages } from "../../removeUIMessages";
+import { saveToBrowserDB } from "../../../io/saveToBrowserDB";
+import { putBackFreeAIAsync } from "../../putBackFreeAIAsync";
+import { getFreeAIAsync } from "../../getFreeAIAsync";
+import { refreshEngineSlot } from "../../refreshEngines";
+import { MyTask, MyTaskManager } from "../_core/MyTaskManager";
+import { getModelMessagesFromUIMessages } from "../../getModelMessagesFromUIMessages";
 import { v4 } from "uuid";
-import { putUIMessage } from "../putUIMessage";
+import { putUIMessage } from "../../putUIMessage";
 
 export async function handleAppSpecOriginal({
     userPrompt,

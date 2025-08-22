@@ -9,25 +9,25 @@ import {
     tool,
     UIMessage,
 } from "ai";
-import { IOTooling } from "../../io/IOTooling";
-import { APP_ROOT_PATH, SPEC_DOC_PATH } from "../constants";
-import { EngineSetting, useAI } from "../../state/useAI";
+import { IOTooling } from "../../../io/IOTooling";
+import { APP_ROOT_PATH, SPEC_DOC_PATH } from "../../constants";
+import { EngineSetting, useAI } from "../../../state/useAI";
 // import { refreshUIMessages } from "../refreshUIMessages";
 // import { writeFileContent } from "../../io/writeFileContent";
 // import { removeUIMessages } from "../removeUIMessages";
-import { putBackFreeAIAsync } from "../putBackFreeAIAsync";
-import { getFreeAIAsync } from "../getFreeAIAsync";
-import { MyTask, MyTaskManager } from "./_core/MyTaskManager";
-import { getModelMessagesFromUIMessages } from "../getModelMessagesFromUIMessages";
-import { readFileContent } from "../../io/readFileContent";
-import { writeFileContent } from "../../io/writeFileContent";
-import { saveToBrowserDB } from "../../io/saveToBrowserDB";
+import { putBackFreeAIAsync } from "../../putBackFreeAIAsync";
+import { getFreeAIAsync } from "../../getFreeAIAsync";
+import { MyTask, MyTaskManager } from "../_core/MyTaskManager";
+import { getModelMessagesFromUIMessages } from "../../getModelMessagesFromUIMessages";
+import { readFileContent } from "../../../io/readFileContent";
+import { writeFileContent } from "../../../io/writeFileContent";
+import { saveToBrowserDB } from "../../../io/saveToBrowserDB";
 // import z from "zod";
 // import { parseCodeBlocks } from "./_core/LokLokParser";
 // import { parseCodeBlocksActionType } from "./_core/LokLokParser2";
-import { removeFile } from "../../io/removeFile";
-import { parseCodeBlocksGen3 } from "./_core/LokLokParser3";
-import { refreshEngineSlot } from "../refreshEngines";
+import { removeFile } from "../../../io/removeFile";
+import { parseCodeBlocksGen3 } from "../_core/LokLokParser3";
+import { refreshEngineSlot } from "../../refreshEngines";
 
 export async function handleAppSpec({
     userPrompt,
@@ -60,13 +60,11 @@ export async function handleAppSpec({
 
 - {file_path_name} is the file path name
 - {file_summary} is the overview, purpose and summary of the code file
-- {content} is the content of the file
+- {content} is the output content
 
 - if there is an existing file, then you can use [mydearlokloktag action="update-file" ...]
 - if there is no existing file, then you can [mydearlokloktag action="create-file" ...]
 - if you need to remove existing file, then you can [mydearlokloktag action="remove-file" ...]
-
-
         `,
     });
 
@@ -176,8 +174,6 @@ Assume a modern tech stack: Zustand, ReactJS with TypeScript, tRPC with React.js
 Prioritize vibe coding principles: simplicity, AI-driven automation, and rapid prototyping for non-coders.
 If requirements are vague, note gaps in Step 1, suggest enhancements, and proceed with reasonable assumptions.
 Ensure outputs are beginner-friendly, with clear explanations for non-technical users.
-Summarize how the design enables rapid app development via AI-driven workflows.
-Wrap the entire response in a single markdown document.
 
 Folder Structure:
 
@@ -188,7 +184,7 @@ Folder Structure:
 /model/... (mongoose models - backend)
 /docs/... (knowledge base of the app)
 
-Generate the "Product Requirement Definition" starting with Step 1, and output it as a complete design based on the provided requirements.
+Generate the "Product Requirement Definition" starting with Step 1, and create a new file called "/docs/spec.md"
 `,
     });
 
@@ -208,7 +204,19 @@ Generate the "Product Requirement Definition" starting with Step 1, and output i
         console.log(txt);
         engineSettingData.bannerText = `Working: ${task.name}`;
         refreshEngineSlot(engineSettingData);
+
+        writeFileContent({
+            path: SPEC_DOC_PATH,
+            content: txt,
+        });
     }
+
+    await writeFileContent({
+        path: SPEC_DOC_PATH,
+        content: txt,
+    });
+
+    await saveToBrowserDB();
 
     engineSettingData.bannerText = ``;
     refreshEngineSlot(engineSettingData);
