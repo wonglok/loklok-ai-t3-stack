@@ -65,6 +65,7 @@
         "@types/three": "^0.178.1",
         "@types/uuid": "^10.0.0",
         "ai": "^5.0.15",
+        "axios": "^1.11.0",
         "bvhecctrl": "^0.0.15",
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
