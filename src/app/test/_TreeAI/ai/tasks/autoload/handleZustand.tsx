@@ -62,7 +62,7 @@ ${content}
     if (files?.length > 0) {
         chatblocks.push({
             role: "user",
-            content: `Here's the "file system of existing code": 
+            content: `Here's the files in this project: 
 ${content}`,
         });
 
@@ -70,14 +70,14 @@ ${content}`,
             chatblocks.push({
                 role: "assistant",
                 content: `
-[file: "${ff.path}"][begin]
-    [file: "${ff.path}"][summary_start]
+[file: "${ff.path}" --- file begin]
+    [file: "${ff.path}" --- summary_start]
 ${ff.summary}
-    [file: "${ff.path}"][summary_end]
-    [file: "${ff.path}"][content_start]
+    [file: "${ff.path}" --- summary_end]
+    [file: "${ff.path}" --- content_start]
 ${ff.content}
-    [file: "${ff.path}"][content_end]
-[file: "${ff.path}"][end]`,
+    [file: "${ff.path}" --- content_end]
+[file: "${ff.path}" --- file end]`,
             });
         });
     }
