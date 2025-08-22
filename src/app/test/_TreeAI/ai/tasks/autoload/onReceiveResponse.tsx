@@ -20,7 +20,6 @@ import { saveToBrowserDB } from "../../../io/saveToBrowserDB";
 import { putBackFreeAIAsync } from "../../putBackFreeAIAsync";
 import { getFreeAIAsync } from "../../getFreeAIAsync";
 import { MyTask, MyTaskManager } from "../_core/MyTaskManager";
-import { getModelMessagesFromUIMessages } from "../../getModelMessagesFromUIMessages";
 import { putUIMessage } from "../../putUIMessage";
 import { v4 } from "uuid";
 
@@ -40,7 +39,7 @@ export async function onReceiveResponse({
 
     console.log("onReceiveResponse", userPrompt, task);
 
-    putUIMessage({
+    await putUIMessage({
         id: v4(),
         role: "user",
         parts: [
@@ -51,8 +50,6 @@ export async function onReceiveResponse({
             },
         ],
     });
-
-    //
 
     MyTaskManager.add({
         waitFor: [task.name],
