@@ -8,12 +8,12 @@ const TaskFunctions = {}
 
 // Iterate over the keys (module paths) and require each module
 componentContext.keys().forEach((key) => {
-    const module = componentContext(key);
+    const theMod = componentContext(key);
 
-    TaskFunctions[module.name] = {
-        name: module.name,
-        displayName: module.displayName,
-        action: module[module.name],
+    TaskFunctions[theMod.name] = {
+        name: theMod.name,
+        displayName: theMod.displayName,
+        action: theMod[theMod.name],
     }
     // Do something with the imported module
 });
