@@ -11,11 +11,14 @@ import { BootUpTaskManager } from "../ai/tasks/_core/MyTaskManager";
 
 export function VercelLMStudio({ appID }: { appID: string }) {
     useEffect(() => {
+        if (!appID) {
+            return;
+        }
         let ready = async () => {
-            await bootup();
+            await bootup({ appID });
         };
         ready();
-    }, []);
+    }, [appID]);
 
     //
 

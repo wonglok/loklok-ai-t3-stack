@@ -2,10 +2,24 @@ import { useEffect } from "react";
 import { loadFromBrowserDB } from "../io/loadFromBrowserDB";
 import { EngineSetting, useAI } from "../state/useAI";
 import { createInstance } from "localforage";
+import { LokLokSDK } from "../web/LokLokSDK";
 // import { bootEngines } from "./bootEngines";
 
-export const bootup = async () => {
-    await loadFromBrowserDB();
+export const bootup = async ({ appID }) => {
+    let sdk = new LokLokSDK({ appID });
+    let files =
+        (await sdk.setupPlatform({
+            procedure: "getFiles",
+            input: {},
+        })) || [];
+
+    if (files instanceof Array) {
+        useAI.setState({
+            files: files,
+        });
+    } else {
+        await loadFromBrowserDB();
+    }
 };
 
 export const SettingsBootUp = () => {
@@ -20,13 +34,14 @@ export const SettingsBootUp = () => {
             name: `chatDB-${appID}`,
         });
 
-        db.getItem("ui-message").then((msg) => {
+        db.getItem("ui-message").then(async (msg) => {
             if (msg instanceof Array) {
                 useAI.setState({
                     uiMessages: msg,
                 });
             }
         });
+
         return useAI.subscribe((now, before) => {
             if (now.uiMessages !== before.uiMessages) {
                 db.setItem("ui-message", now.uiMessages);
