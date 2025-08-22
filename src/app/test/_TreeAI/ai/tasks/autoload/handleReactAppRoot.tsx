@@ -127,7 +127,8 @@ import * as React from 'react';
 
 - use tailwind css to style the elements
 - use some rounded-lg 
-- use some shadow-inner 
+- use some shadow-inner (dont over use this)
+- use some p-3 padding spacing 
 - use some border for shadow-inner items
 
                 `,
