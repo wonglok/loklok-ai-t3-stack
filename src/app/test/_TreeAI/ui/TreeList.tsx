@@ -22,7 +22,7 @@ export function TreeList() {
             <TreeItem
                 key={"Deploy-btn"}
                 itemId={"Deploy-btn"}
-                label={"💻 AI Deploy"}
+                label={"💻 Deploy"}
                 onClick={async () => {
                     let sdk = new LokLokSDK({
                         appID: useAI.getState().appID,
