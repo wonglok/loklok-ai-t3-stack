@@ -43,6 +43,10 @@ export async function handleReactAppRoot({
     let files = useAI.getState().files;
 
     let chatblocks = [];
+    chatblocks.push({
+        role: "system",
+        content: `${await getAppOverviewPrompt()}`,
+    });
 
     let content = await readFileContent({ path: SPEC_DOC_PATH });
     console.log("content", content);
@@ -54,11 +58,6 @@ ${content}
 `,
         });
     }
-
-    chatblocks.push({
-        role: "system",
-        content: `${await getAppOverviewPrompt()}`,
-    });
 
     if (files?.length > 0) {
         chatblocks.push({

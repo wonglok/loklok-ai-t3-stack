@@ -27,6 +27,7 @@ import { saveToBrowserDB } from "../../../io/saveToBrowserDB";
 // import { parseCodeBlocksActionType } from "./_core/LokLokParser2";
 import { removeFile } from "../../../io/removeFile";
 import { parseCodeBlocksGen3 } from "../_core/LokLokParser3";
+import { getAppOverviewPrompt } from "../prompts/getAppOverviewPrompt";
 
 export const name = "handleZustand";
 export const displayName = "Zustand the App";
@@ -42,6 +43,10 @@ export async function handleZustand({
     let files = useAI.getState().files;
 
     let chatblocks = [];
+    chatblocks.push({
+        role: "system",
+        content: `${await getAppOverviewPrompt()}`,
+    });
 
     let content = await readFileContent({ path: SPEC_DOC_PATH });
     console.log("content", content);

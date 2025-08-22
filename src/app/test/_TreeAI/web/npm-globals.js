@@ -6,6 +6,7 @@ import * as Zustand from 'zustand'
 import * as WouterBase from 'wouter'
 import * as WouterHash from 'wouter/use-hash-location'
 import * as Axios from 'axios'
+import * as UUID from 'uuid'
 
 export const NPMCacheTasks = [
     //
@@ -49,6 +50,11 @@ export const NPMCacheTasks = [
         name: `npm-axios`,
         output: `/vendor/axios.js`,
         importVaraible: Axios,
+    },
+    {
+        name: `npm-uuid`,
+        output: `/vendor/uuid.js`,
+        importVaraible: UUID,
     },
 ]
 
