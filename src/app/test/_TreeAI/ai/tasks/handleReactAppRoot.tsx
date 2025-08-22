@@ -59,9 +59,15 @@ ${content}`,
         files.forEach((ff) => {
             chatblocks.push({
                 role: "assistant",
-                content: `--------[file: ${ff.path}][begin]---------
+                content: `
+[file: "${ff.path}"][begin]
+    [file: "${ff.path}"][summary_start]
+${ff.summary}
+    [file: "${ff.path}"][summary_end]
+    [file: "${ff.path}"][content_start]
 ${ff.content}
---------[file: ${ff.path}][end]---------`,
+    [file: "${ff.path}"][content_end]
+[file: "${ff.path}"][end]`,
             });
         });
     }
