@@ -32,6 +32,7 @@ import { v4 } from "uuid";
 import { putUIMessage } from "../../putUIMessage";
 import { removeUIMessage } from "../../removeUIMessage";
 import { listOutFilesToChatBlocks } from "../prompts/listOutFilesToChatBlocks";
+import { LokLokSDK } from "../../../web/LokLokSDK";
 
 export const name = "handleMongoose";
 export const displayName = "Mongoose Models Backend";
@@ -178,17 +179,28 @@ ${await getFileOutputFormatting()}
         text += part;
         console.log(text);
 
-        parseText(text);
-
-        //
-
-        //
+        await parseText(text);
     }
-    parseText(text);
+    await parseText(text);
 
     await saveToBrowserDB();
+
+    let sdk = new LokLokSDK({
+        appID: useAI.getState().appID,
+    });
+
+    await sdk.setupPlatform({
+        input: {
+            key: `/models/defineMongooseModels.js`,
+            value: await readFileContent({
+                path: `/models/defineMongooseModels.js`,
+            }),
+        },
+    });
 
     await MyTaskManager.doneTask(task.name);
 
     await putBackFreeAIAsync({ engine: slot });
 }
+
+//

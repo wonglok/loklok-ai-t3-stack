@@ -4,6 +4,8 @@ import { SimpleTreeView } from "@mui/x-tree-view/SimpleTreeView";
 import { TreeItem } from "@mui/x-tree-view/TreeItem";
 import { useAI } from "../state/useAI";
 import { basename } from "path";
+import { LokLokSDK } from "../web/LokLokSDK";
+import { readFileContent } from "../io/readFileContent";
 // import { DeveloperTeam } from "./DeveloperTeam";
 
 export function TreeList() {
@@ -17,14 +19,36 @@ export function TreeList() {
             className="h-full w-full"
         >
             {/*  */}
-            {/* <TreeItem
-                key={"team-btn"}
-                itemId={"team-btn"}
-                label={"👫 AI Team"}
-                onClick={() => {
-                    useAI.setState({ topTab: "team" });
+            <TreeItem
+                key={"Deploy-btn"}
+                itemId={"Deploy-btn"}
+                label={"💻 AI Deploy"}
+                onClick={async () => {
+                    let sdk = new LokLokSDK({
+                        appID: useAI.getState().appID,
+                    });
+
+                    await sdk.setupPlatform({
+                        input: {
+                            key: `/trpc/defineBackendProcedures.js`,
+                            value: await readFileContent({
+                                path: `/trpc/defineBackendProcedures.js`,
+                            }),
+                        },
+                    });
+
+                    await sdk.setupPlatform({
+                        input: {
+                            key: `/models/defineMongooseModels.js`,
+                            value: await readFileContent({
+                                path: `/models/defineMongooseModels.js`,
+                            }),
+                        },
+                    });
+
+                    // useAI.setState({ topTab: "team" });
                 }}
-            ></TreeItem> */}
+            ></TreeItem>
 
             {/* <TreeItem
                 key={"chat-btn"}

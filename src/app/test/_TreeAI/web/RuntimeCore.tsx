@@ -8,13 +8,13 @@ import * as React19 from "react";
 // import * as WouterHash from "wouter/use-hash-location";
 import { NPMCacheTasks } from "./npm-globals";
 import { useAI } from "../state/useAI";
-import { LokSDK } from "./LokLokSDK";
+import { LokLokSDK } from "./LokLokSDK";
 
 export function RuntimeCore() {
     let appID = useAI((r) => r.appID);
 
     React19.useEffect(() => {
-        let sdk = new LokSDK({
+        let sdk = new LokLokSDK({
             appID: appID,
         });
 

@@ -6,7 +6,7 @@ import {
 import { AnyRouter } from "@trpc/server";
 import SuperJSON from "superjson";
 
-export class LokSDK {
+export class LokLokSDK {
     public client: TRPCClient<AnyRouter>;
 
     constructor({ appID }) {
@@ -35,20 +35,29 @@ export class LokSDK {
         //
 
         this.client = client;
-
-        //
     }
 
     async runTRPC({ procedure = "hello", input }) {
-        return (this.client[procedure] as any).mutate(input).then((data) => {
-            console.log("data", data);
-            return data;
-        });
+        return (this.client["app"][procedure] as any)
+            .mutate(input)
+            .then((data) => {
+                console.log("data", data);
+                return data;
+            });
+    }
+
+    async setupPlatform({ procedure = "setKV", input }) {
+        return (this.client["platform"][procedure] as any)
+            .mutate(input)
+            .then((data) => {
+                console.log("data", data);
+                return data;
+            });
     }
 }
 
 declare global {
     interface Window {
-        trpcSDK?: LokSDK;
+        trpcSDK?: LokLokSDK;
     }
 }

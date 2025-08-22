@@ -32,6 +32,7 @@ import { v4 } from "uuid";
 import { putUIMessage } from "../../putUIMessage";
 import { removeUIMessage } from "../../removeUIMessage";
 import { listOutFilesToChatBlocks } from "../prompts/listOutFilesToChatBlocks";
+import { LokLokSDK } from "../../../web/LokLokSDK";
 
 export const name = "handleBackendTRPC";
 export const displayName = "TRPC Backend";
@@ -88,6 +89,10 @@ window.trpcSDK
 - DO NOT USE In-memory mock store 
 
 - DO NOT IMPORT ANYTHING
+
+- Prefer Mongoose naming "_id" instead of "id"
+- ALWAYS USE "_id" instead of "id" 
+- Example: USE "{ _id, ...updates }" instead of { id, ...updates } 
 
 function defineBackendProcedures({ models, otherProcedures, publicProcedure, protectedProcedure }) {
     const { User, ... /* more models are here ... */ } = models;
@@ -213,6 +218,21 @@ ${await getFileOutputFormatting()}
     await saveToBrowserDB();
 
     await MyTaskManager.doneTask(task.name);
+
+    let sdk = new LokLokSDK({
+        appID: useAI.getState().appID,
+    });
+
+    await sdk.setupPlatform({
+        input: {
+            key: `/trpc/defineBackendProcedures.js`,
+            value: await readFileContent({
+                path: `/trpc/defineBackendProcedures.js`,
+            }),
+        },
+    });
+
+    //  platform
 
     await putBackFreeAIAsync({ engine: slot });
 }
