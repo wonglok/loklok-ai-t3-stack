@@ -103,6 +103,16 @@ import * as React from 'react';
 - when write the App component, write file to "/components/App.tsx"
 - when write the other components, write file to "/components/*.tsx"
 
+- use tailwind css to style the elements
+- use some "border" "rounded-lg" together with "shadow-inner" but dont overuse them dear
+- use some "p-3" padding spacing 
+- uses Zustand state management files located at "/store/*.ts" folder
+
+                `,
+    });
+
+    /*
+    
 - for formatting follow this:
 - if you want to create file
 [mydearlokloktag action="create-file" file="{file_path_name}" summary="{file_summary}"]
@@ -124,15 +134,8 @@ import * as React from 'react';
 - if there is an existing file, then you can use [mydearlokloktag action="update-file" ...]
 - if there is no existing file, then you can [mydearlokloktag action="create-file" ...]
 - if you need to remove existing file, then you can [mydearlokloktag action="remove-file" ...]
-
-- use tailwind css to style the elements
-- use some rounded-lg 
-- use some shadow-inner (dont over use this)
-- use some p-3 padding spacing 
-- use some border for shadow-inner items
-
-                `,
-    });
+    
+    */
 
     console.log("chatblocks", chatblocks);
 
