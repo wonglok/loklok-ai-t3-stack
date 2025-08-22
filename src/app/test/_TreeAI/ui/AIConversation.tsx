@@ -184,35 +184,65 @@ function RenderMessages() {
                                     case "data-welcome": // we don't use any reasoning or tool calls in this example
                                         return (
                                             <div key={`${message.id}-${i}`}>
-                                                <div className="mb-3">{`Hi dear, Please tell me what do you want to build: 👇`}</div>
-                                                <div>
-                                                    <div
-                                                        className="mb-2 cursor-pointer rounded-lg border p-3 font-mono text-sm transition-all duration-500 hover:bg-gray-100"
-                                                        onClick={() => {
-                                                            useAI.setState({
-                                                                userPrompt: `Build me a todo list`,
-                                                            });
-                                                        }}
-                                                    >{`Build me a todo list`}</div>
+                                                {uiMessages.length === 0 ? (
+                                                    <>
+                                                        <div className="mb-3">{`Hi dear, Please tell me what do you want to build: 👇`}</div>
+                                                        <div>
+                                                            <div
+                                                                className="mb-2 cursor-pointer rounded-lg border p-3 font-mono text-sm transition-all duration-500 hover:bg-gray-100"
+                                                                onClick={() => {
+                                                                    useAI.setState(
+                                                                        {
+                                                                            userPrompt: `Build me a todo list`,
+                                                                        },
+                                                                    );
+                                                                }}
+                                                            >{`Build me a todo list`}</div>
 
-                                                    <div
-                                                        className="mb-2 cursor-pointer rounded-lg border p-3 font-mono text-sm transition-all duration-500 hover:bg-gray-100"
-                                                        onClick={() => {
-                                                            useAI.setState({
-                                                                userPrompt: `Build me a expense tracking app`,
-                                                            });
-                                                        }}
-                                                    >{`Build me a expense tracking app`}</div>
+                                                            <div
+                                                                className="mb-2 cursor-pointer rounded-lg border p-3 font-mono text-sm transition-all duration-500 hover:bg-gray-100"
+                                                                onClick={() => {
+                                                                    useAI.setState(
+                                                                        {
+                                                                            userPrompt: `Build me a expense tracking app`,
+                                                                        },
+                                                                    );
+                                                                }}
+                                                            >{`Build me a expense tracking app`}</div>
 
-                                                    <div
-                                                        className="mb-2 cursor-pointer rounded-lg border p-3 font-mono text-sm transition-all duration-500 hover:bg-gray-100"
-                                                        onClick={() => {
-                                                            useAI.setState({
-                                                                userPrompt: `Build me a hello world app`,
-                                                            });
-                                                        }}
-                                                    >{`Build me a hello world app`}</div>
-                                                </div>
+                                                            <div
+                                                                className="mb-2 cursor-pointer rounded-lg border p-3 font-mono text-sm transition-all duration-500 hover:bg-gray-100"
+                                                                onClick={() => {
+                                                                    useAI.setState(
+                                                                        {
+                                                                            userPrompt: `Build me a hello world app`,
+                                                                        },
+                                                                    );
+                                                                }}
+                                                            >{`Build me a hello world app`}</div>
+                                                        </div>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <div className="mb-3">{`Hi dear, Please tell me what do you want to build: 👇`}</div>
+                                                        <div>
+                                                            <button
+                                                                disabled
+                                                                className="mb-2 cursor-no-drop rounded-lg border p-3 font-mono text-sm transition-all duration-500 hover:bg-gray-200 disabled:bg-gray-200"
+                                                            >{`Build me a todo list`}</button>
+
+                                                            <button
+                                                                disabled
+                                                                className="mb-2 cursor-no-drop rounded-lg border p-3 font-mono text-sm transition-all duration-500 hover:bg-gray-200 disabled:bg-gray-200"
+                                                            >{`Build me a expense tracking app`}</button>
+
+                                                            <button
+                                                                disabled
+                                                                className="mb-2 cursor-no-drop rounded-lg border p-3 font-mono text-sm transition-all duration-500 hover:bg-gray-200 disabled:bg-gray-200"
+                                                            >{`Build me a hello world app`}</button>
+                                                        </div>
+                                                    </>
+                                                )}
                                             </div>
                                         );
                                     default:

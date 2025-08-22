@@ -184,7 +184,6 @@ ${await getFileOutputFormatting()}
         parseText(text);
 
         //
-
         //
     }
     parseText(text);
@@ -207,23 +206,23 @@ ${await getFileOutputFormatting()}
 please write me a regex parser for typescript for the following code:
 
 
-[mydearlokloktag action="create-file" file="example1.ts" summary="test text"]
+[MyDearTag action="create-file" file="example1.ts" summary="test text"]
 export function hello() {
     console.log("Hello, world!");
 }
-[/mydearlokloktag]
+[/MyDearTag]
 
-[mydearlokloktag action="remove-file" file="example1.ts" summary="test text"]
+[MyDearTag action="remove-file" file="example1.ts" summary="test text"]
 export function hello() {
     console.log("Hello, world!");
 }
-[/mydearlokloktag]
+[/MyDearTag]
 
-[mydearlokloktag action="update-file" file="example1.ts" summary="test text"]
+[MyDearTag action="update-file" file="example1.ts" summary="test text"]
 export function hello() {
     console.log("Hello, world!");
 }
-[/mydearlokloktag]
+[/MyDearTag]
 
 
 */

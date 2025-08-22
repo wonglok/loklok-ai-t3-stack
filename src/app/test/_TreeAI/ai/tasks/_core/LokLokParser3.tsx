@@ -1,6 +1,6 @@
-// Regex to match [mydearlokloktag] tags, capturing action, file name, summary, and code content
+// Regex to match [MyDearTag] tags, capturing action, file name, summary, and code content
 const regex =
-    /\[mydearlokloktag\s+action="([^"]+)"\s+file="([^"]+)"\s+summary="([^"]*)"\]([\s\S]*?)\[\/mydearlokloktag\]/g;
+    /\[MyDearTag\s+action="([^"]+)"\s+file="([^"]+)"\s+summary="([^"]*)"\]([\s\S]*?)\[\/MyDearTag\]/g;
 
 export interface CodeBlockG3 {
     action: string;
@@ -28,23 +28,23 @@ function parseCodeBlocksGen3(input: string): CodeBlockG3[] {
 
 // // Example usage
 // const input = `
-// [mydearlokloktag action="create-file" file="example1.ts" summary="test text"]
+// [MyDearTag action="create-file" file="example1.ts" summary="test text"]
 // export function hello() {
 //     console.log("Hello, world!");
 // }
-// [/mydearlokloktag]
+// [/MyDearTag]
 
-// [mydearlokloktag action="remove-file" file="example1.ts" summary="test text"]
+// [MyDearTag action="remove-file" file="example1.ts" summary="test text"]
 // export function hello() {
 //     console.log("Hello, world!");
 // }
-// [/mydearlokloktag]
+// [/MyDearTag]
 
-// [mydearlokloktag action="update-file" file="example1.ts" summary="test text"]
+// [MyDearTag action="update-file" file="example1.ts" summary="test text"]
 // export function hello() {
 //     console.log("Hello, world!");
 // }
-// [/mydearlokloktag]
+// [/MyDearTag]
 // `;
 
 // const codeBlocks = parseCodeBlocks(input);
