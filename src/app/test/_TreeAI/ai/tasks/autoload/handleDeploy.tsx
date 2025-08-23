@@ -56,8 +56,9 @@ export async function handleDeploy({
         await sdk.setupPlatform({
             procedure: "setKV",
             input: {
-                key: file.path,
-                value: file.content,
+                path: file.path,
+                content: file.content || "",
+                summary: file.summary || "",
             },
         });
 
@@ -65,6 +66,12 @@ export async function handleDeploy({
         refreshEngineSlot(engineSettingData);
     }
 
+    useAI.setState({
+        topTab: "web",
+        engines: useAI.getState().engines.map((en) => {
+            return { ...en, status: "free" };
+        }),
+    });
     //
 
     await saveToBrowserDB();

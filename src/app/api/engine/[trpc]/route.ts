@@ -221,8 +221,6 @@ return appRouter
 
     let platformRouter = createTRPCRouter({
         //publicProcedure
-        // setKV: protectedProcedure
-        //
         setKV: protectedProcedure
             .input(
                 z.object({

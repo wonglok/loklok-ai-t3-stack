@@ -34,7 +34,7 @@ export function TreeList() {
                     await sdk.setupPlatform({
                         procedure: "reset",
                         input: {
-                            empty: 123,
+                            "reset-all": "okayyy",
                         },
                     });
 
@@ -42,8 +42,9 @@ export function TreeList() {
                         await sdk.setupPlatform({
                             procedure: "setKV",
                             input: {
-                                key: file.path,
-                                value: file.content,
+                                path: file.path,
+                                content: file.content || "",
+                                summary: file.summary || "",
                             },
                         });
                     }
