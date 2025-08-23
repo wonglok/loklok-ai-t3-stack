@@ -61,6 +61,8 @@ You are a senior product manager with fullstack developer experience.
 - Write a updated short description of the app idea by the user.
 - Focus on minium viable product features. 
 
+- Assume this app dont have login.
+
 - Don't write next step.
 
 `,

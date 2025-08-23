@@ -1,5 +1,3 @@
-import { readFileContent } from "@/components/_TreeAI/io/readFileContent";
-
 export async function getAppOverviewPrompt() {
     return /** markdown */ `
 ## Identtiy    
