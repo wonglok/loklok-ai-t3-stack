@@ -57,7 +57,7 @@ export async function handleAppSpec({
     let response = streamText({
         //
         system: `
-Refine requirements into a concise, prioritized list using the MoSCoW method (Must-have, Should-have, Could-have, Won't-have).
+Write a short description of the app idea by the user.
         `,
         model: model,
         messages: [
