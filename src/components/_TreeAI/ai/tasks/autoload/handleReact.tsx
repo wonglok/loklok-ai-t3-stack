@@ -33,6 +33,7 @@ import { v4 } from "uuid";
 import { refreshUIMessages } from "../../refreshUIMessages";
 import { removeUIMessage } from "../../removeUIMessage";
 import { listOutFilesToChatBlocks } from "../prompts/listOutFilesToChatBlocks";
+import { makeTicker } from "../_core/makeTicker";
 
 export const name = "handleReact";
 export const displayName = "React JS front end of the App";
@@ -162,12 +163,19 @@ ${await getFileOutputFormatting()}
         }
     };
 
+    let ticker = makeTicker({
+        engineSettingData: slot,
+        displayName: displayName,
+    });
+
     let text = "";
     for await (let part of response.textStream) {
         text += part;
         console.log(text);
 
         parseText(text);
+
+        ticker.tick();
 
         //
     }

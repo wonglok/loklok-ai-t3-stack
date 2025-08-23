@@ -34,6 +34,7 @@ import { getModelMessagesFromUIMessages } from "../../getModelMessagesFromUIMess
 import { parseCodeBlocksGen3 } from "../_core/LokLokParser3";
 import { writeFileContent } from "../../../io/writeFileContent";
 import { removeFile } from "../../../io/removeFile";
+import { makeTicker } from "../_core/makeTicker";
 
 export const name = "handleIntegration";
 export const displayName = "Application Specification";
@@ -137,12 +138,19 @@ ${await getFileOutputFormatting()}
         }
     };
 
+    let ticker = makeTicker({
+        engineSettingData: slot,
+        displayName: displayName,
+    });
+
     let text = "";
     for await (let part of response.textStream) {
         text += part;
         console.log(text);
 
         parseText(text);
+
+        ticker.tick();
         //
     }
     parseText(text);

@@ -33,6 +33,7 @@ import { putUIMessage } from "../../putUIMessage";
 import { removeUIMessage } from "../../removeUIMessage";
 import { listOutFilesToChatBlocks } from "../prompts/listOutFilesToChatBlocks";
 import { LokLokSDK } from "../../../web/LokLokSDK";
+import { makeTicker } from "../_core/makeTicker";
 
 export const name = "handleMongoose";
 export const displayName = "Mongoose Models Backend";
@@ -174,12 +175,19 @@ ${await getFileOutputFormatting()}
         }
     };
 
+    let ticker = makeTicker({
+        engineSettingData: slot,
+        displayName: displayName,
+    });
+
     let text = "";
     for await (let part of response.textStream) {
         text += part;
         console.log(text);
 
         await parseText(text);
+
+        ticker.tick();
     }
     await parseText(text);
 

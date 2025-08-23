@@ -32,6 +32,7 @@ import { v4 } from "uuid";
 import { putUIMessage } from "../../putUIMessage";
 import { removeUIMessage } from "../../removeUIMessage";
 import { listOutFilesToChatBlocks } from "../prompts/listOutFilesToChatBlocks";
+import { makeTicker } from "../_core/makeTicker";
 
 export const name = "handleZustand";
 export const displayName = "Zustand the App";
@@ -161,6 +162,11 @@ ${await getFileOutputFormatting()}
         }
     };
 
+    let ticker = makeTicker({
+        engineSettingData: slot,
+        displayName: displayName,
+    });
+
     let text = "";
     for await (let part of response.textStream) {
         text += part;
@@ -169,7 +175,7 @@ ${await getFileOutputFormatting()}
         parseText(text);
 
         //
-
+        ticker.tick();
         //
     }
     parseText(text);

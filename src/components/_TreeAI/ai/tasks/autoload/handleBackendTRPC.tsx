@@ -33,6 +33,8 @@ import { getFileOutputFormatting } from "../prompts/getFileOutputFormatting";
 // import { removeUIMessage } from "../../removeUIMessage";
 import { listOutFilesToChatBlocks } from "../prompts/listOutFilesToChatBlocks";
 import { LokLokSDK } from "../../../web/LokLokSDK";
+import { refreshEngineSlot } from "../../refreshEngines";
+import { makeTicker } from "../_core/makeTicker";
 
 export const name = "handleBackendTRPC";
 export const displayName = "TRPC Backend";
@@ -206,11 +208,19 @@ ${await getFileOutputFormatting()}
     };
 
     let text = "";
+
+    let ticker = makeTicker({
+        engineSettingData: slot,
+        displayName: displayName,
+    });
+
     for await (let part of response.textStream) {
         text += part;
         console.log(text);
 
         parseText(text);
+        ticker.tick();
+
         //
     }
     parseText(text);
