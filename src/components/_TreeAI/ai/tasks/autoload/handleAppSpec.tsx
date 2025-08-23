@@ -56,8 +56,12 @@ export async function handleAppSpec({
 
     let response = streamText({
         system: `
-    Write a updated description of the app idea by the user.
-            `,
+You are a senior fullstack developer.
+
+- Write a updated description of the app idea by the user.
+- Dont write next step.
+
+`,
         model: model,
         messages: [
             //
