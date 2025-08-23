@@ -37,7 +37,7 @@ import { removeFile } from "../../../io/removeFile";
 import { makeTicker } from "../_core/makeTicker";
 
 export const name = "handleIntegration";
-export const displayName = "Application Specification";
+export const displayName = "Inegration";
 export async function handleIntegration({
     userPrompt,
     task,

@@ -1,7 +1,7 @@
 import { refreshEngineSlot } from "../../refreshEngines";
 
 export let makeTicker = ({ engineSettingData, displayName }) => {
-    let symbols = [`✨`, `💫`, "🤩", "⭐️"];
+    let symbols = [`✨`, `💫`, "🤩", "⭐️", "❤️"];
     let cursor = 0;
 
     return {
@@ -10,7 +10,7 @@ export let makeTicker = ({ engineSettingData, displayName }) => {
 
             cursor = cursor % symbols.length;
 
-            engineSettingData.bannerText = `${displayName}${symbols[cursor]}`;
+            engineSettingData.bannerText = `${displayName} ${symbols[cursor]}`;
 
             refreshEngineSlot(engineSettingData);
         },

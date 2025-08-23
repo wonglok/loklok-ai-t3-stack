@@ -29,7 +29,7 @@ import { saveToBrowserDB } from "../../../io/saveToBrowserDB";
 import { refreshEngineSlot } from "../../refreshEngines";
 
 export const name = "handleAppSpec";
-export const displayName = "Application Specification";
+export const displayName = "Features";
 export async function handleAppSpec({
     userPrompt,
     task,

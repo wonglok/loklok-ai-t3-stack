@@ -35,7 +35,7 @@ import { listOutFilesToChatBlocks } from "../prompts/listOutFilesToChatBlocks";
 import { makeTicker } from "../_core/makeTicker";
 
 export const name = "handleZustand";
-export const displayName = "Zustand State Management";
+export const displayName = "Zustand";
 
 export async function handleZustand({
     userPrompt,

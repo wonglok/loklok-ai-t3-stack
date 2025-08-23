@@ -32,8 +32,8 @@ import { getFileOutputFormatting } from "../prompts/getFileOutputFormatting";
 // import { putUIMessage } from "../../putUIMessage";
 // import { removeUIMessage } from "../../removeUIMessage";
 import { listOutFilesToChatBlocks } from "../prompts/listOutFilesToChatBlocks";
-import { LokLokSDK } from "../../../web/LokLokSDK";
-import { refreshEngineSlot } from "../../refreshEngines";
+// import { LokLokSDK } from "../../../web/LokLokSDK";
+// import { refreshEngineSlot } from "../../refreshEngines";
 import { makeTicker } from "../_core/makeTicker";
 
 export const name = "handleBackendTRPC";
@@ -78,7 +78,7 @@ window.trpcSDK
         console.log(result); // result is obtained via async functuin call
     });
 
-- please write the backend trpc procedures in this file: "/trpc/defineBackendProcedures.js"
+- MUST write all the backend trpc procedures in this file: "/trpc/defineBackendProcedures.js"
 
 - There are 2 global varaibles: "protectedProcedure" and "publicProcedure" for private and public access for appRouter
 

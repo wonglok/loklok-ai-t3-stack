@@ -36,7 +36,7 @@ import { LokLokSDK } from "../../../web/LokLokSDK";
 import { makeTicker } from "../_core/makeTicker";
 
 export const name = "handleMongoose";
-export const displayName = "Mongoose Models Backend";
+export const displayName = "Mongoose DB ORM";
 
 export async function handleMongoose({
     userPrompt,
