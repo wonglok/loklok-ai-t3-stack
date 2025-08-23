@@ -61,7 +61,8 @@ export async function handleIntegration({
         content: `
 Instructions:
 
-implement missing trpc backend procedure that are needed by the front end zustand tRPC client calls
+- implement missing trpc backend procedure that are needed by the front end zustand tRPC client calls.
+- make sure all backend procedure and front end procedures are matched.
 
 ${await getFileOutputFormatting()}
 

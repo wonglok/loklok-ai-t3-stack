@@ -49,6 +49,7 @@ export function VercelLMStudio({ appID }: { appID: string }) {
                     </div>
                     <div className="mr-1 flex h-full items-center">
                         <Link
+                            target="_blank"
                             href={`/apps/${appID}/run`}
                             className="cursor-pointer"
                         >
