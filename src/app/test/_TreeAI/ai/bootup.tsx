@@ -13,12 +13,14 @@ export const bootup = async ({ appID }) => {
             input: {},
         })) || [];
 
+    console.log(files);
+
     if (files instanceof Array) {
         useAI.setState({
             files: files,
         });
     } else {
-        await loadFromBrowserDB();
+        // await loadFromBrowserDB();
     }
 };
 
