@@ -1,7 +1,9 @@
 import { v4 } from "uuid";
 import { useAI } from "../state/useAI";
 import { UIMessage } from "ai";
+import { saveToBrowserDB } from "../io/saveToBrowserDB";
 
+let tt;
 export const putUIMessage = (msg: UIMessage) => {
     let uiMessages = useAI.getState().uiMessages;
 

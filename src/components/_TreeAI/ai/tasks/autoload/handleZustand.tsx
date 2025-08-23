@@ -128,8 +128,6 @@ ${await getFileOutputFormatting()}
         model,
     });
 
-    //
-
     // let lastFile = "";
     let parseText = async (text) => {
         try {
@@ -180,7 +178,7 @@ ${await getFileOutputFormatting()}
         parseText(text);
 
         //
-        ticker.tick();
+        ticker.tick(text);
         //
     }
     parseText(text);

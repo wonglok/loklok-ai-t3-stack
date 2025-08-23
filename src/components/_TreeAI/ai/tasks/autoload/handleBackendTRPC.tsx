@@ -224,7 +224,7 @@ ${await getFileOutputFormatting()}
         console.log(text);
 
         parseText(text);
-        ticker.tick();
+        ticker.tick(text);
 
         //
     }

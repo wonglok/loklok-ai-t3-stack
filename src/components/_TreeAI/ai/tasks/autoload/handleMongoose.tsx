@@ -188,7 +188,7 @@ ${await getFileOutputFormatting()}
 
         await parseText(text);
 
-        ticker.tick();
+        ticker.tick(text);
     }
     await parseText(text);
 

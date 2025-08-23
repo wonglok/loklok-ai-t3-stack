@@ -151,7 +151,7 @@ export async function handleIntegration({
 
     //         parseText(text);
 
-    //         ticker.tick();
+    //         ticker.tick(text);
     //         //
     //     }
     //     parseText(text);

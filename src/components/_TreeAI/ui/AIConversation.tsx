@@ -144,25 +144,26 @@ function RenderMessages() {
 
                                     case "data-codeedit-btn": // we don't use any reasoning or tool calls in this example
                                         return (
-                                            <>
-                                                <div className="flex justify-end">
-                                                    <button
-                                                        className="mt-3 cursor-pointer rounded-lg bg-gray-200 p-3"
-                                                        onClick={() => {
+                                            <div
+                                                key={`${message.id}-${i}`}
+                                                className="flex justify-end"
+                                            >
+                                                <button
+                                                    className="mt-3 cursor-pointer rounded-lg bg-gray-200 p-3"
+                                                    onClick={() => {
+                                                        //
+                                                        useAI.setState({
                                                             //
-                                                            useAI.setState({
-                                                                //
-                                                                currentPath: `${part.data}`,
-                                                                topTab: "code",
-                                                                //
-                                                            });
+                                                            currentPath: `${part.data}`,
+                                                            topTab: "code",
                                                             //
-                                                        }}
-                                                    >
-                                                        Open File
-                                                    </button>
-                                                </div>
-                                            </>
+                                                        });
+                                                        //
+                                                    }}
+                                                >
+                                                    Open File
+                                                </button>
+                                            </div>
                                         );
 
                                     case "data-loading":

@@ -44,9 +44,13 @@ export const SettingsBootUp = () => {
             }
         });
 
+        let tt;
         return useAI.subscribe((now, before) => {
             if (now.uiMessages !== before.uiMessages) {
-                db.setItem("ui-message", now.uiMessages);
+                clearTimeout(tt);
+                tt = setTimeout(() => {
+                    db.setItem("ui-message", now.uiMessages);
+                }, 60);
             }
         });
     }, [appID]);
