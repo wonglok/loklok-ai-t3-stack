@@ -22,15 +22,14 @@ const createContext = async (req: NextRequest) => {
 };
 
 const handler = async (req: NextRequest) => {
+    await mongoose.connect(`${process.env.MONGO_DEVELOP}`);
+
     let appID = req.headers.get("app-id");
+
     console.log(appID);
 
-    let appHashID = `${shortHash(md5(`${appID}${process.env.AUTH_SECRET}${process.env.NODE_ENV}`))}`;
+    let appHashID = `${shortHash(md5(`${appID}${process.env.AUTH_SECRET}`))}`;
     console.log(appHashID);
-
-    await mongoose.connect(
-        `${process.env.MONGO_DEVELOP}${process.env.MONGO_SUFFIX}`,
-    );
 
     const dbPlatform = mongoose.connection.useDb(
         `os_${process.env.NODE_ENV}_${appHashID}`,
@@ -161,8 +160,6 @@ try {
         //     return "you can now see this secret message!";
         // }),
 
-        
-
     });
 } catch (e) {
     console.error(e);
@@ -216,19 +213,21 @@ return appRouter;
                 }),
             )
             .mutation(async ({ input, ctx }) => {
-                console.log(ctx.session.user);
+                // console.log(ctx.session.user);
 
-                await dbPlatform.model("AppCodeStore").findOneAndUpdate(
-                    {
-                        path: input.path,
-                    },
-                    {
-                        path: input.path,
-                        content: input.content || "",
-                        summary: input.summary || "",
-                    },
-                    { ["upsert"]: true, ["new"]: true },
-                );
+                let updated = await dbPlatform
+                    .model("AppCodeStore")
+                    .findOneAndUpdate(
+                        {
+                            path: input.path,
+                        },
+                        {
+                            path: input.path,
+                            content: input.content || "",
+                            summary: input.summary || "",
+                        },
+                        { ["upsert"]: true, ["new"]: true },
+                    );
 
                 return {
                     ok: "deployed",
@@ -239,14 +238,14 @@ return appRouter;
         reset: protectedProcedure
             .input(z.object({}))
             .mutation(async ({ input, ctx }) => {
-                console.log(ctx.session.user);
+                // console.log(ctx.session.user);
                 await dbPlatform.model("AppCodeStore").deleteMany({});
                 return { ok: "reset" };
             }),
         getFiles: protectedProcedure
             .input(z.object({}))
             .mutation(async ({ input, ctx }) => {
-                console.log(ctx.session.user);
+                // console.log(ctx.session.user);
                 let files = await dbPlatform.model("AppCodeStore").find();
                 return JSON.parse(JSON.stringify(files));
             }),
