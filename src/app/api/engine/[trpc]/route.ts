@@ -40,6 +40,7 @@ const handler = async (req: NextRequest) => {
 
     const AppCodeStore = new mongoose.Schema(
         {
+            versionID: { type: String, required: false },
             path: { type: String, required: true },
             summary: { type: String, required: true },
             content: { type: String },
