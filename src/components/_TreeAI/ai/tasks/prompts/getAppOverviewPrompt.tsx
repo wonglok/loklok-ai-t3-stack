@@ -1,9 +1,9 @@
 import { readFileContent } from "@/components/_TreeAI/io/readFileContent";
 
 export async function getAppOverviewPrompt() {
-    let overallRequirementts = await readFileContent({
-        path: `/docs/requirements.txt`,
-    });
+    // let overallRequirementts = await readFileContent({
+    //     path: `/docs/requirements.txt`,
+    // });
 
     return /** markdown */ `
 ## Identtiy    
