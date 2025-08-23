@@ -132,14 +132,13 @@ function RenderMessages() {
                                         );
                                     case "data-codeedit": // we don't use any reasoning or tool calls in this example
                                         return (
-                                            <>
+                                            <div key={`${message.id}-${i}`}>
                                                 <CodeEditorStream
-                                                    key={`${message.id}-${i}`}
                                                     text={part.data}
                                                     language="markdown"
                                                     width="calc(320px - 30px)"
                                                 ></CodeEditorStream>
-                                            </>
+                                            </div>
                                         );
 
                                     case "data-codeedit-btn": // we don't use any reasoning or tool calls in this example
