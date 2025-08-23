@@ -19,7 +19,7 @@ export default async function HomePage() {
                         App Editor
                     </button>
                 </Link>
-                <Link prefetch href={`/apps/${session.user.id}/run`}>
+                <Link target="_blank" href={`/apps/${session.user.id}/run`}>
                     <button className="cursor-pointer rounded-2xl border bg-gray-500 p-5 text-white">
                         App Preview
                     </button>
