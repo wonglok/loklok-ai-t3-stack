@@ -275,12 +275,12 @@ export function TreeList() {
 
             <TreeItem
                 itemId="/setting"
-                label={<>{`🎛️ Setting`}</>}
+                label={<>{`🎛️ Factory Reset`}</>}
                 onClick={() => {}}
             >
                 <TreeItem
                     itemId="/setting/factory-reset"
-                    label={<>{`☢ Factory Reset`}</>}
+                    label={<>{`🗑️ Confirm Reset`}</>}
                     onClick={() => {
                         if (confirm("factory reset and remove all?")) {
                             factortyReset();
