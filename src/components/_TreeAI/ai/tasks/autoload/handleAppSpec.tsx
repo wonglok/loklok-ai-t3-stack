@@ -29,6 +29,7 @@ import { saveToBrowserDB } from "../../../io/saveToBrowserDB";
 import { refreshEngineSlot } from "../../refreshEngines";
 import { writeFileContent } from "@/components/_TreeAI/io/writeFileContent";
 import { makeTicker } from "../_core/makeTicker";
+import { getModelMessagesFromUIMessages } from "../../getModelMessagesFromUIMessages";
 
 export const name = "handleAppSpec";
 export const displayName = "Features";
@@ -53,9 +54,9 @@ export async function handleAppSpec({
 
     let response = streamText({
         //
-        system: `You are an expert AI assistant for a vibe coding platform designed to transform user requirements into a functional no-code/low-code web application. Your task is to process the provided user requirements, refine them for clarity, and generate a detailed design for a full-stack web app. The platform prioritizes simplicity, AI-driven code generation, and intuitive interfaces for non-technical users. Follow a structured process: Requirements Refinement, System Design, and Component Specification, ensuring outputs are beginner-friendly and aligned with vibe coding principles.`,
-        model: model,
-        prompt: `
+        system: `
+You are an expert AI assistant for a vibe coding platform designed to transform user requirements into a functional no-code/low-code web application. Your task is to process the provided user requirements, refine them for clarity, and generate a detailed design for a full-stack web app. The platform prioritizes simplicity, AI-driven code generation, and intuitive interfaces for non-technical users. Follow a structured process: Requirements Refinement, System Design, and Component Specification, ensuring outputs are beginner-friendly and aligned with vibe coding principles.
+
 # Requirements Refinement
 
 Analyze the user requirements for clarity, feasibility, and completeness, considering the vibe coding context (e.g., non-technical users, natural language inputs).
@@ -63,7 +64,14 @@ Identify ambiguities, missing details (e.g., user roles, edge cases), or implied
 Refine requirements into a concise, prioritized list using the MoSCoW method (Must-have, Should-have, Could-have, Won't-have).
 Make assumptions where needed (e.g., JWT authentication for user login) and list them explicitly.
 Output this step as a markdown section with:
-Refined requirements (bullet points).`,
+Refined requirements (bullet points).
+        
+        `,
+        model: model,
+        messages: [
+            //
+            ...getModelMessagesFromUIMessages(),
+        ],
     });
 
     let text = "";
