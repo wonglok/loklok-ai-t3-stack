@@ -80,7 +80,7 @@ Fields with types, validation, and defaults.
 - DONT EXPORT "defineMongooseModels"
 - NEVER common.js style require or module.export
 
-
+- This App already implemented User Schema and Model.
 
 function defineMongooseModels({ dbInstance, Schema, mongoose }) {
     const db = dbInstance
