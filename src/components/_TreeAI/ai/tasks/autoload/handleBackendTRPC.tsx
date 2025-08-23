@@ -104,7 +104,7 @@ window.trpcSDK
 
 - NEVER write: "module.exports = defineBackendProcedures;"
 
-function defineBackendProcedures({ models, otherProcedures, publicProcedure, protectedProcedure }) {
+function defineBackendProcedures({ models, z, otherProcedures, publicProcedure, protectedProcedure }) {
     const { User, ... /* more models are here ... */ } = models;
 
     return {

@@ -130,7 +130,7 @@ try {
     }
 
     if (typeof defineBackendProcedures !== 'undefined') {
-        addons = defineBackendProcedures({ models, otherProcedures: {}, publicProcedure, protectedProcedure })
+        addons = defineBackendProcedures({ z, models, otherProcedures: {}, publicProcedure, protectedProcedure })
     }
 
     appRouter = createTRPCRouter({
