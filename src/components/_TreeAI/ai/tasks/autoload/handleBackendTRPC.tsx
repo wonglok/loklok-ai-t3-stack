@@ -94,13 +94,13 @@ window.trpcSDK
 - NEVER USE .query({...})
 
 - ALWAYS USE "_id" for object id (good)
-- NEVER USE "id" for object id (good)
+- NEVER USE "id" for object id (bad)
 - Example: USE "{ _id, ...updates }" instead of { id, ...updates } 
 
-- DO NOT write: "export function defineBackendProcedures () {}" // bad
+- DO NOT write: "export function defineBackendProcedures () {}"
 - ALWAYS write: "function defineBackendProcedures () {}" // good
 
-- NEVER write: module.exports = defineBackendProcedures; // bad
+- NEVER write: "module.exports = defineBackendProcedures;"
 
 function defineBackendProcedures({ models, otherProcedures, publicProcedure, protectedProcedure }) {
     const { User, ... /* more models are here ... */ } = models;
