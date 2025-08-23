@@ -19,6 +19,11 @@ export default async function HomePage() {
                         App Editor
                     </button>
                 </Link>
+                <Link prefetch href={`/apps/${session.user.id}/run`}>
+                    <button className="cursor-pointer rounded-2xl border bg-gray-500 p-5 text-white">
+                        App Preview
+                    </button>
+                </Link>
             </div>
             <div>{/* <ButtonOpenAI></ButtonOpenAI> */}</div>
             <div className="grid auto-rows-min gap-4 md:grid-cols-3">

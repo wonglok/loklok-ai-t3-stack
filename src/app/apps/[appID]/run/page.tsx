@@ -163,13 +163,14 @@ let ttt = setInterval(() => {
                         },
                     };
 
-                    // @ts-ignore
-                    await window.importHttpModule2(
-                        `/es-module-shims/es-module-shims.js`,
-                    );
-
-                    // @ts-ignore
-                    window.importShim("/src/main.js");
+                    setTimeout(async () => {
+                        // @ts-ignore
+                        await window.importHttpModule2(
+                            `/es-module-shims/es-module-shims.js`,
+                        );
+                        // @ts-ignore
+                        window.importShim("/src/main.js");
+                    }, 10);
                 })
                 .catch((e) => {
                     console.log("front end build failed...");
@@ -187,7 +188,7 @@ let ttt = setInterval(() => {
                         __html: `
         <script>
             window.importHttpModule2 = async (value) => {
-                return import(value);
+                return await import(value);
             };
         </script>
 `,
