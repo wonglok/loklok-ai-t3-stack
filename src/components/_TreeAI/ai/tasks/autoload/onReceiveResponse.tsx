@@ -71,22 +71,21 @@ export async function onReceiveResponse({
         args: { userPrompt: userPrompt },
     });
 
-    MyTaskManager.add({
-        waitFor: [
-            "handleAppSpec",
-            "handleMongoose",
-            "handleBackendTRPC",
-            "handleZustand",
-            "handleReact",
-        ],
-        name: "handleIntegration",
-        args: { userPrompt: userPrompt },
-    });
+    // MyTaskManager.add({
+    //     waitFor: [
+    //         "handleAppSpec",
+    //         "handleMongoose",
+    //         "handleBackendTRPC",
+    //         "handleZustand",
+    //         "handleReact",
+    //     ],
+    //     name: "handleIntegration",
+    //     args: { userPrompt: userPrompt },
+    // });
 
     //
     MyTaskManager.add({
         waitFor: [
-            "handleIntegration",
             "handleAppSpec",
             "handleMongoose",
             "handleBackendTRPC",

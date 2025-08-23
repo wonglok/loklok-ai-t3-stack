@@ -95,8 +95,8 @@ window.trpcSDK
 - ALWAYS USE .mutation({...})
 - NEVER USE .query({...})
 
-- Prefer Mongoose naming "_id" instead of "id"
-- ALWAYS USE "_id" instead of "id" 
+- ALWAYS USE "_id" for object id (good)
+- NEVER USE "id" for object id (good)
 - Example: USE "{ _id, ...updates }" instead of { id, ...updates } 
 
 - DO NOT write: "export function defineBackendProcedures () {}" // bad

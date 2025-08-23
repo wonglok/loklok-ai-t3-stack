@@ -84,6 +84,9 @@ window.trpcSDK
 
 - Never Impport "@/types"
 
+- ALWAYS USE "_id" for object id (good)
+- NEVER USE "id" for object id (good)
+
 ${await getFileOutputFormatting()}
 
                 `,
