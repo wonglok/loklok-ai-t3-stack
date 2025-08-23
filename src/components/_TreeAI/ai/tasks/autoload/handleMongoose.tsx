@@ -79,8 +79,8 @@ Fields with types, validation, and defaults.
 - DONT EXPORT "defineMongooseModels"
 - NEVER common.js style require or module.export
 
-function defineMongooseModels({ appID, dbInstance, Schema, mongoose }) {
-    const db = dbInstance // mongoose.connection.useDb("app_development_appID", { useCache: true });
+function defineMongooseModels({ dbInstance, Schema, mongoose }) {
+    const db = dbInstance
 
     // {
     //     const ExampleSchema = new Schema({
@@ -104,6 +104,7 @@ ${await getFileOutputFormatting()}
 
                 `,
     });
+    // mongoose.connection.useDb("app_development_appID", { useCache: true });
 
     console.log("chatblocks", chatblocks);
 
