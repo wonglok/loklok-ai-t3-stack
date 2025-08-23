@@ -39,40 +39,10 @@ const handler = async (req: NextRequest) => {
         },
     );
 
-    const VersionStore = new mongoose.Schema(
-        {
-            title: { type: String, required: false },
-            description: { type: String, required: false },
-            date: { type: Date, required: false },
-        },
-        {
-            timestamps: true,
-        },
-    );
-
-    if (!dbPlatform.models["VersionStore"]) {
-        dbPlatform.model("VersionStore", VersionStore);
-    }
-
-    const CodeBackupStore = new mongoose.Schema(
-        {
-            versionID: { type: String, required: true },
-            path: { type: String, required: true },
-            content: { type: String },
-            date: { type: Date, required: false },
-        },
-        {
-            timestamps: true,
-        },
-    );
-
-    if (!dbPlatform.models["CodeBackupStore"]) {
-        dbPlatform.model("CodeBackupStore", CodeBackupStore);
-    }
-
     const AppCodeStore = new mongoose.Schema(
         {
             path: { type: String, required: true },
+            summary: { type: String, required: true },
             content: { type: String },
         },
         {
@@ -117,6 +87,21 @@ const handler = async (req: NextRequest) => {
                 };
             }),
     });
+
+    let defineMongooseModelsContent =
+        toJSON(defineMongooseModels)?.content || "";
+    let defineBackendProceduresContent =
+        toJSON(defineBackendProcedures)?.content || "";
+
+    console.log(`
+            
+            
+/////
+${defineMongooseModelsContent}
+/////
+${defineBackendProceduresContent}
+
+`);
     try {
         let func = new Function(
             `args`,
@@ -134,8 +119,10 @@ let appRouter
 let models = {} 
 let addons = {}
 
-${toJSON(defineMongooseModels)?.content || ""}
-${toJSON(defineBackendProcedures)?.content || ""}
+/////
+${defineMongooseModelsContent}
+/////
+${defineBackendProceduresContent}
 
 try {
     
@@ -240,7 +227,7 @@ return appRouter;
                         content: input.content || "",
                         summary: input.summary || "",
                     },
-                    { upsert: true },
+                    { ["upsert"]: true, ["new"]: true },
                 );
 
                 return {

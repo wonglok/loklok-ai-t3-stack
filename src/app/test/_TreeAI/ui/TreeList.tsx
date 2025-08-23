@@ -4,8 +4,8 @@ import { SimpleTreeView } from "@mui/x-tree-view/SimpleTreeView";
 import { TreeItem } from "@mui/x-tree-view/TreeItem";
 import { useAI } from "../state/useAI";
 import { LokLokSDK } from "../web/LokLokSDK";
-import { basename } from "path";
-import { readFileContent } from "../io/readFileContent";
+// import { basename } from "path";
+// import { readFileContent } from "../io/readFileContent";
 // import { DeveloperTeam } from "./DeveloperTeam";
 
 export function TreeList() {
@@ -119,7 +119,7 @@ export function TreeList() {
                 itemId="/components"
                 label={
                     <>
-                        📂
+                        🌏
                         {` React Components`}
                     </>
                 }
@@ -160,7 +160,7 @@ export function TreeList() {
                 itemId="/models"
                 label={
                     <>
-                        📂
+                        💽
                         {` Mongoose models`}
                     </>
                 }
@@ -199,7 +199,7 @@ export function TreeList() {
                 itemId="/store"
                 label={
                     <>
-                        📂
+                        🤩
                         {` Zustand store`}
                     </>
                 }
@@ -238,7 +238,7 @@ export function TreeList() {
                 itemId="/trpc"
                 label={
                     <>
-                        📂
+                        👨🏼‍🍳
                         {` TRPC models`}
                     </>
                 }
