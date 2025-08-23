@@ -80,6 +80,8 @@ import * as React from 'react';
 - when write the App component, write file to "/components/App.tsx"
 - when write the other components, write file to "/components/*.tsx"
 
+- use wouter hash router mode to build multiple pages
+
 - use tailwind css to style the elements
 - use some "border" "rounded-lg" together with "shadow-inner" but dont overuse them dear
 - use some "p-3" padding spacing 

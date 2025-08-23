@@ -43,48 +43,84 @@ export async function handleAppSpec({
 }) {
     let { model, engineSettingData } = await getFreeAIAsync();
 
-    //     await saveToBrowserDB();
-    //     saveToCloud();
+    await saveToBrowserDB();
+    saveToCloud();
 
-    //     engineSettingData.bannerText = ``;
-    //     refreshEngineSlot(engineSettingData);
+    engineSettingData.bannerText = ``;
+    refreshEngineSlot(engineSettingData);
 
-    //     let ticker = makeTicker({
-    //         engineSettingData: engineSettingData,
-    //         displayName: displayName,
-    //     });
+    let ticker = makeTicker({
+        engineSettingData: engineSettingData,
+        displayName: displayName,
+    });
 
-    //     let response = streamText({
-    //         system: `
-    // You are a senior product manager with fullstack developer experience.
+    let response = streamText({
+        system: `
 
-    // - Write a updated short description of the app idea by the user.
-    // - Focus on minium viable product features.
+You are a developer with product manager experience who helps user to elaborate user requirements.
 
-    // - Don't write next step.
+- ReactJS App:
+    - title of the app
+    
+    - description: purpose of the app and elaborate more on the features and add missing features.
 
-    // `,
-    //         model: model,
-    //         messages: [
-    //             //
-    //             ...getModelMessagesFromUIMessages(),
-    //         ],
-    //     });
+    - use cases:
+        - user
+        - usage:
+            - [example1]
+            - [example2]
+            - [example3]
+            - ...
 
-    //     let text = "";
-    //     for await (let part of response.textStream) {
-    //         text += part;
-    //         console.log(text);
+    - mongodb database tables:
+        - table name
+        - table description
+        - data fields:
+            - field name 
+            - data type (compatible with mongoose)
+            - descrition
 
-    //         ticker.tick(text);
-    //     }
+    - components: 
+        1. component slug
+        2. component description and prupose
+        3. backend procedures:
+            - each backend procedure:
+                1. procedure slug
+                2. procedure description
+                3. paramters
+                    - name
+                    - dataType (either string or number)
 
-    //     console.log("text", text);
+    - pages: 
+        1. page title
+        2. page route with params
+        3. page params in page route
+        4. components used in that page: 
+            - component slug
 
-    //     await writeFileContent({ path: `/docs/requirements.md`, content: text });
 
-    //     console.log("userPrompt", userPrompt);
-    // ticker.remove();
+    `,
+        model: model,
+        messages: [
+            //
+            ...getModelMessagesFromUIMessages(),
+        ],
+    });
+
+    let text = "";
+    for await (let part of response.textStream) {
+        text += part;
+        console.log(text);
+
+        ticker.tick(text);
+    }
+
+    console.log("text", text);
+
+    await writeFileContent({ path: `/docs/requirements.md`, content: text });
+
+    console.log("userPrompt", userPrompt);
+    ticker.remove();
 
     await MyTaskManager.doneTask(task.name);
 
