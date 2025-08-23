@@ -101,6 +101,7 @@ export const factortyReset = async () => {
     location.reload();
 };
 export const useAI = create<{
+    reloadFunc: () => void;
     uiMessages: UIMessage[];
     userPrompt: string;
     lastUserPrompt: string;
@@ -115,6 +116,7 @@ export const useAI = create<{
 }>((set, get) => {
     return {
         //
+        reloadFunc: () => {},
         topTab: "web",
         uiMessages: [
             {

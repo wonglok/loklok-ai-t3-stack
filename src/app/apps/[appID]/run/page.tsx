@@ -21,12 +21,10 @@ export default function AppRun() {
 
         sdk.publicRPC({
             procedure: "getFiles",
-            input: {
-                //
-            },
+            input: {},
         }).then((files) => {
             console.log("appID", appID);
-            console.log("getFiles", files);
+            console.log("got files", files);
 
             rollupCode({
                 files: [

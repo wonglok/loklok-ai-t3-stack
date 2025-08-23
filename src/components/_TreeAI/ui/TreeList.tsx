@@ -38,16 +38,16 @@ export function TreeList() {
                             appID: useAI.getState().appID,
                         });
 
-                        await sdk.setupPlatform({
-                            procedure: "reset",
-                            input: {
-                                "reset-all": "okayyy",
-                            },
-                        });
+                        // await sdk.setupPlatform({
+                        //     procedure: "reset",
+                        //     input: {
+                        //         "reset-all": "okayyy",
+                        //     },
+                        // });
 
                         for (let file of files) {
                             await sdk.setupPlatform({
-                                procedure: "setKV",
+                                procedure: "setFS",
                                 input: {
                                     path: file.path,
                                     content: file.content || "",

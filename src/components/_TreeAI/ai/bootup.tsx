@@ -7,20 +7,20 @@ import { LokLokSDK } from "../web/LokLokSDK";
 
 export const bootup = async ({ appID }) => {
     let sdk = new LokLokSDK({ appID });
+
+    //
     let files =
         (await sdk.publicRPC({
             procedure: "getFiles",
             input: {},
         })) || [];
 
-    console.log("files", files);
+    console.log("files-boot", files);
 
     if (files instanceof Array) {
         useAI.setState({
             files: files,
         });
-    } else {
-        // await loadFromBrowserDB();
     }
 };
 

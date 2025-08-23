@@ -107,6 +107,14 @@ let ttt = setInterval(() => {
         ],
     });
 
+    useEffect(() => {
+        useAI.setState({
+            reloadFunc: () => {
+                reload();
+            },
+        });
+    }, []);
+
     return (
         <>
             <div className="h-full w-full">

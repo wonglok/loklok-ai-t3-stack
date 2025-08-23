@@ -22,8 +22,6 @@ export function VercelLMStudio({ appID }: { appID: string }) {
         ready();
     }, [appID]);
 
-    //
-
     let topTab = useAI((r) => r.topTab);
 
     if (!appID) {

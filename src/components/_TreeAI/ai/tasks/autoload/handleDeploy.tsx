@@ -44,18 +44,18 @@ export async function handleDeploy({
         appID: useAI.getState().appID,
     });
 
-    await sdk.setupPlatform({
-        procedure: "reset",
-        input: {
-            empty: 123,
-        },
-    });
+    // await sdk.setupPlatform({
+    //     procedure: "reset",
+    //     input: {
+    //         empty: 123,
+    //     },
+    // });
 
     let i = 0;
     let files = useAI.getState().files;
     for (let file of files) {
         await sdk.setupPlatform({
-            procedure: "setKV",
+            procedure: "setFS",
             input: {
                 path: file.path,
                 content: file.content || "",
@@ -74,6 +74,10 @@ export async function handleDeploy({
             return { ...en, status: "free" };
         }),
     });
+
+    setTimeout(() => {
+        useAI.getState().reloadFunc();
+    }, 10);
     //
 
     await saveToBrowserDB();

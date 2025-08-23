@@ -95,15 +95,15 @@ const handler = async (req: NextRequest) => {
     let defineBackendProceduresContent =
         toJSON(defineBackendProcedures)?.content || "";
 
-    if (process.env.NODE_ENV === "development") {
-        console.log(`
-/////
-${defineMongooseModelsContent}
-/////
-${defineBackendProceduresContent}
-//// Develop
-`);
-    }
+    //     if (process.env.NODE_ENV === "development") {
+    //         console.log(`
+    // /////
+    // ${defineMongooseModelsContent}
+    // /////
+    // ${defineBackendProceduresContent}
+    // //// Develop
+    // `);
+    //     }
 
     try {
         let func = new Function(
@@ -207,7 +207,7 @@ return appRouter;
 
     let platformRouter = createTRPCRouter({
         //publicProcedure
-        setKV: protectedProcedure
+        setFS: protectedProcedure
             .input(
                 z.object({
                     path: z.string(),

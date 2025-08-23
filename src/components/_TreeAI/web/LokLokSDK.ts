@@ -44,7 +44,7 @@ export class LokLokSDK {
             });
     }
 
-    async setupPlatform({ procedure = "setKV", input }) {
+    async setupPlatform({ procedure = "setFS", input }) {
         return (this.client["platform"][procedure] as any)
             .mutate(input)
             .then((data) => {
@@ -57,7 +57,6 @@ export class LokLokSDK {
         return (this.client["public"][procedure] as any)
             .mutate(input)
             .then((data) => {
-                console.log("getFiles", data);
                 return data;
             });
     }
