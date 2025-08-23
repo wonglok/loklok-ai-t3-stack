@@ -5,7 +5,20 @@ export const getModelMessagesFromUIMessages = () => {
     let uiMessages = useAI.getState().uiMessages;
 
     uiMessages.filter((r) => {
-        if (r.parts.some((r) => r.type.startsWith("data-"))) {
+        if (r.parts.some((r) => r.type.startsWith("data-code"))) {
+            return false;
+        }
+        return true;
+    });
+    uiMessages.filter((r) => {
+        if (r.parts.some((r) => r.type.startsWith("data-welcome"))) {
+            return false;
+        }
+        return true;
+    });
+
+    uiMessages.filter((r) => {
+        if (r.parts.some((r) => r.type.startsWith("reasoning"))) {
             return false;
         }
         return true;
