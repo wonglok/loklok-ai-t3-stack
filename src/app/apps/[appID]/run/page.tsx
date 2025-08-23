@@ -18,19 +18,12 @@ export default function AppRun() {
         let sdk = new LokLokSDK({ appID: appID });
         window.trpcSDK = sdk;
 
-        sdk.setupPlatform({
+        sdk.publicRPC({
             procedure: "getFiles",
             input: {
                 //
             },
         }).then((files) => {
-            // files = files.map((item) => {
-            //     return {
-            //         path: item.key,
-            //         content: item.value,
-            //     };
-            // });
-
             console.log("appID", appID);
             console.log("getFiles", files);
 
@@ -56,8 +49,7 @@ export function MyApp () {
 
     React.useEffect(() => {
         import('/components/App.tsx').then((myModule) =>{
-                console.log(myModule)
-                console.log('yoyo', myModule)
+                console.log('module', myModule)
                 if (myModule?.App) {
                     try {
                         setApp(<myModule.App></myModule.App>)

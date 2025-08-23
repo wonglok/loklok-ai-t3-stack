@@ -193,8 +193,7 @@ try {
     })
 }
 
-
-return appRouter
+return appRouter;
     `,
         );
 
@@ -261,11 +260,7 @@ return appRouter
             .input(z.object({}))
             .mutation(async ({ input }) => {
                 let files = await dbPlatform.model("AppCodeStore").find();
-                return files.map((r: any) => {
-                    return {
-                        ...r,
-                    };
-                });
+                return JSON.parse(JSON.stringify(files));
             }),
     });
 
@@ -276,11 +271,7 @@ return appRouter
                 .input(z.object({}))
                 .mutation(async ({ input }) => {
                     let files = await dbPlatform.model("AppCodeStore").find();
-                    return files.map((r: any) => {
-                        return {
-                            ...r,
-                        };
-                    });
+                    return JSON.parse(JSON.stringify(files));
                 }),
         }),
         platform: platformRouter,
