@@ -106,7 +106,10 @@ const handler = async (req: NextRequest) => {
             };
         });
 
-    console.log(defineBackendProcedures?.value, defineMongooseModels?.value);
+    console.log(
+        defineBackendProcedures?.content,
+        defineMongooseModels?.content,
+    );
 
     let appRouter = createTRPCRouter({
         hello: publicProcedure
@@ -134,8 +137,8 @@ let appRouter
 let models = {} 
 let addons = {}
 
-${defineMongooseModels?.value || ""}
-${defineBackendProcedures?.value || ""}
+${defineMongooseModels?.content || ""}
+${defineBackendProcedures?.content || ""}
 
 try {
     
