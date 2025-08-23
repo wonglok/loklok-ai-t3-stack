@@ -22,6 +22,7 @@ import { getFreeAIAsync } from "../../getFreeAIAsync";
 import { MyTask, MyTaskManager } from "../_core/MyTaskManager";
 import md5 from "md5";
 import { useAI } from "../../../state/useAI";
+import { saveToCloud } from "@/components/_TreeAI/io/saveToCloud";
 // import { putUIMessage } from "../../putUIMessage";
 // import { v4 } from "uuid";
 
@@ -89,6 +90,7 @@ export async function onReceiveResponse({
     await MyTaskManager.doneTask(task.name);
 
     await saveToBrowserDB();
+    saveToCloud();
 
     await putBackFreeAIAsync({ engine: slot });
 }

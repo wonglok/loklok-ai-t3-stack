@@ -1,19 +1,13 @@
-import { createInstance } from "localforage";
 import { useAI } from "../state/useAI";
 import { LokLokSDK } from "../web/LokLokSDK";
 
 let timer000;
-export const saveToBrowserDB = async () => {
+export const saveToCloud = async () => {
     //
     const appID = useAI.getState().appID;
     const files = useAI.getState().files;
-    const appFiles = createInstance({
-        name: `${appID}-files`,
-    });
 
-    await appFiles.setItem("files", files);
-
-    console.log("save-db");
+    console.log("save-to-cloud");
 
     clearTimeout(timer000);
     timer000 = setTimeout(async () => {
@@ -30,3 +24,5 @@ export const saveToBrowserDB = async () => {
         }
     }, 1500);
 };
+
+//

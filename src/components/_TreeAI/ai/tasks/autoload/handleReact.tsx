@@ -34,6 +34,7 @@ import { refreshUIMessages } from "../../refreshUIMessages";
 import { removeUIMessage } from "../../removeUIMessage";
 import { listOutFilesToChatBlocks } from "../prompts/listOutFilesToChatBlocks";
 import { makeTicker } from "../_core/makeTicker";
+import { saveToCloud } from "@/components/_TreeAI/io/saveToCloud";
 
 export const name = "handleReact";
 export const displayName = "React.JS";
@@ -182,6 +183,7 @@ ${await getFileOutputFormatting()}
     parseText(text);
 
     await saveToBrowserDB();
+    saveToCloud();
 
     await MyTaskManager.doneTask(task.name);
 

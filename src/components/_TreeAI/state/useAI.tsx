@@ -90,6 +90,7 @@ export const factortyReset = async () => {
     });
 
     await saveToBrowserDB();
+    saveToCloud();
 
     let appID = useAI.getState().appID;
 

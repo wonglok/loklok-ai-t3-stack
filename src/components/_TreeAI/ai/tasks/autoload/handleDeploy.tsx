@@ -28,6 +28,7 @@ import { saveToBrowserDB } from "../../../io/saveToBrowserDB";
 // import { parseCodeBlocksGen3 } from "../_core/LokLokParser3";
 import { refreshEngineSlot } from "../../refreshEngines";
 import { LokLokSDK } from "../../../web/LokLokSDK";
+import { saveToCloud } from "@/components/_TreeAI/io/saveToCloud";
 
 export const name = "handleDeploy";
 export const displayName = "Deploy Application";
@@ -81,6 +82,7 @@ export async function handleDeploy({
     //
 
     await saveToBrowserDB();
+    saveToCloud();
 
     engineSettingData.bannerText = ``;
     refreshEngineSlot(engineSettingData);

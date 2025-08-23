@@ -35,6 +35,7 @@ import { listOutFilesToChatBlocks } from "../prompts/listOutFilesToChatBlocks";
 // import { LokLokSDK } from "../../../web/LokLokSDK";
 // import { refreshEngineSlot } from "../../refreshEngines";
 import { makeTicker } from "../_core/makeTicker";
+import { saveToCloud } from "@/components/_TreeAI/io/saveToCloud";
 
 export const name = "handleBackendTRPC";
 export const displayName = "TRPC Backend";
@@ -115,9 +116,10 @@ function defineBackendProcedures({ models, z, otherProcedures, publicProcedure, 
 
         // hello: publicProcedure
         //     .input(z.object({ text: z.string() }))
-        //     .mutation(({ input }) => {
+        //     .mutation(({ input, ctx }) => {
+        //         let user = ctx.session.user;
         //         return {
-        //             greeting: input.text,
+        //             greeting: "hi dear: " + user.id + input.text,
         //         };
         //     }),
 
@@ -193,6 +195,7 @@ ${await getFileOutputFormatting()}
                         content: block.code,
                     });
                     await saveToBrowserDB();
+                    saveToCloud();
                 } else if (block.action === "update-file") {
                     await writeFileContent({
                         summary: `${block.summary}`,
@@ -200,6 +203,7 @@ ${await getFileOutputFormatting()}
                         content: block.code,
                     });
                     await saveToBrowserDB();
+                    saveToCloud();
                 } else if (block.action === "remove-file") {
                     await removeFile({
                         path: `${block.fileName}`,
@@ -235,6 +239,7 @@ ${await getFileOutputFormatting()}
     parseText(text);
 
     await saveToBrowserDB();
+    saveToCloud();
 
     await MyTaskManager.doneTask(task.name);
 
