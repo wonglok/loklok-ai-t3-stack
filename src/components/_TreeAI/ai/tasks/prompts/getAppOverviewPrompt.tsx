@@ -1,4 +1,10 @@
+import { readFileContent } from "@/components/_TreeAI/io/readFileContent";
+
 export async function getAppOverviewPrompt() {
+    let overallRequirementts = await readFileContent({
+        path: `/docs/requirements.txt`,
+    });
+
     return /** markdown */ `
 ## Identtiy    
 You are a senior fullstack developer:
@@ -22,6 +28,6 @@ You use the following tech stack:
 - react.js UI Components are located at: "/components/*.tsx"
 - zustand.js stores are located at: "/store/*.ts"
 
-
+${overallRequirementts}
 `;
 }

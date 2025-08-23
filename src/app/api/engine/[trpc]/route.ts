@@ -118,11 +118,12 @@ const mongoose = args.mongoose;
 const dbInstance = args.dbInstance;
 const Schema = args.Schema;
 
-let appRouter
-let models = {} 
-let addons = {}
+let appRouter;
+let models = {}; 
+let addons = {};
 
 ${defineMongooseModelsContent}
+
 ${defineBackendProceduresContent}
 
 try {
@@ -230,11 +231,10 @@ return appRouter;
                         },
                         { ["upsert"]: true, ["new"]: true },
                     );
-
                 return {
                     ok: "deployed",
-                    path: input.path,
-                    content: input.content,
+                    path: updated.path,
+                    content: updated.content,
                 };
             }),
         reset: protectedProcedure

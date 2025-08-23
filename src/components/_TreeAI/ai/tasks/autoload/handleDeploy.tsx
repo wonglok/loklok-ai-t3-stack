@@ -51,6 +51,7 @@ export async function handleDeploy({
         },
     });
 
+    let i = 0;
     let files = useAI.getState().files;
     for (let file of files) {
         await sdk.setupPlatform({
@@ -62,8 +63,9 @@ export async function handleDeploy({
             },
         });
 
-        engineSettingData.bannerText = `Uploading: ${file.path}`;
+        engineSettingData.bannerText = `Uploading ${((i / files.length) * 100).toFixed(0)}%`;
         refreshEngineSlot(engineSettingData);
+        i++;
     }
 
     useAI.setState({

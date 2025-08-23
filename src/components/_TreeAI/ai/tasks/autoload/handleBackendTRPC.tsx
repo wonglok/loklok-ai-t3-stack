@@ -9,7 +9,7 @@ import {
     tool,
     UIMessage,
 } from "ai";
-import { IOTooling } from "../../../io/IOTooling";
+// import { IOTooling } from "../../../io/IOTooling";
 import { EngineSetting, useAI } from "../../../state/useAI";
 // import { refreshUIMessages } from "../refreshUIMessages";
 // import { writeFileContent } from "../../io/writeFileContent";
@@ -18,7 +18,7 @@ import { putBackFreeAIAsync } from "../../putBackFreeAIAsync";
 import { getFreeAIAsync } from "../../getFreeAIAsync";
 import { MyTask, MyTaskManager } from "../_core/MyTaskManager";
 import { getModelMessagesFromUIMessages } from "../../getModelMessagesFromUIMessages";
-import { readFileContent } from "../../../io/readFileContent";
+// import { readFileContent } from "../../../io/readFileContent";
 import { writeFileContent } from "../../../io/writeFileContent";
 import { saveToBrowserDB } from "../../../io/saveToBrowserDB";
 // import z from "zod";
