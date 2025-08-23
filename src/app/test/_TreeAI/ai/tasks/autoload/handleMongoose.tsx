@@ -90,11 +90,11 @@ function defineMongooseModels({ appID, dbInstance, Schema, mongoose }) {
     //     }
     // }
 
-    ... // add more models
+    ... // add more schema
 
     return {
-        ["Example"]: db.model("Example"),
-        ...
+        // ["Example"]: db.model("Example"),
+        ... // add more models
     };
 }
 

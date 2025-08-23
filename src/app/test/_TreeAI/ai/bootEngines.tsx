@@ -47,7 +47,7 @@ export const bootEngines = async () => {
                                 nprogress.inc();
                             },
                             config: {
-                                evalBatchSize: 131070 * 0.45,
+                                evalBatchSize: Math.floor(131070 / 2.1),
                                 contextLength: 131070,
                             },
                         })
