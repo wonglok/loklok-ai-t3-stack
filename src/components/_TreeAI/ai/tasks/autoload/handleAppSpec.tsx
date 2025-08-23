@@ -79,7 +79,7 @@ You are a senior fullstack developer.
 
     console.log("text", text);
 
-    await writeFileContent({ path: `/docs/requirements.txt`, content: text });
+    await writeFileContent({ path: `/docs/requirements.md`, content: text });
 
     console.log("userPrompt", userPrompt);
 
