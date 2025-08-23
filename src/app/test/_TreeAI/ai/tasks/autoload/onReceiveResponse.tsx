@@ -20,6 +20,8 @@ import { saveToBrowserDB } from "../../../io/saveToBrowserDB";
 import { putBackFreeAIAsync } from "../../putBackFreeAIAsync";
 import { getFreeAIAsync } from "../../getFreeAIAsync";
 import { MyTask, MyTaskManager } from "../_core/MyTaskManager";
+import md5 from "md5";
+import { useAI } from "../../../state/useAI";
 // import { putUIMessage } from "../../putUIMessage";
 // import { v4 } from "uuid";
 
@@ -69,11 +71,20 @@ export async function onReceiveResponse({
         args: { userPrompt: userPrompt },
     });
 
-    // MyTaskManager.add({
-    //     waitFor: [""]
-    //     name: "handleDeploy",
-    //     args: {}
-    // })
+    //
+    MyTaskManager.add({
+        waitFor: [
+            "handleAppSpec",
+            "handleMongoose",
+            "handleBackendTRPC",
+            "handleZustand",
+            "handleReact",
+        ],
+        name: "handleDeploy",
+        args: {
+            hash: `${md5(JSON.stringify(useAI.getState().files))}`,
+        },
+    });
 
     await MyTaskManager.doneTask(task.name);
 
