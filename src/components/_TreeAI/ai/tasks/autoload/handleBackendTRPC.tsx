@@ -67,8 +67,11 @@ Instructions:
 - DO NOT WRAP THE CODE WITH markdown
 - ONLY WRITE PURE CODE FOR
 
+- Please refer to mongoose models in "/models/defineMongooseModels.js" to have all features 
+
 - The app has a Global variable window.trpcSDK as a custom tRPC Frontend Client.
-- Dont import anything
+
+- MUST NOT import module
 
 window.trpcSDK
     .runTRPC({
