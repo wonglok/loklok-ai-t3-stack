@@ -36,7 +36,7 @@ import { listOutFilesToChatBlocks } from "../prompts/listOutFilesToChatBlocks";
 import { makeTicker } from "../_core/makeTicker";
 
 export const name = "handleReact";
-export const displayName = "React JS front end of the App";
+export const displayName = "React.JS";
 
 export async function handleReact({
     userPrompt,

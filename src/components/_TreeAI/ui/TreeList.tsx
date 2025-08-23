@@ -2,7 +2,7 @@ import * as React from "react";
 // import Box from "@mui/material/Box";
 import { SimpleTreeView } from "@mui/x-tree-view/SimpleTreeView";
 import { TreeItem } from "@mui/x-tree-view/TreeItem";
-import { useAI } from "../state/useAI";
+import { factortyReset, useAI } from "../state/useAI";
 import { LokLokSDK } from "../web/LokLokSDK";
 // import { basename } from "path";
 // import { readFileContent } from "../io/readFileContent";
@@ -271,6 +271,22 @@ export function TreeList() {
                             />
                         );
                     })}
+            </TreeItem>
+
+            <TreeItem
+                itemId="/setting"
+                label={<>{`🎛️ Setting`}</>}
+                onClick={() => {}}
+            >
+                <TreeItem
+                    itemId="/setting/factory-reset"
+                    label={<>{`☢ Factory Reset`}</>}
+                    onClick={() => {
+                        if (confirm("factory reset and remove all?")) {
+                            factortyReset();
+                        }
+                    }}
+                ></TreeItem>
             </TreeItem>
 
             {/* {files.map((r) => {

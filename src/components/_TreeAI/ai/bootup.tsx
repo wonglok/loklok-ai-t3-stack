@@ -88,10 +88,6 @@ export const SettingsBootUp = () => {
             localStorage.getItem("engine3") === "ok";
         useAI.getState().engines[4].enabled =
             localStorage.getItem("engine4") === "ok";
-        useAI.getState().engines[5].enabled =
-            localStorage.getItem("engine5") === "ok";
-        useAI.getState().engines[6].enabled =
-            localStorage.getItem("engine6") === "ok";
 
         useAI.setState({
             engines: [...useAI.getState().engines],
