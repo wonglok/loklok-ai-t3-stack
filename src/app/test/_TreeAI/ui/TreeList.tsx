@@ -27,27 +27,31 @@ export function TreeList() {
                 itemId={"Deploy-btn"}
                 label={"💻 Deploy"}
                 onClick={async () => {
-                    let sdk = new LokLokSDK({
-                        appID: useAI.getState().appID,
-                    });
+                    if (confirm("reset and deploy?")) {
+                        let sdk = new LokLokSDK({
+                            appID: useAI.getState().appID,
+                        });
 
-                    await sdk.setupPlatform({
-                        procedure: "reset",
-                        input: {
-                            "reset-all": "okayyy",
-                        },
-                    });
-
-                    for (let file of files) {
                         await sdk.setupPlatform({
-                            procedure: "setKV",
+                            procedure: "reset",
                             input: {
-                                path: file.path,
-                                content: file.content || "",
-                                summary: file.summary || "",
+                                "reset-all": "okayyy",
                             },
                         });
+
+                        for (let file of files) {
+                            await sdk.setupPlatform({
+                                procedure: "setKV",
+                                input: {
+                                    path: file.path,
+                                    content: file.content || "",
+                                    summary: file.summary || "",
+                                },
+                            });
+                        }
                     }
+
+                    //
                 }}
             ></TreeItem>
 
