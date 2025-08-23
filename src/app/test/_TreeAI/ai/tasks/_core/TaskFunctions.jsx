@@ -18,6 +18,6 @@ componentContext.keys().forEach((key) => {
     // Do something with the imported module
 });
 
-console.log(TaskFunctions)
+// console.log(TaskFunctions)
 
 export { TaskFunctions }
