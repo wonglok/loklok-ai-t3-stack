@@ -43,52 +43,50 @@ export async function handleAppSpec({
 }) {
     let { model, engineSettingData } = await getFreeAIAsync();
 
-    await saveToBrowserDB();
-    saveToCloud();
+    //     await saveToBrowserDB();
+    //     saveToCloud();
 
-    engineSettingData.bannerText = ``;
-    refreshEngineSlot(engineSettingData);
+    //     engineSettingData.bannerText = ``;
+    //     refreshEngineSlot(engineSettingData);
 
-    let ticker = makeTicker({
-        engineSettingData: engineSettingData,
-        displayName: displayName,
-    });
+    //     let ticker = makeTicker({
+    //         engineSettingData: engineSettingData,
+    //         displayName: displayName,
+    //     });
 
-    let response = streamText({
-        system: `
-You are a senior product manager with fullstack developer experience.
+    //     let response = streamText({
+    //         system: `
+    // You are a senior product manager with fullstack developer experience.
 
-- Write a updated short description of the app idea by the user.
-- Focus on minium viable product features. 
+    // - Write a updated short description of the app idea by the user.
+    // - Focus on minium viable product features.
 
-- Assume this app dont have login.
+    // - Don't write next step.
 
-- Don't write next step.
+    // `,
+    //         model: model,
+    //         messages: [
+    //             //
+    //             ...getModelMessagesFromUIMessages(),
+    //         ],
+    //     });
 
-`,
-        model: model,
-        messages: [
-            //
-            ...getModelMessagesFromUIMessages(),
-        ],
-    });
+    //     let text = "";
+    //     for await (let part of response.textStream) {
+    //         text += part;
+    //         console.log(text);
 
-    let text = "";
-    for await (let part of response.textStream) {
-        text += part;
-        console.log(text);
+    //         ticker.tick(text);
+    //     }
 
-        ticker.tick(text);
-    }
+    //     console.log("text", text);
 
-    console.log("text", text);
+    //     await writeFileContent({ path: `/docs/requirements.md`, content: text });
 
-    await writeFileContent({ path: `/docs/requirements.md`, content: text });
-
-    console.log("userPrompt", userPrompt);
+    //     console.log("userPrompt", userPrompt);
+    // ticker.remove();
 
     await MyTaskManager.doneTask(task.name);
-    ticker.remove();
 
     await putBackFreeAIAsync({ engine: engineSettingData });
 
