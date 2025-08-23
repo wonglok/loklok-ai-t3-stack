@@ -56,7 +56,7 @@ export async function handleAppSpec({
 
     let response = streamText({
         system: `
-You are a senior fullstack developer.
+You are a senior product manager with fullstack developer experience.
 
 - Write a updated description of the app idea by the user.
 - Dont write next step.
