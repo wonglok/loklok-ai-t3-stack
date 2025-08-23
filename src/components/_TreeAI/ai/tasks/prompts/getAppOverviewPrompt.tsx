@@ -23,5 +23,7 @@ You use the following tech stack:
 - react.js UI Components are located at: "/components/*.tsx"
 - zustand.js stores are located at: "/store/*.ts"
 
+- this app don't have user feature
+
 `;
 }
