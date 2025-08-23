@@ -19,8 +19,6 @@ You use the following tech stack:
 
 - If no need to modify content then dont edit it.
 
-- this app don't have "user" feature
-
 ## Folders:
 - react.js UI Components are located at: "/components/*.tsx"
 - zustand.js stores are located at: "/store/*.ts"
