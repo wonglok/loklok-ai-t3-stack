@@ -88,6 +88,73 @@ window.trpcSDK
 - ALWAYS USE "_id" for object id (good)
 - NEVER USE "id" for object id (good)
 
+
+Example Zustand
+
+export const useSDK = create((set, get) => ({
+    user: null,
+    loading: false,
+    error: null,
+    jwt: null,
+
+    appID: GLOBAL_APP_ID,
+    setAppID: ({ appID }) => set({ appID }),
+
+    login: async (username, password) => {
+        set({ loading: true, error: null });
+        try {
+            let result = await window.trpcSDK
+                .runTRPC({
+                    procedure: "login", // [hello] is the procedure name
+                    input: { 
+                        username,
+                        password,
+                    },
+                });
+
+            localStorage.setItem("jwt_my_app", result.token);
+            set({ user: result.user, jwt: result.token, loading: false });
+            return result;
+        } catch (e) {
+            set({ error: e.message ?? "Login failed", loading: false });
+            throw e;
+        }
+    },
+
+    register: async (username, email, password) => {
+        set({ loading: true, error: null });
+        try {
+            let result = await window.trpcSDK
+                .runTRPC({
+                    procedure: "login", // [hello] is the procedure name
+                    input: { 
+                        username,
+                        email,
+                        password,
+                    },
+                });
+
+            localStorage.setItem("jwt_my_app", result.token);
+            set({ user: result.user, jwt: result.token, loading: false });
+            return result;
+        } catch (e) {
+            set({ error: e.message ?? "Registration failed", loading: false });
+            throw e;
+        }
+    },
+
+    logout: () => {
+        localStorage.removeItem("jwt_my_app");
+        set({ user: null, jwt: null });
+    },
+
+    // 
+    // for each procedure in the techncial specification ([the appRouter procedures]) 
+    // create the trpc client functions here
+    
+}));
+
+
 ${await getFileOutputFormatting()}
 
                 `,

@@ -60,7 +60,8 @@ export async function handleReact({
     chatblocks.push({
         role: "user",
         content: `
-Instructions:
+# React Component
+React Component for HTML
 
 - Identify React Component modules and implement them in this format, use only typescript ".ts" files:
 - DO NOT WRAP THE CODE WITH markdown
@@ -80,12 +81,37 @@ import * as React from 'react';
 - when write the App component, write file to "/components/App.tsx"
 - when write the other components, write file to "/components/*.tsx"
 
-- use wouter hash router mode to build multiple pages
-
 - use tailwind css to style the elements
 - use some "border" "rounded-lg" together with "shadow-inner" but dont overuse them dear
 - use some "p-3" padding spacing 
 - uses Zustand state management files located at "/store/*.ts" folder
+
+------
+
+- save JWT to zustand and localStorage with appID as Key after user loggin successfully
+- save JWT to zustand and localStorage with appID as Key after user registered successfully
+
+- Responsive UI component
+- UI component shouldn't have any margin pixel for the outermost div element.
+- use Zustand for State Management for React
+- Loading and error states
+- Have import and export using ESM for React Component Code
+- Include login, register, dashboard
+
+- Cannot use zustand selector as inline varaible
+- build a simple layout
+- single page application with <HashRouter> from react-router-dom
+- const location = useLocation()  
+- use location.pathname instead of location.hash
+
+## Overall 
+
+- Tailwind CSS for styling for Frontend CSS Styling
+- Javascript preferred over typescript
+- React + Javascript for Frontend HTML
+- @react-three/fiber + drei for Frontend 3D
+- Zustand for state management for Frontend State Management
+
 
 
 ${await getFileOutputFormatting()}

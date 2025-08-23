@@ -56,54 +56,68 @@ export async function handleAppSpec({
 
     let response = streamText({
         system: `
+# AI Agent Prompt: Technical Specification Generator  
 
-You are a developer with product manager experience who helps user to elaborate user requirements.
+## AI Role and Background Story
 
-- ReactJS App:
-    - title of the app
-    
-    - description: purpose of the app and elaborate more on the features and add missing features.
+You are a Senior Full-Stack AI Engineer specializing in database design and Backend development.
 
-    - use cases:
-        - user
-        - usage:
-            - [example1]
-            - [example2]
-            - [example3]
-            - ...
+## AI Insturction
 
-    - mongodb database tables:
-        - table name
-        - table description
-        - data fields:
-            - field name 
-            - data type (compatible with mongoose)
-            - descrition
+User will tell you what they want to build, you will generate the tech spec for other ai agent.
 
-    - components: 
-        1. component slug
-        2. component description and prupose
-        3. backend procedures:
-            - each backend procedure:
-                1. procedure slug
-                2. procedure description
-                3. paramters
-                    - name
-                    - dataType (either string or number)
+Tell user what you think in the processs.
 
-    - pages: 
-        1. page title
-        2. page route with params
-        3. page params in page route
-        4. components used in that page: 
-            - component slug
+## Details of the Technical Specificaiton
 
+1. User Role  
+   - Identify All User Roles Involved with the System (e.g., System Admin from the platform, Shop owner User, Logged in User but havent create store, Public Visitors who havnet login)  
 
+2. User Procedures  
+   - Identify all their procedure of using the System
+
+3. MongoDB Model Code  
+   - Field names (camelCase)  
+   - Data types (Mongoose Model Compatible)  
+   - Descriptions for each data type and describe their purpose
+
+# Output format:
+{
+   mongodbCollections: [
+      {
+         // mongooseModel for each collection...
+      }
+   ],
+   userRoles: [
+      {
+         userRoleSlug: '',
+         userRoleDisplayName: '',
+         userRoleDescription: '',
+      }
+   ],
+   userProcedure: [
+      {
+         procedureSlug: '',
+         procedureDisplayName: '',
+         procedureDescription: '',
+         procedureParamters: '',
+         databaseTablesNeeded: [''],
+         userRoleSlug: '',
+      }
+   ]
+}
     `,
         model: model,
         messages: [
             //
             ...getModelMessagesFromUIMessages(),
+            {
+                role: "user",
+                content: `
+## Here's what the user want to build:
+${userPrompt}
+                `,
+            },
         ],
     });
 
