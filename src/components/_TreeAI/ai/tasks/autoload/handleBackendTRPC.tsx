@@ -110,28 +110,28 @@ function defineBackendProcedures({ models, z, otherProcedures, publicProcedure, 
     return {
         ...otherProcedures,
 
-        hello: publicProcedure
-            .input(z.object({ text: z.string() }))
-            .mutation(({ input }) => {
-                return {
-                    greeting: input.text,
-                };
-            }),
+        // hello: publicProcedure
+        //     .input(z.object({ text: z.string() }))
+        //     .mutation(({ input }) => {
+        //         return {
+        //             greeting: input.text,
+        //         };
+        //     }),
 
-        create: protectedProcedure
-            .input(z.object({ name: z.string().min(1) }))
-            .mutation(async ({ input }) => {
-                let post = { id: post.id + 1, name: input.name };
-                return post;
-            }),
+        // create: protectedProcedure
+        //     .input(z.object({ name: z.string().min(1) }))
+        //     .mutation(async ({ input }) => {
+        //         let post = { id: post.id + 1, name: input.name };
+        //         return post;
+        //     }),
 
-        getLatest: protectedProcedure.mutation(() => {
-            return post;
-        }),
+        // getLatest: protectedProcedure.mutation(() => {
+        //     return post;
+        // }),
 
-        getSecretMessage: protectedProcedure.mutation(() => {
-            return "you can now see this secret message!";
-        }),
+        // getSecretMessage: protectedProcedure.mutation(() => {
+        //     return "you can now see this secret message!";
+        // }),
 
         // ... develop more code here
     }
