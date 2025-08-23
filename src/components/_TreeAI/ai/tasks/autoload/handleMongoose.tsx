@@ -78,6 +78,7 @@ Fields with types, validation, and defaults.
 - Dont change "getAllModesl"
 - Only Implement "defineMongooseModels" function
 - DONT EXPORT "defineMongooseModels"
+- NEVER common.js style require or module.export
 
 function defineMongooseModels({ appID, dbInstance, Schema, mongoose }) {
     const db = dbInstance // mongoose.connection.useDb("app_development_appID", { useCache: true });

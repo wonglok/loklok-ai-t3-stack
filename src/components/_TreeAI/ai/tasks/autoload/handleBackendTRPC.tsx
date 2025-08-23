@@ -90,6 +90,8 @@ window.trpcSDK
 
 - DO NOT IMPORT ANYTHING
 
+- NEVER common.js style require or module.export
+
 - ALWAYS USE .mutation({...})
 - NEVER USE .query({...})
 
