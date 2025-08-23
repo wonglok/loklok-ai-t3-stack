@@ -102,6 +102,7 @@ window.trpcSDK
 - DO NOT write: "export function defineBackendProcedures () {}" // bad
 - ALWAYS write: "function defineBackendProcedures () {}" // good
 
+
 function defineBackendProcedures({ models, otherProcedures, publicProcedure, protectedProcedure }) {
     const { User, ... /* more models are here ... */ } = models;
 

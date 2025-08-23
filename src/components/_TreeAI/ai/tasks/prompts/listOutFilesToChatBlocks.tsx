@@ -1,12 +1,12 @@
 export async function listOutFilesToChatBlocks({ files, chatblocks }) {
     chatblocks?.push({
         role: "user",
-        content: `Here's the files in this project: `,
+        content: `Here are the files in this project: `,
     });
 
     files?.forEach((ff) => {
         chatblocks.push({
-            role: "assistant",
+            role: "user",
             content: `
 [file: "${ff.path}"------file_begin]
     [file: "${ff.path}"------summary_start]
