@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { auth } from "@/server/auth";
 import { api, HydrateClient } from "@/trpc/server";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 // import { ButtonYo } from "./_core/llm-calls/createStudy";
 // import { ButtonOpenAI } from "./_core/llm-calls/buttonOpenAI";
 export default async function HomePage() {
@@ -11,15 +12,19 @@ export default async function HomePage() {
 
     const session = await auth();
 
+    if (!session.user) {
+        return redirect("/login");
+    }
+
     return (
         <>
             <div>
-                <Link prefetch href={`/apps/${session.user.id}/edit`}>
+                <Link prefetch href={`/apps/${session?.user?.id}/edit`}>
                     <button className="cursor-pointer rounded-2xl border bg-gray-500 p-5 text-white">
                         App Editor
                     </button>
                 </Link>
-                <Link target="_blank" href={`/apps/${session.user.id}/run`}>
+                <Link target="_blank" href={`/apps/${session?.user?.id}/run`}>
                     <button className="cursor-pointer rounded-2xl border bg-gray-500 p-5 text-white">
                         App Preview
                     </button>
