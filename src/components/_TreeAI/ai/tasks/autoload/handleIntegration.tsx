@@ -66,7 +66,7 @@ Instructions:
 
 ${await getFileOutputFormatting()}
 
-                `,
+`,
     });
 
     console.log("chatblocks", chatblocks);

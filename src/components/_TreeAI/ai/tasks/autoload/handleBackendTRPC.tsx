@@ -99,6 +99,9 @@ window.trpcSDK
 - ALWAYS USE "_id" instead of "id" 
 - Example: USE "{ _id, ...updates }" instead of { id, ...updates } 
 
+- DO NOT write: "export function defineBackendProcedures () {}" // bad
+- ALWAYS write: "function defineBackendProcedures () {}" // good
+
 function defineBackendProcedures({ models, otherProcedures, publicProcedure, protectedProcedure }) {
     const { User, ... /* more models are here ... */ } = models;
 
