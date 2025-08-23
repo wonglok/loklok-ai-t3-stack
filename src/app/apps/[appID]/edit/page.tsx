@@ -6,7 +6,7 @@ import { useEffect } from "react";
 
 export default function Page() {
     let params = useParams();
-
+    let appID = useAI((r) => r.appID);
     useEffect(() => {
         useAI.setState({
             appID: `${params.appID}`,
@@ -14,8 +14,8 @@ export default function Page() {
     }, [params]);
     return (
         <>
-            {params.appID && (
-                <VercelLMStudio appID={params.appID as string}></VercelLMStudio>
+            {params.appID && appID && (
+                <VercelLMStudio appID={appID as string}></VercelLMStudio>
             )}
         </>
     );

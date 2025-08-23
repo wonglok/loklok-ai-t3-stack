@@ -15,13 +15,20 @@ export function ViewAI({}) {
         files.map((r) => r.path).join("-"),
         engines.map((r) => `${r.status}${r.modelName}`).join("-"),
     ]);
+    let appID = useAI((r) => r.appID);
 
-    return <CoreRunner files={appFiles}></CoreRunner>;
+    return (
+        <>
+            {appID && appFiles?.length > 0 && (
+                <CoreRunner appID={appID} files={appFiles}></CoreRunner>
+            )}
+        </>
+    );
 }
 
-export function CoreRunner({ files }) {
+export function CoreRunner({ appID, files }) {
     let { show } = useWebView({
-        runPage: "/test/run",
+        runPage: `/apps/${appID}/run`,
         files: [
             ...files,
             {
