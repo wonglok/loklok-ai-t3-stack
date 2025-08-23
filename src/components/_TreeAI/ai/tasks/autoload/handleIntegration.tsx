@@ -48,115 +48,113 @@ export async function handleIntegration({
     let { model, engineSettingData: slot } = await getFreeAIAsync();
     let files = useAI.getState().files;
 
-    //     let chatblocks = [];
-    //     chatblocks.push({
-    //         role: "system",
-    //         content: `${await getAppOverviewPrompt()}`,
-    //     });
+    let chatblocks = [];
+    chatblocks.push({
+        role: "system",
+        content: `${await getAppOverviewPrompt()}`,
+    });
 
-    //     await listOutFilesToChatBlocks({ files, chatblocks });
+    await listOutFilesToChatBlocks({ files, chatblocks });
 
-    //     chatblocks.push({
-    //         role: "user",
-    //         content: `
-    // Instructions:
+    chatblocks.push({
+        role: "user",
+        content: `
+    Instructions:
 
-    // - implement missing trpc backend procedure that are needed by the front end zustand tRPC client calls.
-    // - make sure all backend procedure and front end procedures are matched.
+    - implement any missing trpc backend procedure that are needed by the front end zustand tRPC client calls.
 
-    // ${await getFileOutputFormatting()}
+    ${await getFileOutputFormatting()}
+    `,
+    });
 
-    // `,
-    //     });
+    console.log("chatblocks", chatblocks);
 
-    //     console.log("chatblocks", chatblocks);
+    let response = streamText({
+        // schema: z
+        //     .array(
+        //         z
+        //             .object({
+        //                 path: z.string().describe("file path"),
+        //                 code: z.string().describe("code"),
+        //             })
+        //             .describe("file chatblocks"),
+        //     )
+        //     .describe("list of files and its content"),
+        // schemaName: "file outputs",
+        // schemaDescription: "a list of files to be written to file system",
+        // toolChoice: "required",
+        // tools: {
+        //     ...IOTooling,
+        // },
 
-    //     let response = streamText({
-    //         // schema: z
-    //         //     .array(
-    //         //         z
-    //         //             .object({
-    //         //                 path: z.string().describe("file path"),
-    //         //                 code: z.string().describe("code"),
-    //         //             })
-    //         //             .describe("file chatblocks"),
-    //         //     )
-    //         //     .describe("list of files and its content"),
-    //         // schemaName: "file outputs",
-    //         // schemaDescription: "a list of files to be written to file system",
-    //         // toolChoice: "required",
-    //         // tools: {
-    //         //     ...IOTooling,
-    //         // },
+        messages: [
+            //
+            ...getModelMessagesFromUIMessages(),
+            //
+            ...chatblocks,
 
-    //         messages: [
-    //             //
-    //             ...getModelMessagesFromUIMessages(),
-    //             //
-    //             ...chatblocks,
+            //
+        ],
+        model,
+    });
 
-    //             //
-    //         ],
-    //         model,
-    //     });
+    //
 
-    //     //
+    // let lastFile = "";
+    let parseText = async (text) => {
+        try {
+            const blocks = parseCodeBlocksGen3(`${text}`);
+            console.log("Parsed blocks:", JSON.stringify(blocks, null, 2));
 
-    //     // let lastFile = "";
-    //     let parseText = async (text) => {
-    //         try {
-    //             const blocks = parseCodeBlocksGen3(`${text}`);
-    //             console.log("Parsed blocks:", JSON.stringify(blocks, null, 2));
+            for (let block of blocks) {
+                if (block.action === "create-file") {
+                    await writeFileContent({
+                        summary: `${block.summary}`,
+                        path: `${block.fileName}`,
+                        content: block.code,
+                    });
+                    await saveToBrowserDB();
+                } else if (block.action === "update-file") {
+                    await writeFileContent({
+                        summary: `${block.summary}`,
+                        path: `${block.fileName}`,
+                        content: block.code,
+                    });
+                    await saveToBrowserDB();
+                } else if (block.action === "remove-file") {
+                    await removeFile({
+                        path: `${block.fileName}`,
+                    });
+                } else {
+                }
+            }
+        } catch (e) {
+            if (e instanceof Error) {
+                console.error(`Parse error: ${e.message}`);
+            } else {
+                console.error(e);
+            }
+        }
+    };
 
-    //             for (let block of blocks) {
-    //                 if (block.action === "create-file") {
-    //                     await writeFileContent({
-    //                         summary: `${block.summary}`,
-    //                         path: `${block.fileName}`,
-    //                         content: block.code,
-    //                     });
-    //                     await saveToBrowserDB();
-    //                 } else if (block.action === "update-file") {
-    //                     await writeFileContent({
-    //                         summary: `${block.summary}`,
-    //                         path: `${block.fileName}`,
-    //                         content: block.code,
-    //                     });
-    //                     await saveToBrowserDB();
-    //                 } else if (block.action === "remove-file") {
-    //                     await removeFile({
-    //                         path: `${block.fileName}`,
-    //                     });
-    //                 } else {
-    //                 }
-    //             }
-    //         } catch (e) {
-    //             if (e instanceof Error) {
-    //                 console.error(`Parse error: ${e.message}`);
-    //             } else {
-    //                 console.error(e);
-    //             }
-    //         }
-    //     };
+    let ticker = makeTicker({
+        engineSettingData: slot,
+        displayName: displayName,
+    });
 
-    //     let ticker = makeTicker({
-    //         engineSettingData: slot,
-    //         displayName: displayName,
-    //     });
+    let text = "";
+    for await (let part of response.textStream) {
+        text += part;
+        console.log(text);
 
-    //     let text = "";
-    //     for await (let part of response.textStream) {
-    //         text += part;
-    //         console.log(text);
+        parseText(text);
 
-    //         parseText(text);
+        ticker.tick(text);
+        //
+    }
+    parseText(text);
 
-    //         ticker.tick(text);
-    //         //
-    //     }
-    //     parseText(text);
-
-    //     await saveToBrowserDB();
+    await saveToBrowserDB();
 
     await MyTaskManager.doneTask(task.name);
 

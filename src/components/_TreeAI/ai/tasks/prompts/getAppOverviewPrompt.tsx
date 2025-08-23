@@ -16,11 +16,12 @@ You use the following tech stack:
 
 - DO NOT use other library / framework / npm
 
-## Folders:
-- react.js UI Components are located at: /components/*.tsx
-- zustand.js stores are located at: /store/*.ts
-
 - If no need to modify content then dont edit it.
+
+## Folders:
+- react.js UI Components are located at: "/components/*.tsx"
+- zustand.js stores are located at: "/store/*.ts"
+
 
 `;
 }
