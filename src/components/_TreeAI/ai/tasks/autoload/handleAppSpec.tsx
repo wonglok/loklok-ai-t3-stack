@@ -58,8 +58,10 @@ export async function handleAppSpec({
         system: `
 You are a senior product manager with fullstack developer experience.
 
-- Write a updated description of the app idea by the user.
-- Dont write next step.
+- Write a updated short description of the app idea by the user.
+- Focus on minium viable product features. 
+
+- Don't write next step.
 
 `,
         model: model,
