@@ -27,7 +27,7 @@ export function ViewAI({}) {
 }
 
 export function CoreRunner({ appID, files }) {
-    let { show } = useWebView({
+    let { show, reload } = useWebView({
         runPage: `/apps/${appID}/run`,
         files: [
             ...files,
@@ -109,8 +109,28 @@ let ttt = setInterval(() => {
 
     return (
         <>
-            {/*  */}
-            <div className="h-full w-full p-3">{show}</div>
+            <div className="h-full w-full">
+                <div className="mb-3 w-full p-3" style={{ height: `50px` }}>
+                    <div className="flex justify-end rounded-lg bg-gray-100 p-3">
+                        <button
+                            className="rounded-2xl bg-green-500 p-2 px-4 text-white"
+                            onClick={() => {
+                                reload();
+                            }}
+                        >
+                            Refresh
+                        </button>
+                    </div>
+                </div>
+                <div
+                    className="w-full pt-3"
+                    style={{ height: `calc(100% - 50px - 12px)` }}
+                >
+                    <div className="h-full w-full">
+                        <div className="h-full w-full p-3">{show}</div>
+                    </div>
+                </div>
+            </div>
 
             {/*  */}
         </>

@@ -37,6 +37,14 @@ export const useWebView = ({
     let [frame, setFrame] = useState("");
     let refTimer = useRef(-5000);
 
+    let reload = () => {
+        let frameOld = `${frame}`;
+        setFrame("");
+        setTimeout(() => {
+            setFrame(frameOld);
+        });
+    };
+
     useEffect(() => {
         if (files.length === 0) {
             return;
@@ -96,6 +104,7 @@ export const useWebView = ({
     }, [files.map((r) => r.content + r.summary + r.path).join("_")]);
 
     return {
+        reload: reload,
         show: (
             <>
                 {frame && (
