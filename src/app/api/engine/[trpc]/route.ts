@@ -57,6 +57,7 @@ const handler = async (req: NextRequest) => {
     let defineMongooseModels = await dbPlatform
         .model("AppCodeStore")
         .findOne({ path: `/models/defineMongooseModels.js` })
+        .lean()
         .catch((r) => {
             console.log(r);
             return {
@@ -68,6 +69,7 @@ const handler = async (req: NextRequest) => {
     let defineBackendProcedures = await dbPlatform
         .model("AppCodeStore")
         .findOne({ path: `/trpc/defineBackendProcedures.js` })
+        .lean()
         .catch((r) => {
             console.log(r);
             return {
