@@ -231,7 +231,9 @@ return appRouter;
                     summary: z.string().optional(),
                 }),
             )
-            .mutation(async ({ input }) => {
+            .mutation(async ({ input, ctx }) => {
+                console.log(ctx.session.user);
+
                 await dbPlatform.model("AppCodeStore").findOneAndUpdate(
                     {
                         path: input.path,
@@ -252,13 +254,15 @@ return appRouter;
             }),
         reset: protectedProcedure
             .input(z.object({}))
-            .mutation(async ({ input }) => {
+            .mutation(async ({ input, ctx }) => {
+                console.log(ctx.session.user);
                 await dbPlatform.model("AppCodeStore").deleteMany({});
                 return { ok: "reset" };
             }),
         getFiles: protectedProcedure
             .input(z.object({}))
-            .mutation(async ({ input }) => {
+            .mutation(async ({ input, ctx }) => {
+                console.log(ctx.session.user);
                 let files = await dbPlatform.model("AppCodeStore").find();
                 return JSON.parse(JSON.stringify(files));
             }),
