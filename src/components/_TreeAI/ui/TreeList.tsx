@@ -18,7 +18,13 @@ export function TreeList() {
 
     return (
         <SimpleTreeView
-            defaultExpandedItems={["/docs", "/components"]}
+            defaultExpandedItems={[
+                "/docs",
+                "/components",
+                "/trpc",
+                "/models",
+                "/store",
+            ]}
             className="h-full w-full"
         >
             {/*  */}
@@ -114,6 +120,39 @@ export function TreeList() {
             </TreeItem>
 
             */}
+            <TreeItem
+                itemId="/docs"
+                label={<>{`📄 Docs`}</>}
+                onClick={() => {
+                    //
+                    useAI.setState({
+                        topTab: "code",
+                    });
+                    //
+                }}
+            >
+                {files
+                    .filter((r) => r?.path?.startsWith("/docs"))
+                    .map((r) => {
+                        return (
+                            <TreeItem
+                                key={r.path}
+                                itemId={r.path}
+                                label={
+                                    <div className="h-full w-full overflow-x-auto">
+                                        {r.path}
+                                    </div>
+                                }
+                                onClick={() => {
+                                    useAI.setState({
+                                        topTab: "code",
+                                        currentPath: r.path,
+                                    });
+                                }}
+                            />
+                        );
+                    })}
+            </TreeItem>
 
             <TreeItem
                 itemId="/components"
