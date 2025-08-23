@@ -82,8 +82,6 @@ window.trpcSDK
 
 - There are 2 global varaibles: "protectedProcedure" and "publicProcedure" for private and public access for appRouter
 
-- DO NOT EXPORT "defineBackendProcedures"
-
 - DO NOT CHANGE "defineBackendProcedures" function input arguments
 
 - MUST use Mongoose Models in the "models" argument in the "defineBackendProcedures" function.

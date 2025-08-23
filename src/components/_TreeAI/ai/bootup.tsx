@@ -13,7 +13,7 @@ export const bootup = async ({ appID }) => {
             input: {},
         })) || [];
 
-    console.log(files);
+    console.log("files", files);
 
     if (files instanceof Array) {
         useAI.setState({
@@ -51,32 +51,32 @@ export const SettingsBootUp = () => {
         });
     }, [appID]);
 
-    useEffect(() => {
-        if (!appID) {
-            return;
-        }
+    // useEffect(() => {
+    //     if (!appID) {
+    //         return;
+    //     }
 
-        let db = createInstance({
-            name: `engines-${appID}`,
-        });
+    //     let db = createInstance({
+    //         name: `engines-${appID}`,
+    //     });
 
-        db.getItem("engine-settings").then((engSettting: EngineSetting[]) => {
-            if (engSettting instanceof Array) {
-                engSettting = engSettting.map((it) => {
-                    it.status = "empty";
-                    return it;
-                });
-                useAI.setState({
-                    engines: engSettting,
-                });
-            }
-        });
-        return useAI.subscribe((now, before) => {
-            if (now.engines !== before.engines) {
-                db.setItem("engine-settings", now.engines);
-            }
-        });
-    }, [appID]);
+    //     db.getItem("engine-settings").then((engSettting: EngineSetting[]) => {
+    //         if (engSettting instanceof Array) {
+    //             engSettting = engSettting.map((it) => {
+    //                 it.status = "empty";
+    //                 return it;
+    //             });
+    //             useAI.setState({
+    //                 engines: engSettting,
+    //             });
+    //         }
+    //     });
+    //     return useAI.subscribe((now, before) => {
+    //         if (now.engines !== before.engines) {
+    //             db.setItem("engine-settings", now.engines);
+    //         }
+    //     });
+    // }, [appID]);
 
     useEffect(() => {
         useAI.getState().engines[0].enabled = true;
