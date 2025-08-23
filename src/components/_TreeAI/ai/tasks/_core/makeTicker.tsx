@@ -10,7 +10,7 @@ export let makeTicker = ({ engineSettingData, displayName }) => {
 
             cursor = cursor % symbols.length;
 
-            engineSettingData.bannerText = `${displayName} ${symbols[cursor]}`;
+            engineSettingData.bannerText = ` ${symbols[cursor]} ${displayName} ${symbols[cursor]}`;
 
             refreshEngineSlot(engineSettingData);
         },
