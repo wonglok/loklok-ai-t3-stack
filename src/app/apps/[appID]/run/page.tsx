@@ -163,11 +163,17 @@ let ttt = setInterval(() => {
                         },
                     };
 
+                    let importHTTP = await new Promise((resolve) => {
+                        let ttt = setInterval(() => {
+                            if (window.importHttpModuleCore) {
+                                clearInterval(ttt);
+                                resolve(window.importHttpModuleCore);
+                            }
+                        });
+                    });
                     setTimeout(async () => {
                         // @ts-ignore
-                        await window.importHttpModule2(
-                            `/es-module-shims/es-module-shims.js`,
-                        );
+                        await importHTTP(`/es-module-shims/es-module-shims.js`);
                         // @ts-ignore
                         window.importShim("/src/main.js");
                     }, 10);
@@ -187,7 +193,7 @@ let ttt = setInterval(() => {
                     dangerouslySetInnerHTML={{
                         __html: `
         <script>
-            window.importHttpModule2 = async (value) => {
+            window.importHttpModuleCore = async (value) => {
                 return await import(value);
             };
         </script>
@@ -206,4 +212,10 @@ let ttt = setInterval(() => {
             </div>
         </>
     );
+}
+
+declare global {
+    interface Window {
+        importHttpModuleCore?: () => Promise<any>;
+    }
 }
