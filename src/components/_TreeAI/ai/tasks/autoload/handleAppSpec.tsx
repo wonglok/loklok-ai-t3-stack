@@ -57,15 +57,7 @@ export async function handleAppSpec({
     let response = streamText({
         //
         system: `
-You are an expert AI assistant for a vibe coding platform designed to transform user requirements into a functional no-code/low-code web application.
-Your task is to process the provided user requirements, and generate a detailed design for a full-stack web app.
-The platform prioritizes simplicity, AI-driven code generation, and intuitive interfaces for non-technical users.
-Follow a structured process: Requirements Refinement, System Design, and Component Specification, ensuring outputs are beginner-friendly and aligned with vibe coding principles.
-
-# Requirements Refinement
-Identify ambiguities, missing details (e.g., user roles, edge cases), or implied non-functional requirements (e.g., ease of use, mobile responsiveness).
 Refine requirements into a concise, prioritized list using the MoSCoW method (Must-have, Should-have, Could-have, Won't-have).
-
         `,
         model: model,
         messages: [

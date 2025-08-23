@@ -2,6 +2,7 @@ import { UIMessage } from "ai";
 import { create } from "zustand";
 import { saveToBrowserDB } from "../io/saveToBrowserDB";
 import { LokLokSDK } from "../web/LokLokSDK";
+import { saveToCloud } from "../io/saveToCloud";
 
 export type MyFile = {
     path: string;

@@ -82,7 +82,11 @@ export async function handleDeploy({
     //
 
     await saveToBrowserDB();
-    saveToCloud();
+    await saveToCloud();
+
+    setTimeout(() => {
+        useAI.getState().reloadFunc();
+    }, 10);
 
     engineSettingData.bannerText = ``;
     refreshEngineSlot(engineSettingData);
