@@ -74,6 +74,7 @@ function LMStudioGate({ children }) {
                                     <img
                                         className="m-3 aspect-video h-36"
                                         src={`/img/step1.png`}
+                                        alt=""
                                     ></img>
                                 </Link>
 
@@ -85,6 +86,7 @@ function LMStudioGate({ children }) {
                                     <img
                                         className="m-3 aspect-video h-36"
                                         src={`/img/step2.png`}
+                                        alt=""
                                     ></img>
                                 </Link>
                             </div>
