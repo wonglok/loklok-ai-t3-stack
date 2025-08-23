@@ -49,38 +49,38 @@ export async function handleAppSpec({
     engineSettingData.bannerText = ``;
     refreshEngineSlot(engineSettingData);
 
-    //     let ticker = makeTicker({
-    //         engineSettingData: engineSettingData,
-    //         displayName: displayName,
-    //     });
+    let ticker = makeTicker({
+        engineSettingData: engineSettingData,
+        displayName: displayName,
+    });
 
-    //     let response = streamText({
-    //         //
-    //         system: `
-    // Write a short description of the app idea by the user.
-    //         `,
-    //         model: model,
-    //         messages: [
-    //             //
-    //             ...getModelMessagesFromUIMessages(),
-    //         ],
-    //     });
+    let response = streamText({
+        system: `
+    Write a updated description of the app idea by the user.
+            `,
+        model: model,
+        messages: [
+            //
+            ...getModelMessagesFromUIMessages(),
+        ],
+    });
 
-    //     let text = "";
-    //     for await (let part of response.textStream) {
-    //         text += part;
-    //         console.log(text);
+    let text = "";
+    for await (let part of response.textStream) {
+        text += part;
+        console.log(text);
 
-    //         ticker.tick(text);
-    //     }
+        ticker.tick(text);
+    }
 
-    //     console.log("text", text);
+    console.log("text", text);
 
-    //     await writeFileContent({ path: `/docs/requirements.txt`, content: text });
+    await writeFileContent({ path: `/docs/requirements.txt`, content: text });
 
     console.log("userPrompt", userPrompt);
 
     await MyTaskManager.doneTask(task.name);
+    ticker.remove();
 
     await putBackFreeAIAsync({ engine: engineSettingData });
 

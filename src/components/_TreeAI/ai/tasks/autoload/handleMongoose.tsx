@@ -28,11 +28,11 @@ import { removeFile } from "../../../io/removeFile";
 import { parseCodeBlocksGen3 } from "../_core/LokLokParser3";
 import { getAppOverviewPrompt } from "../prompts/getAppOverviewPrompt";
 import { getFileOutputFormatting } from "../prompts/getFileOutputFormatting";
-import { v4 } from "uuid";
-import { putUIMessage } from "../../putUIMessage";
-import { removeUIMessage } from "../../removeUIMessage";
+// import { v4 } from "uuid";
+// import { putUIMessage } from "../../putUIMessage";
+// import { removeUIMessage } from "../../removeUIMessage";
 import { listOutFilesToChatBlocks } from "../prompts/listOutFilesToChatBlocks";
-import { LokLokSDK } from "../../../web/LokLokSDK";
+// import { LokLokSDK } from "../../../web/LokLokSDK";
 import { makeTicker } from "../_core/makeTicker";
 import { saveToCloud } from "@/components/_TreeAI/io/saveToCloud";
 

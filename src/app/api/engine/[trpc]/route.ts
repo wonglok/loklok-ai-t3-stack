@@ -28,15 +28,23 @@ const handler = async (req: NextRequest) => {
 
     let appHashID = `${shortHash(md5(`${appID}${process.env.NODE_ENV}${process.env.AUTH_SECRET}`))}`;
 
+    let phase = "dev";
+    if (process.env.NODE_ENV === "development") {
+        phase = "dev";
+    }
+    if (process.env.NODE_ENV === "production") {
+        phase = "prod";
+    }
+    if (process.env.NODE_ENV === "test") {
+        phase = "test";
+    }
+
     console.log(appID);
     console.log(appHashID);
 
-    const dbPlatform = mongoose.connection.useDb(
-        `os_${process.env.NODE_ENV}_${appHashID}`,
-        {
-            useCache: true,
-        },
-    );
+    const dbPlatform = mongoose.connection.useDb(`os_${phase}_${appHashID}`, {
+        useCache: true,
+    });
 
     const AppCodeStore = new mongoose.Schema(
         {
@@ -184,7 +192,7 @@ return appRouter;
         //
 
         const dbAppInstance = mongoose.connection.useDb(
-            `app_${process.env.NODE_ENV}_${appHashID}`,
+            `app_${phase}_${appHashID}`,
             {
                 useCache: true,
             },
