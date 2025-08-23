@@ -93,15 +93,15 @@ const handler = async (req: NextRequest) => {
     let defineBackendProceduresContent =
         toJSON(defineBackendProcedures)?.content || "";
 
-    console.log(`
-            
-            
+    if (process.env.NODE_ENV === "development") {
+        console.log(`
 /////
 ${defineMongooseModelsContent}
 /////
 ${defineBackendProceduresContent}
-
 `);
+    }
+
     try {
         let func = new Function(
             `args`,
