@@ -26,7 +26,7 @@ const handler = async (req: NextRequest) => {
 
     let appID = req.headers.get("app-id");
 
-    let appHashID = `${shortHash(md5(`${appID}${process.env.AUTH_SECRET}`))}`;
+    let appHashID = `${shortHash(md5(`${appID}${process.env.NODE_ENV}${process.env.AUTH_SECRET}`))}`;
 
     console.log(appID);
     console.log(appHashID);
