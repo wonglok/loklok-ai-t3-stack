@@ -2,6 +2,7 @@ import { v4 } from "uuid";
 import { refreshEngineSlot } from "../../refreshEngines";
 import { putUIMessage } from "../../putUIMessage";
 import { UIMessage } from "ai";
+import { removeUIMessage } from "../../removeUIMessage";
 
 export let makeTicker = ({ engineSettingData, displayName }) => {
     let symbols = [`✨`, "🤩", "⭐️", "❤️", "💙", "💛", "💖", "😍", "🥰"];
@@ -37,6 +38,10 @@ export let makeTicker = ({ engineSettingData, displayName }) => {
             putUIMessage(uiMsg as UIMessage);
 
             refreshEngineSlot(engineSettingData);
+        },
+
+        remove: () => {
+            removeUIMessage(uiMsg as UIMessage);
         },
     };
 };

@@ -184,6 +184,7 @@ ${await getFileOutputFormatting()}
 
     await saveToBrowserDB();
     saveToCloud();
+    ticker.remove();
 
     await MyTaskManager.doneTask(task.name);
 
