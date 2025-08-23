@@ -20,7 +20,8 @@ You use the following tech stack:
 - trpc
 - typescript
 
-- DO NOT use other library / framework / npm
+- MUST NOT use other library / framework / npm
+- NEVER common.js style require or module.export
 
 - If no need to modify content then dont edit it.
 
