@@ -1,6 +1,6 @@
 "use client";
-import { useAI } from "@/app/test/_TreeAI/state/useAI";
-import { VercelLMStudio } from "@/app/test/_TreeAI/ui/VercelLMStudio";
+import { useAI } from "@/components/_TreeAI/state/useAI";
+import { VercelLMStudio } from "@/components/_TreeAI/ui/VercelLMStudio";
 import { useParams } from "next/navigation";
 import { useEffect } from "react";
 

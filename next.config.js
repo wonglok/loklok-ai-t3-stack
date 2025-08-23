@@ -6,7 +6,7 @@ import "./src/env.js";
 
 import fs from 'fs'
 import path from 'path'
-import { NPMCacheTasks } from "./src/app/test/_TreeAI/web/npm-globals.js";
+import { NPMCacheTasks } from "./src/components/_TreeAI/web/npm-globals.js";
 
 NPMCacheTasks.filter(r => r.output).map((tsk) => {
 

@@ -2,7 +2,7 @@
 
 import { transform } from "sucrase";
 import path from "path";
-import { NPMCacheTasks } from "@/app/test/_TreeAI/web/npm-globals";
+import { NPMCacheTasks } from "@/components/_TreeAI/web/npm-globals";
 
 export const rollupCode = async ({ files = [] }) => {
     const CodePrefix = `loklokcode:`;

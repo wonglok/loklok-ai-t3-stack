@@ -1,6 +1,6 @@
 "use client";
-import { LokLokSDK } from "@/app/test/_TreeAI/web/LokLokSDK";
-import { NPMCacheTasks } from "@/app/test/_TreeAI/web/npm-globals";
+import { LokLokSDK } from "@/components/_TreeAI/web/LokLokSDK";
+import { NPMCacheTasks } from "@/components/_TreeAI/web/npm-globals";
 // import ReactDOM19 from "react-dom/client";
 import * as React19 from "react";
 // import * as ReactThreeDrei from "@react-three/drei";

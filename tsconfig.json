@@ -41,8 +41,8 @@
         "src/app/app-editor/[appID]/ui/util/CodePod.jsx",
         "src/app/app-editor/[appID]/ui/util/useFilesFrameHook.jsx",
         "src/app/app-editor/[appID]/ui/util/CodeRunner.jsx",
-        "src/app/test/_TreeAI/aaaa",
-        "src/app/test/_TreeAI/web/rollupCode.ts"
+        "src/components/_TreeAI/aaaa",
+        "src/components/_TreeAI/web/rollupCode.ts"
     ],
     "exclude": ["node_modules", "public"]
 }

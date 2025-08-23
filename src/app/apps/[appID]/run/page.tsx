@@ -1,13 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { LokLokSDK } from "@/app/test/_TreeAI/web/LokLokSDK";
+import { LokLokSDK } from "@/components/_TreeAI/web/LokLokSDK";
 import { useParams } from "next/navigation";
-import { rollupCode } from "@/app/test/_TreeAI/web/rollupCode";
+import { rollupCode } from "@/components/_TreeAI/web/rollupCode";
 // import { RuntimeCore } from "@/app/test/_TreeAI/web/RuntimeCore";
 // import { LokRuntimeCore } from "./_run/LokRuntimeCore";
 import * as React19 from "react";
-import { NPMCacheTasks } from "@/app/test/_TreeAI/web/npm-globals";
+import { NPMCacheTasks } from "@/components/_TreeAI/web/npm-globals";
 
 export default function AppRun() {
     let { appID } = useParams();

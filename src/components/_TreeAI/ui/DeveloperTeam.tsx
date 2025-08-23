@@ -121,13 +121,14 @@ function EnableSwitch({ name }: { name: string }) {
 
     return (
         <>
-            {(item.status === "working" ||
-                item.status === "reserved" ||
-                item.status === "downloading") && (
-                <div className="pr-3">
-                    <LoaderIcon className="animate-spin"></LoaderIcon>
-                </div>
-            )}
+            {item.enabled &&
+                (item.status === "working" ||
+                    item.status === "reserved" ||
+                    item.status === "downloading") && (
+                    <div className="pr-3">
+                        <LoaderIcon className="animate-spin"></LoaderIcon>
+                    </div>
+                )}
 
             <Switch
                 disabled={atLeastOneWorkerRunning}

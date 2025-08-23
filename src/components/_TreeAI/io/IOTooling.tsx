@@ -1,7 +1,7 @@
 import { tool } from "ai";
 import z from "zod";
-import { readFileContent } from "../io/readFileContent";
-import { writeFileContent } from "../io/writeFileContent";
+import { readFileContent } from "./readFileContent";
+import { writeFileContent } from "./writeFileContent";
 
 export const IOTooling = {
     readFile: tool({

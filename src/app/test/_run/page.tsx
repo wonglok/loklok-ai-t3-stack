@@ -1,6 +1,6 @@
 "use client";
-import { useAI } from "../_TreeAI/state/useAI";
-import { RuntimeCore } from "../_TreeAI/web/RuntimeCore";
+import { useAI } from "../../../components/_TreeAI/state/useAI";
+import { RuntimeCore } from "../../../components/_TreeAI/web/RuntimeCore";
 
 export default function Page() {
     let appID = useAI((r) => r.appID);
