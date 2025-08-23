@@ -26,9 +26,9 @@ const handler = async (req: NextRequest) => {
 
     let appID = req.headers.get("app-id");
 
-    console.log(appID);
-
     let appHashID = `${shortHash(md5(`${appID}${process.env.AUTH_SECRET}`))}`;
+
+    console.log(appID);
     console.log(appHashID);
 
     const dbPlatform = mongoose.connection.useDb(
