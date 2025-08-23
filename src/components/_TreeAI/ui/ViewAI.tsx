@@ -135,7 +135,7 @@ let ttt = setInterval(() => {
                     style={{ height: `calc(100% - 50px - 12px)` }}
                 >
                     <div className="h-full w-full">
-                        <div className="h-full w-full p-3">{show}</div>
+                        <div className="h-full w-full bg-white p-3">{show}</div>
                     </div>
                 </div>
             </div>
