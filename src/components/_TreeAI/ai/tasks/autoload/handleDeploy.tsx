@@ -82,6 +82,17 @@ export async function handleDeploy({
         useAI.getState().reloadFunc();
     }, 10);
     //
+    let uiMsg = {
+        id: `${v4()}`,
+        role: "assistant",
+        parts: [
+            {
+                type: "data-deployed",
+                data: `Deployed`, // text
+            },
+        ],
+    };
+    putUIMessage(uiMsg as UIMessage);
 
     await saveToBrowserDB();
     await saveToCloud();
@@ -96,23 +107,6 @@ export async function handleDeploy({
 
     engineSettingData.bannerText = ``;
     refreshEngineSlot(engineSettingData);
-
-    let uiMsg = {
-        id: `${v4()}`,
-        role: "assistant",
-        parts: [
-            {
-                type: "data-deployed",
-                data: `Deployed`, // text
-            },
-            // {
-            //     type: "data-codeedit-btn",
-            //     data: ``, // path
-            // },
-            //data-codeedit
-        ],
-    };
-    putUIMessage(uiMsg as UIMessage);
 
     await MyTaskManager.doneTask(task.name);
     await putBackFreeAIAsync({ engine: engineSettingData });

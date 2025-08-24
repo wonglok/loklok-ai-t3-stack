@@ -8,15 +8,13 @@ export async function listOutFilesToChatBlocks({ files, chatblocks }) {
         chatblocks.push({
             role: "user",
             content: `
-[file: "${ff.path}"------file_begin]
-    [file: "${ff.path}"------summary_start]
-Summary of this file:
+File Path: ${ff.path}
+File Summary: 
 ${ff.summary}
-    [file: "${ff.path}"------summary_end]
-    [file: "${ff.path}"------content_start]
+
+File Content: 
 ${ff.content}
-    [file: "${ff.path}"------content_end]
-[file: "${ff.path}"------file_end]`,
+`,
         });
     });
 }

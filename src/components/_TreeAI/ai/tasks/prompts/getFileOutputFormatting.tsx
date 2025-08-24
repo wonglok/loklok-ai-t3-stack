@@ -24,7 +24,5 @@ export async function getFileOutputFormatting() {
 - if there is no existing file, then you can [TJ_TAG action="create-file" ...]
 - if you need to remove existing file, then you can [TJ_TAG action="remove-file" ...]
 
-Remove files that are orphaned and not used by anything.
-
 `;
 }

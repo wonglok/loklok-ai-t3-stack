@@ -47,55 +47,55 @@ export async function handleAppSpec({
     engineSettingData.bannerText = ``;
     refreshEngineSlot(engineSettingData);
 
-    let ticker = makeTicker({
-        engineSettingData: engineSettingData,
-        displayName: displayName,
-    });
+    //     let ticker = makeTicker({
+    //         engineSettingData: engineSettingData,
+    //         displayName: displayName,
+    //     });
 
-    let response = streamText({
-        system: `
+    //     let response = streamText({
+    //         system: `
 
-You are a senior developer who has product management skills. You help user analyse the tech sepc.
+    // You are a senior developer who has product management skills. You help user analyse the tech sepc.
 
-    # Output format:
-    
-    ## mongoose collections
-    [mongoose name, desc]
+    //     # Output format:
 
-    ## trpcProcedures
-    [prcedure name, desc]
-    
-    ## trpcProcedures
-    [prcedure name, desc]
-    
-    ## zustand
-    [zustand state props name, desc]
-    [zustand api method call name, desc]
+    //     ## mongoose collections
+    //     [mongoose name, desc]
 
-    ## react js ui components
-    [ui components names, desc]
-    
-        `,
-        model: model,
-        messages: [
-            //
-            ...getModelMessagesFromUIMessages(),
-        ],
-    });
+    //     ## trpcProcedures
+    //     [prcedure name, desc]
 
-    let text = "";
-    for await (let part of response.textStream) {
-        text += part;
-        console.log(text);
+    //     ## trpcProcedures
+    //     [prcedure name, desc]
 
-        ticker.tick(text);
-    }
+    //     ## zustand
+    //     [zustand state props name, desc]
+    //     [zustand api method call name, desc]
 
-    console.log("text", text);
+    //     ## react js ui components
+    //     [ui components names, desc]
 
-    await writeFileContent({ path: `/docs/requirements.md`, content: text });
+    //         `,
+    //         model: model,
+    //         messages: [
+    //             //
+    //             ...getModelMessagesFromUIMessages(),
+    //         ],
+    //     });
 
-    ticker.remove();
+    //     let text = "";
+    //     for await (let part of response.textStream) {
+    //         text += part;
+    //         console.log(text);
+
+    //         ticker.tick(text);
+    //     }
+
+    //     console.log("text", text);
+
+    //     await writeFileContent({ path: `/docs/requirements.md`, content: text });
+
+    //     ticker.remove();
 
     await MyTaskManager.doneTask(task.name);
 
