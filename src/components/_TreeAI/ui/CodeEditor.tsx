@@ -7,6 +7,7 @@ import {
     MonacoJsxSyntaxHighlight,
 } from "monaco-jsx-syntax-highlight";
 import { getLang } from "./func/getLang";
+import { saveToCloud } from "../io/saveToCloud";
 
 export function CodeEditor() {
     // let ref = useRef<any>(null);
@@ -141,6 +142,8 @@ export function CodeEditor() {
                             onChange={(v) => {
                                 if (file) {
                                     file.content = `${v}`;
+
+                                    saveToCloud();
                                 }
                             }}
                         ></Editor>

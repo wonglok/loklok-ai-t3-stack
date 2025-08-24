@@ -1,6 +1,6 @@
 import { useAI } from "../state/useAI";
 import { LokLokSDK } from "../web/LokLokSDK";
-
+import nprogress from "nprogress";
 let timer000;
 export const saveToCloud = async () => {
     console.log("save-to-cloud");
@@ -12,7 +12,9 @@ export const saveToCloud = async () => {
         const files = useAI.getState().files;
 
         let sdk = new LokLokSDK({ appID });
+        let i = 0;
         for (let file of files) {
+            nprogress.set(i / files.length);
             await sdk.setupPlatform({
                 procedure: "setFS",
                 input: {
@@ -21,6 +23,7 @@ export const saveToCloud = async () => {
                     summary: file.summary || "",
                 },
             });
+            i++;
         }
     }, 1500);
 };
