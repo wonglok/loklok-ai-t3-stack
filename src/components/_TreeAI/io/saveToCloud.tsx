@@ -14,7 +14,7 @@ export const saveToCloud = async () => {
         let sdk = new LokLokSDK({ appID });
         let i = 0;
         for (let file of files) {
-            nprogress.set(i / files.length);
+            nprogress.set(i / (files.length - 1));
             await sdk.setupPlatform({
                 procedure: "setFS",
                 input: {
@@ -25,6 +25,7 @@ export const saveToCloud = async () => {
             });
             i++;
         }
+        nprogress.done();
     }, 1500);
 };
 

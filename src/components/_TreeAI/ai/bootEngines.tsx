@@ -44,7 +44,7 @@ export const bootEngines = async () => {
                                 useAI.setState({
                                     engines: [...engines],
                                 });
-                                nprogress.inc();
+                                nprogress.set(ev);
                             },
                             config: {
                                 evalBatchSize: Math.floor(131070 / 2.1),
@@ -54,6 +54,8 @@ export const bootEngines = async () => {
                         .catch((e) => {
                             console.log(e);
                         });
+
+                    nprogress.done();
 
                     engine.bannerText = ``;
                     useAI.setState({
