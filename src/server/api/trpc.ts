@@ -100,7 +100,9 @@ export const createAppTRPCContext = async (opts: { headers: Headers }) => {
 
         let found = await dbAppInstance
             .model("User")
-            .findOne({ _id: `${userData.id}` })
+            .findOne({
+                _id: userData.id,
+            })
             .select({
                 _id: true,
                 email: true,
@@ -257,7 +259,7 @@ export const protectedAppProcedure = t.procedure
         //     throw new TRPCError({ code: "UNAUTHORIZED" });
         // }
 
-        console.log(ctx.session);
+        // console.log(ctx.session);
 
         return next({
             ctx: {

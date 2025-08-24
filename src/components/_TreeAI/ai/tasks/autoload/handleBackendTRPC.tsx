@@ -87,13 +87,13 @@ window.trpcSDK
         console.log(result); // result is obtained via async functuin call
     });
 
-- MUST write all the backend trpc procedures in this file: "/trpc/defineBackendProcedures.js"
+- MUST write all the backend trpc procedures in this file: "/trpc/*.js"
 
 - There are 2 global varaibles: "protectedProcedure" and "publicProcedure" for private and public access for appRouter
 
-- DO NOT CHANGE "defineBackendProcedures" function input arguments
+- DO NOT CHANGE Immediately Invoked Function Expression input arguments
 
-- MUST use Mongoose Models in the "models" argument in the "defineBackendProcedures" function.
+- MUST use Mongoose Models in the "models" argument in the Immediately Invoked Function Expression.
 
 - DO NOT USE In-memory mock store 
 
@@ -112,33 +112,29 @@ window.trpcSDK
 - ALWAYS use: ctx.session.user to get user from the procedure context (GOOD)
 - NEVER use: ctx.user to get user from the procedure context (BAD)
 
-
-function defineBackendProcedures({ models, z, otherProcedures, publicProcedure, protectedProcedure, jwt, bcrypt, JWT_SECRET, mongoose, ObjectId }) {
+- Example: login register etc
+(function ({ z, models, allProcedures, publicProcedure, protectedProcedure, jwt, bcrypt, JWT_SECRET, ObjectId, mongoose }) {
     const { Task } = models;
 
-    return {
-        ...otherProcedures,
+    // Register a new user (public)
+    allProcedures.publicProcedure
+        .input(z.object({
+            email: z.string(),
+            password: z.string().min(6),
+        }))
+        .mutation(async ({ input }) => {
+            const { User } = models;
+            const existing = await User.findOne({ email: input.email });
+            if (existing) throw new Error('Email already in use');
 
-        // Register a new user (public)
-        register: publicProcedure
-            .input(z.object({
-                email: z.string(),
-                password: z.string().min(6),
-            }))
-            .mutation(async ({ input }) => {
-                const { User } = models;
-                const existing = await User.findOne({ email: input.email });
-                if (existing) throw new Error('Email already in use');
+            const hashed = await bcrypt.hash(input.password, 10);
+            const user = await User.create({ email: input.email, passwordHash: hashed });
 
-                const hashed = await bcrypt.hash(input.password, 10);
-                const user = await User.create({ email: input.email, password: hashed });
-
-                const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '1d' });
-                return { token };
-            }),
-
-        // Login existing user (public)
-        login: publicProcedure 
+            const token = jwt.sign({ _id: String(user._id) }, JWT_SECRET, { expiresIn: '1d' });
+            return { token };
+        });
+    
+    allProcedures.login = publicProcedure
             .input(z.object({
                 email: z.string(),
                 password: z.string(),
@@ -152,70 +148,73 @@ function defineBackendProcedures({ models, z, otherProcedures, publicProcedure, 
                 const match = await bcrypt.compare(input.password, user.passwordHash);
                 if (!match) throw new Error('Invalid credentials');
 
-                const token = jwt.sign({ id: JSON.stringify(user._id) }, JWT_SECRET, { expiresIn: '1week' });
+                const token = jwt.sign({ _id: String(user._id) }, JWT_SECRET, { expiresIn: '1week' });
                 return { token };
-            }),
+            });
+
+}({ z, models, allProcedures, publicProcedure, protectedProcedure, jwt, bcrypt, JWT_SECRET, ObjectId, mongoose }))
 
 
-        // Example
-        // Get all tasks for the logged in user (protected)
-        getTasks: protectedProcedure
+- Example: Tasks Management
+(function ({ z, models, allProcedures, publicProcedure, protectedProcedure, jwt, bcrypt, JWT_SECRET, ObjectId, mongoose }) {
+    const { Task } = models;
+
+    allProcedures.getTasks = protectedProcedure
             .mutation(async ({ ctx }) => {
-                const tasks = await Task.find({ userID: ObjectId.createFromHexString(ctx.session.user._id + "") }).sort({ _id: -1 }).lean();
-                console.log(tasks)
+                const tasks = await Task.find({ userID: ObjectId.createFromHexString(ctx.session.user._id) })
+                    .sort({ _id: -1 })
+                    .lean();
                 return tasks;
-            }),
+            });
 
-        // Example
-        // Add a new task (protected)
-        addTask: protectedProcedure
+
+    allProcedures.addTask = protectedProcedure
             .input(z.object({
                 title: z.string(),
             }))
             .mutation(async ({ input, ctx }) => {
-                console.log('ctx.session.user', ctx.session.user._id)
-
-                const task = await Task.create({ 
-                    title: input.title, 
-                    completed: false, 
-                    userID: ObjectId.createFromHexString(ctx.session.user._id + "") 
+                const task = await Task.create({
+                    title: input.title,
+                    completed: false,
+                    userID: ObjectId.createFromHexString(ctx.session.user._id),
                 });
 
                 return JSON.parse(JSON.stringify(task));
-            }),
+            });
 
-        // Example
-        // Toggle completion status of a task (protected)
-        toggleTask: protectedProcedure
+            
+
+    allProcedures.toggleTask = protectedProcedure
             .input(z.object({
                 _id: z.string(),
             }))
             .mutation(async ({ input, ctx }) => {
-                const task = await Task.findOne({ _id: ObjectId.createFromHexString(input._id), userID: ObjectId.createFromHexString(ctx.session.user._id + "") });
+                const task = await Task.findOne({
+                    _id: ObjectId.createFromHexString(input._id),
+                    userID: ObjectId.createFromHexString(ctx.session.user._id),
+                });
 
                 if (!task) throw new Error('Task not found');
 
                 task.completed = !task.completed;
                 await task.save();
                 return task;
-            }),
+            });
 
-        // Example
-        // Delete a task (protected)
-        deleteTask: protectedProcedure
+    allProcedures.deleteTask = protectedProcedure
             .input(z.object({
                 _id: z.string(),
             }))
             .mutation(async ({ input, ctx }) => {
-
-                
-                const result = await Task.deleteOne({ _id: ObjectId.createFromHexString(input._id), userID: ObjectId.createFromHexString(ctx.session.user._id + "") });
-                
-                
+                await Task.deleteOne({
+                    _id: ObjectId.createFromHexString(input._id),
+                    userID: ObjectId.createFromHexString(ctx.session.user._id),
+                });
                 return { success: true };
-            }),
-    }
-}
+            });
+
+}({ z, models, allProcedures, publicProcedure, protectedProcedure, jwt, bcrypt, JWT_SECRET, ObjectId, mongoose }))
+
 
 - Only Implement "defineBackendProcedures" function
 - DO NOT write any other function or file

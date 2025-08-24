@@ -63,53 +63,40 @@ export async function handleMongoose({
         content: `
 Instructions:
 
-- Identify mongoose models for backend and implement it in "defineMongooseModels", use only javascript ".js" files:
-- DO NOT WRAP THE CODE WITH markdown
-- ONLY WRITE PURE CODE FOR
-- Dont import anything
+- Identify mongoose models for backend and implement it in "/models/*.js", use only javascript ".js" files:
+- MUST ONLY WRITE PURE CODE
+- MUST NEVER WRAP THE CODE WITH markdown
+- MUST NEVER import anything
+- MUST NEVER export {anything}
+- MUST NEVER export default anything
+- MUST WRITE the backend trpc procedures in this file: "/models/*.js"
+- MUST WRITE Immediately Invoked Function Expression
+- MUST KEEP Immediately Invoked Function Expression argument not changed
+- MUST NOT WRITE tRPC Procedures here 
 
-- please write the backend trpc procedures in this file: "/models/defineMongooseModels.js"
-
-- MUST INCLUDE this "defineMongooseModels" typescript function:
-- for eaxmple the Example Schema and Models
-- Dont change "getAllModesl"
-- DONT EXPORT "defineMongooseModels"
+- for eaxmple the Example User Schema & Models
 - NEVER common.js style require or module.export
 
-function defineMongooseModels({ dbInstance, Schema, ObjectId }) {
+// Immediately Invoked Function Expression
+(function ({ allModels, dbInstance, Schema, ObjectId }) {
     const db = dbInstance
 
     // User schema
     const UserSchema = new Schema({
         email: { type: String, required: true, unique: true },
         passwordHash: { type: String, required: true }
-        // ...
     })
     if (!db.models['User']) {
         db.model("User", UserSchema)
     }
+    allModels.User = db.model("User");
 
-    // Task schema (example)
-    const TaskSchema = new Schema({
-        title: { type: String, required: true },
-        completed: { type: Boolean, default: false },
-        userID: { type: ObjectId, ref: 'User', required: true  }
-    })
-    if (!db.models['Task']) {
-        db.model("Task", TaskSchema)
-    }
+}({ allModels, dbInstance, Schema, ObjectId }));
 
-    return {
-        ["User"]: db.model("User"),
-        ["Task"]: db.model("Task")
-    };
-}
-
-- Only Implement "defineMongooseModels" function
-- DO NOT write any other function or file
+- Implement mode one by one in folder  "/models/*.js"
 
 # instruction
-update suitable code files to meet the latest requirements
+update suitable code files to meet the latest requirements:
 
 ${await getFileOutputFormatting()}
 

@@ -2,102 +2,31 @@ import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 import { type NextRequest } from "next/server";
 
 import { env } from "@/env";
-import { appRouter } from "@/server/api/root";
-import {
-    createAppTRPCContext,
-    createTRPCContext,
-    createTRPCRouter,
-    getInfoByAppID,
-    protectedAppProcedure,
-    t,
-    timingMiddleware,
-} from "@/server/api/trpc";
-import { z, ZodError } from "zod";
+import { createTRPCContext, createTRPCRouter } from "@/server/api/trpc";
+import { z } from "zod";
 
 import { protectedProcedure, publicProcedure } from "@/server/api/trpc";
 import mongoose from "mongoose";
-// import md5 from "md5";
-// import shortHash from "short-hash";
+import md5 from "md5";
+import shortHash from "short-hash";
+import { toJSON } from "./_core/toJSON";
+import { buildModels } from "./_core/buildModels";
+import { buildProcedures } from "./_core/buildProcedures";
 // import { appRouter } from "@/server/api/root";
-
-import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
-import { initTRPC } from "@trpc/server";
-import SuperJSON from "superjson";
-import { ObjectId } from "mongodb";
 
 /**
  * This wraps the `createTRPCContext` helper and provides the required context for the tRPC API when
  * handling a HTTP request (e.g. when you make requests from Client Components).
  */
 const createContext = async (req: NextRequest) => {
-    return createAppTRPCContext({
+    return createTRPCContext({
         headers: req.headers,
     });
 };
 
-const handler = async (req: NextRequest) => {
-    await mongoose.connect(`${process.env.MONGO_DEVELOP}`);
-
-    let appID = req.headers.get("app-id");
-
-    let { appHashID, phase, dbAppInstance, dbPlatform, JWT_SECRET } =
-        getInfoByAppID(appID);
-
-    console.log(appID);
-    console.log(appHashID);
-
-    const AppCodeStore = new mongoose.Schema(
-        {
-            versionID: { type: String, required: false },
-            path: { type: String, required: true },
-            summary: { type: String, required: true },
-            content: { type: String },
-        },
-        {
-            timestamps: true,
-        },
-    );
-
-    if (!dbPlatform.models["AppCodeStore"]) {
-        dbPlatform.model("AppCodeStore", AppCodeStore);
-    }
-    dbPlatform.model("AppCodeStore").deleteOne({});
-    let defineMongooseModels = await dbPlatform
-        .model("AppCodeStore")
-        .findOne({ path: `/models/defineMongooseModels.js` })
-        .lean()
-        .catch((r) => {
-            console.log(r);
-            return {
-                path: `/models/defineMongooseModels.js`,
-                content: ``,
-            };
-        });
-
-    let defineBackendProcedures = await dbPlatform
-        .model("AppCodeStore")
-        .findOne({ path: `/trpc/defineBackendProcedures.js` })
-        .lean()
-        .catch((r) => {
-            console.log(r);
-            return {
-                path: `/trpc/defineBackendProcedures.js`,
-                content: ``,
-            };
-        });
-
-    let toJSON = (v) => JSON.parse(JSON.stringify(v));
-
-    let appRouter;
-
-    let defineMongooseModelsContent =
-        toJSON(defineMongooseModels)?.content || "";
-    let defineBackendProceduresContent =
-        toJSON(defineBackendProcedures)?.content || "";
-
+const buildAppRouter = async ({ appID, appHashID, dbPlatform, phase }) => {
     try {
-        let func = new Function(
+        let buildAppRouter = new Function(
             `args`,
             `
 const createTRPCRouter = args.createTRPCRouter;
@@ -108,33 +37,12 @@ const post = args.post;
 const mongoose = args.mongoose;
 const dbInstance = args.dbInstance;
 const Schema = args.Schema;
-const ObjectId = args.ObjectId;
-
-const jwt = args.jwt;
-const bcrypt = args.bcrypt;
-const JWT_SECRET = args.JWT_SECRET;
+const procedures = args.procedures;
 
 let appRouter;
-let models = {}; 
-let addons = {};
-
-${defineMongooseModelsContent}
-
-${defineBackendProceduresContent}
-
 try {
-    
-    if (typeof defineMongooseModels !== 'undefined') {
-        models = defineMongooseModels({  dbInstance, Schema, mongoose, ObjectId });
-    }
-
-    if (typeof defineBackendProcedures !== 'undefined') {
-        addons = defineBackendProcedures({ z, models, otherProcedures: {}, publicProcedure, protectedProcedure, jwt, bcrypt, JWT_SECRET, ObjectId, mongoose })
-    }
-
     appRouter = createTRPCRouter({
-        //
-        ...addons,
+        ...procedures,
             
         hello: publicProcedure
             .input(z.object({ text: z.string() }))
@@ -144,23 +52,7 @@ try {
                 };
             }),
 
-        // create: protectedProcedure
-        //     .input(z.object({ name: z.string().min(1) }))
-        //     .mutation(async ({ input }) => {
-        //         post = { id: post.id + 1, name: input.name };
-        //         return post;
-        //     }),
-        //
-
-        // getLatest: protectedProcedure.mutation(() => {
-        //     return post;
-        // }),
-
-        // getSecretMessage: protectedProcedure.mutation(() => {
-        //     return "you can now see this secret message!";
-        // }),
-
-    });
+        });
 } catch (e) {
     console.error(e);
     appRouter = createTRPCRouter({
@@ -178,27 +70,47 @@ return appRouter;
     `,
         );
 
-        appRouter = await func({
+        //
+
+        const dbAppInstance = mongoose.connection.useDb(
+            `app_${phase}_${appHashID}`,
+            {
+                useCache: true,
+            },
+        );
+
+        let models = await buildModels({
+            appID,
+            phase,
+            dbPlatform,
+            appHashID,
+            dbAppInstance,
+        });
+
+        let procedures = await buildProcedures({
+            appID,
+            phase,
+            dbPlatform,
+            appHashID,
+            models,
+        });
+
+        return await buildAppRouter({
             createTRPCRouter,
-            protectedProcedure: protectedProcedure,
-            publicProcedure: publicProcedure,
+            protectedProcedure,
+            publicProcedure,
             z,
             mongoose,
             appHashID: appHashID,
             dbPlatform: dbPlatform,
             dbInstance: dbAppInstance,
             Schema: mongoose.Schema,
-            jwt: jwt,
-            bcrypt: bcrypt,
-            JWT_SECRET: JWT_SECRET,
-            ObjectId: ObjectId,
+            procedures: procedures,
         });
-        // ()
-        //
     } catch (e) {
         console.error(e);
 
-        appRouter = createTRPCRouter({
+        return createTRPCRouter({
             hello: publicProcedure
                 .input(z.object({ text: z.string() }))
                 .mutation(({ input }) => {
@@ -208,9 +120,51 @@ return appRouter;
                 }),
         });
     }
+};
+
+const handler = async (req: NextRequest) => {
+    await mongoose.connect(`${process.env.MONGO_DEVELOP}`);
+
+    let appID = req.headers.get("app-id");
+
+    let appHashID = `${shortHash(md5(`${appID}${process.env.NODE_ENV}${process.env.AUTH_SECRET}`))}`;
+
+    let phase = "dev";
+    if (process.env.NODE_ENV === "development") {
+        phase = "dev";
+    }
+    if (process.env.NODE_ENV === "production") {
+        phase = "prod";
+    }
+    if (process.env.NODE_ENV === "test") {
+        phase = "test";
+    }
+
+    console.log("appID", appID);
+    console.log("appHashID", appHashID);
+    console.log("phase", phase);
+
+    const dbPlatform = mongoose.connection.useDb(`os_${phase}_${appHashID}`, {
+        useCache: true,
+    });
+
+    const AppCodeStore = new mongoose.Schema(
+        {
+            versionID: { type: String, required: false },
+            path: { type: String, required: true },
+            summary: { type: String, required: true },
+            content: { type: String },
+        },
+        {
+            timestamps: true,
+        },
+    );
+
+    if (!dbPlatform.models["AppCodeStore"]) {
+        dbPlatform.model("AppCodeStore", AppCodeStore);
+    }
 
     let platformRouter = createTRPCRouter({
-        //publicProcedure
         setFS: protectedProcedure
             .input(
                 z.object({
@@ -241,7 +195,6 @@ return appRouter;
                     content: updated.content,
                 };
             }),
-
         reset: protectedProcedure
             .input(z.object({}))
             .mutation(async ({ input, ctx }) => {
@@ -249,7 +202,6 @@ return appRouter;
                 await dbPlatform.model("AppCodeStore").deleteMany({});
                 return { ok: "reset" };
             }),
-
         getFiles: protectedProcedure
             .input(z.object({}))
             .mutation(async ({ input, ctx }) => {
@@ -259,10 +211,25 @@ return appRouter;
             }),
     });
 
-    // dbPlatform.deleteModel(x)
-
     let myTRPCRouter = createTRPCRouter({
-        app: appRouter,
+        app: await buildAppRouter({
+            phase,
+            dbPlatform,
+            appHashID,
+            appID,
+        }).catch((e) => {
+            // console.log(e);
+
+            return createTRPCRouter({
+                hello: publicProcedure
+                    .input(z.object({ text: z.string() }))
+                    .mutation(({ input }) => {
+                        return {
+                            greeting: input.text,
+                        };
+                    }),
+            });
+        }),
         public: createTRPCRouter({
             getFiles: publicProcedure
                 .input(z.object({}))
@@ -271,7 +238,6 @@ return appRouter;
                     return JSON.parse(JSON.stringify(files));
                 }),
         }),
-
         platform: platformRouter,
     });
 
