@@ -138,8 +138,13 @@ ${await getFileOutputFormatting()}
             // You are a developer you are good at writing json.
             //                 `,
             //             },
+            //
+            //
+
             ...getModelMessagesFromUIMessages(),
             //
+            //
+
             ...chatblocks,
 
             //

@@ -2,7 +2,8 @@ import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 import { type NextRequest } from "next/server";
 
 import { env } from "@/env";
-import { createTRPCContext, createTRPCRouter, t } from "@/server/api/trpc";
+import { appRouter } from "@/server/api/root";
+import { createTRPCContext, createTRPCRouter } from "@/server/api/trpc";
 import { z } from "zod";
 
 import { protectedProcedure, publicProcedure } from "@/server/api/trpc";
@@ -13,19 +14,15 @@ import shortHash from "short-hash";
 
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { TRPCError } from "@trpc/server";
 
 /**
  * This wraps the `createTRPCContext` helper and provides the required context for the tRPC API when
  * handling a HTTP request (e.g. when you make requests from Client Components).
  */
 const createContext = async (req: NextRequest) => {
-    return {
-        // session
-        ...createTRPCContext({
-            headers: req.headers,
-        }),
-    };
+    return createTRPCContext({
+        headers: req.headers,
+    });
 };
 
 const handler = async (req: NextRequest) => {
@@ -355,12 +352,7 @@ return appRouter;
         endpoint: "/api/engine",
         req,
         router: myTRPCRouter,
-        createContext: () => {
-            return {
-                headers: req.headers,
-                ...createContext(req),
-            };
-        },
+        createContext: () => createContext(req),
         onError:
             env.NODE_ENV === "development"
                 ? ({ path, error }) => {
