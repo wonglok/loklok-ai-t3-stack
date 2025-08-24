@@ -16,13 +16,13 @@ import { z, ZodError } from "zod";
 
 import { protectedProcedure, publicProcedure } from "@/server/api/trpc";
 import mongoose from "mongoose";
-import md5 from "md5";
-import shortHash from "short-hash";
+// import md5 from "md5";
+// import shortHash from "short-hash";
 // import { appRouter } from "@/server/api/root";
 
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { initTRPC, TRPCError } from "@trpc/server";
+import { initTRPC } from "@trpc/server";
 import SuperJSON from "superjson";
 
 /**
