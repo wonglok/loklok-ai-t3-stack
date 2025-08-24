@@ -105,7 +105,7 @@ ${await getFileOutputFormatting()}
     });
     // mongoose.connection.useDb("app_development_appID", { useCache: true });
 
-    console.log("chatblocks", chatblocks);
+    // console.log("chatblocks", chatblocks);
 
     let response = streamText({
         // schema: z
@@ -142,7 +142,7 @@ ${await getFileOutputFormatting()}
     let parseText = async (text) => {
         try {
             const blocks = parseCodeBlocksGen3(`${text}`);
-            console.log("Parsed blocks:", JSON.stringify(blocks, null, 2));
+            // console.log("Parsed blocks:", JSON.stringify(blocks, null, 2));
 
             for (let block of blocks) {
                 if (block.action === "create-file") {

@@ -9,8 +9,98 @@
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
-
 import { auth } from "@/server/auth";
+
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+
+import md5 from "md5";
+import shortHash from "short-hash";
+import mongoose from "mongoose";
+
+export const getInfoByAppID = (appID) => {
+    let appHashID = `${shortHash(md5(`${appID}${process.env.NODE_ENV}${process.env.AUTH_SECRET}`))}`;
+
+    let JWT_SECRET = `_${appID}_${md5(appID + "--" + appID + "--" + appHashID)}`;
+
+    let phase = "dev";
+    if (process.env.NODE_ENV === "development") {
+        phase = "dev";
+    }
+    if (process.env.NODE_ENV === "production") {
+        phase = "prod";
+    }
+    if (process.env.NODE_ENV === "test") {
+        phase = "test";
+    }
+
+    const dbPlatform = mongoose.connection.useDb(`os_${phase}_${appHashID}`, {
+        useCache: true,
+    });
+    const dbAppInstance = mongoose.connection.useDb(
+        `app_${phase}_${appHashID}`,
+        {
+            useCache: true,
+        },
+    );
+
+    return {
+        dbPlatform,
+        dbAppInstance,
+        appHashID,
+        JWT_SECRET,
+        appID,
+        phase,
+    };
+};
+/**
+ * 1. CONTEXT
+ *
+ * This section defines the "contexts" that are available in the backend API.
+ *
+ * These allow you to access things when processing a request, like the database, the session, etc.
+ *
+ * This helper generates the "internals" for a tRPC context. The API handler and RSC clients each
+ * wrap this and provides the required context.
+ *
+ * @see https://trpc.io/docs/server/context
+ */
+export const createAppTRPCContext = async (opts: { headers: Headers }) => {
+    let authtoken = opts.headers.get("authtoken");
+    let appID = opts.headers.get("app-id");
+    let user;
+
+    let { JWT_SECRET, appHashID, dbAppInstance } = getInfoByAppID(appID);
+
+    try {
+        let userData = (await jwt.verify(authtoken, JWT_SECRET)) as {
+            id: string;
+        };
+
+        let found = await dbAppInstance
+            .model("User")
+            .findOne({ _id: `${userData.id}` })
+            .select({
+                _id: true,
+                email: true,
+                createdAt: true,
+            })
+            .lean();
+
+        user = { ...found, _id: (found as any)?._id?.toString() };
+        console.log(user);
+    } catch (e) {
+        console.log(e);
+    }
+
+    return {
+        session: {
+            user: user,
+            expires: new Date(new Date().getTime() * 999999).toISOString(),
+        },
+        ...opts,
+    };
+};
 
 /**
  * 1. CONTEXT
@@ -83,7 +173,7 @@ export const createTRPCRouter = t.router;
  * You can remove this if you don't like it, but it can help catch unwanted waterfalls by simulating
  * network latency that would occur in production but not in local development.
  */
-const timingMiddleware = t.middleware(async ({ next, path }) => {
+export const timingMiddleware = t.middleware(async ({ next, path }) => {
     const start = Date.now();
 
     if (t._config.isDev) {

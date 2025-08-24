@@ -32,6 +32,7 @@ import { saveToCloud } from "@/components/_TreeAI/io/saveToCloud";
 import { putUIMessage } from "../../putUIMessage";
 import { v4 } from "uuid";
 import { LMStudioClient } from "@lmstudio/sdk";
+import { makeTicker } from "../_core/makeTicker";
 
 export const name = "handleDeploy";
 export const displayName = "Deploy Application";
@@ -44,6 +45,7 @@ export async function handleDeploy({
 }) {
     let { model, engineSettingData } = await getFreeAIAsync();
 
+    let ticker = makeTicker({ displayName, engineSettingData });
     let sdk = new LokLokSDK({
         appID: useAI.getState().appID,
     });
@@ -85,6 +87,7 @@ export async function handleDeploy({
         putUIMessage(uiMsg as UIMessage);
         engineSettingData.bannerText = `Uploading ${((i / files.length) * 100).toFixed(0)}%`;
         refreshEngineSlot(engineSettingData);
+        ticker.tick(`Uploading ${((i / files.length) * 100).toFixed(0)}%`);
         i++;
     }
 
@@ -116,6 +119,7 @@ export async function handleDeploy({
         refreshID: `_${v4()}`,
     });
 
+    ticker.remove();
     try {
         const client = new LMStudioClient();
         let loadedEngines = await client.llm.listLoaded();

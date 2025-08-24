@@ -26,10 +26,8 @@ export class LokLokSDK {
                         const headers = new Headers();
                         headers.set("x-trpc-source", "nextjs-react-app");
                         headers.set("app-id", appID);
-                        headers.set(
-                            "authtoken",
-                            localStorage.getItem("jwt_" + appID) || "",
-                        );
+                        let auth = localStorage.getItem("jwt_" + appID) || "";
+                        headers.set("authtoken", auth);
 
                         return headers;
                     },

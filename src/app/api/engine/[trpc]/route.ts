@@ -3,8 +3,15 @@ import { type NextRequest } from "next/server";
 
 import { env } from "@/env";
 import { appRouter } from "@/server/api/root";
-import { createTRPCContext, createTRPCRouter } from "@/server/api/trpc";
-import { z } from "zod";
+import {
+    createAppTRPCContext,
+    createTRPCContext,
+    createTRPCRouter,
+    getInfoByAppID,
+    t,
+    timingMiddleware,
+} from "@/server/api/trpc";
+import { z, ZodError } from "zod";
 
 import { protectedProcedure, publicProcedure } from "@/server/api/trpc";
 import mongoose from "mongoose";
@@ -14,13 +21,15 @@ import shortHash from "short-hash";
 
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { initTRPC, TRPCError } from "@trpc/server";
+import SuperJSON from "superjson";
 
 /**
  * This wraps the `createTRPCContext` helper and provides the required context for the tRPC API when
  * handling a HTTP request (e.g. when you make requests from Client Components).
  */
 const createContext = async (req: NextRequest) => {
-    return createTRPCContext({
+    return createAppTRPCContext({
         headers: req.headers,
     });
 };
@@ -30,27 +39,10 @@ const handler = async (req: NextRequest) => {
 
     let appID = req.headers.get("app-id");
 
-    let appHashID = `${shortHash(md5(`${appID}${process.env.NODE_ENV}${process.env.AUTH_SECRET}`))}`;
-
-    let JWT_SECRET = `_${appID}_${md5(appID + "--" + appID + "--" + appHashID)}`;
-
-    let phase = "dev";
-    if (process.env.NODE_ENV === "development") {
-        phase = "dev";
-    }
-    if (process.env.NODE_ENV === "production") {
-        phase = "prod";
-    }
-    if (process.env.NODE_ENV === "test") {
-        phase = "test";
-    }
-
+    let { appHashID, phase, dbAppInstance, dbPlatform, JWT_SECRET } =
+        getInfoByAppID(appID);
     console.log(appID);
     console.log(appHashID);
-
-    const dbPlatform = mongoose.connection.useDb(`os_${phase}_${appHashID}`, {
-        useCache: true,
-    });
 
     const AppCodeStore = new mongoose.Schema(
         {
@@ -94,15 +86,7 @@ const handler = async (req: NextRequest) => {
 
     let toJSON = (v) => JSON.parse(JSON.stringify(v));
 
-    let appRouter = createTRPCRouter({
-        hello: publicProcedure
-            .input(z.object({ text: z.string() }))
-            .mutation(({ input }) => {
-                return {
-                    greeting: input.text,
-                };
-            }),
-    });
+    let appRouter;
 
     let defineMongooseModelsContent =
         toJSON(defineMongooseModels)?.content || "";
@@ -201,14 +185,35 @@ return appRouter;
 
         //
 
-        const dbAppInstance = mongoose.connection.useDb(
-            `app_${phase}_${appHashID}`,
-            {
-                useCache: true,
+        /**
+         * 2. INITIALIZATION
+         *
+         * This is where the tRPC API is initialized, connecting the context and transformer. We also parse
+         * ZodErrors so that you get typesafety on the frontend if your procedure fails due to validation
+         * errors on the backend.
+         */
+        const t = initTRPC.context<typeof createTRPCContext>().create({
+            transformer: SuperJSON,
+            errorFormatter({ shape, error }) {
+                return {
+                    ...shape,
+                    data: {
+                        ...shape.data,
+                        zodError:
+                            error.cause instanceof ZodError
+                                ? error.cause.flatten()
+                                : null,
+                    },
+                };
             },
-        );
+        });
 
-        // // you can reuse this for any procedure
+        // let appProtectedProcdure = t.procedure
+        //     .use(timingMiddleware)
+        //     .use(async ({ ctx, next }) => {
+
+        //     });
+
         // const protectedProcedureApp = t.procedure.use(
         //     async function isAuthed(opts) {
         //         let authtoken = opts.ctx.headers.get("authtoken");
@@ -219,24 +224,6 @@ return appRouter;
 
         //         if (typeof authtoken === "string" && authtoken !== "") {
         //             //
-
-        //             let userData = (await jwt.verify(
-        //                 authtoken,
-        //                 JWT_SECRET,
-        //             )) as { id: string };
-
-        //             console.log("userData", userData);
-        //             console.log("userData", userData);
-        //             console.log("userData", userData);
-
-        //             let found = await dbAppInstance
-        //                 .model("User")
-        //                 .findOne({ _id: `${userData.id}` })
-        //                 .lean();
-
-        //             console.log("found", found);
-        //             console.log("found", found);
-        //             console.log("found", found);
 
         //             if (found) {
         //                 return opts.next({
@@ -282,9 +269,41 @@ return appRouter;
             bcrypt: bcrypt,
             JWT_SECRET: JWT_SECRET,
         });
+
+        //
     } catch (e) {
         console.error(e);
+
+        appRouter = createTRPCRouter({
+            hello: publicProcedure
+                .input(z.object({ text: z.string() }))
+                .mutation(({ input }) => {
+                    return {
+                        greeting: input.text,
+                    };
+                }),
+        });
     }
+
+    // {
+    //     let authtoken = req.headers.get("authtoken");
+    //     let appID = req.headers.get("app-id");
+    //     let appHashID = `${shortHash(md5(`${appID}${process.env.NODE_ENV}${process.env.AUTH_SECRET}`))}`;
+    //     let JWT_SECRET = `_${appID}_${md5(appID + "--" + appID + "--" + appHashID)}`;
+    //     let phase = "dev";
+    //     if (process.env.NODE_ENV === "development") {
+    //         phase = "dev";
+    //     }
+    //     if (process.env.NODE_ENV === "production") {
+    //         phase = "prod";
+    //     }
+    //     if (process.env.NODE_ENV === "test") {
+    //         phase = "test";
+    //     }
+
+    //     console.log("appID", appID);
+    //     console.log("authtoken", authtoken);
+    // }
 
     let platformRouter = createTRPCRouter({
         //publicProcedure
@@ -318,6 +337,7 @@ return appRouter;
                     content: updated.content,
                 };
             }),
+
         reset: protectedProcedure
             .input(z.object({}))
             .mutation(async ({ input, ctx }) => {
@@ -325,6 +345,7 @@ return appRouter;
                 await dbPlatform.model("AppCodeStore").deleteMany({});
                 return { ok: "reset" };
             }),
+
         getFiles: protectedProcedure
             .input(z.object({}))
             .mutation(async ({ input, ctx }) => {
@@ -344,6 +365,7 @@ return appRouter;
                     return JSON.parse(JSON.stringify(files));
                 }),
         }),
+
         platform: platformRouter,
     });
 
@@ -351,7 +373,9 @@ return appRouter;
         endpoint: "/api/engine",
         req,
         router: myTRPCRouter,
-        createContext: () => createContext(req),
+        createContext: () => {
+            return createContext(req);
+        },
         onError:
             env.NODE_ENV === "development"
                 ? ({ path, error }) => {

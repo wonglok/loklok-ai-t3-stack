@@ -12,7 +12,7 @@ export function TreeList() {
     let files = useAI((r) => r.files);
     files = files || [];
 
-    console.log(files);
+    // console.log(files);
 
     // let currentPath = useAI((r) => r.currentPath);
 
