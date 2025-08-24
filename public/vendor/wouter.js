@@ -4,7 +4,7 @@ window.NPM_CACHE = window.NPM_CACHE || {};
 // @ts-ignore
 const NPM_CACHE = window.NPM_CACHE;
 
-NPM_CACHE["npm-wouter"] = NPM_CACHE["npm-wouter"] || {};
+NPM_CACHE["npm-wouter"] = NPM_CACHE["npm-wouter"] || {}; 
 
 export const Link = NPM_CACHE["npm-wouter"]['Link'];
 

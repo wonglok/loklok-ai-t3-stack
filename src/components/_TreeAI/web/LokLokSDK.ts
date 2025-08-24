@@ -10,7 +10,6 @@ export class LokLokSDK {
     public client: TRPCClient<AnyRouter>;
     private appID: string;
     constructor({ appID }) {
-        this.appID = appID;
         function getBaseUrl() {
             if (typeof window !== "undefined") return window.location.origin;
             if (process.env.VERCEL_URL)
@@ -25,7 +24,7 @@ export class LokLokSDK {
                     url: `${getBaseUrl()}/api/engine`,
                     headers: () => {
                         const headers = new Headers();
-                        headers.set("x-trpc-source", "nextjs-react");
+                        headers.set("x-trpc-source", "nextjs-react-app");
                         headers.set("app-id", appID);
                         headers.set(
                             "authtoken",
@@ -38,6 +37,7 @@ export class LokLokSDK {
             ],
         });
 
+        this.appID = appID;
         this.client = client;
     }
     async setAuthToken(token) {

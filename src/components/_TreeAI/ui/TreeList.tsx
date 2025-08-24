@@ -19,6 +19,7 @@ export function TreeList() {
     return (
         <SimpleTreeView
             defaultExpandedItems={[
+                "/backend",
                 "/docs",
                 "/components",
                 "/trpc",
@@ -156,6 +157,44 @@ export function TreeList() {
             </TreeItem>
 
             <TreeItem
+                itemId="/Backend"
+                label={<>{`📲 Backend`}</>}
+                onClick={() => {
+                    //
+                    useAI.setState({
+                        topTab: "code",
+                    });
+                    //
+                }}
+            >
+                {files
+                    .filter(
+                        (r) =>
+                            r?.path?.startsWith("/trpc") ||
+                            r?.path?.startsWith("/models"),
+                    )
+                    .map((r) => {
+                        return (
+                            <TreeItem
+                                key={r.path}
+                                itemId={r.path}
+                                label={
+                                    <div className="h-full w-full overflow-x-auto">
+                                        {r.path}
+                                    </div>
+                                }
+                                onClick={() => {
+                                    useAI.setState({
+                                        topTab: "code",
+                                        currentPath: r.path,
+                                    });
+                                }}
+                            />
+                        );
+                    })}
+            </TreeItem>
+
+            <TreeItem
                 itemId="/components"
                 label={<>{`✨ React UI`}</>}
                 onClick={() => {
@@ -204,44 +243,6 @@ export function TreeList() {
             >
                 {files
                     .filter((r) => r?.path?.startsWith("/store"))
-                    .map((r) => {
-                        return (
-                            <TreeItem
-                                key={r.path}
-                                itemId={r.path}
-                                label={
-                                    <div className="h-full w-full overflow-x-auto">
-                                        {r.path}
-                                    </div>
-                                }
-                                onClick={() => {
-                                    useAI.setState({
-                                        topTab: "code",
-                                        currentPath: r.path,
-                                    });
-                                }}
-                            />
-                        );
-                    })}
-            </TreeItem>
-
-            <TreeItem
-                itemId="/Backend"
-                label={<>{`📲 Backend`}</>}
-                onClick={() => {
-                    //
-                    useAI.setState({
-                        topTab: "code",
-                    });
-                    //
-                }}
-            >
-                {files
-                    .filter(
-                        (r) =>
-                            r?.path?.startsWith("/trpc") ||
-                            r?.path?.startsWith("/models"),
-                    )
                     .map((r) => {
                         return (
                             <TreeItem

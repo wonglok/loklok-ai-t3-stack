@@ -239,7 +239,7 @@ ${await getFileOutputFormatting()}
 
     for await (let part of response.textStream) {
         text += part;
-        console.log(text);
+        // console.log(text);
 
         parseText(text);
         ticker.tick(text);

@@ -86,7 +86,7 @@ export async function handleAppSpec({
     //     let text = "";
     //     for await (let part of response.textStream) {
     //         text += part;
-    //         console.log(text);
+    //         // console.log(text);
 
     //         ticker.tick(text);
     //     }

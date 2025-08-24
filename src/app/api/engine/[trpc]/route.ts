@@ -211,70 +211,70 @@ return appRouter;
             },
         );
 
-        // you can reuse this for any procedure
-        const protectedProcedureApp = t.procedure.use(
-            async function isAuthed(opts) {
-                let authtoken = opts.ctx.headers.get("authtoken");
+        // // you can reuse this for any procedure
+        // const protectedProcedureApp = t.procedure.use(
+        //     async function isAuthed(opts) {
+        //         let authtoken = opts.ctx.headers.get("authtoken");
 
-                console.log("authtoken", authtoken);
-                console.log("authtoken", authtoken);
-                console.log("authtoken", authtoken);
+        //         console.log("authtoken", authtoken);
+        //         console.log("authtoken", authtoken);
+        //         console.log("authtoken", authtoken);
 
-                if (typeof authtoken === "string" && authtoken !== "") {
-                    //
+        //         if (typeof authtoken === "string" && authtoken !== "") {
+        //             //
 
-                    let userData = (await jwt.verify(
-                        authtoken,
-                        JWT_SECRET,
-                    )) as { id: string };
+        //             let userData = (await jwt.verify(
+        //                 authtoken,
+        //                 JWT_SECRET,
+        //             )) as { id: string };
 
-                    console.log("userData", userData);
-                    console.log("userData", userData);
-                    console.log("userData", userData);
+        //             console.log("userData", userData);
+        //             console.log("userData", userData);
+        //             console.log("userData", userData);
 
-                    let found = await dbAppInstance
-                        .model("User")
-                        .findOne({ _id: `${userData.id}` })
-                        .lean();
+        //             let found = await dbAppInstance
+        //                 .model("User")
+        //                 .findOne({ _id: `${userData.id}` })
+        //                 .lean();
 
-                    console.log("found", found);
-                    console.log("found", found);
-                    console.log("found", found);
+        //             console.log("found", found);
+        //             console.log("found", found);
+        //             console.log("found", found);
 
-                    if (found) {
-                        return opts.next({
-                            ctx: {
-                                ...(opts?.ctx || {}),
-                                session: {
-                                    ...(opts?.ctx?.session || {}),
-                                    appUser: found,
-                                },
-                                // ✅ user value is known to be non-null now
-                                // user: ctx.user,
-                                // ^?
-                            },
-                        });
-                    }
-                    //
-                }
+        //             if (found) {
+        //                 return opts.next({
+        //                     ctx: {
+        //                         ...(opts?.ctx || {}),
+        //                         session: {
+        //                             ...(opts?.ctx?.session || {}),
+        //                             appUser: found,
+        //                         },
+        //                         // ✅ user value is known to be non-null now
+        //                         // user: ctx.user,
+        //                         // ^?
+        //                     },
+        //                 });
+        //             }
+        //             //
+        //         }
 
-                const { ctx } = opts;
-                if ((ctx.session as any).appUser) {
-                    throw new TRPCError({
-                        code: "UNAUTHORIZED",
-                        message: "no login",
-                    });
-                }
-                //
+        //         const { ctx } = opts;
+        //         if ((ctx.session as any).appUser) {
+        //             throw new TRPCError({
+        //                 code: "UNAUTHORIZED",
+        //                 message: "no login",
+        //             });
+        //         }
+        //         //
 
-                return opts;
-            },
-        );
+        //         return opts;
+        //     },
+        // );
 
         appRouter = await func({
             createTRPCRouter,
             // TEMP DISABLE SECURITY
-            protectedProcedure: protectedProcedureApp,
+            protectedProcedure: publicProcedure,
             publicProcedure: publicProcedure,
             z,
             mongoose,
