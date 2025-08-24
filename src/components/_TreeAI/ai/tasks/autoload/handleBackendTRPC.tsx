@@ -112,7 +112,7 @@ window.trpcSDK
 - ALWAYS use: ctx.session.user to get user from the procedure context (GOOD)
 - NEVER use: ctx.user to get user from the procedure context (BAD)
 
-function defineBackendProcedures({ models, z, otherProcedures, publicProcedure, protectedProcedure, jwt, bcrypt, JWT_SECRET }) {
+function defineBackendProcedures({ models, z, otherProcedures, publicProcedure, protectedProcedure, jwt, bcrypt, JWT_SECRET, mongoose, ObjectId }) {
     const { User, ... /* more models are here ... */ } = models;
 
     return {

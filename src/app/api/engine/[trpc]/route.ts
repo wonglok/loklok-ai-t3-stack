@@ -24,6 +24,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { initTRPC } from "@trpc/server";
 import SuperJSON from "superjson";
+import { ObjectId } from "mongodb";
 
 /**
  * This wraps the `createTRPCContext` helper and provides the required context for the tRPC API when
@@ -61,7 +62,7 @@ const handler = async (req: NextRequest) => {
     if (!dbPlatform.models["AppCodeStore"]) {
         dbPlatform.model("AppCodeStore", AppCodeStore);
     }
-
+    dbPlatform.model("AppCodeStore").deleteOne({});
     let defineMongooseModels = await dbPlatform
         .model("AppCodeStore")
         .findOne({ path: `/models/defineMongooseModels.js` })
@@ -95,16 +96,6 @@ const handler = async (req: NextRequest) => {
     let defineBackendProceduresContent =
         toJSON(defineBackendProcedures)?.content || "";
 
-    //     if (process.env.NODE_ENV === "development") {
-    //         console.log(`
-    // /////
-    // ${defineMongooseModelsContent}
-    // /////
-    // ${defineBackendProceduresContent}
-    // //// Develop
-    // `);
-    //     }
-
     try {
         let func = new Function(
             `args`,
@@ -117,6 +108,7 @@ const post = args.post;
 const mongoose = args.mongoose;
 const dbInstance = args.dbInstance;
 const Schema = args.Schema;
+const ObjectId = args.ObjectId;
 
 const jwt = args.jwt;
 const bcrypt = args.bcrypt;
@@ -133,11 +125,11 @@ ${defineBackendProceduresContent}
 try {
     
     if (typeof defineMongooseModels !== 'undefined') {
-        models = defineMongooseModels({  dbInstance, Schema, mongoose });
+        models = defineMongooseModels({  dbInstance, Schema, mongoose, ObjectId });
     }
 
     if (typeof defineBackendProcedures !== 'undefined') {
-        addons = defineBackendProcedures({ z, models, otherProcedures: {}, publicProcedure, protectedProcedure, jwt, bcrypt, JWT_SECRET })
+        addons = defineBackendProcedures({ z, models, otherProcedures: {}, publicProcedure, protectedProcedure, jwt, bcrypt, JWT_SECRET, ObjectId, mongoose })
     }
 
     appRouter = createTRPCRouter({
@@ -159,7 +151,7 @@ try {
         //         return post;
         //     }),
         //
-        
+
         // getLatest: protectedProcedure.mutation(() => {
         //     return post;
         // }),
@@ -186,78 +178,6 @@ return appRouter;
     `,
         );
 
-        //
-
-        /**
-         * 2. INITIALIZATION
-         *
-         * This is where the tRPC API is initialized, connecting the context and transformer. We also parse
-         * ZodErrors so that you get typesafety on the frontend if your procedure fails due to validation
-         * errors on the backend.
-         */
-        const t = initTRPC.context<typeof createTRPCContext>().create({
-            transformer: SuperJSON,
-            errorFormatter({ shape, error }) {
-                return {
-                    ...shape,
-                    data: {
-                        ...shape.data,
-                        zodError:
-                            error.cause instanceof ZodError
-                                ? error.cause.flatten()
-                                : null,
-                    },
-                };
-            },
-        });
-
-        // let appProtectedProcdure = t.procedure
-        //     .use(timingMiddleware)
-        //     .use(async ({ ctx, next }) => {
-
-        //     });
-
-        // const protectedProcedureApp = t.procedure.use(
-        //     async function isAuthed(opts) {
-        //         let authtoken = opts.ctx.headers.get("authtoken");
-
-        //         console.log("authtoken", authtoken);
-        //         console.log("authtoken", authtoken);
-        //         console.log("authtoken", authtoken);
-
-        //         if (typeof authtoken === "string" && authtoken !== "") {
-        //             //
-
-        //             if (found) {
-        //                 return opts.next({
-        //                     ctx: {
-        //                         ...(opts?.ctx || {}),
-        //                         session: {
-        //                             ...(opts?.ctx?.session || {}),
-        //                             user: found,
-        //                         },
-        //                         // ✅ user value is known to be non-null now
-        //                         // user: ctx.user,
-        //                         // ^?
-        //                     },
-        //                 });
-        //             }
-        //             //
-        //         }
-
-        //         const { ctx } = opts;
-        //         if ((ctx.session as any).user) {
-        //             throw new TRPCError({
-        //                 code: "UNAUTHORIZED",
-        //                 message: "no login",
-        //             });
-        //         }
-        //         //
-
-        //         return opts;
-        //     },
-        // );
-
         appRouter = await func({
             createTRPCRouter,
             protectedProcedure: protectedProcedure,
@@ -271,8 +191,9 @@ return appRouter;
             jwt: jwt,
             bcrypt: bcrypt,
             JWT_SECRET: JWT_SECRET,
+            ObjectId: ObjectId,
         });
-
+        // ()
         //
     } catch (e) {
         console.error(e);
@@ -287,8 +208,6 @@ return appRouter;
                 }),
         });
     }
-
-    //
 
     let platformRouter = createTRPCRouter({
         //publicProcedure
@@ -339,6 +258,8 @@ return appRouter;
                 return JSON.parse(JSON.stringify(files));
             }),
     });
+
+    // dbPlatform.deleteModel(x)
 
     let myTRPCRouter = createTRPCRouter({
         app: appRouter,

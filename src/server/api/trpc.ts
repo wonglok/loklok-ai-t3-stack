@@ -16,8 +16,9 @@ import jwt from "jsonwebtoken";
 
 import md5 from "md5";
 import shortHash from "short-hash";
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import { addDays } from "date-fns";
+import { ObjectId } from "mongodb";
 
 export const getInfoByAppID = (appID) => {
     let appHashID = `${shortHash(md5(`${appID}${process.env.NODE_ENV}${process.env.AUTH_SECRET}`))}`;
@@ -33,6 +34,10 @@ export const getInfoByAppID = (appID) => {
     }
     if (process.env.NODE_ENV === "test") {
         phase = "test";
+    }
+
+    if (mongoose.connections.length === 0) {
+        mongoose.connect(`${process.env.MONGO_DEVELOP}`);
     }
 
     const dbPlatform = mongoose.connection.useDb(`os_${phase}_${appHashID}`, {
@@ -67,6 +72,8 @@ export const getInfoByAppID = (appID) => {
  *
  * @see https://trpc.io/docs/server/context
  */
+let toJSON = (v) => JSON.parse(JSON.stringify(v));
+
 export const createAppTRPCContext = async (opts: { headers: Headers }) => {
     let authtoken = opts.headers.get("authtoken");
     let appID = opts.headers.get("app-id");
@@ -78,6 +85,18 @@ export const createAppTRPCContext = async (opts: { headers: Headers }) => {
         let userData = (await jwt.verify(authtoken, JWT_SECRET)) as {
             id: string;
         };
+        const db = dbAppInstance;
+        const UserSchema = new Schema({
+            email: { type: String, required: true, unique: true },
+            passwordHash: { type: String, required: true },
+        });
+
+        if (db.models["User"]) {
+            db.deleteModel("User");
+        }
+        if (!db.models["User"]) {
+            db.model("User", UserSchema);
+        }
 
         let found = await dbAppInstance
             .model("User")
