@@ -57,13 +57,13 @@ ${await getAppOverviewPrompt()}
 ${userPrompt}
 
 ## Output Format
-1. Public Users and Private Users (simple and short description, no code)
-2. Public Pages and Protected Pages(simple and short description, no code)
-3. Interactive actions in Each Page (simple and short description, no code)
-4. Routing (simple and short description, no code)
-5. Zustand State (simple and short description, no code)
-6. TRPC APIs (simple and short description, no code)
-7. UI Components (simple and short description, no code)
+1. Public Users and Private Users (list of description but no code)
+2. Public Pages and Protected Pages(list of description but no code)
+3. Interactive actions in Each Page (list of description but no code)
+4. Routing (list of description but no code)
+5. Zustand State (list of description but no code)
+6. TRPC APIs (list of description but no code)
+7. UI Components (list of description but no code)
 
 # Requiremetns:
 - make it really sweet and short and concise and accurate
