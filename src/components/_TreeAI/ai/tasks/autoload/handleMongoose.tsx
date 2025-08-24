@@ -84,7 +84,6 @@ function defineMongooseModels({ dbInstance, Schema, mongoose }) {
     const db = dbInstance
 
     // // USER SCHEMA (registration & authentication) - Example Code below:
-    // Remove Example Code in when you generate code.
     // if (!db.models['User']) {
     //     const userSchema = new mongoose.Schema(
     //         {

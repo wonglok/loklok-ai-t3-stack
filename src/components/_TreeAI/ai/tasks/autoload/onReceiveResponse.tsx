@@ -55,26 +55,25 @@ export async function onReceiveResponse({
     });
 
     MyTaskManager.add({
-        waitFor: ["handleAppSpec", "handleMongoose"],
+        waitFor: ["handleAppSpec"],
         name: "handleBackendTRPC",
         args: { userPrompt: userPrompt },
     });
 
     MyTaskManager.add({
-        waitFor: ["handleAppSpec", "handleBackendTRPC"],
+        waitFor: ["handleAppSpec"],
         name: "handleZustand",
         args: { userPrompt: userPrompt },
     });
 
     MyTaskManager.add({
-        waitFor: ["handleAppSpec", "handleZustand"],
+        waitFor: ["handleAppSpec"],
         name: "handleReact",
         args: { userPrompt: userPrompt },
     });
 
     MyTaskManager.add({
         waitFor: [
-            "handleAppSpec",
             "handleMongoose",
             "handleBackendTRPC",
             "handleZustand",
