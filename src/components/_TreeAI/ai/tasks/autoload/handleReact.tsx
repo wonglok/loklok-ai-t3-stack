@@ -84,10 +84,18 @@ import * as React from 'react';
 - use tailwind css to style the elements
 - use some "border" "rounded-lg" together with "shadow-inner" but dont overuse them dear
 - use some "p-3" padding spacing 
-- uses Zustand state management files located at "/store/*.ts" folder
 
-- MUST use zustand 
-- MUST NOT use React.useState / useState(...)
+- MUST always use zustand to implement backend interaction 
+- MUST never use React.useState / useState
+- MUST never use React.useState
+
+-------------------------
+- NEVER DIRECTLY USE: 
+await window.trpcSDK.runTRPC({
+    procedure: '',
+    input: {  }
+});
+-------------------------
 
 ${await getFileOutputFormatting()}
 
