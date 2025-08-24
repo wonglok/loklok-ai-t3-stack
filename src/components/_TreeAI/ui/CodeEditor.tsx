@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useAI } from "../state/useAI";
 import { sortDate } from "./func/sortDate";
 import { Editor } from "@monaco-editor/react";
@@ -8,6 +8,8 @@ import {
 } from "monaco-jsx-syntax-highlight";
 import { getLang } from "./func/getLang";
 import { saveToCloud } from "../io/saveToCloud";
+import { LokLokSDK } from "../web/LokLokSDK";
+import nprogress from "nprogress";
 
 export function CodeEditor() {
     // let ref = useRef<any>(null);
@@ -101,6 +103,11 @@ export function CodeEditor() {
         [file?.path, files.map((r) => r.path).join("")],
     );
 
+    let appID = useAI((r) => r.appID);
+    let sdk = useMemo(() => {
+        return new LokLokSDK({ appID });
+    }, [appID]);
+
     return (
         <>
             {file && file.content && (
@@ -139,11 +146,20 @@ export function CodeEditor() {
                                 //     : defaultLanguage
                             }
                             value={file.content}
-                            onChange={(v) => {
+                            onChange={async (v) => {
                                 if (file) {
                                     file.content = `${v}`;
 
-                                    saveToCloud();
+                                    nprogress.start();
+                                    await sdk.setupPlatform({
+                                        procedure: "setFS",
+                                        input: {
+                                            path: file.path,
+                                            content: file.content || "",
+                                            summary: file.summary || "",
+                                        },
+                                    });
+                                    nprogress.done();
                                 }
                             }}
                         ></Editor>

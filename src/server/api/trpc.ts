@@ -17,6 +17,7 @@ import jwt from "jsonwebtoken";
 import md5 from "md5";
 import shortHash from "short-hash";
 import mongoose from "mongoose";
+import { addDays } from "date-fns";
 
 export const getInfoByAppID = (appID) => {
     let appHashID = `${shortHash(md5(`${appID}${process.env.NODE_ENV}${process.env.AUTH_SECRET}`))}`;
@@ -96,7 +97,7 @@ export const createAppTRPCContext = async (opts: { headers: Headers }) => {
     return {
         session: {
             user: user,
-            expires: new Date(new Date().getTime() * 999999).toISOString(),
+            expires: addDays(new Date(), 9).toISOString(),
         },
         ...opts,
     };
