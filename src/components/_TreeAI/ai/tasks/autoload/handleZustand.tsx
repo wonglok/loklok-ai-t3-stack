@@ -75,8 +75,7 @@ import { create } from 'zustand';
 - The app has a Global variable window.trpcSDK as a custom tRPC Frontend Client.
 
 - make sure ai implement all trpc backend procedures with correct data type. refer to "/trpc/defineBackendProcedures.js"
-
-window.trpcSDK
+example: window.trpcSDK
     .runTRPC({
         procedure: "hello", // [hello] is the procedure name
         input: { text: "sure been good" },// [input] is the input paramter
@@ -85,34 +84,24 @@ window.trpcSDK
         console.log(result); // result is obtained via async functuin call
     });
 
-- Never Impport "@/types"
+- store when we receive JWT when login / register 
+example: window.trpcSDK.setAuthToken(result.token)
 
+
+declare global {
+    interface Window {
+        trpcSDK?: {
+            runTRPC: (v: any) => void;
+            setAuthToken: (v: any) => void;
+        };
+    }
+}
+
+- Never Impport "@/types"
 - ALWAYS USE "_id" for object id (good)
 - NEVER USE "id" for object id (good)
-
 - NEVER IMPORT "@tanstack/react-query"
 
------ EXAMPLE /components/App.tsx -----
-import { Router, Route } from "wouter";
-import { useHashLocation } from "wouter/use-hash-location";
-// ...
-
-export function App () {
-
-    return <>
-        <Router hook={useHashLocation}>
-            
-            /* ... add more code here ..
-            examples:
-                <Route path="/" component={LandingPage} />
-                <Route path="/my-app" component={MyApp} />
-            */
-        </Router>
-    </>
-}
------ EXAMPLE /components/App.tsx -----
-
-- store when we receive JWT when login / register 
 
 # instruction
 update suitable code files to meet the latest requirements

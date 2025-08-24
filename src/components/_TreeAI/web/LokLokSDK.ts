@@ -40,27 +40,8 @@ export class LokLokSDK {
 
         this.client = client;
     }
-
-    async login({ input }) {
-        return (this.client["app"]["login"] as any)
-            .mutate(input)
-            .then((data) => {
-                let jwt = data.jwt;
-                localStorage.setItem("jwt_" + this.appID, `${jwt}`);
-                // console.log("data", data);
-                return data;
-            });
-    }
-
-    async register({ input }) {
-        return (this.client["app"]["register"] as any)
-            .mutate(input)
-            .then((data) => {
-                let jwt = data.jwt;
-                localStorage.setItem("jwt_" + this.appID, `${jwt}`);
-                // console.log("data", data);
-                return data;
-            });
+    async setAuthToken(token) {
+        localStorage.setItem("jwt_" + this.appID, `${token}`);
     }
 
     async logout({ input }) {

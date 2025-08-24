@@ -215,37 +215,50 @@ return appRouter;
         const protectedProcedure = t.procedure.use(
             async function isAuthed(opts) {
                 let authtoken = opts.ctx.headers.get("authtoken");
-                let user = null;
+
+                //
+
+                console.log("authtoken", authtoken);
+                console.log("authtoken", authtoken);
+                console.log("authtoken", authtoken);
+
                 if (typeof authtoken === "string" && authtoken !== "") {
                     //
 
-                    let userData = await jwt.verify(authtoken, JWT_SECRET);
+                    let userData = (await jwt.verify(
+                        authtoken,
+                        JWT_SECRET,
+                    )) as { id: string };
 
                     console.log("userData", userData);
                     console.log("userData", userData);
                     console.log("userData", userData);
 
+                    let found = dbAppInstance
+                        .model("User")
+                        .findOne({ _id: `${userData.id}` });
+
+                    console.log("found", found);
+                    console.log("found", found);
+                    console.log("found", found);
+                    if (found) {
+                        return opts.next({
+                            ctx: {
+                                ...(opts?.ctx || {}),
+                                user: found,
+                                // ✅ user value is known to be non-null now
+                                // user: ctx.user,
+                                // ^?
+                            },
+                        });
+                    }
                     //
                 }
-                console.log(authtoken);
-                console.log(authtoken);
-                console.log(authtoken);
-
                 // const { ctx } = opts;
                 // // `ctx.user` is nullable
-                // if (!ctx?.user) {
-                //     //     ^?
-                //     throw new TRPCError({ code: "UNAUTHORIZED" });
-                // }
+                //
 
-                return opts.next({
-                    ctx: {
-                        ...(opts?.ctx || {}),
-                        // ✅ user value is known to be non-null now
-                        // user: ctx.user,
-                        // ^?
-                    },
-                });
+                throw new TRPCError({ code: "UNAUTHORIZED" });
             },
         );
 

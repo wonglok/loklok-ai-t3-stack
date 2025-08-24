@@ -96,6 +96,27 @@ await window.trpcSDK.runTRPC({
 });
 -------------------------
 
+
+----- EXAMPLE /components/App.tsx -----
+import { Router, Route } from "wouter";
+import { useHashLocation } from "wouter/use-hash-location";
+// ...
+
+export function App () {
+
+    return <>
+        <Router hook={useHashLocation}>
+            
+            /* ... add more code here ..
+            examples:
+                <Route path="/" component={LandingPage} />
+                <Route path="/my-app" component={MyApp} />
+            */
+        </Router>
+    </>
+}
+----- EXAMPLE /components/App.tsx -----
+
 ${files
     .filter((r) => r.path.startsWith("/store"))
     .map((r) => {
@@ -108,6 +129,8 @@ ${r.content}
 -------------------------------
     `;
     })}
+
+
 
 # instruction
 update suitable code files to meet the latest requirements,
