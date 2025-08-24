@@ -26,6 +26,7 @@ import { saveToCloud } from "@/components/_TreeAI/io/saveToCloud";
 import { generateObject } from "ai";
 import { getModelMessagesFromUIMessages } from "../../getModelMessagesFromUIMessages";
 import z from "zod";
+import { listOutFilesToChatBlocks } from "../prompts/listOutFilesToChatBlocks";
 // import { putUIMessage } from "../../putUIMessage";
 // import { v4 } from "uuid";
 
@@ -50,17 +51,23 @@ export async function onReceiveResponse({
         name: "handleAppSpec",
         args: { userPrompt: userPrompt },
     });
+    let chats = [];
+
+    //
+    let files = useAI.getState().files;
+    await listOutFilesToChatBlocks({ files, chatblocks: chats });
+    //
 
     let { object: needsUpdate } = await generateObject({
-        messages: [...getModelMessagesFromUIMessages()],
+        messages: [...getModelMessagesFromUIMessages(), ...chats],
         model,
         schema: z.object({
-            mongoose: z.boolean().describe("do we need to update mongoose?"),
-            trpc: z.boolean().describe("do we need to update trpc code?"),
-            zustand: z.boolean().describe("do we need to update zustand?"),
-            reactjs: z.boolean().describe("do we need to update reactjs?"),
+            mongoose: z.boolean().describe("update mongoose?"),
+            trpc: z.boolean().describe("update trpc code?"),
+            zustand: z.boolean().describe("update zustand?"),
+            reactjs: z.boolean().describe("update reactjs?"),
         }),
-        schemaDescription: `think about wheter we should edit / update these category of content`,
+        schemaDescription: `think about wheter we need to edit / update these category of code`,
     });
 
     console.log("response", needsUpdate);

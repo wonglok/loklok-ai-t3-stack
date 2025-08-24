@@ -31,6 +31,7 @@ import { LokLokSDK } from "../../../web/LokLokSDK";
 import { saveToCloud } from "@/components/_TreeAI/io/saveToCloud";
 import { putUIMessage } from "../../putUIMessage";
 import { v4 } from "uuid";
+import { LMStudioClient } from "@lmstudio/sdk";
 
 export const name = "handleDeploy";
 export const displayName = "Deploy Application";
@@ -107,4 +108,15 @@ export async function handleDeploy({
     useAI.setState({
         refreshID: `_${v4()}`,
     });
+
+    try {
+        const client = new LMStudioClient();
+        let loadedEngines = await client.llm.listLoaded();
+        for (let engine of loadedEngines) {
+            await engine.unload();
+        }
+    } catch (e) {
+        console.log(e);
+    } finally {
+    }
 }
