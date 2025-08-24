@@ -68,16 +68,30 @@ Instructions:
 - DO NOT WRAP THE CODE WITH markdown
 - ONLY WRITE PURE CODE FOR
 
-- Please refer to mongoose models in "/models/defineMongooseModels.js" to have all features 
+- Please refer to mongoose models in "/models/*.js" to have all features 
+
+${files
+    .filter((r) => r.path.startsWith("/models"))
+    .map((f) => {
+        return `
+---------------------------------------------
+FilePath: ${f.path}
+FileSummary: ${f.summary}
+FileContent: 
+${f.content}
+---------------------------------------------
+    `;
+    })
+    .join("\n\n")}
 
 - The app has a Global variable window.trpcSDK as a custom tRPC Frontend Client.
 
-
 - NEVER use common.js style require or module.export
-
-- MUST NOT import module
-- DO NOT IMPORT ANYTHING
 - NEVER use common.js nodejs
+
+- MUST NOT import { anything } from 'anywhere'
+- MUST NOT export { anything }
+- MUST NOT export default anything
 
 window.trpcSDK
     .runTRPC({
@@ -88,13 +102,11 @@ window.trpcSDK
         console.log(result); // result is obtained via async functuin call
     });
 
-- MUST write all the backend trpc procedures in this file: "/trpc/*.js"
+- MUST write all the backend trpc procedures in this file: "/trpc/*.js" one by one in each file.
 
 - There are 2 global varaibles: "protectedProcedure" and "publicProcedure" for private and public access for appRouter
 
 - DO NOT CHANGE Immediately Invoked Function Expression input arguments
-
-- MUST use Mongoose Models in the "models" argument in the Immediately Invoked Function Expression.
 
 - DO NOT USE In-memory mock store 
 
@@ -107,6 +119,8 @@ window.trpcSDK
 
 - ALWAYS use: ctx.session.user to get user from the procedure context (GOOD)
 - NEVER use: ctx.user to get user from the procedure context (BAD)
+
+- ALWAYS use dbInstance.model(...) function to call models
 
 - ALWAYS make sure we implemented the code for login resgiter and write at: "/trpc/authProcedures.ts"
 
