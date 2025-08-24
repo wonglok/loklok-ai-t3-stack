@@ -11,6 +11,7 @@ import { BootUpTaskManager } from "../ai/tasks/_core/MyTaskManager";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { LokLokSDK } from "../web/LokLokSDK";
+import { v4 } from "uuid";
 
 export function VercelLMStudio({ appID }: { appID: string }) {
     useEffect(() => {
@@ -93,6 +94,10 @@ export function VercelLMStudio({ appID }: { appID: string }) {
                                                 });
                                             }
                                         }
+
+                                        useAI.setState({
+                                            refreshID: `_${v4()}`,
+                                        });
 
                                         //
 
