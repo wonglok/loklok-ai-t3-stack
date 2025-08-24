@@ -123,6 +123,7 @@ window.trpcSDK
 - ALWAYS use dbInstance.model(...) function to call models
 
 - ALWAYS make sure we implemented the code for login resgiter and write at: "/trpc/auth.ts"
+- ALWAYS make sure we implemented the code for other features and write at: "/trpc/*.ts"
 
 - Example: "/trpc/auth.ts"
 (function ({ z, models, allProcedures, publicProcedure, protectedProcedure, jwt, bcrypt, JWT_SECRET, ObjectId, mongoose, dbInstance }) {
@@ -162,69 +163,6 @@ window.trpcSDK
                 return { token };
             });
 
-}({ 
-    // @ts-ignore
-    z, models, allProcedures, publicProcedure, protectedProcedure, jwt, bcrypt, JWT_SECRET, ObjectId, mongoose, dbInstance 
-}))
-
-
-- Example: "/trpc/todoProcedures.ts"
-(function ({ z, models, allProcedures, publicProcedure, protectedProcedure, jwt, bcrypt, JWT_SECRET, ObjectId, mongoose, dbInstance }) {
-    const Task = dbInstance.model("Task")
-
-    allProcedures.getTasks = protectedProcedure
-            .mutation(async ({ ctx }) => {
-                const tasks = await Task.find({ userID: ObjectId.createFromHexString(ctx.session.user._id) })
-                    .sort({ _id: -1 })
-                    .lean();
-                return tasks;
-            });
-
-
-    allProcedures.addTask = protectedProcedure
-            .input(z.object({
-                title: z.string(),
-            }))
-            .mutation(async ({ input, ctx }) => {
-                const task = await Task.create({
-                    title: input.title,
-                    completed: false,
-                    userID: ObjectId.createFromHexString(ctx.session.user._id),
-                });
-
-                return JSON.parse(JSON.stringify(task));
-            });
-
-            
-
-    allProcedures.toggleTask = protectedProcedure
-            .input(z.object({
-                _id: z.string(),
-            }))
-            .mutation(async ({ input, ctx }) => {
-                const task = await Task.findOne({
-                    _id: ObjectId.createFromHexString(input._id),
-                    userID: ObjectId.createFromHexString(ctx.session.user._id),
-                });
-
-                if (!task) throw new Error('Task not found');
-
-                task.completed = !task.completed;
-                await task.save();
-                return task;
-            });
-
-    allProcedures.deleteTask = protectedProcedure
-            .input(z.object({
-                _id: z.string(),
-            }))
-            .mutation(async ({ input, ctx }) => {
-                await Task.deleteOne({
-                    _id: ObjectId.createFromHexString(input._id),
-                    userID: ObjectId.createFromHexString(ctx.session.user._id),
-                });
-                return { success: true };
-            });
 }({ 
     // @ts-ignore
     z, models, allProcedures, publicProcedure, protectedProcedure, jwt, bcrypt, JWT_SECRET, ObjectId, mongoose, dbInstance 

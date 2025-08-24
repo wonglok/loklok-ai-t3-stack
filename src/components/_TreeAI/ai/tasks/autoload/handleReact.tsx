@@ -55,7 +55,7 @@ export async function handleReact({
         content: `${await getAppOverviewPrompt()}`,
     });
 
-    await listOutFilesToChatBlocks({ files, chatblocks });
+    // await listOutFilesToChatBlocks({ files, chatblocks });
 
     chatblocks.push({
         role: "user",

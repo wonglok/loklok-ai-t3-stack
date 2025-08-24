@@ -54,7 +54,7 @@ export async function handleZustand({
         content: `${await getAppOverviewPrompt()}`,
     });
 
-    await listOutFilesToChatBlocks({ files, chatblocks });
+    // await listOutFilesToChatBlocks({ files, chatblocks });
 
     chatblocks.push({
         role: "user",
@@ -76,7 +76,19 @@ import { create } from 'zustand';
 
 - make sure ai implement all trpc backend procedures with correct data type. refer to "/trpc/*.js"
 
-
+${files
+    .filter((r) => r.path.startsWith("/trpc"))
+    .map((f) => {
+        return `
+---------------------------------------------
+FilePath: ${f.path}
+FileSummary: ${f.summary}
+FileContent: 
+${f.content}
+---------------------------------------------
+    `;
+    })
+    .join("\n\n")}
 
 example: window.trpcSDK
     .runTRPC({
