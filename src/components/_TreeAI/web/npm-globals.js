@@ -1,4 +1,5 @@
 import * as React from 'react'
+import * as TRPCClient from '@trpc/client'
 import * as ReactDOM from 'react-dom/client'
 import * as Drei from '@react-three/drei'
 import * as Fiber from '@react-three/fiber'
@@ -10,6 +11,11 @@ import * as UUID from 'uuid'
 
 export const NPMCacheTasks = [
     //
+    {
+        name: `npm-@trpc/client`,
+        output: `/vendor/@trpc/client.js`,
+        importVaraible: TRPCClient,
+    },
     {
         name: `npm-@react-three/drei`,
         output: `/vendor/@react-three/drei.js`,

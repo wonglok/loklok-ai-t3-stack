@@ -56,14 +56,14 @@ ${await getAppOverviewPrompt()}
 ## Here's what the user want to build:
 ${userPrompt}
 
-## Output Format
-1. Public Users and Private Users (list of description but no code)
-2. Public Pages and Protected Pages(list of description but no code)
-3. Interactive actions in Each Page (list of description but no code)
-4. Routing (list of description but no code)
-5. Zustand State (list of description but no code)
-6. TRPC APIs (list of description but no code)
-7. UI Components (list of description but no code)
+## Output Format: JSON
+1. Public Users and Private Users
+2. Public Pages and Protected Page
+3. Interactive actions in Each Page
+4. Routing
+5. Zustand State
+6. TRPC APIs
+7. UI Components
 
 # Requiremetns:
 - make it really sweet and short and concise and accurate
@@ -76,7 +76,7 @@ ${userPrompt}
     let text = "";
     for await (let part of response.textStream) {
         text += part;
-        console.log(text);
+        // console.log(text);
         ticker.tick(text);
 
         await writeFileContent({

@@ -47,7 +47,7 @@ export function MyApp () {
     let [outlet, setApp] = React.useState(null)
 
     React.useEffect(() => {
-        import('/components/App.tsx').then((myModule) =>{
+        import('/frontend/src/main.js').then((myModule) =>{
                 console.log('module', myModule)
                 if (myModule?.App) {
                     try {
@@ -57,7 +57,7 @@ export function MyApp () {
                     }
                 } else {
                     try {
-                        setApp(<div className="w-full h-full from-orange-100 to-yellow-300 bg-gradient-to-t flex items-center justify-center">Loading...</div>)
+                        setApp(<div className="w-full h-full from-orange-100 to-yellow-300 bg-gradient-to-t flex items-center justify-center">Not found...</div>)
                     } catch (e) {
                         console.log(e)
                     }

@@ -21,13 +21,16 @@ function parseCodeBlocksGen3(input: string): CodeBlockG3[] {
         const summary = match[3]; // Captured summary
         let code = match[4].trim(); // Captured code content, trimmed
 
+        code = code.replace("```json", "");
+        code = code.replace("```md", "");
         code = code.replace("```ts", "");
-        code = code.replace("```ts", "");
-
         code = code.replace("```js", "");
-        code = code.replace("```js", "");
-
         code = code.replace("```", "");
+
+        code = code.replace("```json", "");
+        code = code.replace("```md", "");
+        code = code.replace("```ts", "");
+        code = code.replace("```js", "");
         code = code.replace("```", "");
 
         blocks.push({ action, fileName, summary, code });

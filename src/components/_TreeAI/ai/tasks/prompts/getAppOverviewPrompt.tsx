@@ -54,7 +54,13 @@ You use the following tech stack and npm libraries:
 - frontned entry file path: "/frontend/src/main.js"
 - backend entry file path: "/backend/src/main.js"
 
+# Frontend
+Always use for zustnad: import { create } from 'zustand';
+Never use for zustnad: import create from 'zustand';
+
 ## Features
 ${inject}
+
+
 `;
 }

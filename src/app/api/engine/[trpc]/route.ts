@@ -206,7 +206,7 @@ const handler = async (req: NextRequest) => {
                 let queryResult = await dbPlatform.model("AppCodeStore").find();
 
                 let data = queryResult.map((r) => {
-                    r = { ...r };
+                    r = { ...r._doc };
                     delete r.__v;
                     return { ...r, _id: `${r._id}` };
                 });
@@ -242,7 +242,7 @@ const handler = async (req: NextRequest) => {
                         .find();
 
                     let data = queryResult.map((r) => {
-                        r = { ...r };
+                        r = { ...r._doc };
                         delete r.__v;
                         return { ...r, _id: `${r._id}` };
                     });
