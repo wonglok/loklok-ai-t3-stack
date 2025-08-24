@@ -11,15 +11,6 @@ export interface CodeBlockG3 {
 
 // Function to parse the input string and extract code blocks
 function parseCodeBlocksGen3(input: string): CodeBlockG3[] {
-    input = input.replace("```ts", "");
-    input = input.replace("```ts", "");
-
-    input = input.replace("```js", "");
-    input = input.replace("```js", "");
-
-    input = input.replace("```", "");
-    input = input.replace("```", "");
-
     const blocks: CodeBlockG3[] = [];
     let match: RegExpExecArray | null;
 
@@ -28,7 +19,17 @@ function parseCodeBlocksGen3(input: string): CodeBlockG3[] {
         const action = match[1]; // Captured action type
         const fileName = match[2]; // Captured file name
         const summary = match[3]; // Captured summary
-        const code = match[4].trim(); // Captured code content, trimmed
+        let code = match[4].trim(); // Captured code content, trimmed
+
+        code = code.replace("```ts", "");
+        code = code.replace("```ts", "");
+
+        code = code.replace("```js", "");
+        code = code.replace("```js", "");
+
+        code = code.replace("```", "");
+        code = code.replace("```", "");
+
         blocks.push({ action, fileName, summary, code });
     }
 

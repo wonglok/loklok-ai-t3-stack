@@ -16,9 +16,9 @@ export async function getFileOutputFormatting() {
 {file_content}
 [/TJ_TAG]
 
-- {file_path_name} is the file.path name
-- {file_summary} is the file.summary overview, purpose and summary of the file_content
-- {file_content} is the file.content of the file, unwwrapping \`\`\`ts or \`\`\`js
+- {file_path_name} is the file path name
+- {file_content} is the file content of the file, unwwrapping \`\`\`ts or \`\`\`js
+- {file_summary} is the overview, purpose and summary of the {file_content}
 
 - if there is an existing file, then you can use [TJ_TAG action="update-file" ...]
 - if there is no existing file, then you can [TJ_TAG action="create-file" ...]
