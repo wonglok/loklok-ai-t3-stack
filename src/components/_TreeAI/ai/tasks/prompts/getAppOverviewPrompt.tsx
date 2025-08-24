@@ -44,6 +44,9 @@ You use the following tech stack and npm libraries:
 - backend codes are located at: "/backend/**.*"
 - frontend codes are located at: "/frontend/**.*"
 
+- frontned entry file path: "/frontend/src/main.ts"
+- backend entry file path: "/backend/src/main.ts"
+
 ## Features
 ${inject}
 `;
