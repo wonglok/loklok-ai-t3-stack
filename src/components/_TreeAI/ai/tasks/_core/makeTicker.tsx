@@ -34,7 +34,7 @@ export let makeTicker = ({ engineSettingData, displayName }) => {
 
             cursor = cursor % symbols.length;
 
-            engineSettingData.bannerText = `${displayName} ${symbols[cursor]} ${(text.split(" ").length / (duration / 1000)).toFixed(1)} Tokens / second`;
+            engineSettingData.bannerText = `${displayName} ${symbols[cursor]} ${(text.split(" ").length / (duration / 1000)).toFixed(1)} token/s`;
 
             uiMsg.parts[0].data = text;
 
