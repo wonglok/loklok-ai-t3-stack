@@ -24,10 +24,12 @@ export class LokLokSDK {
                     url: `${getBaseUrl()}/api/engine`,
                     headers: () => {
                         const headers = new Headers();
-                        headers.set("x-trpc-source", "nextjs-react-app");
-                        headers.set("app-id", appID);
+
                         let auth = localStorage.getItem("jwt_" + appID) || "";
                         headers.set("authtoken", auth);
+
+                        headers.set("x-trpc-source", "nextjs-react-app");
+                        headers.set("app-id", appID);
 
                         return headers;
                     },
@@ -38,6 +40,7 @@ export class LokLokSDK {
         this.appID = appID;
         this.client = client;
     }
+
     async setAuthToken(token) {
         localStorage.setItem("jwt_" + this.appID, `${token}`);
     }

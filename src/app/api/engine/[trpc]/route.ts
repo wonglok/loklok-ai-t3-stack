@@ -8,6 +8,7 @@ import {
     createTRPCContext,
     createTRPCRouter,
     getInfoByAppID,
+    protectedAppProcedure,
     t,
     timingMiddleware,
 } from "@/server/api/trpc";
@@ -29,7 +30,7 @@ import SuperJSON from "superjson";
  * handling a HTTP request (e.g. when you make requests from Client Components).
  */
 const createContext = async (req: NextRequest) => {
-    return createAppTRPCContext({
+    return createTRPCContext({
         headers: req.headers,
     });
 };
@@ -41,6 +42,7 @@ const handler = async (req: NextRequest) => {
 
     let { appHashID, phase, dbAppInstance, dbPlatform, JWT_SECRET } =
         getInfoByAppID(appID);
+
     console.log(appID);
     console.log(appHashID);
 
@@ -257,7 +259,19 @@ return appRouter;
 
         appRouter = await func({
             createTRPCRouter,
-            protectedProcedure: protectedProcedure,
+            protectedProcedure: publicProcedure,
+
+            // .use(({ ctx, next }) => {
+            //     if (!ctx.session?.user) {
+            //         throw new TRPCError({ code: "UNAUTHORIZED" });
+            //     }
+            //     return next({
+            //         ctx: {
+            //             // infers the `session` as non-nullable
+            //             session: { ...ctx.session, user: ctx.session.user },
+            //         },
+            //     });
+            // }),
             publicProcedure: publicProcedure,
             z,
             mongoose,
@@ -285,25 +299,7 @@ return appRouter;
         });
     }
 
-    // {
-    //     let authtoken = req.headers.get("authtoken");
-    //     let appID = req.headers.get("app-id");
-    //     let appHashID = `${shortHash(md5(`${appID}${process.env.NODE_ENV}${process.env.AUTH_SECRET}`))}`;
-    //     let JWT_SECRET = `_${appID}_${md5(appID + "--" + appID + "--" + appHashID)}`;
-    //     let phase = "dev";
-    //     if (process.env.NODE_ENV === "development") {
-    //         phase = "dev";
-    //     }
-    //     if (process.env.NODE_ENV === "production") {
-    //         phase = "prod";
-    //     }
-    //     if (process.env.NODE_ENV === "test") {
-    //         phase = "test";
-    //     }
-
-    //     console.log("appID", appID);
-    //     console.log("authtoken", authtoken);
-    // }
+    //
 
     let platformRouter = createTRPCRouter({
         //publicProcedure

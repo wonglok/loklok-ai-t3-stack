@@ -87,7 +87,6 @@ example: window.trpcSDK
 - store when we receive JWT when login / register 
 example: window.trpcSDK.setAuthToken(result.token)
 
-
 declare global {
     interface Window {
         trpcSDK?: {

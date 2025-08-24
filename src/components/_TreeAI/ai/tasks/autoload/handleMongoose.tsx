@@ -79,16 +79,17 @@ Instructions:
 function defineMongooseModels({ dbInstance, Schema, mongoose }) {
     const db = dbInstance
 
-    // Dont include example here
-    //    const Example = new Schema({
-    //         ...
-    //    })
-    //. if (!db.models['Example']) { db.model("Example", Example); }
+    const User = new Schema({
+        // ...
+    })
+    if (!db.models['User']) { 
+        db.model("User", User); 
+    }
 
     // add more schemas and models ..
 
     return {
-        // ["Example"]: db.model("Example"),
+        ["User"]: db.model("User"),
         ... // add more models
     };
 }

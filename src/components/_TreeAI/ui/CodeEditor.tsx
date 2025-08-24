@@ -107,6 +107,7 @@ export function CodeEditor() {
     let sdk = useMemo(() => {
         return new LokLokSDK({ appID });
     }, [appID]);
+    let timer = useRef<any>(0);
 
     return (
         <>
@@ -146,20 +147,24 @@ export function CodeEditor() {
                                 //     : defaultLanguage
                             }
                             value={file.content}
-                            onChange={async (v) => {
+                            onChange={(v) => {
                                 if (file) {
                                     file.content = `${v}`;
 
                                     nprogress.start();
-                                    await sdk.setupPlatform({
-                                        procedure: "setFS",
-                                        input: {
-                                            path: file.path,
-                                            content: file.content || "",
-                                            summary: file.summary || "",
-                                        },
-                                    });
-                                    nprogress.done();
+                                    clearTimeout(timer.current);
+                                    timer.current = setTimeout(async () => {
+                                        await sdk.setupPlatform({
+                                            procedure: "setFS",
+                                            input: {
+                                                path: file.path,
+                                                content: file.content || "",
+                                                summary: file.summary || "",
+                                            },
+                                        });
+
+                                        nprogress.done();
+                                    }, 500);
                                 }
                             }}
                         ></Editor>
