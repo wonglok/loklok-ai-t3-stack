@@ -230,9 +230,6 @@ window.trpcSDK
     z, models, allProcedures, publicProcedure, protectedProcedure, jwt, bcrypt, JWT_SECRET, ObjectId, mongoose, dbInstance 
 }))
 
-
-
-
 # instruction
 update suitable code files to meet the latest requirements
 
