@@ -113,6 +113,9 @@ export function App () {
             /* ... add more code here ..
             examples:
                 <Route path="/" component={LandingPage} />
+                <Route path="/login" component={LoginPage} />
+                <Route path="/register" component={RegisterPage} />
+                // ....
                 <Route path="/my-app" component={MyApp} />
             */
         </Router>
