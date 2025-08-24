@@ -50,36 +50,50 @@ export async function onReceiveResponse({
 
     MyTaskManager.add({
         waitFor: ["handleAppSpec"],
-        name: "handleMongoose",
+        name: "handleBackendCode",
         args: { userPrompt: userPrompt },
     });
 
     MyTaskManager.add({
-        waitFor: ["handleAppSpec", "handleMongoose"],
-        name: "handleBackendTRPC",
+        waitFor: ["handleAppSpec"],
+        name: "handleFrontendCode",
         args: { userPrompt: userPrompt },
     });
 
-    MyTaskManager.add({
-        waitFor: ["handleAppSpec", "handleBackendTRPC"],
-        name: "handleZustand",
-        args: { userPrompt: userPrompt },
-    });
+    // MyTaskManager.add({
+    //     waitFor: ["handleAppSpec"],
+    //     name: "handleMongoose",
+    //     args: { userPrompt: userPrompt },
+    // });
 
-    MyTaskManager.add({
-        waitFor: ["handleAppSpec", "handleZustand"],
-        name: "handleReact",
-        args: { userPrompt: userPrompt },
-    });
+    // MyTaskManager.add({
+    //     waitFor: ["handleAppSpec", "handleMongoose"],
+    //     name: "handleBackendTRPC",
+    //     args: { userPrompt: userPrompt },
+    // });
+
+    // MyTaskManager.add({
+    //     waitFor: ["handleAppSpec", "handleBackendTRPC"],
+    //     name: "handleZustand",
+    //     args: { userPrompt: userPrompt },
+    // });
+
+    // MyTaskManager.add({
+    //     waitFor: ["handleAppSpec", "handleZustand"],
+    //     name: "handleReact",
+    //     args: { userPrompt: userPrompt },
+    // });
 
     MyTaskManager.add({
         waitFor: [
             "handleAppSpec",
-            "handleMongoose",
-            "handleBackendTRPC",
-            "handleZustand",
-            "handleReact",
-            "handleTesting",
+            "handleBackendCode",
+            "handleFrontendCode",
+
+            // "handleBackendTRPC",
+            // "handleZustand",
+            // "handleReact",
+            // "handleTesting",
         ],
         name: "handleDeploy",
         args: {
@@ -88,9 +102,5 @@ export async function onReceiveResponse({
     });
 
     await MyTaskManager.doneTask(task.name);
-
-    await saveToBrowserDB();
-    saveToCloud();
-
     await putBackFreeAIAsync({ engine: slot });
 }

@@ -89,10 +89,6 @@ export const factortyReset = async () => {
             },
         ],
     });
-
-    await saveToBrowserDB();
-    saveToCloud();
-
     let appID = useAI.getState().appID;
 
     let sdk = new LokLokSDK({ appID });
@@ -100,6 +96,10 @@ export const factortyReset = async () => {
         procedure: `reset`,
         input: {},
     });
+
+    saveToBrowserDB();
+    saveToCloud();
+
     location.reload();
 };
 export const useAI = create<{

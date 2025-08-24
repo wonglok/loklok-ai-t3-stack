@@ -36,10 +36,10 @@ import { listOutFilesToChatBlocks } from "../prompts/listOutFilesToChatBlocks";
 import { makeTicker } from "../_core/makeTicker";
 import { saveToCloud } from "@/components/_TreeAI/io/saveToCloud";
 
-export const name = "handleMongoose";
-export const displayName = "Mongoose DB ORM";
+export const name = "handleBackendCode";
+export const displayName = "Backend Code";
 
-export async function handleMongoose({
+export async function handleBackendCode({
     userPrompt,
     task,
 }: {
@@ -60,77 +60,15 @@ export async function handleMongoose({
     chatblocks.push({
         role: "user",
         content: `
-Instructions:
 
-- Identify mongoose models for backend and implement it in "defineMongooseModels", use only javascript ".js" files:
-- DO NOT WRAP THE CODE WITH markdown
-- ONLY WRITE PURE CODE FOR
-- Dont import anything
+# Instruction
 
-- please write the backend trpc procedures in this file: "/models/defineMongooseModels.js"
-
-Mongoose Database: Design MongoDB schemas using Mongoose. For each model, provide:  
-Schema definition in code-like syntax (e.g., const TaskSchema = new mongoose.Schema({ title: String, description: String })).  
-Fields with types, validation, and defaults.
-
-- MUST INCLUDE this "defineMongooseModels" typescript function:
-- for eaxmple the Example Schema and Models
-- Dont change "getAllModesl"
-- Only Implement "defineMongooseModels" function
-- DONT EXPORT "defineMongooseModels"
-- NEVER common.js style require or module.export
-
-function defineMongooseModels({ dbInstance, Schema, mongoose }) {
-    const db = dbInstance
-
-    // // USER SCHEMA (registration & authentication) - Example Code below:
-    // Remove Example Code in when you generate code.
-    // if (!db.models['User']) {
-    //     const userSchema = new mongoose.Schema(
-    //         {
-    //             email: {
-    //                 type: String,
-    //                 required: true,
-    //                 unique: true,
-    //             },
-    //             passwordHash: {
-    //                 type: String,
-    //                 required: true,
-    //                 select: false  // hide by default
-    //             },
-    //             lastLogin: { type: Date },
-    //             status: { type: String, default: 'unverified',  },
-    //         },
-    //         {
-    //             timestamps: true,  // add createdAt / updatedAt
-    //             versionKey: false   
-    //         }
-    //     );
-    //     // Pre‑save – hash plain password if it changed
-    //     userSchema.pre('save', async function (next) {
-    //         if (this.isModified('password')) {
-    //             this.passwordHash = await bcrypt.hash(this.password, 12);
-    //             this.password = undefined; // erase plain pwd
-    //         }
-    //         next();
-    //     });
-    //     db.model('User', userSchema);
-    // }
-
-    ... // add more schema
-
-    return {
-        // ["Example"]: db.model("Example"),
-        ... // add more models
-    };
-}
-
+output the backend code
 
 ${await getFileOutputFormatting()}
 
                 `,
     });
-    // mongoose.connection.useDb("app_development_appID", { useCache: true });
 
     console.log("chatblocks", chatblocks);
 

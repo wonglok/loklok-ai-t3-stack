@@ -31,6 +31,9 @@ You use the following tech stack and npm libraries:
 - axios
 - trpc
 - typescript
+- mongoose
+
+- MUST NOT USE prisma
 
 - MUST NOT use other npm library
 - NEVER common.js style require or module.export
@@ -38,9 +41,10 @@ You use the following tech stack and npm libraries:
 - If no need to modify content then dont edit it.
 
 ## Folders:
-- react.js UI Components are located at: "/components/*.tsx"
-- zustand.js stores are located at: "/store/*.ts"
+- backend codes are located at: "/backend/**.*"
+- frontend codes are located at: "/frontend/**.*"
 
+## Features
 ${inject}
 `;
 }
