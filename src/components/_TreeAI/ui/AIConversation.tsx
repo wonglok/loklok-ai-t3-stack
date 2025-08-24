@@ -147,7 +147,7 @@ function RenderMessages() {
                                                 key={`${message.id}-${i}`}
                                                 className="w-full overflow-x-auto"
                                             >
-                                                <pre className="w-full whitespace-pre">
+                                                <pre className="w-full text-xs whitespace-pre">
                                                     {
                                                         (part?.data ||
                                                             "") as string
