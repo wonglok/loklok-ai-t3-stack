@@ -131,6 +131,7 @@ const Schema = args.Schema;
 
 const jwt = args.jwt;
 const bcrypt = args.bcrypt;
+const JWT_SECRET = args.JWT_SECRET;
 
 let appRouter;
 let models = {}; 
@@ -147,7 +148,7 @@ try {
     }
 
     if (typeof defineBackendProcedures !== 'undefined') {
-        addons = defineBackendProcedures({ z, models, otherProcedures: {}, publicProcedure, protectedProcedure, jwt, bcrypt })
+        addons = defineBackendProcedures({ z, models, otherProcedures: {}, publicProcedure, protectedProcedure, jwt, bcrypt, JWT_SECRET })
     }
 
     appRouter = createTRPCRouter({
@@ -217,6 +218,7 @@ return appRouter;
             Schema: mongoose.Schema,
             jwt: jwt,
             bcrypt: bcrypt,
+            JWT_SECRET: `_${appID}_${md5(appID + "--" + appID + "--" + appHashID)}`,
         });
     } catch (e) {
         console.error(e);

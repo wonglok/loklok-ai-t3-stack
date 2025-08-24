@@ -64,6 +64,10 @@ export function VercelLMStudio({ appID }: { appID: string }) {
                                             URL.createObjectURL(first),
                                         ).then((r) => r.json());
 
+                                        useAI.setState({
+                                            files: files,
+                                        });
+
                                         // console.log(files);
 
                                         let sdk = new LokLokSDK({
@@ -71,15 +75,28 @@ export function VercelLMStudio({ appID }: { appID: string }) {
                                         });
 
                                         for (let file of files) {
-                                            await sdk.setupPlatform({
-                                                procedure: "setFS",
-                                                input: {
-                                                    path: file.path,
-                                                    content: file.content || "",
-                                                    summary: file.summary || "",
-                                                },
-                                            });
+                                            if (
+                                                typeof file.path !==
+                                                    "undefined" &&
+                                                typeof file.content !==
+                                                    "undefined"
+                                            ) {
+                                                await sdk.setupPlatform({
+                                                    procedure: "setFS",
+                                                    input: {
+                                                        path: file.path,
+                                                        content:
+                                                            file.content || "",
+                                                        summary:
+                                                            file.summary || "",
+                                                    },
+                                                });
+                                            }
                                         }
+
+                                        //
+
+                                        alert("successfully imported! 🤩");
 
                                         //
                                     }
