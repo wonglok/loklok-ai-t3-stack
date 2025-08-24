@@ -72,7 +72,11 @@ Instructions:
 
 - The app has a Global variable window.trpcSDK as a custom tRPC Frontend Client.
 
+
+- NEVER use common.js style require or module.export
+
 - MUST NOT import module
+- DO NOT IMPORT ANYTHING
 
 window.trpcSDK
     .runTRPC({
@@ -92,10 +96,6 @@ window.trpcSDK
 - MUST use Mongoose Models in the "models" argument in the "defineBackendProcedures" function.
 
 - DO NOT USE In-memory mock store 
-
-- DO NOT IMPORT ANYTHING
-
-- NEVER common.js style require or module.export
 
 - ALWAYS USE .mutation({...})
 - NEVER USE .query({...})
