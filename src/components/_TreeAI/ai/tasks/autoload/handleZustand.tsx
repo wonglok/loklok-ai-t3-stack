@@ -54,7 +54,7 @@ export async function handleZustand({
         content: `${await getAppOverviewPrompt()}`,
     });
 
-    // await listOutFilesToChatBlocks({ files, chatblocks });
+    await listOutFilesToChatBlocks({ files, chatblocks });
 
     chatblocks.push({
         role: "user",
