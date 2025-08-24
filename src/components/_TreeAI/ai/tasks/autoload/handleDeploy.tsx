@@ -97,6 +97,12 @@ export async function handleDeploy({
     await saveToBrowserDB();
     await saveToCloud();
 
+    engineSettingData.bannerText = ``;
+    refreshEngineSlot(engineSettingData);
+
+    await MyTaskManager.doneTask(task.name);
+    await putBackFreeAIAsync({ engine: engineSettingData });
+
     setTimeout(() => {
         useAI.getState().reloadFunc();
     }, 10);
@@ -104,10 +110,4 @@ export async function handleDeploy({
     setTimeout(() => {
         useAI.getState().reloadFunc();
     }, 150);
-
-    engineSettingData.bannerText = ``;
-    refreshEngineSlot(engineSettingData);
-
-    await MyTaskManager.doneTask(task.name);
-    await putBackFreeAIAsync({ engine: engineSettingData });
 }
