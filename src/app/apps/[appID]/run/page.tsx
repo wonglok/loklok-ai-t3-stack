@@ -44,20 +44,20 @@ export function MyApp () {
 
     let [output, setOutput] = useState('')
 
-    let [outlet, setApp] = React.useState(null)
+    let [outlet, setAppOutlet] = React.useState(null)
 
     React.useEffect(() => {
         import('/components/App.tsx').then((myModule) =>{
                 console.log('module', myModule)
                 if (myModule?.App) {
                     try {
-                        setApp(<myModule.App></myModule.App>)
+                        setAppOutlet(<myModule.App></myModule.App>)
                     } catch (e) {
                         console.log(e)
                     }
                 } else {
                     try {
-                        setApp(<div className="w-full h-full from-orange-100 to-yellow-300 bg-gradient-to-t flex items-center justify-center">Loading...</div>)
+                        setAppOutlet(<div className="w-full h-full from-yellow-300 to-teal-500 bg-gradient-to-br flex items-center justify-center text-white">Not found /components/App.js </div>)
                     } catch (e) {
                         console.log(e)
                     }

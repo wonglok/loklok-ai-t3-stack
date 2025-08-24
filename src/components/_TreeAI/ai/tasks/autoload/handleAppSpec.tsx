@@ -30,7 +30,6 @@ import { refreshEngineSlot } from "../../refreshEngines";
 import { writeFileContent } from "@/components/_TreeAI/io/writeFileContent";
 import { makeTicker } from "../_core/makeTicker";
 import { getModelMessagesFromUIMessages } from "../../getModelMessagesFromUIMessages";
-import { saveToCloud } from "@/components/_TreeAI/io/saveToCloud";
 
 export const name = "handleAppSpec";
 export const displayName = "Features";
@@ -44,7 +43,6 @@ export async function handleAppSpec({
     let { model, engineSettingData } = await getFreeAIAsync();
 
     await saveToBrowserDB();
-    saveToCloud();
 
     engineSettingData.bannerText = ``;
     refreshEngineSlot(engineSettingData);
@@ -57,7 +55,7 @@ export async function handleAppSpec({
     let response = streamText({
         system: `
 
-        You are a senior developer who has product management skillet.
+You are a senior developer who has product management skills. You help user analyse the tech sepc.
 
     # Output format:
     
@@ -82,13 +80,6 @@ export async function handleAppSpec({
         messages: [
             //
             ...getModelMessagesFromUIMessages(),
-            {
-                role: "user",
-                content: `
-    ## Here's what the user want to build:
-    ${userPrompt}
-                    `,
-            },
         ],
     });
 
@@ -104,7 +95,6 @@ export async function handleAppSpec({
 
     await writeFileContent({ path: `/docs/requirements.md`, content: text });
 
-    console.log("userPrompt", userPrompt);
     ticker.remove();
 
     await MyTaskManager.doneTask(task.name);

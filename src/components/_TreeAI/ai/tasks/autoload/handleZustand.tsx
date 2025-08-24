@@ -210,7 +210,6 @@ ${await getFileOutputFormatting()}
                         content: block.code,
                     });
                     await saveToBrowserDB();
-                    saveToCloud();
                 } else if (block.action === "update-file") {
                     await writeFileContent({
                         summary: `${block.summary}`,
@@ -218,7 +217,6 @@ ${await getFileOutputFormatting()}
                         content: block.code,
                     });
                     await saveToBrowserDB();
-                    saveToCloud();
                 } else if (block.action === "remove-file") {
                     await removeFile({
                         path: `${block.fileName}`,
