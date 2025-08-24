@@ -68,7 +68,7 @@ Instructions:
 - DO NOT WRAP THE CODE WITH markdown
 - ONLY WRITE PURE CODE FOR
 
-- Please refer to mongoose models in "/models/*.js" to have all features 
+- Please refer to mongoose models in "/models/*.js" to have all features:
 
 ${files
     .filter((r) => r.path.startsWith("/models"))
@@ -122,9 +122,9 @@ window.trpcSDK
 
 - ALWAYS use dbInstance.model(...) function to call models
 
-- ALWAYS make sure we implemented the code for login resgiter and write at: "/trpc/authProcedures.ts"
+- ALWAYS make sure we implemented the code for login resgiter and write at: "/trpc/auth.ts"
 
-- Example: "/trpc/authProcedures.ts"
+- Example: "/trpc/auth.ts"
 (function ({ z, models, allProcedures, publicProcedure, protectedProcedure, jwt, bcrypt, JWT_SECRET, ObjectId, mongoose, dbInstance }) {
     const User = dbInstance.model("User")
 
@@ -226,10 +226,7 @@ window.trpcSDK
 }({ z, models, allProcedures, publicProcedure, protectedProcedure, jwt, bcrypt, JWT_SECRET, ObjectId, mongoose, dbInstance }))
 
 
-- Only Implement "defineBackendProcedures" function
-- DO NOT write any other function or file
 
-- issue JWT when login / register 
 
 # instruction
 update suitable code files to meet the latest requirements
