@@ -72,6 +72,7 @@ const models = args.models;
 
 let allProcedures = {};
 
+${defineBackendProceduresContent}
 
 return allProcedures;
     `,
