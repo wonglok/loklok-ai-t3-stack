@@ -77,6 +77,7 @@ Instructions:
 
 - MUST NOT import module
 - DO NOT IMPORT ANYTHING
+- NEVER use common.js nodejs
 
 window.trpcSDK
     .runTRPC({
@@ -104,17 +105,14 @@ window.trpcSDK
 - NEVER USE "id" for object id (bad)
 - Example: USE "{ _id, ...updates }" instead of { id, ...updates } 
 
-- DO NOT write: "export function defineBackendProcedures () {}"
-- ALWAYS write: "function defineBackendProcedures () {}" // good
-
-- NEVER write: "module.exports = defineBackendProcedures;"
-
 - ALWAYS use: ctx.session.user to get user from the procedure context (GOOD)
 - NEVER use: ctx.user to get user from the procedure context (BAD)
 
-- Example: login register etc
-(function ({ z, models, allProcedures, publicProcedure, protectedProcedure, jwt, bcrypt, JWT_SECRET, ObjectId, mongoose }) {
-    const { Task } = models;
+- ALWAYS make sure we implemented the code for login resgiter and write at: "/trpc/authProcedures.ts"
+
+- Example: "/trpc/authProcedures.ts"
+(function ({ z, models, allProcedures, publicProcedure, protectedProcedure, jwt, bcrypt, JWT_SECRET, ObjectId, mongoose, dbInstance }) {
+    const User = dbInstance.model("User")
 
     // Register a new user (public)
     allProcedures.publicProcedure
@@ -123,7 +121,6 @@ window.trpcSDK
             password: z.string().min(6),
         }))
         .mutation(async ({ input }) => {
-            const { User } = models;
             const existing = await User.findOne({ email: input.email });
             if (existing) throw new Error('Email already in use');
 
@@ -140,7 +137,6 @@ window.trpcSDK
                 password: z.string(),
             }))
             .mutation(async ({ input }) => {
-                const { User } = models;
                 const user = await User.findOne({ email: input.email });
 
                 if (!user) throw new Error('Invalid credentials');
@@ -152,12 +148,12 @@ window.trpcSDK
                 return { token };
             });
 
-}({ z, models, allProcedures, publicProcedure, protectedProcedure, jwt, bcrypt, JWT_SECRET, ObjectId, mongoose }))
+}({ z, models, allProcedures, publicProcedure, protectedProcedure, jwt, bcrypt, JWT_SECRET, ObjectId, mongoose, dbInstance }))
 
 
-- Example: Tasks Management
-(function ({ z, models, allProcedures, publicProcedure, protectedProcedure, jwt, bcrypt, JWT_SECRET, ObjectId, mongoose }) {
-    const { Task } = models;
+- Example: "/trpc/todoProcedures.ts"
+(function ({ z, models, allProcedures, publicProcedure, protectedProcedure, jwt, bcrypt, JWT_SECRET, ObjectId, mongoose, dbInstance }) {
+    const Task = dbInstance.model("Task")
 
     allProcedures.getTasks = protectedProcedure
             .mutation(async ({ ctx }) => {
@@ -213,7 +209,7 @@ window.trpcSDK
                 return { success: true };
             });
 
-}({ z, models, allProcedures, publicProcedure, protectedProcedure, jwt, bcrypt, JWT_SECRET, ObjectId, mongoose }))
+}({ z, models, allProcedures, publicProcedure, protectedProcedure, jwt, bcrypt, JWT_SECRET, ObjectId, mongoose, dbInstance }))
 
 
 - Only Implement "defineBackendProcedures" function
