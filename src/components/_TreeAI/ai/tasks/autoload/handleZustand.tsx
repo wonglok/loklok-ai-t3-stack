@@ -112,6 +112,7 @@ export function App () {
 }
 ----- EXAMPLE /components/App.tsx -----
 
+- store when we receive JWT when login / register 
 
 # instruction
 update suitable code files to meet the latest requirements
