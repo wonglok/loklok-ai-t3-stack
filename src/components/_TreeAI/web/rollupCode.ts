@@ -65,11 +65,11 @@ export const rollupCode = async ({ files = [] }) => {
                         if (pathname.endsWith(".jsx")) {
                             return pathname.replace(".jsx", "");
                         }
-                        if (pathname.endsWith(".js")) {
-                            return pathname.replace(".js", "");
+                        if (pathname.endsWith(".ts")) {
+                            return pathname.replace(".ts", "");
                         }
-                        if (pathname.endsWith(".jsx")) {
-                            return pathname.replace(".jsx", "");
+                        if (pathname.endsWith(".tsx")) {
+                            return pathname.replace(".tsx", "");
                         }
                         return pathname;
                     };

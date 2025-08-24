@@ -50,9 +50,9 @@ export function CodeEditor() {
         (editor: any, monaco: any) => {
             setEditor(editor);
 
-            monaco.languages.javascript.javascriptDefaults.setCompilerOptions({
-                jsx: monaco.languages.javascript.JsxEmit.Preserve,
-                target: monaco.languages.javascript.ScriptTarget.ES2020,
+            monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
+                jsx: monaco.languages.typescript.JsxEmit.Preserve,
+                target: monaco.languages.typescript.ScriptTarget.ES2020,
                 esModuleInterop: true,
                 // moduleResolution: "nodenext",
                 baseUrl: "./", // Or your project's base directory
