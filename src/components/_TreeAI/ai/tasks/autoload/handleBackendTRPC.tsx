@@ -118,6 +118,43 @@ function defineBackendProcedures({ models, z, otherProcedures, publicProcedure, 
     return {
         ...otherProcedures,
 
+         // Register a new user (public)
+        register: publicProcedure
+            .input(z.object({
+                email: z.string(),
+                password: z.string().min(6),
+            }))
+            .mutation(async ({ input }) => {
+                const { User } = models;
+                const existing = await User.findOne({ email: input.email });
+                if (existing) throw new Error('Email already in use');
+
+                const hashed = await bcrypt.hash(input.password, 10);
+                const user = await User.create({ email: input.email, password: hashed });
+
+                const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '999d' });
+                return { token };
+            }),
+
+        // Login existing user (public)
+        login: publicProcedure
+            .input(z.object({
+                email: z.string(),
+                password: z.string(),
+            }))
+            .mutation(async ({ input }) => {
+                const { User } = models;
+                const user = await User.findOne({ email: input.email });
+
+                if (!user) throw new Error('Invalid credentials');
+
+                const match = await bcrypt.compare(input.password, user.passwordHash);
+                if (!match) throw new Error('Invalid credentials');
+
+                const token = jwt.sign({ id: user._id.toString() }, JWT_SECRET, { expiresIn: '999d' });
+                return { token };
+            }),
+
         // hello: publicProcedure
         //     .input(z.object({ text: z.string() }))
         //     .mutation(({ input, ctx }) => {
