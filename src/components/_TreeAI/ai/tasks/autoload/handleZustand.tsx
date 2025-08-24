@@ -65,7 +65,7 @@ Instructions:
 - DO NOT WRAP THE CODE WITH markdown
 - ONLY WRITE PURE CODE FOR
 
-- include the following lines:
+- MUST include the following lines:
 import { create } from 'zustand';
 
 - all zustand trpc frontend method must exist in trpc backend
