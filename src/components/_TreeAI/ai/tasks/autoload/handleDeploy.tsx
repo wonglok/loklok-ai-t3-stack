@@ -29,6 +29,8 @@ import { saveToBrowserDB } from "../../../io/saveToBrowserDB";
 import { refreshEngineSlot } from "../../refreshEngines";
 import { LokLokSDK } from "../../../web/LokLokSDK";
 import { saveToCloud } from "@/components/_TreeAI/io/saveToCloud";
+import { putUIMessage } from "../../putUIMessage";
+import { v4 } from "uuid";
 
 export const name = "handleDeploy";
 export const displayName = "Deploy Application";
@@ -88,10 +90,29 @@ export async function handleDeploy({
         useAI.getState().reloadFunc();
     }, 10);
 
+    setTimeout(() => {
+        useAI.getState().reloadFunc();
+    }, 150);
+
     engineSettingData.bannerText = ``;
     refreshEngineSlot(engineSettingData);
 
-    console.log("userPrompt", userPrompt);
+    let uiMsg = {
+        id: `${v4()}`,
+        role: "assistant",
+        parts: [
+            {
+                type: "data-deployed",
+                data: `Deployed`, // text
+            },
+            // {
+            //     type: "data-codeedit-btn",
+            //     data: ``, // path
+            // },
+            //data-codeedit
+        ],
+    };
+    putUIMessage(uiMsg as UIMessage);
 
     await MyTaskManager.doneTask(task.name);
     await putBackFreeAIAsync({ engine: engineSettingData });

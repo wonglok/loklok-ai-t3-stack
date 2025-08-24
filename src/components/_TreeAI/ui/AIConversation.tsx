@@ -23,6 +23,7 @@ import { MyTaskManager } from "../ai/tasks/_core/MyTaskManager";
 import { putUIMessage } from "../ai/putUIMessage";
 import { v4 } from "uuid";
 import { UIMessage } from "ai";
+import { Button } from "@/components/ui/button";
 
 export const AIConversation = () => {
     const userPrompt = useAI((r) => r.userPrompt);
@@ -138,6 +139,30 @@ function RenderMessages() {
                                                     language="markdown"
                                                     width="calc(320px - 30px)"
                                                 ></CodeEditorStream>
+                                            </div>
+                                        );
+
+                                    case "data-deployed": // we don't use any reasoning or tool calls in this example
+                                        return (
+                                            <div key={`${message.id}-${i}`}>
+                                                <Button
+                                                    onClick={() => {
+                                                        useAI.setState({
+                                                            topTab: "web",
+                                                        });
+
+                                                        useAI
+                                                            .getState()
+                                                            .reloadFunc();
+                                                        setTimeout(() => {
+                                                            useAI
+                                                                .getState()
+                                                                .reloadFunc();
+                                                        }, 150);
+                                                    }}
+                                                >
+                                                    Deployed, Open Preview
+                                                </Button>
                                             </div>
                                         );
 

@@ -35,6 +35,7 @@ import { listOutFilesToChatBlocks } from "../prompts/listOutFilesToChatBlocks";
 // import { LokLokSDK } from "../../../web/LokLokSDK";
 import { makeTicker } from "../_core/makeTicker";
 import { saveToCloud } from "@/components/_TreeAI/io/saveToCloud";
+import { v4 } from "uuid";
 
 export const name = "handleMongoose";
 export const displayName = "Mongoose DB ORM";
