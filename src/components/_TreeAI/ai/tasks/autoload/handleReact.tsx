@@ -88,6 +88,9 @@ import * as React from 'react';
 - MUST never use React.useState / useState
 - MUST never use React.useState
 
+- ALWAYS: import { useLocation } from 'wouter'; 
+- NEVER: import { useNavigate } from 'wouter';
+
 -------------------------
 - NEVER DIRECTLY USE: 
 await window.trpcSDK.runTRPC({

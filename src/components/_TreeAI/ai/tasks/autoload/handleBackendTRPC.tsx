@@ -162,7 +162,10 @@ window.trpcSDK
                 return { token };
             });
 
-}({ z, models, allProcedures, publicProcedure, protectedProcedure, jwt, bcrypt, JWT_SECRET, ObjectId, mongoose, dbInstance }))
+}({ 
+    // @ts-ignore
+    z, models, allProcedures, publicProcedure, protectedProcedure, jwt, bcrypt, JWT_SECRET, ObjectId, mongoose, dbInstance 
+}))
 
 
 - Example: "/trpc/todoProcedures.ts"
@@ -222,8 +225,10 @@ window.trpcSDK
                 });
                 return { success: true };
             });
-
-}({ z, models, allProcedures, publicProcedure, protectedProcedure, jwt, bcrypt, JWT_SECRET, ObjectId, mongoose, dbInstance }))
+}({ 
+    // @ts-ignore
+    z, models, allProcedures, publicProcedure, protectedProcedure, jwt, bcrypt, JWT_SECRET, ObjectId, mongoose, dbInstance 
+}))
 
 
 

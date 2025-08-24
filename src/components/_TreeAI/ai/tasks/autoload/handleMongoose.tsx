@@ -91,8 +91,11 @@ Instructions:
         db.model("User", UserSchema)
     }
     allModels.User = db.model("User");
+}({
+    // @ts-ignore
+    allModels, dbInstance, Schema, ObjectId 
+}));
 
-}({ allModels, dbInstance, Schema, ObjectId }));
 
 - Implement mode one by one in folder  "/models/*.js"
 
