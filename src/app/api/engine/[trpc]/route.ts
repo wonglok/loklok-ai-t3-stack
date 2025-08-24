@@ -200,6 +200,7 @@ return appRouter;
 
         appRouter = await func({
             createTRPCRouter,
+            // TEMP DISABLE SECURITY
             protectedProcedure: publicProcedure,
             publicProcedure: publicProcedure,
             z,
