@@ -120,6 +120,7 @@ export function TreeList() {
             </TreeItem>
 
             */}
+
             <TreeItem
                 itemId="/docs"
                 label={<>{`📄 Docs`}</>}
@@ -156,12 +157,7 @@ export function TreeList() {
 
             <TreeItem
                 itemId="/components"
-                label={
-                    <>
-                        🌏
-                        {` React Components`}
-                    </>
-                }
+                label={<>{`✨ React UI`}</>}
                 onClick={() => {
                     //
                     useAI.setState({
@@ -196,52 +192,8 @@ export function TreeList() {
             </TreeItem>
 
             <TreeItem
-                itemId="/models"
-                label={
-                    <>
-                        💽
-                        {` Mongoose models`}
-                    </>
-                }
-                onClick={() => {
-                    //
-                    useAI.setState({
-                        topTab: "code",
-                    });
-                    //
-                }}
-            >
-                {files
-                    .filter((r) => r?.path?.startsWith("/models"))
-                    .map((r) => {
-                        return (
-                            <TreeItem
-                                key={r.path}
-                                itemId={r.path}
-                                label={
-                                    <div className="h-full w-full overflow-x-auto">
-                                        {r.path}
-                                    </div>
-                                }
-                                onClick={() => {
-                                    useAI.setState({
-                                        topTab: "code",
-                                        currentPath: r.path,
-                                    });
-                                }}
-                            />
-                        );
-                    })}
-            </TreeItem>
-
-            <TreeItem
                 itemId="/store"
-                label={
-                    <>
-                        🤩
-                        {` Zustand store`}
-                    </>
-                }
+                label={<>{`🐻 Zustand`}</>}
                 onClick={() => {
                     //
                     useAI.setState({
@@ -274,13 +226,8 @@ export function TreeList() {
             </TreeItem>
 
             <TreeItem
-                itemId="/trpc"
-                label={
-                    <>
-                        👨🏼‍🍳
-                        {` TRPC models`}
-                    </>
-                }
+                itemId="/Backend"
+                label={<>{`📲 Backend`}</>}
                 onClick={() => {
                     //
                     useAI.setState({
@@ -290,7 +237,11 @@ export function TreeList() {
                 }}
             >
                 {files
-                    .filter((r) => r?.path?.startsWith("/trpc"))
+                    .filter(
+                        (r) =>
+                            r?.path?.startsWith("/trpc") ||
+                            r?.path?.startsWith("/models"),
+                    )
                     .map((r) => {
                         return (
                             <TreeItem
@@ -311,6 +262,40 @@ export function TreeList() {
                         );
                     })}
             </TreeItem>
+
+            {/* <TreeItem
+                itemId="/models"
+                label={<>{`🚥 Mongoose models`}</>}
+                onClick={() => {
+                    //
+                    useAI.setState({
+                        topTab: "code",
+                    });
+                    //
+                }}
+            >
+                {files
+                    .filter((r) => r?.path?.startsWith("/models"))
+                    .map((r) => {
+                        return (
+                            <TreeItem
+                                key={r.path}
+                                itemId={r.path}
+                                label={
+                                    <div className="h-full w-full overflow-x-auto">
+                                        {r.path}
+                                    </div>
+                                }
+                                onClick={() => {
+                                    useAI.setState({
+                                        topTab: "code",
+                                        currentPath: r.path,
+                                    });
+                                }}
+                            />
+                        );
+                    })}
+            </TreeItem> */}
 
             <TreeItem
                 itemId="/setting"
