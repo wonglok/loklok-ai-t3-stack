@@ -30,7 +30,7 @@ import SuperJSON from "superjson";
  * handling a HTTP request (e.g. when you make requests from Client Components).
  */
 const createContext = async (req: NextRequest) => {
-    return createTRPCContext({
+    return createAppTRPCContext({
         headers: req.headers,
     });
 };
@@ -259,19 +259,7 @@ return appRouter;
 
         appRouter = await func({
             createTRPCRouter,
-            protectedProcedure: publicProcedure,
-
-            // .use(({ ctx, next }) => {
-            //     if (!ctx.session?.user) {
-            //         throw new TRPCError({ code: "UNAUTHORIZED" });
-            //     }
-            //     return next({
-            //         ctx: {
-            //             // infers the `session` as non-nullable
-            //             session: { ...ctx.session, user: ctx.session.user },
-            //         },
-            //     });
-            // }),
+            protectedProcedure: protectedProcedure,
             publicProcedure: publicProcedure,
             z,
             mongoose,

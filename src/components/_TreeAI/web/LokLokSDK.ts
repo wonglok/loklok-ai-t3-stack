@@ -44,6 +44,9 @@ export class LokLokSDK {
     async setAuthToken(token) {
         localStorage.setItem("jwt_" + this.appID, `${token}`);
     }
+    async getAuthToken() {
+        return localStorage.getItem("jwt_" + this.appID);
+    }
 
     async runTRPC({ procedure = "hello", input }) {
         return (this.client["app"][procedure] as any)
