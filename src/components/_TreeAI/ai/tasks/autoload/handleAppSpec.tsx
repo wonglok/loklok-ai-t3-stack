@@ -74,9 +74,9 @@ User will tell you what they want to build
 ${userPrompt}
 
 ## Output Format
-1. Public Users and Private Users
-2. Public Pages and Protected Pages
-3. Interactive actions in Each Page 
+1. Public Users and Private Users (text description, no code)
+2. Public Pages and Protected Pages(text description, no code)
+3. Interactive actions in Each Page (text description, no code)
 4. Routing (text description, no code)
 5. Zustand State (text description, no code)
 6. TRPC APIs (text description, no code)

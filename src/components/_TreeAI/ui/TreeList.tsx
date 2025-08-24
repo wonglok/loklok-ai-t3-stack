@@ -155,11 +155,11 @@ export function TreeList() {
             </TreeItem>
 
             <TreeItem
-                itemId="/components"
+                itemId="/backend"
                 label={
                     <>
-                        🌏
-                        {` React Components`}
+                        🧑🏻‍💻
+                        {` Backend`}
                     </>
                 }
                 onClick={() => {
@@ -171,48 +171,11 @@ export function TreeList() {
                 }}
             >
                 {files
-                    .filter((r) => r?.path?.startsWith("/components"))
-                    .map((r) => {
-                        return (
-                            <TreeItem
-                                key={r.path}
-                                itemId={r.path}
-                                label={
-                                    <div className="h-full w-full overflow-x-auto">
-                                        {r.path}
-                                    </div>
-                                }
-                                onClick={() => {
-                                    useAI.setState({
-                                        topTab: "code",
-                                        currentPath: r.path,
-                                    });
-                                }}
-                            />
-                        );
-                    })}
-
-                {/*  */}
-            </TreeItem>
-
-            <TreeItem
-                itemId="/models"
-                label={
-                    <>
-                        💽
-                        {` Mongoose models`}
-                    </>
-                }
-                onClick={() => {
-                    //
-                    useAI.setState({
-                        topTab: "code",
-                    });
-                    //
-                }}
-            >
-                {files
-                    .filter((r) => r?.path?.startsWith("/models"))
+                    .filter(
+                        (r) =>
+                            r?.path?.startsWith("/models") ||
+                            r?.path?.startsWith("/trpc"),
+                    )
                     .map((r) => {
                         return (
                             <TreeItem
@@ -235,11 +198,11 @@ export function TreeList() {
             </TreeItem>
 
             <TreeItem
-                itemId="/store"
+                itemId="/frontend"
                 label={
                     <>
                         🤩
-                        {` Zustand store`}
+                        {` Frontend`}
                     </>
                 }
                 onClick={() => {
@@ -251,46 +214,11 @@ export function TreeList() {
                 }}
             >
                 {files
-                    .filter((r) => r?.path?.startsWith("/store"))
-                    .map((r) => {
-                        return (
-                            <TreeItem
-                                key={r.path}
-                                itemId={r.path}
-                                label={
-                                    <div className="h-full w-full overflow-x-auto">
-                                        {r.path}
-                                    </div>
-                                }
-                                onClick={() => {
-                                    useAI.setState({
-                                        topTab: "code",
-                                        currentPath: r.path,
-                                    });
-                                }}
-                            />
-                        );
-                    })}
-            </TreeItem>
-
-            <TreeItem
-                itemId="/trpc"
-                label={
-                    <>
-                        👨🏼‍🍳
-                        {` TRPC models`}
-                    </>
-                }
-                onClick={() => {
-                    //
-                    useAI.setState({
-                        topTab: "code",
-                    });
-                    //
-                }}
-            >
-                {files
-                    .filter((r) => r?.path?.startsWith("/trpc"))
+                    .filter(
+                        (r) =>
+                            r?.path?.startsWith("/store") ||
+                            r?.path?.startsWith("/components"),
+                    )
                     .map((r) => {
                         return (
                             <TreeItem

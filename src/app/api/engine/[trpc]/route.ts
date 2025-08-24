@@ -203,15 +203,23 @@ const handler = async (req: NextRequest) => {
         getFiles: protectedProcedure
             .input(z.object({}))
             .mutation(async ({ input, ctx }) => {
-                // console.log(ctx.session.user);
-                let files = await dbPlatform.model("AppCodeStore").find();
-                return JSON.parse(JSON.stringify(files));
+                let queryResult = await dbPlatform.model("AppCodeStore").find();
+
+                let data = queryResult.map((r) => {
+                    r = { ...r };
+                    delete r.__v;
+                    return { ...r, _id: `${r._id}` };
+                });
+
+                return data;
             }),
     });
 
-    let myTRPCRouter = createTRPCRouter({
+    let rootRouter = createTRPCRouter({
         app: await buildAppRouter({ phase, dbPlatform, appHashID }).catch(
             (e) => {
+                //
+
                 // console.log(e);
 
                 return createTRPCRouter({
@@ -229,8 +237,17 @@ const handler = async (req: NextRequest) => {
             getFiles: publicProcedure
                 .input(z.object({}))
                 .mutation(async ({ input }) => {
-                    let files = await dbPlatform.model("AppCodeStore").find();
-                    return JSON.parse(JSON.stringify(files));
+                    let queryResult = await dbPlatform
+                        .model("AppCodeStore")
+                        .find();
+
+                    let data = queryResult.map((r) => {
+                        r = { ...r };
+                        delete r.__v;
+                        return { ...r, _id: `${r._id}` };
+                    });
+
+                    return data;
                 }),
         }),
         platform: platformRouter,
@@ -239,7 +256,7 @@ const handler = async (req: NextRequest) => {
     return fetchRequestHandler({
         endpoint: "/api/engine",
         req,
-        router: myTRPCRouter,
+        router: rootRouter,
         createContext: () => {
             return createContext(req);
         },
