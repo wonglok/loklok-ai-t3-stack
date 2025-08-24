@@ -171,11 +171,7 @@ export function TreeList() {
                 }}
             >
                 {files
-                    .filter(
-                        (r) =>
-                            r?.path?.startsWith("/models") ||
-                            r?.path?.startsWith("/trpc"),
-                    )
+                    .filter((r) => r?.path?.startsWith("/backend"))
                     .map((r) => {
                         return (
                             <TreeItem
@@ -214,11 +210,7 @@ export function TreeList() {
                 }}
             >
                 {files
-                    .filter(
-                        (r) =>
-                            r?.path?.startsWith("/store") ||
-                            r?.path?.startsWith("/components"),
-                    )
+                    .filter((r) => r?.path?.startsWith("/frontend"))
                     .map((r) => {
                         return (
                             <TreeItem
