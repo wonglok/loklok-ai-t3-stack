@@ -165,13 +165,13 @@ function RenderMessages() {
                                                             topTab: "web",
                                                         });
 
-                                                        useAI
-                                                            .getState()
-                                                            .reloadFunc();
+                                                        useAI.setState({
+                                                            refreshID: `${v4()}`,
+                                                        });
                                                         setTimeout(() => {
-                                                            useAI
-                                                                .getState()
-                                                                .reloadFunc();
+                                                            useAI.setState({
+                                                                refreshID: `${v4()}`,
+                                                            });
                                                         }, 150);
                                                     }}
                                                 >
