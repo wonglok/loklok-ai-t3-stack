@@ -152,12 +152,8 @@ ${await getFileOutputFormatting()}
             //                 `,
             //             },
             //
-            //
 
             ...getModelMessagesFromUIMessages(),
-            //
-            //
-
             ...chatblocks,
 
             //

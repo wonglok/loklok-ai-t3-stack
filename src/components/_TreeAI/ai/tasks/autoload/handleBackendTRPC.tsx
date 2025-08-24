@@ -171,6 +171,21 @@ window.trpcSDK
 # instruction
 update suitable code files within "/trpc/*" to meet the latest requirements
 
+
+
+${files
+    .filter((r) => r.path.startsWith("/models"))
+    .map((f) => {
+        return `
+Implement for this mongoose model:
+---------------------------------------------
+FilePath: ${f.path}
+FileSummary: ${f.summary}
+---------------------------------------------
+    `;
+    })
+    .join("\n\n")}
+
 ${await getFileOutputFormatting()}
 
                 `,
