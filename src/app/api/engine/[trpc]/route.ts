@@ -11,6 +11,9 @@ import md5 from "md5";
 import shortHash from "short-hash";
 // import { appRouter } from "@/server/api/root";
 
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+
 /**
  * This wraps the `createTRPCContext` helper and provides the required context for the tRPC API when
  * handling a HTTP request (e.g. when you make requests from Client Components).
@@ -126,6 +129,9 @@ const mongoose = args.mongoose;
 const dbInstance = args.dbInstance;
 const Schema = args.Schema;
 
+const jwt = args.jwt;
+const bcrypt = args.bcrypt;
+
 let appRouter;
 let models = {}; 
 let addons = {};
@@ -141,7 +147,7 @@ try {
     }
 
     if (typeof defineBackendProcedures !== 'undefined') {
-        addons = defineBackendProcedures({ z, models, otherProcedures: {}, publicProcedure, protectedProcedure })
+        addons = defineBackendProcedures({ z, models, otherProcedures: {}, publicProcedure, protectedProcedure, jwt, bcrypt })
     }
 
     appRouter = createTRPCRouter({
@@ -209,6 +215,8 @@ return appRouter;
             dbPlatform: dbPlatform,
             dbInstance: dbAppInstance,
             Schema: mongoose.Schema,
+            jwt: jwt,
+            bcrypt: bcrypt,
         });
     } catch (e) {
         console.error(e);

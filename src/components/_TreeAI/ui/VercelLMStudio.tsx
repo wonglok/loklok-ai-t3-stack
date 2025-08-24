@@ -10,6 +10,7 @@ import { AIConversation } from "./AIConversation";
 import { BootUpTaskManager } from "../ai/tasks/_core/MyTaskManager";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { LokLokSDK } from "../web/LokLokSDK";
 
 export function VercelLMStudio({ appID }: { appID: string }) {
     useEffect(() => {
@@ -46,6 +47,76 @@ export function VercelLMStudio({ appID }: { appID: string }) {
                         App Editor
                     </div>
                     <div className="mr-1 flex h-full items-center">
+                        <div
+                            className="mr-1 cursor-pointer"
+                            onClick={() => {
+                                //
+
+                                let inp = document.createElement("input");
+
+                                inp.type = "file";
+                                inp.onchange = async () => {
+                                    let first = inp.files[0];
+                                    if (first) {
+                                        console.log(first);
+
+                                        let files = await fetch(
+                                            URL.createObjectURL(first),
+                                        ).then((r) => r.json());
+
+                                        // console.log(files);
+
+                                        let sdk = new LokLokSDK({
+                                            appID: useAI.getState().appID,
+                                        });
+
+                                        for (let file of files) {
+                                            await sdk.setupPlatform({
+                                                procedure: "setFS",
+                                                input: {
+                                                    path: file.path,
+                                                    content: file.content || "",
+                                                    summary: file.summary || "",
+                                                },
+                                            });
+                                        }
+
+                                        //
+                                    }
+                                };
+                                inp.click();
+                                //
+                            }}
+                        >
+                            <Button>Import Code</Button>
+                        </div>
+
+                        <div
+                            className="mr-1 cursor-pointer"
+                            onClick={() => {
+                                //
+
+                                let files = useAI.getState().files;
+
+                                let json = JSON.stringify(files, null, "\t");
+
+                                let ar = document.createElement("a");
+
+                                ar.href = URL.createObjectURL(
+                                    new Blob([json], {
+                                        type: "application/json",
+                                    }),
+                                );
+
+                                ar.download = "export.json";
+
+                                ar.click();
+                                //
+                            }}
+                        >
+                            <Button>Export Code</Button>
+                        </div>
+
                         <Link
                             target="_blank"
                             href={`/apps/${appID}/run`}
