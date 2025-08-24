@@ -115,7 +115,7 @@ window.trpcSDK
 
 - ALWAYS USE "_id" for object id (good)
 - NEVER USE "id" for object id (bad)
-- Example: USE "{ _id, ...updates }" instead of { id, ...updates } 
+- Example: USE { ...myObject, _id } instead of { ...myObject, id }
 
 - ALWAYS use: ctx.session.user to get user from the procedure context (GOOD)
 - NEVER use: ctx.user to get user from the procedure context (BAD)
