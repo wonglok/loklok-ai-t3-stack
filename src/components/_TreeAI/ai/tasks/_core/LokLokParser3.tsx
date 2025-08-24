@@ -21,10 +21,19 @@ function parseCodeBlocksGen3(input: string): CodeBlockG3[] {
         const summary = match[3]; // Captured summary
         let code = match[4].trim(); // Captured code content, trimmed
 
-        code = code.replace(new RegExp(/\`\`\`js/g), "");
-        code = code.replace(new RegExp(/\`\`\`ts/g), "");
         code = code.replace(new RegExp(/\`\`\`jsx/g), "");
         code = code.replace(new RegExp(/\`\`\`tsx/g), "");
+        code = code.replace(new RegExp(/\`\`\`jsx/g), "");
+        code = code.replace(new RegExp(/\`\`\`tsx/g), "");
+
+        code = code.replace(new RegExp(/\`\`\`js/g), "");
+        code = code.replace(new RegExp(/\`\`\`ts/g), "");
+        code = code.replace(new RegExp(/\`\`\`js/g), "");
+        code = code.replace(new RegExp(/\`\`\`ts/g), "");
+
+        code = code.replace(new RegExp(/\`\`\`/g), "");
+        code = code.replace(new RegExp(/\`\`\`/g), "");
+        code = code.replace(new RegExp(/\`\`\`/g), "");
         code = code.replace(new RegExp(/\`\`\`/g), "");
 
         blocks.push({ action, fileName, summary, code });
