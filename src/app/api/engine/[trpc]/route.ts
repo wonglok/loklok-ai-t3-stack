@@ -9,6 +9,9 @@ import { protectedProcedure, publicProcedure } from "@/server/api/trpc";
 import mongoose from "mongoose";
 import md5 from "md5";
 import shortHash from "short-hash";
+import { toJSON } from "./_func/toJSON";
+import { buildModels } from "./_func/buildModels";
+import { buildProcedures } from "./_func/buildProcedures";
 // import { appRouter } from "@/server/api/root";
 
 /**
@@ -21,100 +24,9 @@ const createContext = async (req: NextRequest) => {
     });
 };
 
-const handler = async (req: NextRequest) => {
-    await mongoose.connect(`${process.env.MONGO_DEVELOP}`);
-
-    let appID = req.headers.get("app-id");
-
-    let appHashID = `${shortHash(md5(`${appID}${process.env.NODE_ENV}${process.env.AUTH_SECRET}`))}`;
-
-    let phase = "dev";
-    if (process.env.NODE_ENV === "development") {
-        phase = "dev";
-    }
-    if (process.env.NODE_ENV === "production") {
-        phase = "prod";
-    }
-    if (process.env.NODE_ENV === "test") {
-        phase = "test";
-    }
-
-    console.log(appID);
-    console.log(appHashID);
-
-    const dbPlatform = mongoose.connection.useDb(`os_${phase}_${appHashID}`, {
-        useCache: true,
-    });
-
-    const AppCodeStore = new mongoose.Schema(
-        {
-            versionID: { type: String, required: false },
-            path: { type: String, required: true },
-            summary: { type: String, required: true },
-            content: { type: String },
-        },
-        {
-            timestamps: true,
-        },
-    );
-
-    if (!dbPlatform.models["AppCodeStore"]) {
-        dbPlatform.model("AppCodeStore", AppCodeStore);
-    }
-
-    let defineMongooseModels = await dbPlatform
-        .model("AppCodeStore")
-        .findOne({ path: `/models/defineMongooseModels.js` })
-        .lean()
-        .catch((r) => {
-            console.log(r);
-            return {
-                path: `/models/defineMongooseModels.js`,
-                content: ``,
-            };
-        });
-
-    let defineBackendProcedures = await dbPlatform
-        .model("AppCodeStore")
-        .findOne({ path: `/trpc/defineBackendProcedures.js` })
-        .lean()
-        .catch((r) => {
-            console.log(r);
-            return {
-                path: `/trpc/defineBackendProcedures.js`,
-                content: ``,
-            };
-        });
-
-    let toJSON = (v) => JSON.parse(JSON.stringify(v));
-
-    let appRouter = createTRPCRouter({
-        hello: publicProcedure
-            .input(z.object({ text: z.string() }))
-            .mutation(({ input }) => {
-                return {
-                    greeting: input.text,
-                };
-            }),
-    });
-
-    let defineMongooseModelsContent =
-        toJSON(defineMongooseModels)?.content || "";
-    let defineBackendProceduresContent =
-        toJSON(defineBackendProcedures)?.content || "";
-
-    //     if (process.env.NODE_ENV === "development") {
-    //         console.log(`
-    // /////
-    // ${defineMongooseModelsContent}
-    // /////
-    // ${defineBackendProceduresContent}
-    // //// Develop
-    // `);
-    //     }
-
+const buildAppRouter = async ({ appHashID, dbPlatform, phase }) => {
     try {
-        let func = new Function(
+        let buildAppRouter = new Function(
             `args`,
             `
 const createTRPCRouter = args.createTRPCRouter;
@@ -125,28 +37,12 @@ const post = args.post;
 const mongoose = args.mongoose;
 const dbInstance = args.dbInstance;
 const Schema = args.Schema;
+const procedures = args.procedures;
 
 let appRouter;
-let models = {}; 
-let addons = {};
-
-${defineMongooseModelsContent}
-
-${defineBackendProceduresContent}
-
 try {
-    
-    if (typeof defineMongooseModels !== 'undefined') {
-        models = defineMongooseModels({  dbInstance, Schema, mongoose });
-    }
-
-    if (typeof defineBackendProcedures !== 'undefined') {
-        addons = defineBackendProcedures({ z, models, otherProcedures: {}, publicProcedure, protectedProcedure })
-    }
-
     appRouter = createTRPCRouter({
-        //
-        ...addons,
+        ...procedures,
             
         hello: publicProcedure
             .input(z.object({ text: z.string() }))
@@ -156,22 +52,7 @@ try {
                 };
             }),
 
-        // create: protectedProcedure
-        //     .input(z.object({ name: z.string().min(1) }))
-        //     .mutation(async ({ input }) => {
-        //         post = { id: post.id + 1, name: input.name };
-        //         return post;
-        //     }),
-
-        // getLatest: protectedProcedure.mutation(() => {
-        //     return post;
-        // }),
-
-        // getSecretMessage: protectedProcedure.mutation(() => {
-        //     return "you can now see this secret message!";
-        // }),
-
-    });
+        });
 } catch (e) {
     console.error(e);
     appRouter = createTRPCRouter({
@@ -198,7 +79,21 @@ return appRouter;
             },
         );
 
-        appRouter = await func({
+        let models = await buildModels({
+            phase,
+            dbPlatform,
+            appHashID,
+            dbAppInstance,
+        });
+
+        let procedures = await buildProcedures({
+            phase,
+            dbPlatform,
+            appHashID,
+            models,
+        });
+
+        return await buildAppRouter({
             createTRPCRouter,
             protectedProcedure,
             publicProcedure,
@@ -208,13 +103,66 @@ return appRouter;
             dbPlatform: dbPlatform,
             dbInstance: dbAppInstance,
             Schema: mongoose.Schema,
+            procedures: procedures,
         });
     } catch (e) {
         console.error(e);
+
+        return createTRPCRouter({
+            hello: publicProcedure
+                .input(z.object({ text: z.string() }))
+                .mutation(({ input }) => {
+                    return {
+                        greeting: input.text,
+                    };
+                }),
+        });
+    }
+};
+
+const handler = async (req: NextRequest) => {
+    await mongoose.connect(`${process.env.MONGO_DEVELOP}`);
+
+    let appID = req.headers.get("app-id");
+
+    let appHashID = `${shortHash(md5(`${appID}${process.env.NODE_ENV}${process.env.AUTH_SECRET}`))}`;
+
+    let phase = "dev";
+    if (process.env.NODE_ENV === "development") {
+        phase = "dev";
+    }
+    if (process.env.NODE_ENV === "production") {
+        phase = "prod";
+    }
+    if (process.env.NODE_ENV === "test") {
+        phase = "test";
+    }
+
+    console.log("appID", appID);
+    console.log("appHashID", appHashID);
+    console.log("phase", phase);
+
+    const dbPlatform = mongoose.connection.useDb(`os_${phase}_${appHashID}`, {
+        useCache: true,
+    });
+
+    const AppCodeStore = new mongoose.Schema(
+        {
+            versionID: { type: String, required: false },
+            path: { type: String, required: true },
+            summary: { type: String, required: true },
+            content: { type: String },
+        },
+        {
+            timestamps: true,
+        },
+    );
+
+    if (!dbPlatform.models["AppCodeStore"]) {
+        dbPlatform.model("AppCodeStore", AppCodeStore);
     }
 
     let platformRouter = createTRPCRouter({
-        //publicProcedure
         setFS: protectedProcedure
             .input(
                 z.object({
@@ -262,7 +210,21 @@ return appRouter;
     });
 
     let myTRPCRouter = createTRPCRouter({
-        app: appRouter,
+        app: await buildAppRouter({ phase, dbPlatform, appHashID }).catch(
+            (e) => {
+                // console.log(e);
+
+                return createTRPCRouter({
+                    hello: publicProcedure
+                        .input(z.object({ text: z.string() }))
+                        .mutation(({ input }) => {
+                            return {
+                                greeting: input.text,
+                            };
+                        }),
+                });
+            },
+        ),
         public: createTRPCRouter({
             getFiles: publicProcedure
                 .input(z.object({}))

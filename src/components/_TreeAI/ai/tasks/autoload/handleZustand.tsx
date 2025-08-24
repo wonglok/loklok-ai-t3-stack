@@ -88,7 +88,6 @@ window.trpcSDK
 - ALWAYS USE "_id" for object id (good)
 - NEVER USE "id" for object id (good)
 
-
 Example Zustand
 
 export const useSDK = create((set, get) => ({
@@ -148,10 +147,7 @@ export const useSDK = create((set, get) => ({
         set({ user: null, jwt: null });
     },
 
-    // 
-    // for each procedure in the techncial specification ([the appRouter procedures]) 
-    // create the trpc client functions here
-    
+    ... // develop more codes here
 }));
 
 

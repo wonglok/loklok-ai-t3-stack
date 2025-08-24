@@ -31,6 +31,8 @@ import { writeFileContent } from "@/components/_TreeAI/io/writeFileContent";
 import { makeTicker } from "../_core/makeTicker";
 import { getModelMessagesFromUIMessages } from "../../getModelMessagesFromUIMessages";
 import { saveToCloud } from "@/components/_TreeAI/io/saveToCloud";
+import { getAppOverviewPrompt } from "../prompts/getAppOverviewPrompt";
+import { getFileOutputFormatting } from "../prompts/getFileOutputFormatting";
 
 export const name = "handleAppSpec";
 export const displayName = "Features";
@@ -56,56 +58,7 @@ export async function handleAppSpec({
 
     let response = streamText({
         system: `
-# AI Agent Prompt: Technical Specification Generator  
-
-## AI Role and Background Story
-
-You are a Senior Full-Stack AI Engineer specializing in database design and Backend development.
-
-## AI Insturction
-
-User will tell you what they want to build, you will generate the tech spec for other ai agent.
-
-Tell user what you think in the processs.
-
-## Details of the Technical Specificaiton
-
-1. User Role  
-   - Identify All User Roles Involved with the System (e.g., System Admin from the platform, Shop owner User, Logged in User but havent create store, Public Visitors who havnet login)  
-
-2. User Procedures  
-   - Identify all their procedure of using the System
-
-3. MongoDB Model Code  
-   - Field names (camelCase)  
-   - Data types (Mongoose Model Compatible)  
-   - Descriptions for each data type and describe their purpose
-
-# Output format:
-{
-   mongodbCollections: [
-      {
-         // mongooseModel for each collection...
-      }
-   ],
-   userRoles: [
-      {
-         userRoleSlug: '',
-         userRoleDisplayName: '',
-         userRoleDescription: '',
-      }
-   ],
-   userProcedure: [
-      {
-         procedureSlug: '',
-         procedureDisplayName: '',
-         procedureDescription: '',
-         procedureParamters: '',
-         databaseTablesNeeded: [''],
-         userRoleSlug: '',
-      }
-   ]
-}
+${await getAppOverviewPrompt()}
     `,
         model: model,
         messages: [
@@ -114,8 +67,21 @@ Tell user what you think in the processs.
             {
                 role: "user",
                 content: `
+## AI Insturction
+User will tell you what they want to build
+
 ## Here's what the user want to build:
 ${userPrompt}
+
+## Output Format
+1. Public Users and Private Users
+2. Public Pages and Protected Pages
+3. Interactive actions in Each Page 
+4. Routing (text description, no code)
+5. Zustand State (text description, no code)
+6. TRPC APIs (text description, no code)
+7. UI Components (text description, no code)
+
                 `,
             },
         ],
@@ -125,13 +91,19 @@ ${userPrompt}
     for await (let part of response.textStream) {
         text += part;
         console.log(text);
-
         ticker.tick(text);
+
+        await writeFileContent({
+            path: `/docs/requirements.md`,
+            content: text,
+        });
     }
 
     console.log("text", text);
 
     await writeFileContent({ path: `/docs/requirements.md`, content: text });
+    await saveToBrowserDB();
+    await saveToCloud();
 
     console.log("userPrompt", userPrompt);
     ticker.remove();
