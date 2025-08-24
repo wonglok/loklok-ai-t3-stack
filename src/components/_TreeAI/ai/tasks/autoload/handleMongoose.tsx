@@ -76,21 +76,32 @@ Instructions:
 - DONT EXPORT "defineMongooseModels"
 - NEVER common.js style require or module.export
 
-function defineMongooseModels({ dbInstance, Schema, mongoose }) {
+function defineMongooseModels({ dbInstance, Schema, ObjectId }) {
     const db = dbInstance
 
-    const User = new Schema({
+    // User schema
+    const UserSchema = new Schema({
+        email: { type: String, required: true, unique: true },
+        passwordHash: { type: String, required: true }
         // ...
     })
-    if (!db.models['User']) { 
-        db.model("User", User); 
+    if (!db.models['User']) {
+        db.model("User", UserSchema)
     }
 
-    // add more schemas and models ..
+    // Task schema (example)
+    const TaskSchema = new Schema({
+        title: { type: String, required: true },
+        completed: { type: Boolean, default: false },
+        userID: { type: ObjectId, ref: 'User', required: true  }
+    })
+    if (!db.models['Task']) {
+        db.model("Task", TaskSchema)
+    }
 
     return {
         ["User"]: db.model("User"),
-        ... // add more models
+        ["Task"]: db.model("Task")
     };
 }
 

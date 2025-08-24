@@ -112,13 +112,14 @@ window.trpcSDK
 - ALWAYS use: ctx.session.user to get user from the procedure context (GOOD)
 - NEVER use: ctx.user to get user from the procedure context (BAD)
 
+
 function defineBackendProcedures({ models, z, otherProcedures, publicProcedure, protectedProcedure, jwt, bcrypt, JWT_SECRET, mongoose, ObjectId }) {
-    const { User, ... /* more models are here ... */ } = models;
+    const { Task } = models;
 
     return {
         ...otherProcedures,
 
-         // Register a new user (public)
+        // Register a new user (public)
         register: publicProcedure
             .input(z.object({
                 email: z.string(),
@@ -132,12 +133,12 @@ function defineBackendProcedures({ models, z, otherProcedures, publicProcedure, 
                 const hashed = await bcrypt.hash(input.password, 10);
                 const user = await User.create({ email: input.email, password: hashed });
 
-                const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '999d' });
+                const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '1d' });
                 return { token };
             }),
 
         // Login existing user (public)
-        login: publicProcedure
+        login: publicProcedure 
             .input(z.object({
                 email: z.string(),
                 password: z.string(),
@@ -151,36 +152,68 @@ function defineBackendProcedures({ models, z, otherProcedures, publicProcedure, 
                 const match = await bcrypt.compare(input.password, user.passwordHash);
                 if (!match) throw new Error('Invalid credentials');
 
-                const token = jwt.sign({ id: user._id.toString() }, JWT_SECRET, { expiresIn: '999d' });
+                const token = jwt.sign({ id: JSON.stringify(user._id) }, JWT_SECRET, { expiresIn: '1week' });
                 return { token };
             }),
 
-        // hello: publicProcedure
-        //     .input(z.object({ text: z.string() }))
-        //     .mutation(({ input, ctx }) => {
-        //         let user = ctx.session.user;
-        //         return {
-        //             greeting: "hi dear: " + user.id + input.text,
-        //         };
-        //     }),
 
-        // create: protectedProcedure
-        //     .input(z.object({ name: z.string().min(1) }))
-        //     .mutation(async ({ input, ctx }) => {
-        //         let user = ctx.session.user;
-        //         let post = { id: post.id + 1, name: input.name, userID: user.id };
-        //         return post;
-        //     }),
+        // Example
+        // Get all tasks for the logged in user (protected)
+        getTasks: protectedProcedure
+            .mutation(async ({ ctx }) => {
+                const tasks = await Task.find({ userID: ObjectId.createFromHexString(ctx.session.user._id + "") }).sort({ _id: -1 }).lean();
+                console.log(tasks)
+                return tasks;
+            }),
 
-        // getLatest: protectedProcedure.mutation(() => {
-        //     return post;
-        // }),
+        // Example
+        // Add a new task (protected)
+        addTask: protectedProcedure
+            .input(z.object({
+                title: z.string(),
+            }))
+            .mutation(async ({ input, ctx }) => {
+                console.log('ctx.session.user', ctx.session.user._id)
 
-        // getSecretMessage: protectedProcedure.mutation(() => {
-        //     return "you can now see this secret message!";
-        // }),
+                const task = await Task.create({ 
+                    title: input.title, 
+                    completed: false, 
+                    userID: ObjectId.createFromHexString(ctx.session.user._id + "") 
+                });
 
-        // ... develop more code here
+                return JSON.parse(JSON.stringify(task));
+            }),
+
+        // Example
+        // Toggle completion status of a task (protected)
+        toggleTask: protectedProcedure
+            .input(z.object({
+                _id: z.string(),
+            }))
+            .mutation(async ({ input, ctx }) => {
+                const task = await Task.findOne({ _id: ObjectId.createFromHexString(input._id), userID: ObjectId.createFromHexString(ctx.session.user._id + "") });
+
+                if (!task) throw new Error('Task not found');
+
+                task.completed = !task.completed;
+                await task.save();
+                return task;
+            }),
+
+        // Example
+        // Delete a task (protected)
+        deleteTask: protectedProcedure
+            .input(z.object({
+                _id: z.string(),
+            }))
+            .mutation(async ({ input, ctx }) => {
+
+                
+                const result = await Task.deleteOne({ _id: ObjectId.createFromHexString(input._id), userID: ObjectId.createFromHexString(ctx.session.user._id + "") });
+                
+                
+                return { success: true };
+            }),
     }
 }
 
