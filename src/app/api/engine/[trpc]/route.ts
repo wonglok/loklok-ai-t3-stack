@@ -232,7 +232,7 @@ return appRouter;
                     console.log("userData", userData);
                     console.log("userData", userData);
 
-                    let found = dbAppInstance
+                    let found = await dbAppInstance
                         .model("User")
                         .findOne({ _id: `${userData.id}` })
                         .lean();
@@ -240,6 +240,7 @@ return appRouter;
                     console.log("found", found);
                     console.log("found", found);
                     console.log("found", found);
+
                     if (found) {
                         return opts.next({
                             ctx: {
