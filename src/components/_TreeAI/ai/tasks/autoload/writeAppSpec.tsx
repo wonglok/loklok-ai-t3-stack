@@ -56,7 +56,7 @@ ${await getAppOverviewPrompt()}
 ## Here's what the user want to build:
 ${userPrompt}
 
-## Output Format: JSON
+## Output Format: Markdwon with sections and lists
 1. Public Users and Private Users
 2. Public Pages and Protected Page
 3. Interactive actions in Each Page

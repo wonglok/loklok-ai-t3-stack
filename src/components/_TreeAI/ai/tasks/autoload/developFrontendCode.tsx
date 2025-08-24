@@ -79,6 +79,16 @@ let ttt = setInterval(() => {
 
 \`\`\`
 
+Here's the code template for "/frontend/src/components/App.js":
+\`\`\`js
+
+export function App () {
+    return // add code here ...
+}
+
+\`\`\`
+
+
 # Instruction
 
 output the frontend code
