@@ -61,6 +61,8 @@ export async function handleZustand({
         content: `
 Instructions:
 
+- the front end uses wouter, and wouter/use-hash-location for hash based rotuer
+
 - Identify Zustand stores and implement them, use only typescript ".ts" files:
 - DO NOT WRAP THE CODE WITH markdown
 - ONLY WRITE PURE CODE FOR
@@ -89,6 +91,27 @@ window.trpcSDK
 - NEVER USE "id" for object id (good)
 
 - NEVER IMPORT "@tanstack/react-query"
+
+----- EXAMPLE /components/App.tsx -----
+import { Router, Route } from "wouter";
+import { useHashLocation } from "wouter/use-hash-location";
+// ...
+
+export function App () {
+
+    return <>
+        <Router hook={useHashLocation}>
+            
+            /* ... add more code here ..
+            examples:
+                <Route path="/" component={LandingPage} />
+                <Route path="/my-app" component={MyApp} />
+            */
+        </Router>
+    </>
+}
+----- EXAMPLE /components/App.tsx -----
+
 
 ${await getFileOutputFormatting()}
 

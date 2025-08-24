@@ -78,10 +78,6 @@ export async function handleDeploy({
         }),
     });
 
-    setTimeout(() => {
-        useAI.getState().reloadFunc();
-    }, 10);
-    //
     let uiMsg = {
         id: `${v4()}`,
         role: "assistant",
@@ -94,6 +90,10 @@ export async function handleDeploy({
     };
     putUIMessage(uiMsg as UIMessage);
 
+    useAI.setState({
+        refreshID: `_${v4()}`,
+    });
+
     await saveToBrowserDB();
     await saveToCloud();
 
@@ -103,11 +103,7 @@ export async function handleDeploy({
     await MyTaskManager.doneTask(task.name);
     await putBackFreeAIAsync({ engine: engineSettingData });
 
-    setTimeout(() => {
-        useAI.getState().reloadFunc();
-    }, 10);
-
-    setTimeout(() => {
-        useAI.getState().reloadFunc();
-    }, 150);
+    useAI.setState({
+        refreshID: `_${v4()}`,
+    });
 }

@@ -110,15 +110,12 @@ export function CoreRunner({ appID }) {
     //         ],
     //     });
 
-    let [rand, reload] = useState(`_${Math.random()}`);
-    useEffect(() => {
+    let refreshID = useAI((r) => r.refreshID);
+    let reload = () => {
         useAI.setState({
-            reloadFunc: () => {
-                reload(`_${Math.random()}`);
-            },
+            refreshID: `_${Math.random()}`,
         });
-    }, []);
-
+    };
     return (
         <>
             <div className="h-full w-full">
@@ -127,7 +124,7 @@ export function CoreRunner({ appID }) {
                         <button
                             className="rounded-2xl bg-green-500 p-2 px-4 text-white"
                             onClick={() => {
-                                reload(`_${Math.random()}`);
+                                reload();
                             }}
                         >
                             Refresh
@@ -143,7 +140,7 @@ export function CoreRunner({ appID }) {
                             {
                                 <iframe
                                     className="h-full w-full"
-                                    key={rand}
+                                    key={refreshID}
                                     src={`/apps/${appID}/run`}
                                 ></iframe>
                             }
