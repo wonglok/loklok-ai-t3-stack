@@ -25,13 +25,16 @@ export let makeTicker = ({ engineSettingData, displayName }) => {
     };
     putUIMessage(uiMsg as UIMessage);
 
+    let start = performance.now();
     return {
         tick: (text) => {
             cursor += 1;
+            let now = performance.now();
+            let duration = now - start;
 
             cursor = cursor % symbols.length;
 
-            engineSettingData.bannerText = ` ${symbols[cursor]} ${displayName} ${symbols[cursor]}`;
+            engineSettingData.bannerText = `${displayName} ${symbols[cursor]} ${(cursor / (duration / 1000)).toFixed(1)} Tokens / second`;
 
             uiMsg.parts[0].data = text;
 

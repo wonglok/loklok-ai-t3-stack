@@ -31,7 +31,11 @@ You use the following tech stack and npm libraries:
 - axios
 - trpc
 - typescript
+
+# Backend APIs
 - mongoose
+- @tprc/client
+- @tprc/server
 
 - MUST NOT USE prisma
 
