@@ -16,6 +16,9 @@ export async function getFileOutputFormatting() {
 {file_content}
 [/TJ_TAG]
 
+- ALWAYS PROVDE [TJ_TAG ...]
+- ALWAYS PROVDE [/TJ_TAG]
+
 - {file_path_name} is the file path name
 - {file_content} is the file content of the file, unwwrapping \`\`\`ts or \`\`\`js
 - {file_summary} is the overview, purpose and summary of the {file_content}
@@ -23,6 +26,7 @@ export async function getFileOutputFormatting() {
 - if there is an existing file, then you can use [TJ_TAG action="update-file" ...]
 - if there is no existing file, then you can [TJ_TAG action="create-file" ...]
 - if you need to remove existing file, then you can [TJ_TAG action="remove-file" ...]
+
 
 Remove files that are orphaned and not used by anything.
 
