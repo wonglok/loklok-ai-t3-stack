@@ -60,6 +60,24 @@ export async function developFrontendCode({
     chatblocks.push({
         role: "user",
         content: `
+Here's the code template for "/frontend/src/main.js":
+
+\`\`\`js
+import { App } from '/frontend/src/components/App.js'
+
+let ttt = setInterval(() => {
+    let domElement = document.querySelector('#root')
+
+    if (domElement) {
+        clearInterval(ttt)
+        if (!domElement?.reactRoot) {
+            domElement.reactRoot = ReactDOM.createRoot(domElement)
+        }
+        domElement.reactRoot.render(<App></App>)
+    }
+}, 0);
+
+\`\`\`
 
 # Instruction
 

@@ -61,9 +61,34 @@ export async function developBackendCode({
         role: "user",
         content: `
 
-# Instruction
+Here's the code template for "/backend/src/main.js":
+\`\`\`js
+import { appRouter } from './appRouter.js'; // please put all other routes here
 
+let createContext = (req) => {
+    const headers = req.headers
+    const jwt = headers.get('jwt');
+
+    // ... do jwt verification
+    // insert user query logic based on jwt
+    return {
+        // user: user
+    }
+}
+
+let getRouter = () => appRouter
+
+export {
+    createContext,
+    getRouter,
+}
+
+\`\`\`
+
+
+# Instruction
 output the backend code
+
 
 ${await getFileOutputFormatting()}
 

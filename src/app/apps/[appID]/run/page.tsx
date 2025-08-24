@@ -30,77 +30,84 @@ export default function AppRun() {
                 files: [
                     ...files,
 
-                    {
-                        path: `/src/MyApp.js`,
-                        content: `
-import * as ReactDOM from 'react-dom'
-import * as React from 'react'
-import { Canvas } from '@react-three/fiber'
-import { Sphere, MeshTransmissionMaterial, Environment, OrbitControls } from '@react-three/drei'
-// import { useSDK } from '@/ui/useSDK.js'
-import { useState } from 'react'
+                    //                     {
+                    //                         path: `/src/MyApp.js`,
+                    //                         content: `
+                    // import * as ReactDOM from 'react-dom'
+                    // import * as React from 'react'
+                    // import { Canvas } from '@react-three/fiber'
+                    // import { Sphere, MeshTransmissionMaterial, Environment, OrbitControls } from '@react-three/drei'
+                    // // import { useSDK } from '@/ui/useSDK.js'
+                    // import { useState } from 'react'
 
-export function MyApp () {  
+                    // export function MyApp () {
 
-    let [output, setOutput] = useState('')
+                    //     let [output, setOutput] = useState('')
 
-    let [outlet, setApp] = React.useState(null)
+                    //     let [outlet, setApp] = React.useState(null)
 
-    React.useEffect(() => {
-        import('/frontend/src/main.js').then((myModule) =>{
-                console.log('module', myModule)
-                if (myModule?.App) {
-                    try {
-                        setApp(<myModule.App></myModule.App>)
-                    } catch (e) {
-                        console.log(e)
-                    }
-                } else {
-                    try {
-                        setApp(<div className="w-full h-full from-orange-100 to-yellow-300 bg-gradient-to-t flex items-center justify-center">Not found...</div>)
-                    } catch (e) {
-                        console.log(e)
-                    }
-                }
-            }).catch((e) => {
-                console.log(e)
-            })
-    }, [])
+                    //     React.useEffect(() => {
+                    //         import('/frontend/src/main.js').then((myModule) =>{
+                    //                 console.log('module', myModule)
+                    //                 if (myModule?.App) {
+                    //                     try {
+                    //                         setApp(<myModule.App></myModule.App>)
+                    //                     } catch (e) {
+                    //                         console.log(e)
+                    //                     }
+                    //                 } else {
+                    //                     try {
+                    //                         setApp(<div className="w-full h-full from-orange-100 to-yellow-300 bg-gradient-to-t flex items-center justify-center">Not found...</div>)
+                    //                     } catch (e) {
+                    //                         console.log(e)
+                    //                     }
+                    //                 }
+                    //             }).catch((e) => {
+                    //                 console.log(e)
+                    //             })
+                    //     }, [])
 
-    return <div className="w-full h-full relative">
-        {outlet}
-    </div>
-}
-`,
+                    //     return <div className="w-full h-full relative">
+                    //         {outlet}
+                    //     </div>
+                    // }
+                    // `,
 
-                        //  <Canvas className="w-full h-full">
-                        //             <Sphere>
-                        //                 <MeshTransmissionMaterial color="white" thickness={1.1}></MeshTransmissionMaterial>
-                        //             </Sphere>
-                        //             <Environment preset="lobby" background></Environment>
-                        //             <OrbitControls></OrbitControls>
-                        //         </Canvas>
-                    },
+                    //                         //  <Canvas className="w-full h-full">
+                    //                         //             <Sphere>
+                    //                         //                 <MeshTransmissionMaterial color="white" thickness={1.1}></MeshTransmissionMaterial>
+                    //                         //             </Sphere>
+                    //                         //             <Environment preset="lobby" background></Environment>
+                    //                         //             <OrbitControls></OrbitControls>
+                    //                         //         </Canvas>
+                    //                     },
                     {
                         path: `/src/main.js`,
                         content: /* typescript */ `
-import { MyApp } from '../src/MyApp.js'
-import * as ReactDOM from 'react-dom'
-import * as React from 'react'
+
+import('/frontend/src/main.js').then((myModule) =>{
+    console.log(myModule)
+}).catch((e) => {
+    console.log(e)
+})
+
+// import { MyApp } from '../src/MyApp.js'
+// import * as ReactDOM from 'react-dom'
+// import * as React from 'react'
 
 
-let ttt = setInterval(() => {
+// let ttt = setInterval(() => {
     
-    let domElement = document.querySelector('#run_code_div')
+//     let domElement = document.querySelector('#run_code_div')
 
-    if (domElement) {
-        clearInterval(ttt)
-        if (!domElement?.root) {
-            domElement.root = ReactDOM.createRoot(domElement)
-        }
-        domElement.root.render(<MyApp></MyApp>)
-    }
-}, 0);
+//     if (domElement) {
+//         clearInterval(ttt)
+//         if (!domElement?.root) {
+//             domElement.root = ReactDOM.createRoot(domElement)
+//         }
+//         domElement.root.render(<MyApp></MyApp>)
+//     }
+// }, 0);
 `,
                     },
                 ],
@@ -206,7 +213,7 @@ let ttt = setInterval(() => {
                     crossOrigin="anonymous"
                     referrerPolicy="no-referrer"
                 />
-                <div className="h-full w-full" id="run_code_div"></div>
+                <div className="h-full w-full" id="root"></div>
             </div>
         </>
     );
