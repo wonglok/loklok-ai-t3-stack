@@ -60,20 +60,20 @@ You are a senior developer who has product management skills. You help user anal
     # Output format:
     
     ## mongoose collections
-    [mongoose info]
+    [mongoose name, desc]
 
     ## trpcProcedures
-    [prcedure name]
+    [prcedure name, desc]
     
     ## trpcProcedures
-    [prcedure name]
+    [prcedure name, desc]
     
     ## zustand
-    [zustand state props name]
-    [zustand api method call name]
+    [zustand state props name, desc]
+    [zustand api method call name, desc]
 
     ## react js ui components
-    [ui components names]
+    [ui components names, desc]
     
         `,
         model: model,
