@@ -44,7 +44,10 @@ export let makeTicker = ({ engineSettingData, displayName }) => {
             engineSettingData.bannerText = "";
             refreshEngineSlot(engineSettingData);
 
-            removeUIMessage(uiMsg as UIMessage);
+            uiMsg.parts[0].data = `Finished: ${displayName}`;
+            putUIMessage(uiMsg as UIMessage);
+
+            // removeUIMessage(uiMsg as UIMessage);
         },
     };
 };
