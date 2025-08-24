@@ -233,7 +233,7 @@ return appRouter;
         //                         ...(opts?.ctx || {}),
         //                         session: {
         //                             ...(opts?.ctx?.session || {}),
-        //                             appUser: found,
+        //                             user: found,
         //                         },
         //                         // ✅ user value is known to be non-null now
         //                         // user: ctx.user,
@@ -245,7 +245,7 @@ return appRouter;
         //         }
 
         //         const { ctx } = opts;
-        //         if ((ctx.session as any).appUser) {
+        //         if ((ctx.session as any).user) {
         //             throw new TRPCError({
         //                 code: "UNAUTHORIZED",
         //                 message: "no login",

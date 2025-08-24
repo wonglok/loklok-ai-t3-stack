@@ -109,8 +109,8 @@ window.trpcSDK
 
 - NEVER write: "module.exports = defineBackendProcedures;"
 
-- ALWAYS use: ctx.session.appUser to get user from the procedure context (GOOD)
-- NEVER use: ctx.session.user to get user from the procedure context (BAD)
+- ALWAYS use: ctx.session.user to get user from the procedure context (GOOD)
+- NEVER use: ctx.user to get user from the procedure context (BAD)
 
 function defineBackendProcedures({ models, z, otherProcedures, publicProcedure, protectedProcedure, jwt, bcrypt, JWT_SECRET }) {
     const { User, ... /* more models are here ... */ } = models;
@@ -158,7 +158,7 @@ function defineBackendProcedures({ models, z, otherProcedures, publicProcedure, 
         // hello: publicProcedure
         //     .input(z.object({ text: z.string() }))
         //     .mutation(({ input, ctx }) => {
-        //         let user = ctx.session.appUser;
+        //         let user = ctx.session.user;
         //         return {
         //             greeting: "hi dear: " + user.id + input.text,
         //         };
@@ -167,7 +167,7 @@ function defineBackendProcedures({ models, z, otherProcedures, publicProcedure, 
         // create: protectedProcedure
         //     .input(z.object({ name: z.string().min(1) }))
         //     .mutation(async ({ input, ctx }) => {
-        //         let user = ctx.session.appUser;
+        //         let user = ctx.session.user;
         //         let post = { id: post.id + 1, name: input.name, userID: user.id };
         //         return post;
         //     }),
