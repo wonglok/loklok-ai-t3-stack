@@ -57,7 +57,7 @@ export const useWebView = ({
                     .then((fileArray) => {
                         //
 
-                        // console.log(fileArray);
+                        console.log(fileArray);
 
                         let url = new URL(`${location.origin}${runPage}`);
 
@@ -110,7 +110,7 @@ export const useWebView = ({
                 {frame && (
                     <iframe
                         className="h-full w-full rounded-lg border bg-gradient-to-tr from-white to-gray-300"
-                        src={`/apps/${appID}/run`}
+                        src={frame}
                     ></iframe>
                 )}
             </>

@@ -53,7 +53,7 @@ export function CodeEditorStream({
                 // moduleResolution: "nodenext",
                 baseUrl: "./", // Or your project's base directory
                 paths: {
-                    // "../types": ["./types/index.js"], // Adjust to your actual path
+                    // "../types": ["./types/index.ts"], // Adjust to your actual path
                 },
             });
 

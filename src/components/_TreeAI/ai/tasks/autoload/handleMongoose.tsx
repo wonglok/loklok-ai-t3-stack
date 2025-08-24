@@ -28,18 +28,18 @@ import { removeFile } from "../../../io/removeFile";
 import { parseCodeBlocksGen3 } from "../_core/LokLokParser3";
 import { getAppOverviewPrompt } from "../prompts/getAppOverviewPrompt";
 import { getFileOutputFormatting } from "../prompts/getFileOutputFormatting";
-import { putUIMessage } from "../../putUIMessage";
-import { v4 } from "uuid";
-import { refreshUIMessages } from "../../refreshUIMessages";
-import { removeUIMessage } from "../../removeUIMessage";
+// import { v4 } from "uuid";
+// import { putUIMessage } from "../../putUIMessage";
+// import { removeUIMessage } from "../../removeUIMessage";
 import { listOutFilesToChatBlocks } from "../prompts/listOutFilesToChatBlocks";
+// import { LokLokSDK } from "../../../web/LokLokSDK";
 import { makeTicker } from "../_core/makeTicker";
 import { saveToCloud } from "@/components/_TreeAI/io/saveToCloud";
 
-export const name = "handleReact";
-export const displayName = "React.JS";
+export const name = "handleMongoose";
+export const displayName = "Mongoose DB ORM";
 
-export async function handleReact({
+export async function handleMongoose({
     userPrompt,
     task,
 }: {
@@ -60,64 +60,77 @@ export async function handleReact({
     chatblocks.push({
         role: "user",
         content: `
-# React Component
-React Component for HTML
+Instructions:
 
-- Identify React Component modules and implement them in this format, use only javascript ".js" files:
+- Identify mongoose models for backend and implement it in "defineMongooseModels", use only javascript ".js" files:
 - DO NOT WRAP THE CODE WITH markdown
-- ONLY WRITE PURE CODE FOR {code} etc
-- the folder for components is at "/components/*"
-- the folder for util is at "/util/*"
+- ONLY WRITE PURE CODE FOR
+- Dont import anything
 
-- DO NOT USE '@/...' to import modules
-- ALWAYS USE '/...' to import modules
+- please write the backend trpc procedures in this file: "/models/defineMongooseModels.js"
 
-- use named export for "App" Component like the following: 
-export function App () {...}
+Mongoose Database: Design MongoDB schemas using Mongoose. For each model, provide:  
+Schema definition in code-like syntax (e.g., const TaskSchema = new mongoose.Schema({ title: String, description: String })).  
+Fields with types, validation, and defaults.
 
-- include the following lines:
-import * as React from 'react';
+- MUST INCLUDE this "defineMongooseModels" typescript function:
+- for eaxmple the Example Schema and Models
+- Dont change "getAllModesl"
+- Only Implement "defineMongooseModels" function
+- DONT EXPORT "defineMongooseModels"
+- NEVER common.js style require or module.export
 
-- when write the App component, write file to "/components/App.jsx"
-- when write the other components, write file to "/components/*.jsx"
+function defineMongooseModels({ dbInstance, Schema, mongoose }) {
+    const db = dbInstance
 
-- use tailwind css to style the elements
-- use some "border" "rounded-lg" together with "shadow-inner" but dont overuse them dear
-- use some "p-3" padding spacing 
-- uses Zustand state management files located at "/store/*.js" folder
+    // // USER SCHEMA (registration & authentication) - Example Code below:
+    // Remove Example Code in when you generate code.
+    // if (!db.models['User']) {
+    //     const userSchema = new mongoose.Schema(
+    //         {
+    //             email: {
+    //                 type: String,
+    //                 required: true,
+    //                 unique: true,
+    //             },
+    //             passwordHash: {
+    //                 type: String,
+    //                 required: true,
+    //                 select: false  // hide by default
+    //             },
+    //             lastLogin: { type: Date },
+    //             status: { type: String, default: 'unverified',  },
+    //         },
+    //         {
+    //             timestamps: true,  // add createdAt / updatedAt
+    //             versionKey: false   
+    //         }
+    //     );
+    //     // Pre‑save – hash plain password if it changed
+    //     userSchema.pre('save', async function (next) {
+    //         if (this.isModified('password')) {
+    //             this.passwordHash = await bcrypt.hash(this.password, 12);
+    //             this.password = undefined; // erase plain pwd
+    //         }
+    //         next();
+    //     });
+    //     db.model('User', userSchema);
+    // }
 
-------
+    ... // add more schema
 
-- save JWT to zustand and localStorage with appID as Key after user loggin successfully
-- save JWT to zustand and localStorage with appID as Key after user registered successfully
-
-- Responsive UI component
-- UI component shouldn't have any margin pixel for the outermost div element.
-- use Zustand for State Management for React
-- Loading and error states
-- Have import and export using ESM for React Component Code
-- Include login, register, dashboard
-
-- Cannot use zustand selector as inline varaible
-- build a simple layout
-- single page application with <HashRouter> from react-router-dom
-- const location = useLocation()  
-- use location.pathname instead of location.hash
-
-## Overall 
-
-- Tailwind CSS for styling for Frontend CSS Styling
-- Javascript preferred 
-- React + Javascript for Frontend HTML
-- @react-three/fiber + drei for Frontend 3D
-- Zustand for state management for Frontend State Management
-
+    return {
+        // ["Example"]: db.model("Example"),
+        ... // add more models
+    };
+}
 
 
 ${await getFileOutputFormatting()}
 
                 `,
     });
+    // mongoose.connection.useDb("app_development_appID", { useCache: true });
 
     console.log("chatblocks", chatblocks);
 
@@ -140,12 +153,7 @@ ${await getFileOutputFormatting()}
         // },
 
         messages: [
-            //             {
-            //                 role: "system",
-            //                 content: `
-            // You are a developer you are good at writing json.
-            //                 `,
-            //             },
+            //
             ...getModelMessagesFromUIMessages(),
             //
             ...chatblocks,
@@ -170,12 +178,16 @@ ${await getFileOutputFormatting()}
                         path: `${block.fileName}`,
                         content: block.code,
                     });
+                    await saveToBrowserDB();
+                    saveToCloud();
                 } else if (block.action === "update-file") {
                     await writeFileContent({
                         summary: `${block.summary}`,
                         path: `${block.fileName}`,
                         content: block.code,
                     });
+                    await saveToBrowserDB();
+                    saveToCloud();
                 } else if (block.action === "remove-file") {
                     await removeFile({
                         path: `${block.fileName}`,
@@ -202,13 +214,11 @@ ${await getFileOutputFormatting()}
         text += part;
         console.log(text);
 
-        parseText(text);
+        await parseText(text);
 
         ticker.tick(text);
-
-        //
     }
-    parseText(text);
+    await parseText(text);
 
     await saveToBrowserDB();
     saveToCloud();
@@ -218,3 +228,5 @@ ${await getFileOutputFormatting()}
 
     await putBackFreeAIAsync({ engine: slot });
 }
+
+//

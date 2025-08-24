@@ -22,7 +22,7 @@ import { getFreeAIAsync } from "../../getFreeAIAsync";
 import { MyTask, MyTaskManager } from "../_core/MyTaskManager";
 import md5 from "md5";
 import { useAI } from "../../../state/useAI";
-// import { saveToCloud } from "@/components/_TreeAI/io/saveToCloud";
+import { saveToCloud } from "@/components/_TreeAI/io/saveToCloud";
 // import { putUIMessage } from "../../putUIMessage";
 // import { v4 } from "uuid";
 
@@ -44,56 +44,42 @@ export async function onReceiveResponse({
 
     MyTaskManager.add({
         waitFor: [task.name],
-        name: "writeAppSpec",
+        name: "handleAppSpec",
         args: { userPrompt: userPrompt },
     });
 
     MyTaskManager.add({
-        waitFor: ["writeAppSpec"],
-        name: "developBackendCode",
+        waitFor: ["handleAppSpec"],
+        name: "handleMongoose",
         args: { userPrompt: userPrompt },
     });
 
     MyTaskManager.add({
-        waitFor: ["writeAppSpec"],
-        name: "developFrontendCode",
+        waitFor: ["handleAppSpec", "handleMongoose"],
+        name: "handleBackendTRPC",
         args: { userPrompt: userPrompt },
     });
 
-    // MyTaskManager.add({
-    //     waitFor: ["writeAppSpec"],
-    //     name: "handleMongoose",
-    //     args: { userPrompt: userPrompt },
-    // });
+    MyTaskManager.add({
+        waitFor: ["handleAppSpec", "handleBackendTRPC"],
+        name: "handleZustand",
+        args: { userPrompt: userPrompt },
+    });
 
-    // MyTaskManager.add({
-    //     waitFor: ["writeAppSpec", "handleMongoose"],
-    //     name: "handleBackendTRPC",
-    //     args: { userPrompt: userPrompt },
-    // });
-
-    // MyTaskManager.add({
-    //     waitFor: ["writeAppSpec", "handleBackendTRPC"],
-    //     name: "handleZustand",
-    //     args: { userPrompt: userPrompt },
-    // });
-
-    // MyTaskManager.add({
-    //     waitFor: ["writeAppSpec", "handleZustand"],
-    //     name: "handleReact",
-    //     args: { userPrompt: userPrompt },
-    // });
+    MyTaskManager.add({
+        waitFor: ["handleAppSpec", "handleZustand"],
+        name: "handleReact",
+        args: { userPrompt: userPrompt },
+    });
 
     MyTaskManager.add({
         waitFor: [
-            "writeAppSpec",
-            "developBackendCode",
-            "developFrontendCode",
-
-            // "handleBackendTRPC",
-            // "handleZustand",
-            // "handleReact",
-            // "handleTesting",
+            "handleAppSpec",
+            "handleMongoose",
+            "handleBackendTRPC",
+            "handleZustand",
+            "handleReact",
+            "handleTesting",
         ],
         name: "handleDeploy",
         args: {
@@ -102,5 +88,9 @@ export async function onReceiveResponse({
     });
 
     await MyTaskManager.doneTask(task.name);
+
+    await saveToBrowserDB();
+    saveToCloud();
+
     await putBackFreeAIAsync({ engine: slot });
 }

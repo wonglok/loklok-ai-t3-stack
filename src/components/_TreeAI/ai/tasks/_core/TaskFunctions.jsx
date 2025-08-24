@@ -1,5 +1,5 @@
 
-// Dynamically import all .js files from the './src/components' directory
+// Dynamically import all .ts files from the './src/components' directory
 // and its subdirectories.
 // @ts-ignore
 const componentContext = require.context("../autoload/", true, /\.tsx$/);

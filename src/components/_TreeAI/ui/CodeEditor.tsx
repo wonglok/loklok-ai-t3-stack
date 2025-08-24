@@ -57,7 +57,7 @@ export function CodeEditor() {
                 // moduleResolution: "nodenext",
                 baseUrl: "./", // Or your project's base directory
                 paths: {
-                    // "../types": ["./types/index.js"], // Adjust to your actual path
+                    // "../types": ["./types/index.ts"], // Adjust to your actual path
                 },
             });
 
@@ -130,7 +130,7 @@ export function CodeEditor() {
                             width={"100%"}
                             height={"100%"}
                             onMount={handleEditorDidMount}
-                            // defaultLanguage="javascript"
+                            // defaultLanguage="typescript"
                             language={
                                 getLang(file.path)
                                 // llmStatus === "writing" && track && path.includes(".js")

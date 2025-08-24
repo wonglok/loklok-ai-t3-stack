@@ -7,10 +7,10 @@ export let getLang = (filename: string) => {
         return "javascript";
     } else if (extname(filename) === ".jsx") {
         return "javascript";
-    } else if (extname(filename) === ".js") {
-        return "javascript";
-    } else if (extname(filename) === ".jsx") {
-        return "javascript";
+    } else if (extname(filename) === ".ts") {
+        return "typescript";
+    } else if (extname(filename) === ".tsx") {
+        return "typescript";
     } else {
         return "markdown";
     }

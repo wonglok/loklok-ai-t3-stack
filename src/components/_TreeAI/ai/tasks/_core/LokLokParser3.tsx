@@ -11,6 +11,8 @@ export interface CodeBlockG3 {
 
 // Function to parse the input string and extract code blocks
 function parseCodeBlocksGen3(input: string): CodeBlockG3[] {
+    input = input.replace(new RegExp(/\`\`\`/g), "");
+
     const blocks: CodeBlockG3[] = [];
     let match: RegExpExecArray | null;
 
@@ -19,20 +21,7 @@ function parseCodeBlocksGen3(input: string): CodeBlockG3[] {
         const action = match[1]; // Captured action type
         const fileName = match[2]; // Captured file name
         const summary = match[3]; // Captured summary
-        let code = match[4].trim(); // Captured code content, trimmed
-
-        code = code.replace("```json", "");
-        code = code.replace("```md", "");
-        code = code.replace("```ts", "");
-        code = code.replace("```js", "");
-        code = code.replace("```", "");
-
-        code = code.replace("```json", "");
-        code = code.replace("```md", "");
-        code = code.replace("```ts", "");
-        code = code.replace("```js", "");
-        code = code.replace("```", "");
-
+        const code = match[4].trim(); // Captured code content, trimmed
         blocks.push({ action, fileName, summary, code });
     }
 
@@ -41,19 +30,19 @@ function parseCodeBlocksGen3(input: string): CodeBlockG3[] {
 
 // // Example usage
 // const input = `
-// [TJ_TAG action="create-file" file="example1.js" summary="test text"]
+// [TJ_TAG action="create-file" file="example1.ts" summary="test text"]
 // export function hello() {
 //     console.log("Hello, world!");
 // }
 // [/TJ_TAG]
 
-// [TJ_TAG action="remove-file" file="example1.js" summary="test text"]
+// [TJ_TAG action="remove-file" file="example1.ts" summary="test text"]
 // export function hello() {
 //     console.log("Hello, world!");
 // }
 // [/TJ_TAG]
 
-// [TJ_TAG action="update-file" file="example1.js" summary="test text"]
+// [TJ_TAG action="update-file" file="example1.ts" summary="test text"]
 // export function hello() {
 //     console.log("Hello, world!");
 // }

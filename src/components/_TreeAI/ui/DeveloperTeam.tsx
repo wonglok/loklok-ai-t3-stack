@@ -29,6 +29,19 @@ export function DeveloperTeam() {
     return (
         <>
             <div className="px-3">
+                {/* <div className="mb-3 rounded-lg border bg-white p-3 shadow-sm">
+                    <Button
+                        variant="destructive"
+                        onClick={() => {
+                            if (confirm("Factory Reset?")) {
+                                factortyReset();
+                            }
+                        }}
+                    >
+                        Factory Reset
+                    </Button>
+                </div> */}
+
                 {engines.map((engine) => {
                     let { name, displayName } = engine;
                     return (

@@ -28,18 +28,17 @@ import { removeFile } from "../../../io/removeFile";
 import { parseCodeBlocksGen3 } from "../_core/LokLokParser3";
 import { getAppOverviewPrompt } from "../prompts/getAppOverviewPrompt";
 import { getFileOutputFormatting } from "../prompts/getFileOutputFormatting";
-// import { v4 } from "uuid";
-// import { putUIMessage } from "../../putUIMessage";
-// import { removeUIMessage } from "../../removeUIMessage";
+import { v4 } from "uuid";
+import { putUIMessage } from "../../putUIMessage";
+import { removeUIMessage } from "../../removeUIMessage";
 import { listOutFilesToChatBlocks } from "../prompts/listOutFilesToChatBlocks";
-// import { LokLokSDK } from "../../../web/LokLokSDK";
 import { makeTicker } from "../_core/makeTicker";
 import { saveToCloud } from "@/components/_TreeAI/io/saveToCloud";
 
-export const name = "developFrontendCode";
-export const displayName = "Frontend Code";
+export const name = "handleZustand";
+export const displayName = "Zustand";
 
-export async function developFrontendCode({
+export async function handleZustand({
     userPrompt,
     task,
 }: {
@@ -60,38 +59,101 @@ export async function developFrontendCode({
     chatblocks.push({
         role: "user",
         content: `
-Here's the code template for "/frontend/src/main.js":
+Instructions:
 
-\`\`\`js
-import { App } from '/frontend/src/components/App.js'
+- Identify Zustand stores and implement them, use only typescript ".ts" files:
+- DO NOT WRAP THE CODE WITH markdown
+- ONLY WRITE PURE CODE FOR
 
-let ttt = setInterval(() => {
-    let domElement = document.querySelector('#root')
+- include the following lines:
+import { create } from 'zustand';
 
-    if (domElement) {
-        clearInterval(ttt)
-        if (!domElement?.reactRoot) {
-            domElement.reactRoot = ReactDOM.createRoot(domElement)
+- all zustand trpc frontend method must exist in trpc backend
+
+- The app has a Global variable window.trpcSDK as a custom tRPC Frontend Client.
+
+- make sure ai implement all trpc backend procedures with correct data type. refer to "/trpc/defineBackendProcedures.js"
+
+window.trpcSDK
+    .runTRPC({
+        procedure: "hello", // [hello] is the procedure name
+        input: { text: "sure been good" },// [input] is the input paramter
+    })
+    .then((result) => {
+        console.log(result); // result is obtained via async functuin call
+    });
+
+- Never Impport "@/types"
+
+- ALWAYS USE "_id" for object id (good)
+- NEVER USE "id" for object id (good)
+
+
+Example Zustand
+
+export const useSDK = create((set, get) => ({
+    user: null,
+    loading: false,
+    error: null,
+    jwt: null,
+
+    appID: GLOBAL_APP_ID,
+    setAppID: ({ appID }) => set({ appID }),
+
+    login: async (username, password) => {
+        set({ loading: true, error: null });
+        try {
+            let result = await window.trpcSDK
+                .runTRPC({
+                    procedure: "login", // [hello] is the procedure name
+                    input: { 
+                        username,
+                        password,
+                    },
+                });
+
+            localStorage.setItem("jwt_my_app", result.token);
+            set({ user: result.user, jwt: result.token, loading: false });
+            return result;
+        } catch (e) {
+            set({ error: e.message ?? "Login failed", loading: false });
+            throw e;
         }
-        domElement.reactRoot.render(<App></App>)
-    }
-}, 0);
+    },
 
-\`\`\`
+    register: async (username, email, password) => {
+        set({ loading: true, error: null });
+        try {
+            let result = await window.trpcSDK
+                .runTRPC({
+                    procedure: "login", // [hello] is the procedure name
+                    input: { 
+                        username,
+                        email,
+                        password,
+                    },
+                });
 
-Here's the code template for "/frontend/src/components/App.js":
-\`\`\`js
+            localStorage.setItem("jwt_my_app", result.token);
+            set({ user: result.user, jwt: result.token, loading: false });
+            return result;
+        } catch (e) {
+            set({ error: e.message ?? "Registration failed", loading: false });
+            throw e;
+        }
+    },
 
-export function App () {
-    return // add code here ...
-}
+    logout: () => {
+        localStorage.removeItem("jwt_my_app");
+        set({ user: null, jwt: null });
+    },
 
-\`\`\`
+    // 
+    // for each procedure in the techncial specification ([the appRouter procedures]) 
+    // create the trpc client functions here
+    
+}));
 
-
-# Instruction
-
-output the frontend code
 
 ${await getFileOutputFormatting()}
 
@@ -119,7 +181,12 @@ ${await getFileOutputFormatting()}
         // },
 
         messages: [
-            //
+            //             {
+            //                 role: "system",
+            //                 content: `
+            // You are a developer you are good at writing json.
+            //                 `,
+            //             },
             ...getModelMessagesFromUIMessages(),
             //
             ...chatblocks,
@@ -128,8 +195,6 @@ ${await getFileOutputFormatting()}
         ],
         model,
     });
-
-    //
 
     // let lastFile = "";
     let parseText = async (text) => {
@@ -178,13 +243,15 @@ ${await getFileOutputFormatting()}
     let text = "";
     for await (let part of response.textStream) {
         text += part;
-        // console.log(text);
+        console.log(text);
 
-        await parseText(text);
+        parseText(text);
 
+        //
         ticker.tick(text);
+        //
     }
-    await parseText(text);
+    parseText(text);
 
     await saveToBrowserDB();
     saveToCloud();
@@ -195,4 +262,30 @@ ${await getFileOutputFormatting()}
     await putBackFreeAIAsync({ engine: slot });
 }
 
+/*
+
 //
+
+please write me a regex parser for typescript for the following code:
+
+
+[TJ_TAG action="create-file" file="example1.ts" summary="test text"]
+export function hello() {
+    console.log("Hello, world!");
+}
+[/TJ_TAG]
+
+[TJ_TAG action="remove-file" file="example1.ts" summary="test text"]
+export function hello() {
+    console.log("Hello, world!");
+}
+[/TJ_TAG]
+
+[TJ_TAG action="update-file" file="example1.ts" summary="test text"]
+export function hello() {
+    console.log("Hello, world!");
+}
+[/TJ_TAG]
+
+
+*/
