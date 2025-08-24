@@ -212,11 +212,9 @@ return appRouter;
         );
 
         // you can reuse this for any procedure
-        const protectedProcedure = t.procedure.use(
+        const protectedProcedureApp = t.procedure.use(
             async function isAuthed(opts) {
                 let authtoken = opts.ctx.headers.get("authtoken");
-
-                //
 
                 console.log("authtoken", authtoken);
                 console.log("authtoken", authtoken);
@@ -236,7 +234,8 @@ return appRouter;
 
                     let found = dbAppInstance
                         .model("User")
-                        .findOne({ _id: `${userData.id}` });
+                        .findOne({ _id: `${userData.id}` })
+                        .lean();
 
                     console.log("found", found);
                     console.log("found", found);
@@ -245,7 +244,10 @@ return appRouter;
                         return opts.next({
                             ctx: {
                                 ...(opts?.ctx || {}),
-                                user: found,
+                                session: {
+                                    ...(opts?.ctx?.session || {}),
+                                    appUser: found,
+                                },
                                 // ✅ user value is known to be non-null now
                                 // user: ctx.user,
                                 // ^?
@@ -254,18 +256,24 @@ return appRouter;
                     }
                     //
                 }
-                // const { ctx } = opts;
-                // // `ctx.user` is nullable
+
+                const { ctx } = opts;
+                if ((ctx.session as any).appUser) {
+                    throw new TRPCError({
+                        code: "UNAUTHORIZED",
+                        message: "no login",
+                    });
+                }
                 //
 
-                throw new TRPCError({ code: "UNAUTHORIZED" });
+                return opts;
             },
         );
 
         appRouter = await func({
             createTRPCRouter,
             // TEMP DISABLE SECURITY
-            protectedProcedure: protectedProcedure,
+            protectedProcedure: protectedProcedureApp,
             publicProcedure: publicProcedure,
             z,
             mongoose,

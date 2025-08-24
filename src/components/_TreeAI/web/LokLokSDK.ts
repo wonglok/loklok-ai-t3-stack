@@ -44,17 +44,6 @@ export class LokLokSDK {
         localStorage.setItem("jwt_" + this.appID, `${token}`);
     }
 
-    async logout({ input }) {
-        localStorage.removeItem("jwt_" + this.appID);
-
-        return (this.client["auth"]["logout"] as any)
-            .mutate(input)
-            .then((data) => {
-                // console.log("data", data);
-                return data;
-            });
-    }
-
     async runTRPC({ procedure = "hello", input }) {
         return (this.client["app"][procedure] as any)
             .mutate(input)
