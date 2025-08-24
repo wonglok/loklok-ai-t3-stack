@@ -70,10 +70,6 @@ Instructions:
 
 - please write the backend trpc procedures in this file: "/models/defineMongooseModels.js"
 
-Mongoose Database: Design MongoDB schemas using Mongoose. For each model, provide:  
-Schema definition in code-like syntax (e.g., const TaskSchema = new mongoose.Schema({ title: String, description: String })).  
-Fields with types, validation, and defaults.
-
 - MUST INCLUDE this "defineMongooseModels" typescript function:
 - for eaxmple the Example Schema and Models
 - Dont change "getAllModesl"
@@ -84,40 +80,12 @@ Fields with types, validation, and defaults.
 function defineMongooseModels({ dbInstance, Schema, mongoose }) {
     const db = dbInstance
 
-    // // USER SCHEMA (registration & authentication) - Example Code below:
-    // if (!db.models['User']) {
-    //     const userSchema = new mongoose.Schema(
-    //         {
-    //             email: {
-    //                 type: String,
-    //                 required: true,
-    //                 unique: true,
-    //             },
-    //             passwordHash: {
-    //                 type: String,
-    //                 required: true,
-    //                 select: false  // hide by default
-    //             },
-    //             lastLogin: { type: Date },
-    //             status: { type: String, default: 'unverified',  },
-    //         },
-    //         {
-    //             timestamps: true,  // add createdAt / updatedAt
-    //             versionKey: false   
-    //         }
-    //     );
-    //     // Pre‑save – hash plain password if it changed
-    //     userSchema.pre('save', async function (next) {
-    //         if (this.isModified('password')) {
-    //             this.passwordHash = await bcrypt.hash(this.password, 12);
-    //             this.password = undefined; // erase plain pwd
-    //         }
-    //         next();
-    //     });
-    //     db.model('User', userSchema);
-    // }
+    //    const Example = new Schema({
+    //         ...
+    //    })
+    //. if (!db.models['Example']) { db.model("Example", Example); }
 
-    ... // add more schema
+    // add more schemas and models ..
 
     return {
         // ["Example"]: db.model("Example"),
