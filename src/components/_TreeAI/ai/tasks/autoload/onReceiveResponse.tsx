@@ -51,87 +51,38 @@ export async function onReceiveResponse({
         name: "handleAppSpec",
         args: { userPrompt: userPrompt },
     });
-    let chats = [];
 
-    //
-    let files = useAI.getState().files;
-    await listOutFilesToChatBlocks({ files, chatblocks: chats });
-    //
-
-    let { object: needsUpdate } = await generateObject({
-        messages: [...getModelMessagesFromUIMessages(), ...chats],
-        model,
-        schema: z.object({
-            mongoose: z.boolean().describe("update mongoose?"),
-            trpc: z.boolean().describe("update trpc code?"),
-            zustand: z.boolean().describe("update zustand?"),
-            reactjs: z.boolean().describe("update reactjs?"),
-        }),
-        schemaDescription: `think about wheter we need to edit / update these category of code`,
+    await MyTaskManager.add({
+        name: "handleMongoose",
+        waitFor: ["handleAppSpec"],
+        args: { userPrompt: userPrompt },
     });
 
-    if (needsUpdate.mongoose) {
-        needsUpdate.mongoose = true;
-    }
+    await MyTaskManager.add({
+        name: "handleBackendTRPC",
+        waitFor: ["handleMongoose"],
+        args: { userPrompt: userPrompt },
+    });
 
-    if (needsUpdate.trpc) {
-        needsUpdate.mongoose = true;
-    }
+    await MyTaskManager.add({
+        name: "handleZustand",
+        waitFor: ["handleBackendTRPC"],
+        args: { userPrompt: userPrompt },
+    });
 
-    if (needsUpdate.zustand) {
-        needsUpdate.trpc = true;
-        needsUpdate.mongoose = true;
-    }
-
-    if (needsUpdate.reactjs) {
-        needsUpdate.zustand = true;
-        needsUpdate.trpc = true;
-        needsUpdate.mongoose = true;
-    }
-
-    console.log("needs to work on", needsUpdate);
-    console.log("needs to work on", needsUpdate);
-    console.log("needs to work on", needsUpdate);
-    console.log("needs to work on", needsUpdate);
-
-    let waitFor = [];
-    if (needsUpdate.mongoose) {
-        waitFor.push("handleMongoose");
-        await MyTaskManager.add({
-            name: "handleMongoose",
-            waitFor: ["handleAppSpec"],
-            args: { userPrompt: userPrompt },
-        });
-    }
-
-    if (needsUpdate.trpc) {
-        waitFor.push("handleBackendTRPC");
-        await MyTaskManager.add({
-            name: "handleBackendTRPC",
-            waitFor: ["handleMongoose"],
-            args: { userPrompt: userPrompt },
-        });
-    }
-    if (needsUpdate.zustand) {
-        waitFor.push("handleZustand");
-        await MyTaskManager.add({
-            name: "handleZustand",
-            waitFor: ["handleBackendTRPC"],
-            args: { userPrompt: userPrompt },
-        });
-    }
-
-    if (needsUpdate.zustand) {
-        waitFor.push("handleReact");
-        await MyTaskManager.add({
-            name: "handleReact",
-            waitFor: ["handleZustand"],
-            args: { userPrompt: userPrompt },
-        });
-    }
+    await MyTaskManager.add({
+        name: "handleReact",
+        waitFor: ["handleZustand"],
+        args: { userPrompt: userPrompt },
+    });
 
     MyTaskManager.add({
-        waitFor: waitFor,
+        waitFor: [
+            "handleReact",
+            "handleZustand",
+            "handleBackendTRPC",
+            "handleMongoose",
+        ],
         name: "handleDeploy",
         args: {
             hash: `${md5(JSON.stringify(useAI.getState().files))}`,
