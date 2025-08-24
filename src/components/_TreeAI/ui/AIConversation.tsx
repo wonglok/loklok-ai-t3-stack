@@ -141,6 +141,20 @@ function RenderMessages() {
                                                 ></CodeEditorStream>
                                             </div>
                                         );
+                                    case "data-text": // we don't use any reasoning or tool calls in this example
+                                        return (
+                                            <div
+                                                key={`${message.id}-${i}`}
+                                                className="w-full overflow-x-auto"
+                                            >
+                                                <pre className="w-full whitespace-pre">
+                                                    {
+                                                        (part?.data ||
+                                                            "") as string
+                                                    }
+                                                </pre>
+                                            </div>
+                                        );
 
                                     case "data-deployed": // we don't use any reasoning or tool calls in this example
                                         return (

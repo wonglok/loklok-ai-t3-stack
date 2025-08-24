@@ -13,8 +13,8 @@ export let makeTicker = ({ engineSettingData, displayName }) => {
         role: "assistant",
         parts: [
             {
-                type: "data-codeedit",
-                data: ``, // text
+                type: "data-text",
+                data: `Loading...`, // text
             },
             // {
             //     type: "data-codeedit-btn",
@@ -28,21 +28,19 @@ export let makeTicker = ({ engineSettingData, displayName }) => {
     return {
         tick: (text) => {
             cursor += 1;
-
             cursor = cursor % symbols.length;
 
             engineSettingData.bannerText = ` ${symbols[cursor]} ${displayName} ${symbols[cursor]}`;
-
             uiMsg.parts[0].data = text;
 
             putUIMessage(uiMsg as UIMessage);
-
             refreshEngineSlot(engineSettingData);
         },
 
         remove: () => {
             engineSettingData.bannerText = "";
             refreshEngineSlot(engineSettingData);
+
             removeUIMessage(uiMsg as UIMessage);
         },
     };
