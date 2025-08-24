@@ -78,7 +78,7 @@ export function MyApp () {
             },
             {
                 path: `/src/main.js`,
-                content: /* typescript */ `
+                content: /* javascript */ `
 import { MyApp } from '../src/App.js'
 import * as ReactDOM from 'react-dom'
 import * as React from 'react'

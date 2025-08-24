@@ -73,7 +73,7 @@ Mongoose Database: Design MongoDB schemas using Mongoose. For each model, provid
 Schema definition in code-like syntax (e.g., const TaskSchema = new mongoose.Schema({ title: String, description: String })).  
 Fields with types, validation, and defaults.
 
-- MUST INCLUDE this "defineMongooseModels" typescript function:
+- MUST INCLUDE this "defineMongooseModels" javascript function:
 - for eaxmple the Example Schema and Models
 - Dont change "getAllModesl"
 - Only Implement "defineMongooseModels" function

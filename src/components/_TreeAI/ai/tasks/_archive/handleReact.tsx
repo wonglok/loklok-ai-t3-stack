@@ -63,7 +63,7 @@ export async function handleReact({
 # React Component
 React Component for HTML
 
-- Identify React Component modules and implement them in this format, use only typescript ".ts" files:
+- Identify React Component modules and implement them in this format, use only javascript ".js" files:
 - DO NOT WRAP THE CODE WITH markdown
 - ONLY WRITE PURE CODE FOR {code} etc
 - the folder for components is at "/components/*"
@@ -78,13 +78,13 @@ export function App () {...}
 - include the following lines:
 import * as React from 'react';
 
-- when write the App component, write file to "/components/App.tsx"
-- when write the other components, write file to "/components/*.tsx"
+- when write the App component, write file to "/components/App.jsx"
+- when write the other components, write file to "/components/*.jsx"
 
 - use tailwind css to style the elements
 - use some "border" "rounded-lg" together with "shadow-inner" but dont overuse them dear
 - use some "p-3" padding spacing 
-- uses Zustand state management files located at "/store/*.ts" folder
+- uses Zustand state management files located at "/store/*.js" folder
 
 ------
 
@@ -107,7 +107,7 @@ import * as React from 'react';
 ## Overall 
 
 - Tailwind CSS for styling for Frontend CSS Styling
-- Javascript preferred over typescript
+- Javascript preferred 
 - React + Javascript for Frontend HTML
 - @react-three/fiber + drei for Frontend 3D
 - Zustand for state management for Frontend State Management
@@ -218,31 +218,3 @@ ${await getFileOutputFormatting()}
 
     await putBackFreeAIAsync({ engine: slot });
 }
-
-/*
-
-//
-
-please write me a regex parser for typescript for the following code:
-
-
-[TJ_TAG action="create-file" file="example1.ts" summary="test text"]
-export function hello() {
-    console.log("Hello, world!");
-}
-[/TJ_TAG]
-
-[TJ_TAG action="remove-file" file="example1.ts" summary="test text"]
-export function hello() {
-    console.log("Hello, world!");
-}
-[/TJ_TAG]
-
-[TJ_TAG action="update-file" file="example1.ts" summary="test text"]
-export function hello() {
-    console.log("Hello, world!");
-}
-[/TJ_TAG]
-
-
-*/

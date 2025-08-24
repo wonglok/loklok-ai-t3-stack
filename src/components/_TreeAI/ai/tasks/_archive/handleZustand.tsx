@@ -61,7 +61,7 @@ export async function handleZustand({
         content: `
 Instructions:
 
-- Identify Zustand stores and implement them, use only typescript ".ts" files:
+- Identify Zustand stores and implement them, use only javascript ".js" files:
 - DO NOT WRAP THE CODE WITH markdown
 - ONLY WRITE PURE CODE FOR
 
@@ -262,22 +262,22 @@ ${await getFileOutputFormatting()}
 
 //
 
-please write me a regex parser for typescript for the following code:
+please write me a regex parser for javascript for the following code:
 
 
-[TJ_TAG action="create-file" file="example1.ts" summary="test text"]
+[TJ_TAG action="create-file" file="example1.js" summary="test text"]
 export function hello() {
     console.log("Hello, world!");
 }
 [/TJ_TAG]
 
-[TJ_TAG action="remove-file" file="example1.ts" summary="test text"]
+[TJ_TAG action="remove-file" file="example1.js" summary="test text"]
 export function hello() {
     console.log("Hello, world!");
 }
 [/TJ_TAG]
 
-[TJ_TAG action="update-file" file="example1.ts" summary="test text"]
+[TJ_TAG action="update-file" file="example1.js" summary="test text"]
 export function hello() {
     console.log("Hello, world!");
 }

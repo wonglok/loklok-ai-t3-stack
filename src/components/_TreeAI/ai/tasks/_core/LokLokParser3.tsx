@@ -37,19 +37,19 @@ function parseCodeBlocksGen3(input: string): CodeBlockG3[] {
 
 // // Example usage
 // const input = `
-// [TJ_TAG action="create-file" file="example1.ts" summary="test text"]
+// [TJ_TAG action="create-file" file="example1.js" summary="test text"]
 // export function hello() {
 //     console.log("Hello, world!");
 // }
 // [/TJ_TAG]
 
-// [TJ_TAG action="remove-file" file="example1.ts" summary="test text"]
+// [TJ_TAG action="remove-file" file="example1.js" summary="test text"]
 // export function hello() {
 //     console.log("Hello, world!");
 // }
 // [/TJ_TAG]
 
-// [TJ_TAG action="update-file" file="example1.ts" summary="test text"]
+// [TJ_TAG action="update-file" file="example1.js" summary="test text"]
 // export function hello() {
 //     console.log("Hello, world!");
 // }

@@ -48,7 +48,7 @@ export function MyApp () {
     let [outlet, setApp] = React.useState(null)
 
     React.useEffect(() => {
-        import('/components/App.tsx').then((myModule) =>{
+        import('/components/App.jsx').then((myModule) =>{
                 console.log('myModule', myModule)
                 if (myModule?.App) {
                     try {
@@ -84,7 +84,7 @@ export function MyApp () {
             },
             {
                 path: `/src/main.js`,
-                content: /* typescript */ `
+                content: /* javascript */ `
 import { MyApp } from '../src/App.js'
 import * as ReactDOM from 'react-dom'
 import * as React from 'react'

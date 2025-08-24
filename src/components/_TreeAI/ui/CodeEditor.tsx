@@ -50,14 +50,14 @@ export function CodeEditor() {
         (editor: any, monaco: any) => {
             setEditor(editor);
 
-            monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
-                jsx: monaco.languages.typescript.JsxEmit.Preserve,
-                target: monaco.languages.typescript.ScriptTarget.ES2020,
+            monaco.languages.javascript.javascriptDefaults.setCompilerOptions({
+                jsx: monaco.languages.javascript.JsxEmit.Preserve,
+                target: monaco.languages.javascript.ScriptTarget.ES2020,
                 esModuleInterop: true,
                 // moduleResolution: "nodenext",
                 baseUrl: "./", // Or your project's base directory
                 paths: {
-                    // "../types": ["./types/index.ts"], // Adjust to your actual path
+                    // "../types": ["./types/index.js"], // Adjust to your actual path
                 },
             });
 
@@ -130,7 +130,7 @@ export function CodeEditor() {
                             width={"100%"}
                             height={"100%"}
                             onMount={handleEditorDidMount}
-                            // defaultLanguage="typescript"
+                            // defaultLanguage="javascript"
                             language={
                                 getLang(file.path)
                                 // llmStatus === "writing" && track && path.includes(".js")
