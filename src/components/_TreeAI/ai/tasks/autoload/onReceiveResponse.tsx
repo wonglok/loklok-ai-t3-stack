@@ -23,6 +23,9 @@ import { MyTask, MyTaskManager } from "../_core/MyTaskManager";
 import md5 from "md5";
 import { useAI } from "../../../state/useAI";
 import { saveToCloud } from "@/components/_TreeAI/io/saveToCloud";
+import { generateObject } from "ai";
+import { getModelMessagesFromUIMessages } from "../../getModelMessagesFromUIMessages";
+import z from "zod";
 // import { putUIMessage } from "../../putUIMessage";
 // import { v4 } from "uuid";
 
@@ -40,9 +43,6 @@ export async function onReceiveResponse({
 }) {
     let { model, engineSettingData: slot } = await getFreeAIAsync();
 
-    await MyTaskManager.doneTask(task.name);
-    await putBackFreeAIAsync({ engine: slot });
-
     console.log(task.name, userPrompt, task);
 
     MyTaskManager.add({
@@ -51,41 +51,70 @@ export async function onReceiveResponse({
         args: { userPrompt: userPrompt },
     });
 
-    MyTaskManager.add({
-        name: "handleMongoose",
-        waitFor: ["handleAppSpec"],
-        args: { userPrompt: userPrompt },
+    let { object: needsUpdate } = await generateObject({
+        messages: [...getModelMessagesFromUIMessages()],
+        model,
+        schema: z.object({
+            mongoose: z.boolean().describe("do we need to update mongoose?"),
+            trpc: z.boolean().describe("do we need to update trpc code?"),
+            zustand: z.boolean().describe("do we need to update zustand?"),
+            reactjs: z.boolean().describe("do we need to update reactjs?"),
+        }),
+        schemaDescription: `think about wheter we should edit / update these category of content`,
     });
 
-    MyTaskManager.add({
-        name: "handleBackendTRPC",
-        waitFor: ["handleMongoose"],
-        args: { userPrompt: userPrompt },
-    });
+    console.log("response", needsUpdate);
+    // [
+    //     "handleMongoose",
+    //     "handleBackendTRPC",
+    //     "handleZustand",
+    //     "handleReact",
+    //     "handleTesting",
+    // ]
+    let waitFor = [];
+    if (needsUpdate.mongoose) {
+        await MyTaskManager.add({
+            name: "handleMongoose",
+            waitFor: ["handleAppSpec"],
+            args: { userPrompt: userPrompt },
+        });
+        waitFor.push("handleMongoose");
+    }
+
+    if (needsUpdate.trpc) {
+        await MyTaskManager.add({
+            name: "handleBackendTRPC",
+            waitFor: ["handleMongoose"],
+            args: { userPrompt: userPrompt },
+        });
+        waitFor.push("handleBackendTRPC");
+    }
+    if (needsUpdate.zustand) {
+        await MyTaskManager.add({
+            name: "handleZustand",
+            waitFor: ["handleBackendTRPC"],
+            args: { userPrompt: userPrompt },
+        });
+        waitFor.push("handleZustand");
+    }
+
+    if (needsUpdate.zustand) {
+        await MyTaskManager.add({
+            name: "handleReact",
+            waitFor: ["handleZustand"],
+            args: { userPrompt: userPrompt },
+        });
+        waitFor.push("handleReact");
+    }
 
     MyTaskManager.add({
-        name: "handleZustand",
-        waitFor: ["handleBackendTRPC"],
-        args: { userPrompt: userPrompt },
-    });
-
-    MyTaskManager.add({
-        name: "handleReact",
-        waitFor: ["handleZustand"],
-        args: { userPrompt: userPrompt },
-    });
-
-    MyTaskManager.add({
-        waitFor: [
-            "handleMongoose",
-            "handleBackendTRPC",
-            "handleZustand",
-            "handleReact",
-            "handleTesting",
-        ],
+        waitFor: waitFor,
         name: "handleDeploy",
         args: {
             hash: `${md5(JSON.stringify(useAI.getState().files))}`,
         },
     });
+
+    await MyTaskManager.doneTask(task.name);
+    await putBackFreeAIAsync({ engine: slot });
 }
