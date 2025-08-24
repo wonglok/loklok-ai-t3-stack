@@ -73,7 +73,6 @@ Instructions:
 - MUST INCLUDE this "defineMongooseModels" typescript function:
 - for eaxmple the Example Schema and Models
 - Dont change "getAllModesl"
-- Only Implement "defineMongooseModels" function
 - DONT EXPORT "defineMongooseModels"
 - NEVER common.js style require or module.export
 
@@ -93,6 +92,8 @@ function defineMongooseModels({ dbInstance, Schema, mongoose }) {
     };
 }
 
+- Only Implement "defineMongooseModels" function
+- DO NOT write any other function or file
 
 ${await getFileOutputFormatting()}
 

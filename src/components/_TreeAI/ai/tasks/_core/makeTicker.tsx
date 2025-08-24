@@ -6,7 +6,8 @@ import { removeUIMessage } from "../../removeUIMessage";
 
 export let makeTicker = ({ engineSettingData, displayName }) => {
     let symbols = [`✨`, "🤩", "⭐️", "❤️", "💙", "💛", "💖", "😍", "🥰"];
-    let cursor = 0;
+    let cursor1 = 0;
+    let cursor2 = 0;
 
     let uiMsg = {
         id: `${v4()}`,
@@ -27,10 +28,12 @@ export let makeTicker = ({ engineSettingData, displayName }) => {
 
     return {
         tick: (text) => {
-            cursor += 1;
-            cursor = cursor % symbols.length;
+            cursor1 += 1;
+            cursor1 = cursor1 % symbols.length;
+            cursor2 -= 1;
+            cursor2 = Math.abs(cursor1 % symbols.length);
 
-            engineSettingData.bannerText = ` ${symbols[cursor]} ${displayName} ${symbols[cursor]}`;
+            engineSettingData.bannerText = ` ${symbols[cursor1]} ${displayName} ${symbols[cursor2]}`;
             uiMsg.parts[0].data = text;
 
             putUIMessage(uiMsg as UIMessage);
