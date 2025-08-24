@@ -61,7 +61,6 @@ export async function handleReact({
         role: "user",
         content: `
 # React Component
-React Component for HTML
 
 - Identify React Component modules and implement them in this format, use only typescript ".ts" files:
 - DO NOT WRAP THE CODE WITH markdown
@@ -97,8 +96,22 @@ await window.trpcSDK.runTRPC({
 });
 -------------------------
 
+${files
+    .filter((r) => r.path.startsWith("/store"))
+    .map((r) => {
+        return `
+-------------------------------
+FilePath: ${r.path}
+Summary: ${r.summary}
+Content: 
+${r.content}
+-------------------------------
+    `;
+    })}
+
 # instruction
-update suitable code files to meet the latest requirements
+update suitable code files to meet the latest requirements,
+use suitable zustand stores accordingly.
 
 ${await getFileOutputFormatting()}
 

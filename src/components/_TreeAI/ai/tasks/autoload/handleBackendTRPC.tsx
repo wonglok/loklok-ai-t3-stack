@@ -150,6 +150,9 @@ function defineBackendProcedures({ models, z, otherProcedures, publicProcedure, 
 - Only Implement "defineBackendProcedures" function
 - DO NOT write any other function or file
 
+# instruction
+update suitable code files to meet the latest requirements
+
 ${await getFileOutputFormatting()}
 
                 `,

@@ -113,6 +113,9 @@ export function App () {
 ----- EXAMPLE /components/App.tsx -----
 
 
+# instruction
+update suitable code files to meet the latest requirements
+
 ${await getFileOutputFormatting()}
 
                 `,

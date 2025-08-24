@@ -48,6 +48,18 @@ export async function handleDeploy({
         appID: useAI.getState().appID,
     });
 
+    let uiMsg = {
+        id: `${v4()}`,
+        role: "assistant",
+        parts: [
+            {
+                type: "data-deployed",
+                data: `Deployed`, // text
+                text: ``,
+            },
+        ],
+    };
+
     // await sdk.setupPlatform({
     //     procedure: "reset",
     //     input: {
@@ -67,6 +79,10 @@ export async function handleDeploy({
             },
         });
 
+        uiMsg.parts[0].type = "text";
+        uiMsg.parts[0].text = `Uploading ${((i / files.length) * 100).toFixed(0)}%`;
+
+        putUIMessage(uiMsg as UIMessage);
         engineSettingData.bannerText = `Uploading ${((i / files.length) * 100).toFixed(0)}%`;
         refreshEngineSlot(engineSettingData);
         i++;
@@ -79,16 +95,7 @@ export async function handleDeploy({
         }),
     });
 
-    let uiMsg = {
-        id: `${v4()}`,
-        role: "assistant",
-        parts: [
-            {
-                type: "data-deployed",
-                data: `Deployed`, // text
-            },
-        ],
-    };
+    uiMsg.parts[0].type = "data-deployed";
     putUIMessage(uiMsg as UIMessage);
 
     useAI.setState({
