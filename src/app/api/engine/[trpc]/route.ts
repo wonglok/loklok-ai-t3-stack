@@ -2,7 +2,7 @@ import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 import { type NextRequest } from "next/server";
 
 import { env } from "@/env";
-import { createTRPCContext, createTRPCRouter } from "@/server/api/trpc";
+import { createTRPCContext, createTRPCRouter, t } from "@/server/api/trpc";
 import { z } from "zod";
 
 import { protectedProcedure, publicProcedure } from "@/server/api/trpc";
@@ -13,15 +13,19 @@ import shortHash from "short-hash";
 
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { TRPCError } from "@trpc/server";
 
 /**
  * This wraps the `createTRPCContext` helper and provides the required context for the tRPC API when
  * handling a HTTP request (e.g. when you make requests from Client Components).
  */
 const createContext = async (req: NextRequest) => {
-    return createTRPCContext({
-        headers: req.headers,
-    });
+    return {
+        // session
+        ...createTRPCContext({
+            headers: req.headers,
+        }),
+    };
 };
 
 const handler = async (req: NextRequest) => {
@@ -30,6 +34,8 @@ const handler = async (req: NextRequest) => {
     let appID = req.headers.get("app-id");
 
     let appHashID = `${shortHash(md5(`${appID}${process.env.NODE_ENV}${process.env.AUTH_SECRET}`))}`;
+
+    let JWT_SECRET = `_${appID}_${md5(appID + "--" + appID + "--" + appHashID)}`;
 
     let phase = "dev";
     if (process.env.NODE_ENV === "development") {
@@ -205,10 +211,48 @@ return appRouter;
             },
         );
 
+        // you can reuse this for any procedure
+        const protectedProcedure = t.procedure.use(
+            async function isAuthed(opts) {
+                let authtoken = opts.ctx.headers.get("authtoken");
+                let user = null;
+                if (typeof authtoken === "string" && authtoken !== "") {
+                    //
+
+                    let userData = await jwt.verify(authtoken, JWT_SECRET);
+
+                    console.log("userData", userData);
+                    console.log("userData", userData);
+                    console.log("userData", userData);
+
+                    //
+                }
+                console.log(authtoken);
+                console.log(authtoken);
+                console.log(authtoken);
+
+                // const { ctx } = opts;
+                // // `ctx.user` is nullable
+                // if (!ctx?.user) {
+                //     //     ^?
+                //     throw new TRPCError({ code: "UNAUTHORIZED" });
+                // }
+
+                return opts.next({
+                    ctx: {
+                        ...(opts?.ctx || {}),
+                        // ✅ user value is known to be non-null now
+                        // user: ctx.user,
+                        // ^?
+                    },
+                });
+            },
+        );
+
         appRouter = await func({
             createTRPCRouter,
             // TEMP DISABLE SECURITY
-            protectedProcedure: publicProcedure,
+            protectedProcedure: protectedProcedure,
             publicProcedure: publicProcedure,
             z,
             mongoose,
@@ -218,7 +262,7 @@ return appRouter;
             Schema: mongoose.Schema,
             jwt: jwt,
             bcrypt: bcrypt,
-            JWT_SECRET: `_${appID}_${md5(appID + "--" + appID + "--" + appHashID)}`,
+            JWT_SECRET: JWT_SECRET,
         });
     } catch (e) {
         console.error(e);
@@ -290,7 +334,10 @@ return appRouter;
         req,
         router: myTRPCRouter,
         createContext: () => {
-            return createContext(req);
+            return {
+                headers: req.headers,
+                ...createContext(req),
+            };
         },
         onError:
             env.NODE_ENV === "development"
