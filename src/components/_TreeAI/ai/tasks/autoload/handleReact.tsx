@@ -139,7 +139,8 @@ ${r.content}
 
 
 # instruction
-update suitable code files to meet the latest requirements,
+update suitable code files within "/components/*" to meet the latest requirements
+
 use suitable zustand stores accordingly.
 
 ${await getFileOutputFormatting()}

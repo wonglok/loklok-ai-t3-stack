@@ -100,7 +100,7 @@ Instructions:
 }));
 
 # instruction
-update suitable code files within "/models/*" to meet the latest requirements:
+update suitable code files within "/models/*" to meet the latest requirements
 
 ${await getFileOutputFormatting()}
 

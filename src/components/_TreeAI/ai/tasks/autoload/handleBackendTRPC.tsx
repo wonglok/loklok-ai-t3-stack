@@ -169,7 +169,7 @@ window.trpcSDK
 }))
 
 # instruction
-update suitable code files to meet the latest requirements
+update suitable code files within "/trpc/*" to meet the latest requirements
 
 ${await getFileOutputFormatting()}
 
