@@ -38,7 +38,15 @@ export const buildProcedures = async ({
     // console.log("trpcProcedures", data);
 
     for await (let item of data) {
-        defineBackendProceduresContent += item.content + "\n";
+        defineBackendProceduresContent +=
+            `
+            try {
+                ${item.content}
+            } catch (e) {
+                console.error(e);
+                console.log(${JSON.stringify(item.path)})
+            }
+        ` + "\n";
     }
 
     // let defineBackendProceduresContent =
@@ -64,12 +72,6 @@ const models = args.models;
 
 let allProcedures = {};
 
-try {
-    ${defineBackendProceduresContent}
-    
-} catch (e) {
-    console.error(e);
-}
 
 return allProcedures;
     `,
