@@ -39,12 +39,11 @@ export const buildProcedures = async ({
 
     for await (let item of data) {
         defineBackendProceduresContent +=
-            `
-            try {
+            `try {
                 ${item.content}
             } catch (e) {
-                console.error(e);
                 console.log(${JSON.stringify(item.path)})
+                console.error(e);
             }
         ` + "\n";
     }

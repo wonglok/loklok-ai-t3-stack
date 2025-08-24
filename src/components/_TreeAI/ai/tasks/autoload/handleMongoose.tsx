@@ -63,13 +63,14 @@ export async function handleMongoose({
         content: `
 Instructions:
 
-- Identify mongoose models for backend and implement it in "/models/*.js", use only javascript ".js" files:
+- Identify mongoose models for backend and implement them in "/models/*.js" one by one, use only javascript ".js" files:
 - MUST ONLY WRITE PURE CODE
 - MUST NEVER WRAP THE CODE WITH markdown
 - MUST NEVER import anything
-- MUST NEVER export {anything}
+- MUST NEVER export { anything }
 - MUST NEVER export default anything
-- MUST WRITE the backend trpc procedures in this file: "/models/*.js"
+
+- MUST WRITE the backend trpc procedures in this folder: "/models/*.js"
 - MUST WRITE Immediately Invoked Function Expression
 - MUST KEEP Immediately Invoked Function Expression argument not changed
 - MUST NOT WRITE tRPC Procedures here 
@@ -96,11 +97,8 @@ Instructions:
     allModels, dbInstance, Schema, ObjectId 
 }));
 
-
-- Implement mode one by one in folder  "/models/*.js"
-
 # instruction
-update suitable code files to meet the latest requirements:
+update suitable code files within "/models/*" to meet the latest requirements:
 
 ${await getFileOutputFormatting()}
 

@@ -16,13 +16,29 @@ export const buildModels = async ({
     appID,
 }) => {
     //
-    let defineMongooseModels = await dbPlatform
+    let defineMongooseModelsContent = "";
+
+    let queryResult = await dbPlatform
         .model("AppCodeStore")
-        .findOne({ path: `/models/defineMongooseModels.js` })
+        .find({ path: { $regex: "^" + "/models" } })
         .lean();
 
-    let defineMongooseModelsContent =
-        toJSON(defineMongooseModels)?.content || "";
+    let data = queryResult.map((r) => {
+        r = { ...r };
+        delete r.__v;
+        return { ...r, _id: `${r._id}` };
+    });
+
+    for await (let item of data) {
+        defineMongooseModelsContent +=
+            `try {
+                ${item.content}
+            } catch (e) {
+                console.log(${JSON.stringify(item.path)})
+                console.error(e);
+            }
+        ` + "\n";
+    }
 
     let func = new Function(
         `args`,
@@ -40,11 +56,7 @@ const ObjectId = args.ObjectId;
 let appRouter;
 let allModels = {};
 
-try {
-    ${defineMongooseModelsContent}
-} catch (e) {
-    console.error(e);
-}
+${defineMongooseModelsContent}
 
 return allModels;
     `,
