@@ -79,6 +79,7 @@ Instructions:
 function defineMongooseModels({ dbInstance, Schema, mongoose }) {
     const db = dbInstance
 
+    // Dont include example here
     //    const Example = new Schema({
     //         ...
     //    })

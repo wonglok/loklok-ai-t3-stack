@@ -70,48 +70,64 @@ export async function onReceiveResponse({
         schemaDescription: `think about wheter we need to edit / update these category of code`,
     });
 
-    console.log("response", needsUpdate);
-    // [
-    //     "handleMongoose",
-    //     "handleBackendTRPC",
-    //     "handleZustand",
-    //     "handleReact",
-    //     "handleTesting",
-    // ]
+    if (needsUpdate.mongoose) {
+        needsUpdate.mongoose = true;
+    }
+
+    if (needsUpdate.trpc) {
+        needsUpdate.mongoose = true;
+    }
+
+    if (needsUpdate.zustand) {
+        needsUpdate.trpc = true;
+        needsUpdate.mongoose = true;
+    }
+
+    if (needsUpdate.reactjs) {
+        needsUpdate.zustand = true;
+        needsUpdate.trpc = true;
+        needsUpdate.mongoose = true;
+    }
+
+    console.log("needs to work on", needsUpdate);
+    console.log("needs to work on", needsUpdate);
+    console.log("needs to work on", needsUpdate);
+    console.log("needs to work on", needsUpdate);
+
     let waitFor = [];
     if (needsUpdate.mongoose) {
+        waitFor.push("handleMongoose");
         await MyTaskManager.add({
             name: "handleMongoose",
             waitFor: ["handleAppSpec"],
             args: { userPrompt: userPrompt },
         });
-        waitFor.push("handleMongoose");
     }
 
     if (needsUpdate.trpc) {
+        waitFor.push("handleBackendTRPC");
         await MyTaskManager.add({
             name: "handleBackendTRPC",
             waitFor: ["handleMongoose"],
             args: { userPrompt: userPrompt },
         });
-        waitFor.push("handleBackendTRPC");
     }
     if (needsUpdate.zustand) {
+        waitFor.push("handleZustand");
         await MyTaskManager.add({
             name: "handleZustand",
             waitFor: ["handleBackendTRPC"],
             args: { userPrompt: userPrompt },
         });
-        waitFor.push("handleZustand");
     }
 
     if (needsUpdate.zustand) {
+        waitFor.push("handleReact");
         await MyTaskManager.add({
             name: "handleReact",
             waitFor: ["handleZustand"],
             args: { userPrompt: userPrompt },
         });
-        waitFor.push("handleReact");
     }
 
     MyTaskManager.add({
