@@ -101,7 +101,6 @@ declare global {
 - NEVER USE "id" for object id (good)
 - NEVER IMPORT "@tanstack/react-query"
 
-
 # instruction
 update suitable code files to meet the latest requirements
 
