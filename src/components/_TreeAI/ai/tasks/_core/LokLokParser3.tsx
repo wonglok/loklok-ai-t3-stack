@@ -11,8 +11,14 @@ export interface CodeBlockG3 {
 
 // Function to parse the input string and extract code blocks
 function parseCodeBlocksGen3(input: string): CodeBlockG3[] {
-    input = input.replace(new RegExp(/\`\`\`\j\s/g), "");
-    input = input.replace(new RegExp(/\`\`\`\t\s/g), "");
+    input = input.replace("```ts", "");
+    input = input.replace("```ts", "");
+
+    input = input.replace("```js", "");
+    input = input.replace("```js", "");
+
+    input = input.replace("```", "");
+    input = input.replace("```", "");
 
     const blocks: CodeBlockG3[] = [];
     let match: RegExpExecArray | null;
