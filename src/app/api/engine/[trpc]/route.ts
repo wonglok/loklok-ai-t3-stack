@@ -201,7 +201,7 @@ return appRouter;
         appRouter = await func({
             createTRPCRouter,
             protectedProcedure: publicProcedure,
-            publicProcedure,
+            publicProcedure: publicProcedure,
             z,
             mongoose,
             appHashID: appHashID,
