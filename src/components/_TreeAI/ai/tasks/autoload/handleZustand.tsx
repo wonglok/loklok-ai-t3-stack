@@ -74,7 +74,10 @@ import { create } from 'zustand';
 
 - The app has a Global variable window.trpcSDK as a custom tRPC Frontend Client.
 
-- make sure ai implement all trpc backend procedures with correct data type. refer to "/trpc/defineBackendProcedures.js"
+- make sure ai implement all trpc backend procedures with correct data type. refer to "/trpc/*.js"
+
+
+
 example: window.trpcSDK
     .runTRPC({
         procedure: "hello", // [hello] is the procedure name

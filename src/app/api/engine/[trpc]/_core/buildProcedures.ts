@@ -48,9 +48,6 @@ export const buildProcedures = async ({
         ` + "\n";
     }
 
-    // let defineBackendProceduresContent =
-    //     toJSON(defineBackendProcedures)?.content || "";
-
     let func = new Function(
         `args`,
         `
