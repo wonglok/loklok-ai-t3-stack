@@ -40,7 +40,10 @@ export async function onReceiveResponse({
 }) {
     let { model, engineSettingData: slot } = await getFreeAIAsync();
 
-    console.log("onReceiveResponse", userPrompt, task);
+    await MyTaskManager.doneTask(task.name);
+    await putBackFreeAIAsync({ engine: slot });
+
+    console.log(task.name, userPrompt, task);
 
     MyTaskManager.add({
         waitFor: [task.name],
@@ -85,11 +88,4 @@ export async function onReceiveResponse({
             hash: `${md5(JSON.stringify(useAI.getState().files))}`,
         },
     });
-
-    await MyTaskManager.doneTask(task.name);
-
-    await saveToBrowserDB();
-    saveToCloud();
-
-    await putBackFreeAIAsync({ engine: slot });
 }

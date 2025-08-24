@@ -86,7 +86,7 @@ import * as React from 'react';
 - use some "p-3" padding spacing 
 - uses Zustand state management files located at "/store/*.ts" folder
 
-- always use zustand for state instead of React.useState
+- always use zustand for state management instead of React.useState
 
 ${await getFileOutputFormatting()}
 

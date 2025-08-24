@@ -102,6 +102,7 @@ export async function handleDeploy({
 
     await MyTaskManager.doneTask(task.name);
     await putBackFreeAIAsync({ engine: engineSettingData });
+    MyTaskManager.taskList = [];
 
     useAI.setState({
         refreshID: `_${v4()}`,
