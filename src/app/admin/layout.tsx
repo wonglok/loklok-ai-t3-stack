@@ -58,9 +58,7 @@ export default async function Layout({ children }) {
                             </Breadcrumb>
                         </div>
                     </header>
-                    <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-                        {children}
-                    </div>
+                    <div className="h-full w-full gap-4 pt-0">{children}</div>
                 </SidebarInset>
             </SidebarProvider>
         </HydrateClient>

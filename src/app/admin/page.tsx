@@ -19,16 +19,40 @@ export default async function HomePage() {
     return (
         <>
             <div>
-                <Link prefetch href={`/apps/${session?.user?.id}/edit`}>
-                    <button className="cursor-pointer rounded-2xl border bg-gray-500 p-5 text-white">
-                        App Editor
-                    </button>
-                </Link>
-                <Link target="_blank" href={`/apps/${session?.user?.id}/run`}>
-                    <button className="cursor-pointer rounded-2xl border bg-gray-500 p-5 text-white">
-                        App Preview
-                    </button>
-                </Link>
+                <div className="mb-3">
+                    <Link prefetch href={`/apps/${session?.user?.id}/edit`}>
+                        <button className="cursor-pointer rounded-2xl border bg-gray-500 p-5 text-white">
+                            App Editor
+                        </button>
+                    </Link>
+                    <Link
+                        target="_blank"
+                        href={`/apps/${session?.user?.id}/run`}
+                    >
+                        <button className="cursor-pointer rounded-2xl border bg-gray-500 p-5 text-white">
+                            App Preview
+                        </button>
+                    </Link>
+                </div>
+
+                <div>
+                    <Link
+                        prefetch
+                        href={`/admin/apps/${session?.user?.id}/edit`}
+                    >
+                        <button className="cursor-pointer rounded-2xl border bg-gray-500 p-5 text-white">
+                            Recursive Editor
+                        </button>
+                    </Link>
+                    <Link
+                        target="_blank"
+                        href={`/admin/apps/${session?.user?.id}/run`}
+                    >
+                        <button className="cursor-pointer rounded-2xl border bg-gray-500 p-5 text-white">
+                            Recurisve Preview
+                        </button>
+                    </Link>
+                </div>
             </div>
             <div>{/* <ButtonOpenAI></ButtonOpenAI> */}</div>
             <div className="grid auto-rows-min gap-4 md:grid-cols-3">
