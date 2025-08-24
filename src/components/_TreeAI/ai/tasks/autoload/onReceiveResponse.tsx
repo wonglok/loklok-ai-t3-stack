@@ -44,51 +44,51 @@ export async function onReceiveResponse({
 
     MyTaskManager.add({
         waitFor: [task.name],
-        name: "handleAppSpec",
+        name: "writeAppSpec",
         args: { userPrompt: userPrompt },
     });
 
     MyTaskManager.add({
-        waitFor: ["handleAppSpec"],
-        name: "handleBackendCode",
+        waitFor: ["writeAppSpec"],
+        name: "developBackendCode",
         args: { userPrompt: userPrompt },
     });
 
     MyTaskManager.add({
-        waitFor: ["handleAppSpec"],
-        name: "handleFrontendCode",
+        waitFor: ["writeAppSpec"],
+        name: "developFrontendCode",
         args: { userPrompt: userPrompt },
     });
 
     // MyTaskManager.add({
-    //     waitFor: ["handleAppSpec"],
+    //     waitFor: ["writeAppSpec"],
     //     name: "handleMongoose",
     //     args: { userPrompt: userPrompt },
     // });
 
     // MyTaskManager.add({
-    //     waitFor: ["handleAppSpec", "handleMongoose"],
+    //     waitFor: ["writeAppSpec", "handleMongoose"],
     //     name: "handleBackendTRPC",
     //     args: { userPrompt: userPrompt },
     // });
 
     // MyTaskManager.add({
-    //     waitFor: ["handleAppSpec", "handleBackendTRPC"],
+    //     waitFor: ["writeAppSpec", "handleBackendTRPC"],
     //     name: "handleZustand",
     //     args: { userPrompt: userPrompt },
     // });
 
     // MyTaskManager.add({
-    //     waitFor: ["handleAppSpec", "handleZustand"],
+    //     waitFor: ["writeAppSpec", "handleZustand"],
     //     name: "handleReact",
     //     args: { userPrompt: userPrompt },
     // });
 
     MyTaskManager.add({
         waitFor: [
-            "handleAppSpec",
-            "handleBackendCode",
-            "handleFrontendCode",
+            "writeAppSpec",
+            "developBackendCode",
+            "developFrontendCode",
 
             // "handleBackendTRPC",
             // "handleZustand",

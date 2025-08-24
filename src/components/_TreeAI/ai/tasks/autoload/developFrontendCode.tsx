@@ -36,10 +36,10 @@ import { listOutFilesToChatBlocks } from "../prompts/listOutFilesToChatBlocks";
 import { makeTicker } from "../_core/makeTicker";
 import { saveToCloud } from "@/components/_TreeAI/io/saveToCloud";
 
-export const name = "handleFrontendCode";
+export const name = "developFrontendCode";
 export const displayName = "Frontend Code";
 
-export async function handleFrontendCode({
+export async function developFrontendCode({
     userPrompt,
     task,
 }: {
