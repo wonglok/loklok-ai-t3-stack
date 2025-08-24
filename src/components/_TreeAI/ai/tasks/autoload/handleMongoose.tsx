@@ -127,10 +127,11 @@ ${await getFileOutputFormatting()}
         // },
 
         messages: [
+            ...chatblocks,
+
             //
             ...getModelMessagesFromUIMessages(),
             //
-            ...chatblocks,
 
             //
         ],

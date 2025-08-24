@@ -129,7 +129,7 @@ window.trpcSDK
     const User = dbInstance.model("User")
 
     // Register a new user (public)
-    allProcedures.publicProcedure
+    allProcedures.register = publicProcedure
         .input(z.object({
             email: z.string(),
             password: z.string().min(6),
