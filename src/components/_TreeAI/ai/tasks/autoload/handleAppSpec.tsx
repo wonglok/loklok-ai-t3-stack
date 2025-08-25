@@ -82,7 +82,7 @@ export async function handleAppSpec({
     - axios / fetch in es6
     - @trpc/client
     - @trpc/server
-    - wouter for front end multiple page routing
+    - "wouter" for front end single page routing using hash-router
     - javascript
 
     - MUST NOT use other library / framework / npm
