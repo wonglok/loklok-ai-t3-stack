@@ -39,7 +39,7 @@ export const buildProcedures = async ({
     // console.log("trpcProcedures", data);
 
     for await (let item of data) {
-        console.log(item.path);
+        console.log("transform sucrase:", item.path);
         let es6 = transform(item.content || "", {
             transforms: ["jsx", "typescript"],
             preserveDynamicImport: true,

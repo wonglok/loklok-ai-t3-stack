@@ -75,6 +75,10 @@ Instructions:
 - MUST NOT common.js style require or module.export
 - MUST NOT write to /models/index.js
 - MUST write each model one by one in different files.
+- MUST use: authorId: { type: String, required: true }
+- MUST use: userId: { type: String, required: true }
+- MUST use String for foreign keys
+
 
 ------------Example---------------
 (function ({  // MUST NOT MODIFY THIS LINE

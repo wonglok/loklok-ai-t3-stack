@@ -105,7 +105,7 @@ Instructions:
 - MUST use sub-procedure like "auth.signup"
 - MUST use sub-procedure like "auth.login"
 
-- MUST use "ObjectId.createFromHexString" for all object _id or foreign key _id: const userId = ObjectId.createFromHexString(ctx.session.user._id)
+- MUST use: for all object _id or foreign key _id: const userId = JSON.parse(JSON.stringify(ctx.session.user._id))
 
 - Example: "/trpc/auth.js" 
 (function ({
