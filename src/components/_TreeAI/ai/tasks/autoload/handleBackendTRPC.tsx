@@ -82,7 +82,7 @@ Instructions:
 
 - There are 2 global varaibles: "protectedProcedure" and "publicProcedure" for private and public access for appRouter
 
-- DO NOT CHANGE Immediately Invoked Function Expression input arguments
+- DO NOT CHANGE Function input arguments
 
 - DO NOT USE In-memory mock store 
 
