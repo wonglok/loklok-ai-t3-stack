@@ -8,6 +8,7 @@ import SuperJSON from "superjson";
 
 export class LokLokSDK {
     public client: TRPCClient<AnyRouter>;
+    public platform: TRPCClient<AnyRouter>;
     private appID: string;
     constructor({ appID }) {
         function getBaseUrl() {
@@ -38,7 +39,25 @@ export class LokLokSDK {
         });
 
         this.appID = appID;
+
         this.client = client;
+
+        this.platform = createTRPCClient<AnyRouter>({
+            links: [
+                httpBatchStreamLink({
+                    transformer: SuperJSON as any,
+                    url: `${getBaseUrl()}/api/trpc`,
+                    headers: () => {
+                        const headers = new Headers();
+                        headers.set("x-trpc-source", "nextjs-react-app");
+
+                        headers.set("app-id", appID);
+
+                        return headers;
+                    },
+                }),
+            ],
+        });
     }
 
     async setAuthToken(token) {
@@ -60,7 +79,6 @@ export class LokLokSDK {
         }
 
         return (caller as any).mutate(input).then((data) => {
-            // console.log("data", data);
             return data;
         });
     }

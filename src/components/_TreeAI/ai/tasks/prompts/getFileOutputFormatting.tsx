@@ -3,35 +3,31 @@ import { useAI } from "@/components/_TreeAI/state/useAI";
 export async function getFileOutputFormatting() {
     //
     //
-    let files = useAI.getState().files;
+    //     let files = useAI.getState().files;
 
-    let inject = "";
+    //     let inject = `
+    // ## Here are the existing code:
+    //     `;
 
-    for (let file of files) {
-        inject += `
-------------------------
+    //     for (let file of files) {
+    //         inject += `
+    // ------------------------
+    // File Path: ${file.path}
+    // File Summary:
+    // ${file.summary}
 
-File Path: ${file.path}
-File Summary: 
-${file.summary}
+    // File Content:
+    // ${file.content}
+    // ------------------------
+    //         `;
+    //     }
 
-File Content: 
-${file.content}
-
-------------------------
-
-        `;
-    }
-
-    if (inject === "") {
-        inject = "no files at this moment.";
-    }
+    // if (inject === "") {
+    //     inject = "no files at this moment.";
+    // }
     //
     //
     return /** markdown */ `
-
-## Here are the existing code:
-${inject}
 
 ## File Output Foramtting
 

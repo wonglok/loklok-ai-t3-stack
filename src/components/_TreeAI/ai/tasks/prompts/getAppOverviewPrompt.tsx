@@ -30,8 +30,6 @@ ${inject}
 // - MUST NOT use other library / framework / npm
 // - MUST NOT use common.js style require or module.export
 
-// - If no need to modify content then skip it
-
 // ## Folders:
 // - react.js UI Components are located at: "/components/*.tsx"
 // - zustand.js stores are located at: "/store/*.ts"

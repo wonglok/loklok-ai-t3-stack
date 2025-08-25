@@ -62,16 +62,11 @@ export async function handleDeploy({
         ],
     };
 
-    // await sdk.setupPlatform({
-    //     procedure: "reset",
-    //     input: {
-    //         empty: 123,
-    //     },
-    // });
-
     let i = 0;
     let files = useAI.getState().files;
     for (let file of files) {
+        //
+
         await sdk.setupPlatform({
             procedure: "setFS",
             input: {

@@ -68,17 +68,14 @@ export async function handleZustand({
         content: `
 Instructions:
 
-- the front end uses wouter, and wouter/use-hash-location for hash based rotuer
-
 - Identify ALL Zustand stores (includeing user login register) and implement them, use only javascript ".js" files:
+
+Requirements: 
 - DO NOT WRAP THE CODE WITH markdown
 - ONLY WRITE PURE CODE FOR
 
 - MUST use: import { create } from 'zustand'; // good
-- MUST use: 1 propery zustand selector like: const logout = useAuthStore((r) => r.logout) // good
-- MUST use: 1 propery zustand selector like: const login = useAuthStore((r) => r.login) // good
-- MUST use: 1 propery zustand selector like: const user = useAuthStore((r) => r.user) // good
-
+- MUST use: zustand selector like: const user = useAuthStore((r) => r.user) // good
 - MUST NOT use: multiple properies zustand selector like: const {user, logout} = useAuthStore((r) => { // bad
     return { // bad
         user: r.user, // bad

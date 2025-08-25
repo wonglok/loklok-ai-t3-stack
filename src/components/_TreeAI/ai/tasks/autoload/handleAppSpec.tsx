@@ -56,10 +56,10 @@ export async function handleAppSpec({
 
     let chatbox = [];
 
-    listOutFilesToChatBlocks({
-        files: useAI.getState().files,
-        chatblocks: chatbox,
-    });
+    // listOutFilesToChatBlocks({
+    //     files: useAI.getState().files,
+    //     chatblocks: chatbox,
+    // });
 
     let response = streamText({
         system: `

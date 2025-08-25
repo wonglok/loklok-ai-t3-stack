@@ -39,13 +39,6 @@ export function TreeList() {
                             appID: useAI.getState().appID,
                         });
 
-                        // await sdk.setupPlatform({
-                        //     procedure: "reset",
-                        //     input: {
-                        //         "reset-all": "okayyy",
-                        //     },
-                        // });
-
                         for (let file of files) {
                             await sdk.setupPlatform({
                                 procedure: "setFS",
