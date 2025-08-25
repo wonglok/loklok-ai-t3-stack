@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { LokLokSDK } from "@/components/_TreeAI/web/LokLokSDK";
 import { useParams } from "next/navigation";
 import { rollupCode } from "@/components/_TreeAI/web/rollupCode";

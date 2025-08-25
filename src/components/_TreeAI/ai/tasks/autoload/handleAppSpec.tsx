@@ -103,7 +103,7 @@ export async function handleAppSpec({
     - User Requirement list 
         ... (dont write code)
 
-    - Libraries list
+    - NPM Libraries list
         ... (dont write code)
     
     ------ "REACT JS Section" -----
@@ -157,6 +157,7 @@ export async function handleAppSpec({
     - mongoose db collection table names for [/models/*.js]
         ... (dont write code)
 
+    
             `,
         model: model,
         messages: [
