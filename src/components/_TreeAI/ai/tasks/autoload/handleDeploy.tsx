@@ -120,6 +120,7 @@ export async function handleDeploy({
     });
 
     ticker.remove();
+
     try {
         const client = new LMStudioClient();
         let loadedEngines = await client.llm.listLoaded();

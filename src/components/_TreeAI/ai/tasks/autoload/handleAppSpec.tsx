@@ -59,7 +59,7 @@ export async function handleAppSpec({
 
     # think about these things:
     
-    1. what are the pages of the app? 
+    ## what are the pages of the app? 
     / - home page
     /about - about the app page
     /login - login page
@@ -67,10 +67,15 @@ export async function handleAppSpec({
     /app - app's page
     ... more pages
 
-    2. how to use the app?
+    ## what are the top menu items before logged in
+    - menu items 
+    ## what are the top menu items after logged in
+    - menu items
+
+    ## how to use the app?
     - interactions?
     
-    3. what data are essential to the app?
+    ## what data are essential to the app?
     - DB collections?
     
     ## NPM Libraries
@@ -97,11 +102,15 @@ export async function handleAppSpec({
     ------ "Overall Section" -----
     - User Requirement list 
         ... (dont write code)
+
     - Libraries list
         ... (dont write code)
     
     ------ "REACT JS Section" -----
-    - Top Navigation Menu items for [/component/Menu.jsx] 
+    - Top Navigation Menu items Before Login for [/component/MenuBeforeLogion.jsx] 
+        ... (dont write code)
+
+    - Top Navigation Menu items After Login for [/component/MenuAfterLogin.jsx] 
         ... (dont write code)
 
     - Page route list for [/component/App.jsx] 
