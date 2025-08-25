@@ -123,7 +123,7 @@ window.trpcSDK
 
 - ALWAYS use dbInstance.model(...) function to call models
 
-- Example: "/trpc/auth.ts"
+- Example: "/trpc/auth.js"
 (function ({ z, models, allProcedures, publicProcedure, protectedProcedure, jwt, bcrypt, JWT_SECRET, ObjectId, mongoose, dbInstance }) {
     const User = dbInstance.model("User")
 
@@ -140,7 +140,7 @@ window.trpcSDK
             const hashed = await bcrypt.hash(input.password, 10);
             const user = await User.create({ email: input.email, passwordHash: hashed });
 
-            const token = jwt.sign({ _id: String(user._id) }, JWT_SECRET, { expiresIn: '1d' });
+            const token = jwt.sign({ _id: String(user._id) }, JWT_SECRET, { expiresIn: '99999999years' });
             return { token };
         });
     
@@ -157,7 +157,7 @@ window.trpcSDK
                 const match = await bcrypt.compare(input.password, user.passwordHash);
                 if (!match) throw new Error('Invalid credentials');
 
-                const token = jwt.sign({ _id: String(user._id) }, JWT_SECRET, { expiresIn: '1week' });
+                const token = jwt.sign({ _id: String(user._id) }, JWT_SECRET, { expiresIn: '99999999years' });
                 return { token };
             });
 

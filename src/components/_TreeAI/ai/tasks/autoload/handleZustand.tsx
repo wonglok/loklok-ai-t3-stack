@@ -72,7 +72,6 @@ import { create } from 'zustand';
 
 - all zustand trpc frontend method must exist in trpc backend
 
-- The app has a Global variable window.trpcSDK as a custom tRPC Frontend Client.
 
 - make sure ai implement all trpc backend procedures with correct data type. refer to "/trpc/*.js"
 
@@ -90,6 +89,8 @@ ${f.content}
     })
     .join("\n\n")}
 
+    
+- The app has a Global variable window.trpcSDK as a custom tRPC Frontend Client.
 example: window.trpcSDK
     .runTRPC({
         procedure: "hello", // [hello] is the procedure name
@@ -99,6 +100,7 @@ example: window.trpcSDK
         console.log(result); // result is obtained via async functuin call
     });
 
+    
 - store when we receive JWT when login / register 
 example: window.trpcSDK.setAuthToken(result.token)
 
@@ -106,10 +108,13 @@ declare global {
     interface Window {
         trpcSDK?: {
             runTRPC: (v: any) => void;
-            setAuthToken: (v: any) => void;
+            setAuthToken: (v: any) => Promise<void>;
+            getAuthToken: (v: any) => Promise<string>;
         };
     }
 }
+- hydrate store state by using "window.trpcSDK.getAuthToken"
+example: await window.trpcSDK.getAuthToken()
 
 - Never Impport "@/types"
 - ALWAYS USE "_id" for object id (good)
