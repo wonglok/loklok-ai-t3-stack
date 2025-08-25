@@ -120,7 +120,7 @@ declare global {
 - hydrate store state by using "window.trpcSDK.getAuthToken"
 example: await window.trpcSDK.getAuthToken()
 
-- MUST implmenet auth store and include hydration logic and uses "await window.trpcSDK.getAuthToken()"
+- MUST implmenet auth store with hydration logic, login, signup, logout and more .... and uses "await window.trpcSDK.getAuthToken()"
 
 - Never Impport "@/types"
 - ALWAYS USE "_id" for object id (good)
