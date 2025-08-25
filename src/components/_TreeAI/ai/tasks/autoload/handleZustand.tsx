@@ -117,6 +117,7 @@ declare global {
         };
     }
 }
+
 - hydrate store state by using "window.trpcSDK.getAuthToken"
 example: await window.trpcSDK.getAuthToken()
 
