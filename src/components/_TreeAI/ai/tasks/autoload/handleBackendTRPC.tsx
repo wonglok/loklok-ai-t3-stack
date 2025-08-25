@@ -66,11 +66,12 @@ export async function handleBackendTRPC({
     chatblocks.push({
         role: "user",
         content: `
-
 Instructions:
 
 - Identify ALL trpc procedures and user auth login regsiter procedures for backend and implement them, use javascript ".js" files:
 - MUST write to the folder: "/trpc/*.js"
+
+Requirements:
 
 - DO NOT WRAP THE CODE WITH markdown
 - ONLY WRITE PURE CODE FOR

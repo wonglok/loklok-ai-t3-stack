@@ -70,6 +70,8 @@ Instructions:
 - MUST WRITE the mongoose models in this folder: "/models/*.js"
 - MUST make sure we implemented the code for All Mongoose Collection and write at: "/models/*.js"
 
+# Requirements:
+
 - MUST ONLY WRITE PURE CODE
 - MUST NOT WRAP THE CODE WITH markdown
 - MUST NOT import anything

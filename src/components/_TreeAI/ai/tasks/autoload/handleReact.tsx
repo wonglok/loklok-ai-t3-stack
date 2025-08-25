@@ -63,9 +63,12 @@ export async function handleReact({
     chatblocks.push({
         role: "user",
         content: `
-# React Component
+# Instruction:
 
 - Identify ALL React Component including user login register, landing page, and implement them in javascript format, use only javascript ".jsx" files:
+
+# Requirements:
+
 - MUST NOT WRAP THE CODE WITH markdown
 - ONLY WRITE PURE CODE FOR {code} etc
 - the folder for components is at "/components/*"
