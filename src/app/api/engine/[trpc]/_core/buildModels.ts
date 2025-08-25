@@ -40,9 +40,13 @@ export const buildModels = async ({
         ` + "\n";
     }
 
-    let func = new Function(
-        `args`,
-        `
+    //
+
+    let output;
+    try {
+        let func = new Function(
+            `args`,
+            `
 const createTRPCRouter = args.createTRPCRouter;
 const protectedProcedure = args.protectedProcedure;
 const publicProcedure = args.publicProcedure;
@@ -60,12 +64,8 @@ ${defineMongooseModelsContent}
 
 return allModels;
     `,
-    );
+        );
 
-    //
-
-    let output;
-    try {
         output = func({
             createTRPCRouter,
             protectedProcedure,
@@ -80,6 +80,9 @@ return allModels;
         });
     } catch (e) {
         console.log(e);
+
+        console.log(defineMongooseModelsContent);
+        console.log(data.map((r) => r.path).join("\n"));
 
         output = {};
     }
