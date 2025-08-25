@@ -95,20 +95,20 @@ export async function handleAppSpec({
 
     ## Deliverables and Output foramtting:
     - User Requirement list
-        ...
-    - Page route list for [/component/App.jsx]
-        ...
+        ... (dont write code)
+    - Page route list for [/component/App.jsx] 
+        ... (dont write code)
     - React UI Component names for [/component/*.js]
-        ...
+        ... (dont write code)
 
     - Zustand Store Attributes list name for [/store/*.js]
-        ...
+        ... (dont write code)
     - Zustand Store Methods with @trpc/client list name and input params { email: string, password: string }  for [/store/*.js]
-        ...
+        ... (dont write code)
     - @trpc/server back end procedures names with mongoose collection names involved for [/trpc/*.js]
-        ...
+        ... (dont write code)
     - mongoose db collection table names for [/models/*.js]
-        ...
+        ... (dont write code)
 
             `,
         model: model,
