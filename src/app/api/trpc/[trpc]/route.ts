@@ -17,11 +17,9 @@ const createContext = async (req: NextRequest) => {
 };
 
 const handler = async (req: NextRequest) => {
-    if (mongoose.connections.length === 0) {
-        await mongoose.connect(
-            `${process.env.MONGO_DEVELOP}${process.env.MONGO_SUFFIX}`,
-        );
-    }
+    await mongoose.connect(
+        `${process.env.MONGO_DEVELOP}${process.env.MONGO_SUFFIX}`,
+    );
 
     return fetchRequestHandler({
         endpoint: "/api/trpc",
