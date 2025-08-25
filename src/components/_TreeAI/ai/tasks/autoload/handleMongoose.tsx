@@ -101,6 +101,12 @@ Instructions:
 # instruction
 update suitable code files within "/models/*" to meet the latest requirements
 
+${getModelMessagesFromUIMessages()
+    .map((msg) => {
+        return `${msg.role}: ${msg.content}`;
+    })
+    .join("\n\n")}
+
 ${await getFileOutputFormatting()}
 
                 `,
