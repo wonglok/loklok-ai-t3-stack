@@ -64,6 +64,7 @@ export async function handleAppSpec({
     /login - login page
     /register - register page
     /app - app's page
+    ... more pages
 
     how to use the app?
     - interactions?
@@ -94,7 +95,7 @@ export async function handleAppSpec({
     - zustand.js stores are located at: "/store/*.ts"
 
     ## Deliverables and Output foramtting:
-    - User Requirement list
+    - User Requirement list 
         ... (dont write code)
     - Page route list for [/component/App.jsx] 
         ... (dont write code)
