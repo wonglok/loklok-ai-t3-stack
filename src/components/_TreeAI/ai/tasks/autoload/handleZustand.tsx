@@ -109,7 +109,7 @@ declare global {
 }
 
 - use client.app.auth for authentication modules
-example login: window.trpcSDK.client.app.auth.login.mutation({email: email, password: password})
+example login: window.trpcSDK.client.app.auth.login.mutate({email: email, password: password})
 
 - store when we receive JWT when login / register 
 example save token after login: window.trpcSDK.setAuthToken(result.token)
