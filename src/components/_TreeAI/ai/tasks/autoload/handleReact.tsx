@@ -62,7 +62,7 @@ export async function handleReact({
         content: `
 # React Component
 
-- Identify ALL React Component modules (including user login register) and implement them in this format, use only typescript ".ts" files:
+- Identify ALL React Component including user login register, landing page, and implement them in typescript format, use only typescript ".ts" files:
 - DO NOT WRAP THE CODE WITH markdown
 - ONLY WRITE PURE CODE FOR {code} etc
 - the folder for components is at "/components/*"
@@ -84,12 +84,12 @@ import * as React from 'react';
 - use some "border" "rounded-lg" together with "shadow-inner" but dont overuse them dear
 - use some "p-3" padding spacing 
 
-- MUST always use zustand to implement backend interaction 
+- MUST use zustand to implement backend interaction 
 - MUST NOT use React.useState / useState
 - MUST NOT use React.useState
 
-- ALWAYS use: import { useLocation } from 'wouter'; 
-- ALWAYS use: let [location,setLocation] = useLocation();
+- MUST use: import { useLocation } from 'wouter'; 
+- MUST use: let [currnetLocation, setLocation] = useLocation();
 
 - MUST NOT use: import { useNavigate } from 'wouter';
 - MUST NOT use: import { navigate } from "wouter/use-hash-location";
@@ -105,9 +105,9 @@ await window.trpcSDK.client...
 ----- EXAMPLE /components/App.tsx -----
 import { Router, Route, Link, useLocation } from "wouter";
 import { useHashLocation } from "wouter/use-hash-location";
-// ...
 
 export function App () {
+    let [currnetLocation, setLocation] = useLocation();
 
     return <>
         <div>{...}</div> // top navigation menu ..
