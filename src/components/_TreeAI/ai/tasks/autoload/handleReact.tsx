@@ -94,6 +94,9 @@ import * as React from 'react';
 - NEVER use: import { useNavigate } from 'wouter';
 - NEVER use: import { navigate } from "wouter/use-hash-location";
 
+- MUST use hash link: <a href='#/page'></a> // good
+- MUST NOT use:  <a href='/page'></a> // bad
+
 -------------------------
 - NEVER DIRECTLY USE: 
 await window.trpcSDK.runTRPC({
