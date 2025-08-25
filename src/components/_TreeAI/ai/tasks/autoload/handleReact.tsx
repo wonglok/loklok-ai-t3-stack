@@ -51,8 +51,11 @@ export async function handleReact({
 
     let chatblocks = [];
     chatblocks.push({
-        role: "system",
-        content: `${await getAppOverviewPrompt()}`,
+        role: "assistant",
+        content: `
+        Here's the entire tech spec, but only focus on reactjs part and front end pages part:
+        ${await getAppOverviewPrompt()}
+        `,
     });
 
     await listOutFilesToChatBlocks({ files, chatblocks });

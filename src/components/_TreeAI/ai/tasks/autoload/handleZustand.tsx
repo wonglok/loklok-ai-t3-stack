@@ -54,8 +54,11 @@ export async function handleZustand({
 
     let chatblocks = [];
     chatblocks.push({
-        role: "system",
-        content: `${await getAppOverviewPrompt()}`,
+        role: "assistant",
+        content: `
+        Here's the entire tech spec, but only focus on zustnad js part and @trpc/client part:
+        ${await getAppOverviewPrompt()}
+        `,
     });
 
     await listOutFilesToChatBlocks({ files, chatblocks });

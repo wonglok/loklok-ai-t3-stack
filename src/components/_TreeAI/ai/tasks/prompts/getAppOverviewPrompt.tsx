@@ -5,17 +5,12 @@ export async function getAppOverviewPrompt() {
     let inject = `${
         req
             ? `
-Here are the user requirement summary:
-
 ${req}
-    
     `
             : ``
     }`;
 
     return /** markdown */ `
-
-
 ${inject}
 `;
 }

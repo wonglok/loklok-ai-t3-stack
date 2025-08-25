@@ -52,8 +52,11 @@ export async function handleMongoose({
 
     let chatblocks = [];
     chatblocks.push({
-        role: "system",
-        content: `${await getAppOverviewPrompt()}`,
+        role: "assistant",
+        content: `
+        Here's the entire tech spec, but only focus on mongoose part:
+        ${await getAppOverviewPrompt()}
+        `,
     });
 
     await listOutFilesToChatBlocks({ files, chatblocks });

@@ -84,6 +84,7 @@ export async function handleAppSpec({
     - @trpc/server
     - "wouter" for front end single page routing using hash-router
     - javascript
+    - mongoose
 
     - MUST NOT use other library / framework / npm
     - MUST NOT use common.js style require or module.export
@@ -91,6 +92,22 @@ export async function handleAppSpec({
     ## Folders:
     - react.js UI Components are located at: "/components/*.tsx"
     - zustand.js stores are located at: "/store/*.ts"
+
+    ## Deliverables and Output foramtting:
+    - User Requirement list
+        ...
+    - Page route list
+        ...
+    - UI Component names
+        ...
+    - Zustand Store Attributes list name
+        ...
+    - Zustand Store Methods with @trpc/client list name and input params { email: string, password: string }
+        ...
+    - @trpc/server back end procedures names with mongoose collection names involved
+        ...
+    - mongoose db collection table names
+        ...
 
             `,
         model: model,

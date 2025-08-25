@@ -3,10 +3,10 @@ import { LokLokSDK } from "../web/LokLokSDK";
 import nprogress from "nprogress";
 let timer000;
 export const saveToCloud = async () => {
-    console.log("save-to-cloud");
-
     clearTimeout(timer000);
     timer000 = setTimeout(async () => {
+        console.log("save-to-cloud");
+
         //
         const appID = useAI.getState().appID;
         const files = useAI.getState().files;
