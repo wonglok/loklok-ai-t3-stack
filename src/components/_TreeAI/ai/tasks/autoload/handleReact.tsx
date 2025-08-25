@@ -88,7 +88,8 @@ import * as React from 'react';
 - MUST NOT use React.useState / useState
 - MUST NOT use React.useState
 
-- MUST use: import { useLocation } from 'wouter'; 
+- MUST use: import { Router, Route, Link, useLocation } from "wouter";
+- MUST use: import { useHashLocation } from "wouter/use-hash-location";
 - MUST use: let [currnetLocation, setLocation] = useLocation();
 
 - MUST NOT use: import { useNavigate } from 'wouter';
