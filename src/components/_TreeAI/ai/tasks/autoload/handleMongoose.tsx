@@ -75,7 +75,11 @@ Instructions:
 - NEVER common.js style require or module.export
 
 ------------Example---------------
-(function ({ allModels, dbInstance, Schema, ObjectId }) {
+(function ({ 
+    // @ts-ignore // MUST NOT MODIFY THIS LINE
+    allModels, dbInstance, Schema, ObjectId  // MUST NOT MODIFY THIS LINE
+    // MUST NOT MODIFY THIS LINE
+}) {
     const db = dbInstance
 
     // User schema
@@ -93,8 +97,10 @@ Instructions:
     }
     allModels.User = db.model("User");
 }({
-    // @ts-ignore
+    // @ts-ignore // MUST NOT MODIFY THIS LINE
     allModels, dbInstance, Schema, ObjectId  // MUST NOT MODIFY THIS LINE
+    // MUST NOT MODIFY THIS LINE
+
 }));
 ------------Example---------------
 

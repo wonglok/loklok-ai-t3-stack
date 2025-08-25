@@ -110,7 +110,11 @@ Instructions:
 
 
 - Example: "/trpc/auth.js" 
-(function ({ z, models, allProcedures, publicProcedure, protectedProcedure, jwt, bcrypt, JWT_SECRET, ObjectId, mongoose, dbInstance }) {
+(function ({ 
+    // @ts-ignore  // MUST NOT modify the next line
+    z, models, allProcedures, publicProcedure, protectedProcedure, jwt, bcrypt, JWT_SECRET, ObjectId, mongoose, dbInstance  // MUST NOT modify this line
+    // MUST NOT modify the above line
+}) {
     const User = dbInstance.model("User")
 
     // Register a new user (public)
@@ -148,8 +152,9 @@ Instructions:
             });
 
 }({ 
-    // @ts-ignore
-    z, models, allProcedures, publicProcedure, protectedProcedure, jwt, bcrypt, JWT_SECRET, ObjectId, mongoose, dbInstance  // MUST NOT MODIFY THIS LINE
+    // @ts-ignore  // MUST NOT modify the next line
+    z, models, allProcedures, publicProcedure, protectedProcedure, jwt, bcrypt, JWT_SECRET, ObjectId, mongoose, dbInstance  // MUST NOT modify this line
+    // MUST NOT modify the above line
 }))
 
 # instruction
