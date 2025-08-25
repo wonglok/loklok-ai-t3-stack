@@ -103,7 +103,16 @@ Instructions:
 
 - ALWAYS use dbInstance.model(...) function to call models
 
-- Example: "/trpc/auth.js"
+
+- Never uses sub-procedure like "auth.hydrate"
+- Never uses sub-procedure like "auth.signup"
+- Never uses sub-procedure like "auth.login"
+- Always use top-level procedure like: "authHydrate"
+- Always use top-level procedure like: "authSingup"
+- Always use top-level procedure like: "authLogin"
+
+
+- Example: "/trpc/auth.js" 
 (function ({ z, models, allProcedures, publicProcedure, protectedProcedure, jwt, bcrypt, JWT_SECRET, ObjectId, mongoose, dbInstance }) {
     const User = dbInstance.model("User")
 

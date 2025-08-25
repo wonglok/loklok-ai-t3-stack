@@ -93,7 +93,13 @@ ${f.content}
     })
     .join("\n\n")}
 
-    
+- Never uses sub-procedure like "auth.hydrate"
+- Never uses sub-procedure like "auth.signup"
+- Never uses sub-procedure like "auth.login"
+- Always use top-level procedure like: "authHydrate"
+- Always use top-level procedure like: "authSingup"
+- Always use top-level procedure like: "authLogin"
+
 - The app has a Global variable window.trpcSDK as a custom tRPC Frontend Client.
 example: window.trpcSDK
     .runTRPC({
@@ -136,9 +142,6 @@ example: await window.trpcSDK.getAuthToken()
 
 # instruction
 update suitable zustand store code files to meet the latest requirements
-
-
-
 
 ${await getFileOutputFormatting()}
 
