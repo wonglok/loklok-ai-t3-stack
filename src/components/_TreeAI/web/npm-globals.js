@@ -7,9 +7,15 @@ import * as WouterBase from 'wouter'
 import * as WouterHash from 'wouter/use-hash-location'
 import * as Axios from 'axios'
 import * as UUID from 'uuid'
+import * as ReactHookForm from 'react-hook-form'
 
 export const NPMCacheTasks = [
     //
+    {
+        name: `npm-react-hook-form`,
+        output: `/vendor/react-hook-form.js`,
+        importVaraible: ReactHookForm,
+    },
     {
         name: `npm-@react-three/drei`,
         output: `/vendor/@react-three/drei.js`,
