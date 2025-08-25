@@ -5,13 +5,10 @@ import { api } from "@/trpc/react";
 import { useEffect, useState } from "react";
 
 export function MyApps() {
-    const apps = api.inst.listMy.useMutation();
     const create = api.inst.create.useMutation();
 
     const [name, setName] = useState("my-new-app-001");
-    useEffect(() => {
-        apps.mutateAsync({});
-    }, []);
+    useEffect(() => {}, []);
 
     return (
         <>
@@ -29,7 +26,9 @@ export function MyApps() {
                         await create.mutateAsync({
                             name: name,
                         });
-                        apps.mutateAsync({});
+                        window.dispatchEvent(
+                            new CustomEvent("reload-apps-list"),
+                        );
                     }}
                 >
                     {`Create a new app`}

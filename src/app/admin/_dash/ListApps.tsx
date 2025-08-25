@@ -19,6 +19,19 @@ export function ListApps() {
 
     let refTT = useRef<any>(0);
 
+    useEffect(() => {
+        let hh = () => {
+            //
+            //
+            apps.mutateAsync({});
+            //
+            //
+        };
+        window.addEventListener("reload-apps-list", hh);
+        return () => {
+            window.removeEventListener("reload-apps-list", hh);
+        };
+    }, []);
     //
     return (
         <>
