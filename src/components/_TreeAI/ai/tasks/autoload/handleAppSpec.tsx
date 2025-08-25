@@ -134,7 +134,7 @@ export async function handleAppSpec({
         ... (only write sudo-code to desccibe, not to implement)
 
     - Top Navigation Menu items After Login for [/component/MenuAfterLogin.jsx] 
-        App Home, and other app related pages..., Logout, About ...
+        Dashboard, Home, App, and other app related pages..., Logout, About ...
         ... (only write sudo-code to desccibe, not to implement)
 
     - Page route list for [/component/App.jsx] 
@@ -157,15 +157,17 @@ export async function handleAppSpec({
         RegisterPage.jsx
         AppPage.jsx
         ... (only write sudo-code to desccibe, not to implement)
-
-    
-    
     
     
             `,
         model: model,
         messages: [
             //
+            {
+                role: "user",
+                content:
+                    "write the documentation based on the following chat records:",
+            },
             ...getModelMessagesFromUIMessages(),
         ],
     });
