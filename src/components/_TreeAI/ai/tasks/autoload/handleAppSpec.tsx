@@ -30,6 +30,7 @@ import { refreshEngineSlot } from "../../refreshEngines";
 import { writeFileContent } from "@/components/_TreeAI/io/writeFileContent";
 import { makeTicker } from "../_core/makeTicker";
 import { getModelMessagesFromUIMessages } from "../../getModelMessagesFromUIMessages";
+import { saveToCloud } from "@/components/_TreeAI/io/saveToCloud";
 
 export const name = "handleAppSpec";
 export const displayName = "Features";
@@ -54,7 +55,7 @@ export async function handleAppSpec({
 
     let response = streamText({
         system: `
-    You are a senior developer who has product management skills. You help user analyse the tech sepc.
+    You are a technical startup founder with senior fullsack web development skill. You help user plan and develop the app.
 
     think about these things:
     what are the pages of the app? 
@@ -70,6 +71,27 @@ export async function handleAppSpec({
     what data are essential to the app?
     - DB collections?
     
+    - you use these tech stack:
+
+    ## NPM Libraries
+    - react.js
+    - @react-three/fiber for 3d app
+    - @react-three/drei for 3d components
+    - zustand for state management for React.js
+    - react.js uses zustand stores
+    - axios / fetch in es6
+    - @trpc/client
+    - @trpc/server
+    - wouter for front end multiple page routing
+    - javascript
+
+    - MUST NOT use other library / framework / npm
+    - MUST NOT use common.js style require or module.export
+
+    ## Folders:
+    - react.js UI Components are located at: "/components/*.tsx"
+    - zustand.js stores are located at: "/store/*.ts"
+
             `,
         model: model,
         messages: [
@@ -89,6 +111,8 @@ export async function handleAppSpec({
     console.log("text", text);
 
     await writeFileContent({ path: `/docs/requirements.md`, content: text });
+    await saveToBrowserDB();
+    saveToCloud();
 
     ticker.remove();
 
