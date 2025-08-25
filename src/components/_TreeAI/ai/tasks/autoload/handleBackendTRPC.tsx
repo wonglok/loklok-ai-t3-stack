@@ -37,6 +37,7 @@ import { listOutFilesToChatBlocks } from "../prompts/listOutFilesToChatBlocks";
 import { makeTicker } from "../_core/makeTicker";
 import { saveToCloud } from "@/components/_TreeAI/io/saveToCloud";
 import { basename } from "path";
+import { ObjectId } from "mongodb";
 
 export const name = "handleBackendTRPC";
 export const displayName = "TRPC Backend";
@@ -86,8 +87,9 @@ Instructions:
 
 - DO NOT USE In-memory mock store 
 
-- MUST ALWAYS USE for procedure ...mutation({...})
-- MUST ALWAYS USE for procedure ...mutation({...})
+- MUST USE for procedure ...mutation({...})
+- MUST USE for procedure ...mutation({...})
+
 - MUST NOT USE for procedure ....query({...})
 - MUST NOT USE for procedure ....query({...})
 
@@ -104,7 +106,7 @@ Instructions:
 - MUST use sub-procedure like "auth.signup"
 - MUST use sub-procedure like "auth.login"
 
-- MUST ALWAYS stringify the userId: const userId = "" + ctx.session.user._id + ""
+- MUST use "ObjectId.createFromHexString" for all object _id or foreign key _id: const userId = ObjectId.createFromHexString(JSON.parse(JSON.stringify(ctx.session.user._id)))
 
 - Example: "/trpc/auth.js" 
 (function ({
