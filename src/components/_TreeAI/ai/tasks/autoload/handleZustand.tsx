@@ -71,8 +71,17 @@ Instructions:
 - DO NOT WRAP THE CODE WITH markdown
 - ONLY WRITE PURE CODE FOR
 
-- MUST include the following lines:
-import { create } from 'zustand';
+- MUST use: import { create } from 'zustand'; // good
+- MUST use: 1 propery zustand selector like: const logout = useAuthStore((r) => r.logout) // good
+- MUST use: 1 propery zustand selector like: const login = useAuthStore((r) => r.login) // good
+- MUST use: 1 propery zustand selector like: const user = useAuthStore((r) => r.user) // good
+- MUST NOT use: multiple properies zustand selector like: const {user, logout} = useAuthStore((r) => { // bad
+    return { // bad
+        user: r.user, // bad
+        logout: r.logout  // bad
+    }  // bad
+}) // bad
+
 
 - all zustand trpc frontend method must exist in trpc backend
 

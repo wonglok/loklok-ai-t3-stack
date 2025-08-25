@@ -26,13 +26,11 @@ You are a senior fullstack developer:
 - @trpc/client
 - @trpc/server
 - typescript
-- zustand 
-    - always use: import {create} from 'zustand';
 
 - MUST NOT use other library / framework / npm
-- NEVER common.js style require or module.export
+- MUST NOT use common.js style require or module.export
 
-- If no need to modify content then dont edit it.
+- If no need to modify content then skip it
 
 ## Folders:
 - react.js UI Components are located at: "/components/*.tsx"
