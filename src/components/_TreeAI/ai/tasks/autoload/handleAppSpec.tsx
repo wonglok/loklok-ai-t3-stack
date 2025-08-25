@@ -95,19 +95,29 @@ export async function handleAppSpec({
     - zustand.js stores are located at: "/store/*.ts"
 
     ## Deliverables and Output foramtting:
+    ------ Overall Section -----
     - User Requirement list 
         ... (dont write code)
+    - Libraries list
+        ... (dont write code)
+    
+    ------ REACT JS Section -----
     - Page route list for [/component/App.jsx] 
         ... (dont write code)
     - React UI Component names for [/component/*.js]
         ... (dont write code)
 
+    ------ ZUSTAND & @trpc/client Section -----
     - Zustand Store Attributes list name for [/store/*.js]
         ... (dont write code)
     - Zustand Store Methods with @trpc/client list name and input params { email: string, password: string }  for [/store/*.js]
         ... (dont write code)
+    
+    ------@trpc/server Section -----
     - @trpc/server back end procedures names with mongoose collection names involved for [/trpc/*.js]
         ... (dont write code)
+    
+    ------ Mongoose Model Section -----
     - mongoose db collection table names for [/models/*.js]
         ... (dont write code)
 
