@@ -83,6 +83,11 @@ Instructions:
         email: { type: String, required: true, unique: true },
         passwordHash: { type: String, required: true }
     })
+        
+    if (db.models['User']) {
+        db.deleteModel("User")
+    }
+        
     if (!db.models['User']) {
         db.model("User", UserSchema)
     }

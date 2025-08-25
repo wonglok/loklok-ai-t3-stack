@@ -34,7 +34,7 @@ export default async function Layout({ children }) {
             <SidebarProvider>
                 <AppSidebar />
                 <SidebarInset>
-                    <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
+                    <header className="flex h-12 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
                         <div className="flex items-center gap-2 px-4">
                             <SidebarTrigger className="-ml-1" />
                             <Separator
@@ -58,7 +58,7 @@ export default async function Layout({ children }) {
                             </Breadcrumb>
                         </div>
                     </header>
-                    <div className="h-full w-full gap-4 pt-0">{children}</div>
+                    <div className="h-full w-full">{children}</div>
                 </SidebarInset>
             </SidebarProvider>
         </HydrateClient>

@@ -63,6 +63,7 @@
         "@types/jshint": "^2.12.4",
         "@types/jsonwebtoken": "^9.0.10",
         "@types/md5": "^2.3.5",
+        "@types/mongodb": "^4.0.7",
         "@types/react-syntax-highlighter": "^15.5.13",
         "@types/three": "^0.178.1",
         "@types/uuid": "^10.0.0",

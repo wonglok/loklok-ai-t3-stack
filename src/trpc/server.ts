@@ -7,6 +7,7 @@ import { cache } from "react";
 import { createCaller, type AppRouter } from "@/server/api/root";
 import { createTRPCContext } from "@/server/api/trpc";
 import { createQueryClient } from "./query-client";
+import mongoose from "mongoose";
 
 /**
  * This wraps the `createTRPCContext` helper and provides the required context for the tRPC API when
@@ -23,6 +24,8 @@ const createContext = cache(async () => {
 
 const getQueryClient = cache(createQueryClient);
 const caller = createCaller(createContext);
+
+mongoose.connect(`${process.env.MONGO_DEVELOP}`);
 
 export const { trpc: api, HydrateClient } = createHydrationHelpers<AppRouter>(
     caller,
