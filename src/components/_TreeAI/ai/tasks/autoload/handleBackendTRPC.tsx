@@ -65,7 +65,7 @@ export async function handleBackendTRPC({
 
 Instructions:
 
-- Identify trpc procedures for backend and implement them, use javascript ".js" files:
+- Identify ALL trpc procedures (including user auth login regsiter) for backend and implement them, use javascript ".js" files:
 - DO NOT WRAP THE CODE WITH markdown
 - ONLY WRITE PURE CODE FOR
 

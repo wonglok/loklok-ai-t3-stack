@@ -63,7 +63,7 @@ Instructions:
 
 - the front end uses wouter, and wouter/use-hash-location for hash based rotuer
 
-- Identify Zustand stores and implement them, use only typescript ".ts" files:
+- Identify ALL Zustand stores (includeing user login register) and implement them, use only typescript ".ts" files:
 - DO NOT WRAP THE CODE WITH markdown
 - ONLY WRITE PURE CODE FOR
 

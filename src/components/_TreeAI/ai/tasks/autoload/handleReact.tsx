@@ -62,7 +62,7 @@ export async function handleReact({
         content: `
 # React Component
 
-- Identify React Component modules and implement them in this format, use only typescript ".ts" files:
+- Identify ALL React Component modules (including user login register) and implement them in this format, use only typescript ".ts" files:
 - DO NOT WRAP THE CODE WITH markdown
 - ONLY WRITE PURE CODE FOR {code} etc
 - the folder for components is at "/components/*"

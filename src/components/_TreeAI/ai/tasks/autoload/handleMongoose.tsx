@@ -63,7 +63,8 @@ export async function handleMongoose({
         content: `
 Instructions:
 
-- Identify mongoose models for backend and implement them in "/models/*.js" one by one, use only javascript ".js" files:
+- Identify ALL mongoose models (including user model) for backend and implement them in "/models/*.js" one by one, use only javascript ".js" files:
+
 - MUST ONLY WRITE PURE CODE
 - MUST NEVER WRAP THE CODE WITH markdown
 - MUST NEVER import anything
