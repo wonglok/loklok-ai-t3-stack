@@ -65,7 +65,7 @@ Instructions:
 
 - Identify ALL mongoose models (including user model) for backend and implement them in "/models/*.js" one by one, use only javascript ".js" files:
 - MUST WRITE the mongoose models in this folder: "/models/*.js"
-- ALWAYS make sure we implemented the code for All Mongoose Collection and write at: "/models/*.js"
+- MUST make sure we implemented the code for All Mongoose Collection and write at: "/models/*.js"
 
 - MUST ONLY WRITE PURE CODE
 - MUST NEVER WRAP THE CODE WITH markdown

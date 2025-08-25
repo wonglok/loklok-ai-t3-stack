@@ -76,22 +76,6 @@ import { create } from 'zustand';
 
 - all zustand trpc frontend method must exist in trpc backend
 
-
-- make sure ai implement all trpc backend procedures with correct data type. refer to "/trpc/*.js"
-
-${files
-    .filter((r) => r.path.startsWith("/trpc"))
-    .map((f) => {
-        return `
----------------------------------------------
-FilePath: ${f.path}
-FileContent: 
-${f.content}
----------------------------------------------
-    `;
-    })
-    .join("\n\n")}
-
 - MUST use sub-procedure like "auth.hydrate"
 - MUST use sub-procedure like "auth.signup"
 - MUST use sub-procedure like "auth.login"
