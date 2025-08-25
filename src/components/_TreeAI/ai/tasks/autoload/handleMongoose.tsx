@@ -100,13 +100,6 @@ Instructions:
 }));
 ------------Example---------------
 
-# User Requirements:
-${getModelMessagesFromUIMessages()
-    .map((msg) => {
-        return `${msg.role}: ${msg.content}`;
-    })
-    .join("\n\n")}
-
 Help user build mongoose data collections:
 update suitable mongoose code files to meet the latest requirements
 

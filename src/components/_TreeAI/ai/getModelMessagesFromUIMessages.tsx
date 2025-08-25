@@ -32,12 +32,9 @@ export const getModelMessagesFromUIMessages = () => {
         return true;
     });
 
-    uiMessages = uiMessages.filter((r) => {
-        if (r.role !== "system") {
-            return false;
-        }
-        return true;
-    });
+    let msg = convertToModelMessages(uiMessages);
 
-    return convertToModelMessages(uiMessages);
+    console.log(msg);
+
+    return msg;
 };
