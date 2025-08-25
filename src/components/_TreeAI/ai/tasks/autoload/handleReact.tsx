@@ -63,13 +63,13 @@ export async function handleReact({
 # React Component
 
 - Identify ALL React Component including user login register, landing page, and implement them in typescript format, use only typescript ".ts" files:
-- DO NOT WRAP THE CODE WITH markdown
+- MUST NOT WRAP THE CODE WITH markdown
 - ONLY WRITE PURE CODE FOR {code} etc
 - the folder for components is at "/components/*"
 - the folder for util is at "/util/*"
 
-- DO NOT USE '@/...' to import modules
-- ALWAYS USE '/...' to import modules
+- MUST NOT USE '@/...' to import modules
+- MUST USE '/...' to import modules
 
 - use named export for "App" Component like the following: 
 export function App () {...}
