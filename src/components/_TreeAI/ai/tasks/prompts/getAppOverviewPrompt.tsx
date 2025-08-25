@@ -5,7 +5,7 @@ export async function getAppOverviewPrompt() {
     let inject = `${
         req
             ? `
-Here are the user requirement analysis:
+Here are the user requirement summary:
 
 ${req}
     
