@@ -16,17 +16,9 @@ const createContext = async (req: NextRequest) => {
     });
 };
 
-let promise;
-
-if (process.env.NODE_ENV === "development") {
-    promise = mongoose.connect(
-        `${process.env.MONGO_DEVELOP}${process.env.MONGO_SUFFIX}`,
-    );
-} else {
-    promise = mongoose.connect(
-        `${process.env.MONGO_DEVELOP}${process.env.MONGO_SUFFIX}`,
-    );
-}
+let promise = mongoose.connect(
+    `${process.env.MONGO_DEVELOP}${process.env.MONGO_SUFFIX}`,
+);
 
 const handler = async (req: NextRequest) => {
     await promise;

@@ -137,7 +137,13 @@ export const createTRPCContext = async (opts: { headers: Headers }) => {
     const session = await auth();
 
     return {
-        session,
+        session: {
+            ...session,
+            user: {
+                ...session.user,
+                _id: (session.user as any)?._id || session.user.id,
+            },
+        },
         ...opts,
     };
 };

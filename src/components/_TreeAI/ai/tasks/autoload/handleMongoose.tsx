@@ -68,11 +68,13 @@ Instructions:
 - MUST make sure we implemented the code for All Mongoose Collection and write at: "/models/*.js"
 
 - MUST ONLY WRITE PURE CODE
-- MUST NEVER WRAP THE CODE WITH markdown
-- MUST NEVER import anything
-- MUST NEVER export { anything }
-- MUST NEVER export default anything
-- NEVER common.js style require or module.export
+- MUST NOT WRAP THE CODE WITH markdown
+- MUST NOT import anything
+- MUST NOT export { anything }
+- MUST NOT export default anything
+- MUST NOT common.js style require or module.export
+- MUST NOT write to /models/index.js
+- MUST write each model one by one in different files.
 
 ------------Example---------------
 (function ({  // MUST NOT MODIFY THIS LINE

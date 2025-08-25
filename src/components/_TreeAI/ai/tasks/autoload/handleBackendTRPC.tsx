@@ -72,13 +72,12 @@ Instructions:
 - DO NOT WRAP THE CODE WITH markdown
 - ONLY WRITE PURE CODE FOR
 
-
 - MUST ONLY WRITE PURE CODE
-- MUST NEVER WRAP THE CODE WITH markdown
-- MUST NEVER import anything
-- MUST NEVER export { anything }
-- MUST NEVER export default anything
-- NEVER common.js style require or module.export
+- MUST NOT WRAP THE CODE WITH markdown
+- MUST NOT import anything
+- MUST NOT export { anything }
+- MUST NOT export default anything
+- MUST NOT not use common.js style require or module.export
 
 
 - There are 2 global varaibles: "protectedProcedure" and "publicProcedure" for private and public access for appRouter
@@ -106,7 +105,7 @@ Instructions:
 - MUST use sub-procedure like "auth.signup"
 - MUST use sub-procedure like "auth.login"
 
-- MUST use "ObjectId.createFromHexString" for all object _id or foreign key _id: const userId = ObjectId.createFromHexString(JSON.parse(JSON.stringify(ctx.session.user._id)))
+- MUST use "ObjectId.createFromHexString" for all object _id or foreign key _id: const userId = ObjectId.createFromHexString(ctx.session.user._id)
 
 - Example: "/trpc/auth.js" 
 (function ({

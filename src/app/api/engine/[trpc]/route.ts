@@ -3,7 +3,7 @@ import { type NextRequest } from "next/server";
 
 import { env } from "@/env";
 import {
-    createAppTRPCContext,
+    // createAppTRPCContext,
     createTRPCContext,
     createTRPCRouter,
 } from "@/server/api/trpc";
@@ -23,7 +23,7 @@ import { buildProcedures } from "./_core/buildProcedures";
  * handling a HTTP request (e.g. when you make requests from Client Components).
  */
 const createContext = async (req: NextRequest) => {
-    return createAppTRPCContext({
+    return createTRPCContext({
         headers: req.headers,
     });
 };
@@ -126,17 +126,9 @@ return appRouter;
     }
 };
 
-let promise;
-
-if (process.env.NODE_ENV === "development") {
-    promise = mongoose.connect(
-        `${process.env.MONGO_DEVELOP}${process.env.MONGO_SUFFIX}`,
-    );
-} else {
-    promise = mongoose.connect(
-        `${process.env.MONGO_DEVELOP}${process.env.MONGO_SUFFIX}`,
-    );
-}
+let promise = mongoose.connect(
+    `${process.env.MONGO_DEVELOP}${process.env.MONGO_SUFFIX}`,
+);
 
 const handler = async (req: NextRequest) => {
     await promise;
