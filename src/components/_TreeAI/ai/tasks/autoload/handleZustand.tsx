@@ -39,6 +39,7 @@ import { listOutFilesToChatBlocks } from "../prompts/listOutFilesToChatBlocks";
 import { makeTicker } from "../_core/makeTicker";
 import { saveToCloud } from "@/components/_TreeAI/io/saveToCloud";
 import { addRelatedFiles } from "../prompts/addRelatedFiles";
+import { readFileContent } from "@/components/_TreeAI/io/readFileContent";
 
 export const name = "handleZustand";
 export const displayName = "Zustand";
@@ -53,12 +54,19 @@ export async function handleZustand({
     let { model, engineSettingData: slot } = await getFreeAIAsync();
     let files = useAI.getState().files;
 
+    // ${await getAppOverviewPrompt()}
+
     let chatblocks = [];
     chatblocks.push({
         role: "assistant",
         content: `
         Here's the entire tech spec, but only focus on ------ "ZUSTAND & @trpc/client Section" -----:
-        ${await getAppOverviewPrompt()}
+        ${await readFileContent({
+            path: `/docs/overall.md`,
+        })}
+        ${await readFileContent({
+            path: `/docs/store.md`,
+        })}
         `,
     });
 

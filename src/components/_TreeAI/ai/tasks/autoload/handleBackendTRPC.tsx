@@ -39,6 +39,7 @@ import { saveToCloud } from "@/components/_TreeAI/io/saveToCloud";
 import { basename } from "path";
 import { ObjectId } from "mongodb";
 import { addRelatedFiles } from "../prompts/addRelatedFiles";
+import { readFileContent } from "@/components/_TreeAI/io/readFileContent";
 
 export const name = "handleBackendTRPC";
 export const displayName = "TRPC Backend";
@@ -53,12 +54,21 @@ export async function handleBackendTRPC({
     let { model, engineSettingData: slot } = await getFreeAIAsync();
     let files = useAI.getState().files;
 
+    // ${await getAppOverviewPrompt()}
+
     let chatblocks = [];
     chatblocks.push({
         role: "assistant",
         content: `
         Here's the entire tech spec, but only focus on ------ "@trpc/server Section" -----:
-        ${await getAppOverviewPrompt()}
+
+
+        ${await readFileContent({
+            path: `/docs/overall.md`,
+        })}
+        ${await readFileContent({
+            path: `/docs/trpc.md`,
+        })}
         `,
     });
 

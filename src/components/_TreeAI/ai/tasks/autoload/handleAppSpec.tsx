@@ -33,6 +33,8 @@ import { getModelMessagesFromUIMessages } from "../../getModelMessagesFromUIMess
 import { saveToCloud } from "@/components/_TreeAI/io/saveToCloud";
 import { listOutFilesToChatBlocks } from "../prompts/listOutFilesToChatBlocks";
 import { getFileOutputFormatting } from "../prompts/getFileOutputFormatting";
+import { parseCodeBlocksGen3 } from "../_core/LokLokParser3";
+import { removeFile } from "@/components/_TreeAI/io/removeFile";
 
 export const name = "handleAppSpec";
 export const displayName = "Features";
@@ -182,10 +184,49 @@ ${await getFileOutputFormatting()}
         ],
     });
 
+    // let lastFile = "";
+    let parseText = async (text) => {
+        try {
+            const blocks = parseCodeBlocksGen3(`${text}`);
+            // console.log("Parsed blocks:", JSON.stringify(blocks, null, 2));
+
+            for (let block of blocks) {
+                if (block.action === "create-file") {
+                    await writeFileContent({
+                        summary: `${block.summary}`,
+                        path: `${block.fileName}`,
+                        content: block.code,
+                    });
+                    await saveToBrowserDB();
+                } else if (block.action === "update-file") {
+                    await writeFileContent({
+                        summary: `${block.summary}`,
+                        path: `${block.fileName}`,
+                        content: block.code,
+                    });
+                    await saveToBrowserDB();
+                } else if (block.action === "remove-file") {
+                    await removeFile({
+                        path: `${block.fileName}`,
+                    });
+                } else {
+                }
+            }
+        } catch (e) {
+            if (e instanceof Error) {
+                console.error(`Parse error: ${e.message}`);
+            } else {
+                console.error(e);
+            }
+        }
+    };
+
     let text = "";
     for await (let part of response.textStream) {
         text += part;
         // console.log(text);
+
+        parseText(text);
 
         ticker.tick(text);
     }

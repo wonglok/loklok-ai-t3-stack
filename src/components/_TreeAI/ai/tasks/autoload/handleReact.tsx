@@ -50,12 +50,21 @@ export async function handleReact({
     let { model, engineSettingData: slot } = await getFreeAIAsync();
     let files = useAI.getState().files;
 
+    // ${await getAppOverviewPrompt()}
+
     let chatblocks = [];
     chatblocks.push({
         role: "assistant",
         content: `
         Here's the entire tech spec, but only focus on ------ "REACT JS Section" -----:
-        ${await getAppOverviewPrompt()}
+
+
+        ${await readFileContent({
+            path: `/docs/overall.md`,
+        })}
+        ${await readFileContent({
+            path: `/docs/components.md`,
+        })}
         `,
     });
 
