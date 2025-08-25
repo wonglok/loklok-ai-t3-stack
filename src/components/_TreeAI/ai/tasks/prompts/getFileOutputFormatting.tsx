@@ -23,6 +23,6 @@ export async function getFileOutputFormatting() {
 - if there is an existing file, then you can use [TJ_TAG action="update-file" ...]
 - if there is no existing file, then you can [TJ_TAG action="create-file" ...]
 - if you need to remove existing file, then you can [TJ_TAG action="remove-file" ...]
-- if you dont need to modify the file then skip it.
+
 `;
 }
