@@ -36,10 +36,6 @@ export const getInfoByAppID = (appID) => {
         phase = "test";
     }
 
-    if (mongoose.connections.length === 0) {
-        mongoose.connect(`${process.env.MONGO_DEVELOP}`);
-    }
-
     const dbPlatform = mongoose.connection.useDb(`os_${phase}_${appHashID}`, {
         useCache: true,
     });
