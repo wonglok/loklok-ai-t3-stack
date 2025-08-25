@@ -94,7 +94,7 @@ Instructions:
     allModels.User = db.model("User");
 }({
     // @ts-ignore
-    allModels, dbInstance, Schema, ObjectId 
+    allModels, dbInstance, Schema, ObjectId  // MUST NOT MODIFY THIS LINE
 }));
 ------------Example---------------
 

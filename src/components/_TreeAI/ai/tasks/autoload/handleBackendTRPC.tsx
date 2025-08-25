@@ -149,7 +149,7 @@ Instructions:
 
 }({ 
     // @ts-ignore
-    z, models, allProcedures, publicProcedure, protectedProcedure, jwt, bcrypt, JWT_SECRET, ObjectId, mongoose, dbInstance 
+    z, models, allProcedures, publicProcedure, protectedProcedure, jwt, bcrypt, JWT_SECRET, ObjectId, mongoose, dbInstance  // MUST NOT MODIFY THIS LINE
 }))
 
 # instruction
