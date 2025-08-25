@@ -85,7 +85,6 @@ ${files
         return `
 ---------------------------------------------
 FilePath: ${f.path}
-FileSummary: ${f.summary}
 FileContent: 
 ${f.content}
 ---------------------------------------------
@@ -248,31 +247,3 @@ ${await getFileOutputFormatting()}
 
     await putBackFreeAIAsync({ engine: slot });
 }
-
-/*
-
-//
-
-please write me a regex parser for typescript for the following code:
-
-
-[TJ_TAG action="create-file" file="example1.ts" summary="test text"]
-export function hello() {
-    console.log("Hello, world!");
-}
-[/TJ_TAG]
-
-[TJ_TAG action="remove-file" file="example1.ts" summary="test text"]
-export function hello() {
-    console.log("Hello, world!");
-}
-[/TJ_TAG]
-
-[TJ_TAG action="update-file" file="example1.ts" summary="test text"]
-export function hello() {
-    console.log("Hello, world!");
-}
-[/TJ_TAG]
-
-
-*/
