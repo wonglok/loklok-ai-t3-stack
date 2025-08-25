@@ -111,6 +111,17 @@ export class LokLokSDK {
                 });
         }
     }
+    async publicRPC({ procedure = "getFiles", input }) {
+        return this.platform.code.listMy
+            .mutate({
+                appID: this.appID,
+            })
+            .then((data) => {
+                console.log("get-my-all", data);
+
+                return data;
+            });
+    }
 
     // async setupPlatform({ procedure = "setFS", input }) {
     //     return (this.client["platform"][procedure] as any)
@@ -121,13 +132,13 @@ export class LokLokSDK {
     //         });
     // }
 
-    async publicRPC({ procedure = "getFiles", input }) {
-        return (this.client["public"][procedure] as any)
-            .mutate(input)
-            .then((data) => {
-                return data;
-            });
-    }
+    // async publicRPC({ procedure = "getFiles", input }) {
+    //     return (this.client["public"][procedure] as any)
+    //         .mutate(input)
+    //         .then((data) => {
+    //             return data;
+    //         });
+    // }
 }
 
 declare global {

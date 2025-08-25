@@ -16,6 +16,7 @@ import shortHash from "short-hash";
 import { toJSON } from "./_core/toJSON";
 import { buildModels } from "./_core/buildModels";
 import { buildProcedures } from "./_core/buildProcedures";
+import { trackGlobal } from "../../_track/trackGlobal";
 // import { appRouter } from "@/server/api/root";
 
 /**
@@ -126,9 +127,10 @@ return appRouter;
     }
 };
 
-let promise = mongoose.connect(
-    `${process.env.MONGO_DEVELOP}${process.env.MONGO_SUFFIX}`,
-);
+trackGlobal[process.env.MONGO_DEVELOP] =
+    trackGlobal[process.env.MONGO_DEVELOP] ||
+    mongoose.connect(`${process.env.MONGO_DEVELOP}`);
+let promise = trackGlobal[process.env.MONGO_DEVELOP];
 
 const handler = async (req: NextRequest) => {
     await promise;
