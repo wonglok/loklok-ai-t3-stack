@@ -11,5 +11,5 @@ export const saveToBrowserDB = async () => {
 
     await appFiles.setItem("files", files);
 
-    console.log("save-db");
+    console.log("save-browser-db");
 };
