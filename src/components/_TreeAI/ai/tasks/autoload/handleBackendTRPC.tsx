@@ -100,13 +100,9 @@ Instructions:
 
 - MUST use dbInstance.model(...) function to call models
 
-
-- MUST NOT uses sub-procedure like "auth.hydrate"
-- MUST NOT uses sub-procedure like "auth.signup"
-- MUST NOT uses sub-procedure like "auth.login"
-- MUST use top-level procedure like: "authHydrate"
-- MUST use top-level procedure like: "authSingup"
-- MUST use top-level procedure like: "authLogin"
+- MUST use sub-procedure like "auth.hydrate"
+- MUST use sub-procedure like "auth.signup"
+- MUST use sub-procedure like "auth.login"
 
 - MUST ALWAYS stringify the userId: const userId = "" + ctx.session.user._id + ""
 

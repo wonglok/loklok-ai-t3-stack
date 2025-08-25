@@ -92,12 +92,9 @@ ${f.content}
     })
     .join("\n\n")}
 
-- MUST NOT uses sub-procedure like "auth.hydrate"
-- MUST NOT uses sub-procedure like "auth.signup"
-- MUST NOT uses sub-procedure like "auth.login"
-- Always use top-level procedure like: "authHydrate"
-- Always use top-level procedure like: "authSingup"
-- Always use top-level procedure like: "authLogin"
+- MUST use sub-procedure like "auth.hydrate"
+- MUST use sub-procedure like "auth.signup"
+- MUST use sub-procedure like "auth.login"
 
 - The app has a Global variable window.trpcSDK as a custom tRPC Frontend Client.
 example: window.trpcSDK

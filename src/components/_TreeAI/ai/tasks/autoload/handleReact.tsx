@@ -94,9 +94,8 @@ import * as React from 'react';
 - MUST NOT use: import { useNavigate } from 'wouter';
 - MUST NOT use: import { navigate } from "wouter/use-hash-location";
 
-- MUST USE: import { Link } from "wouter"
-- MUST USE: <Link href="/register">Register</Link>
-- MUST NOT USE: <a href="/register">Register</a>
+- MUST use: <a href="#/register">Register</a>
+- MUST NOT use: <a href="/register">Register</a>
 
 -------------------------
 - MUST NOT DIRECTLY USE: 
