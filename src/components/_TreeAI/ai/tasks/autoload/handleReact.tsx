@@ -99,7 +99,7 @@ import * as React from 'react';
 
 -------------------------
 - MUST NOT DIRECTLY USE: 
-await window.trpcSDK...
+await window.trpcSDK.client...
 -------------------------
 
 ----- EXAMPLE /components/App.tsx -----
