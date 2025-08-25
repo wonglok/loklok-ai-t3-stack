@@ -165,6 +165,7 @@ Requirements:
     // MUST NOT modify the above line
 }))
 
+${addRelatedFiles({ name: "/mongoose" })}
 ${addRelatedFiles({ name: "/trpc" })}
 
 ${await getFileOutputFormatting()}

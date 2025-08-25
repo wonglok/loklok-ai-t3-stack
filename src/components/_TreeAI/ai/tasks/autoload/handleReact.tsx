@@ -134,6 +134,7 @@ export function App () {
 }
 ----- EXAMPLE /components/App.tsx -----
 
+${addRelatedFiles({ name: "/store" })}
 ${addRelatedFiles({ name: "/components" })}
 
 ${await getFileOutputFormatting()}

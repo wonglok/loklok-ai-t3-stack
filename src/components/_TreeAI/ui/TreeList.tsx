@@ -335,7 +335,7 @@ export function TreeList() {
                     }}
                 ></TreeItem>
             </TreeItem>
-
+            <>{`Debug`}</>
             {files.map((r) => {
                 return (
                     <TreeItem

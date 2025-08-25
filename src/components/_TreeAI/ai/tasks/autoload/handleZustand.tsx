@@ -128,6 +128,7 @@ example: await window.trpcSDK.getAuthToken()
 - MUST ONLY import { create } from 'zustand'
 - MUST NOT common.js style require or module.export
 
+${addRelatedFiles({ name: "/trpc" })}
 ${addRelatedFiles({ name: "/store" })}
 
 ${await getFileOutputFormatting()}
