@@ -120,13 +120,26 @@ declare global {
 - hydrate store state by using "window.trpcSDK.getAuthToken"
 example: await window.trpcSDK.getAuthToken()
 
+- MUST implmenet auth store and include hydration logic and uses "await window.trpcSDK.getAuthToken()"
+
 - Never Impport "@/types"
 - ALWAYS USE "_id" for object id (good)
 - NEVER USE "id" for object id (good)
+
 - NEVER IMPORT "@tanstack/react-query"
+
+- MUST ONLY WRITE PURE CODE
+- MUST NEVER WRAP THE CODE WITH markdown
+- MUST ONLY import { create } from 'zustand'
+- MUST NEVER export { anything }
+- MUST NEVER export default anything
+- NEVER common.js style require or module.export
 
 # instruction
 update suitable zustand store code files to meet the latest requirements
+
+
+
 
 ${await getFileOutputFormatting()}
 
