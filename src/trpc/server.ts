@@ -25,8 +25,6 @@ const createContext = cache(async () => {
 const getQueryClient = cache(createQueryClient);
 const caller = createCaller(createContext);
 
-mongoose.connect(`${process.env.MONGO_DEVELOP}`);
-
 export const { trpc: api, HydrateClient } = createHydrationHelpers<AppRouter>(
     caller,
     getQueryClient,

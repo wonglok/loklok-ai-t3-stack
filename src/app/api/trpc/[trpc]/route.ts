@@ -4,6 +4,7 @@ import { type NextRequest } from "next/server";
 import { env } from "@/env";
 import { appRouter } from "@/server/api/root";
 import { createTRPCContext } from "@/server/api/trpc";
+import mongoose from "mongoose";
 
 /**
  * This wraps the `createTRPCContext` helper and provides the required context for the tRPC API when
@@ -16,6 +17,10 @@ const createContext = async (req: NextRequest) => {
 };
 
 const handler = (req: NextRequest) => {
+    if (mongoose.connections.length === 0) {
+        mongoose.connect(`${process.env.MONGO_DEVELOP}`);
+    }
+
     return fetchRequestHandler({
         endpoint: "/api/trpc",
         req,
