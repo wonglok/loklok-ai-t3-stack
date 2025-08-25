@@ -48,9 +48,12 @@ export const buildProcedures = async ({
         ` + "\n";
     }
 
-    let func = new Function(
-        `args`,
-        `
+    let output;
+
+    try {
+        let func = new Function(
+            `args`,
+            `
 const createTRPCRouter = args.createTRPCRouter;
 const protectedProcedure = args.protectedProcedure;
 const publicProcedure = args.publicProcedure;
@@ -72,18 +75,15 @@ ${defineBackendProceduresContent}
 
 return rootRouter;
     `,
-    );
+        );
 
-    const dbAppInstance = mongoose.connection.useDb(
-        `app_${phase}_${appHashID}`,
-        {
-            useCache: true,
-        },
-    );
+        const dbAppInstance = mongoose.connection.useDb(
+            `app_${phase}_${appHashID}`,
+            {
+                useCache: true,
+            },
+        );
 
-    let output;
-
-    try {
         output = func({
             createTRPCRouter: createTRPCRouter,
             protectedProcedure: protectedProcedure,
@@ -101,6 +101,7 @@ return rootRouter;
             models: models,
         });
     } catch (e) {
+        console.log(defineBackendProceduresContent);
         output = {};
     }
 

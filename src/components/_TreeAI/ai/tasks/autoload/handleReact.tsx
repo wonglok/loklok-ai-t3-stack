@@ -114,6 +114,7 @@ import { useHashLocation } from "wouter/use-hash-location";
 export function App () {
 
     return <>
+        <div>{...}</div> // top navigation menu ..
         <Router hook={useHashLocation}>
             
             /* ... add more code here ..
