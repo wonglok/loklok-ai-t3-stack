@@ -31,6 +31,7 @@ import { writeFileContent } from "@/components/_TreeAI/io/writeFileContent";
 import { makeTicker } from "../_core/makeTicker";
 import { getModelMessagesFromUIMessages } from "../../getModelMessagesFromUIMessages";
 import { saveToCloud } from "@/components/_TreeAI/io/saveToCloud";
+import { listOutFilesToChatBlocks } from "../prompts/listOutFilesToChatBlocks";
 
 export const name = "handleAppSpec";
 export const displayName = "Features";
@@ -51,6 +52,13 @@ export async function handleAppSpec({
     let ticker = makeTicker({
         engineSettingData: engineSettingData,
         displayName: displayName,
+    });
+
+    let chatbox = [];
+
+    listOutFilesToChatBlocks({
+        files: useAI.getState().files,
+        chatblocks: chatbox,
     });
 
     let response = streamText({
@@ -163,6 +171,7 @@ export async function handleAppSpec({
         model: model,
         messages: [
             //
+            ...chatbox,
             {
                 role: "user",
                 content:
