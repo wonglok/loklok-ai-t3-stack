@@ -106,6 +106,28 @@ export async function handleAppSpec({
     - NPM Libraries list
         ... (only write sudo-code to desccibe, not to implement)
     
+    ------ "Mongoose Model Section" -----
+    - mongoose db collection table names for [/models/*.js]
+        ... (only write sudo-code to desccibe, not to implement)
+    
+    ------ "@trpc/server Section" -----
+    - @trpc/server back end procedures names with mongoose collection names involved for [/trpc/*.js]
+        - auth prcedures...
+        - app related procedures...
+        - mongoose db collection table names needed by each of the procedures from [/models/*.js]
+        ... (only write sudo-code to desccibe, not to implement)
+    
+    ------ "ZUSTAND & @trpc/client Section" -----
+    - Zustand Store Attributes list name for [/store/*.js]
+        auth states...
+        app related states...
+        ... (only write sudo-code to desccibe, not to implement)
+        
+    - Zustand Store Methods with @trpc/client list name and input params { email: string, password: string }  for [/store/*.js]
+        auth prcedures...
+        app related procedures...
+        ... (only write sudo-code to desccibe, not to implement)
+    
     ------ "REACT JS Section" -----
     - Top Navigation Menu items Before Login for [/component/MenuBeforeLogion.jsx] 
         Home, About, Login, Register ... 
@@ -136,27 +158,9 @@ export async function handleAppSpec({
         AppPage.jsx
         ... (only write sudo-code to desccibe, not to implement)
 
-    ------ "ZUSTAND & @trpc/client Section" -----
-    - Zustand Store Attributes list name for [/store/*.js]
-        auth states...
-        app related states...
-        ... (only write sudo-code to desccibe, not to implement)
-        
-    - Zustand Store Methods with @trpc/client list name and input params { email: string, password: string }  for [/store/*.js]
-        auth prcedures...
-        app related procedures...
-        ... (only write sudo-code to desccibe, not to implement)
     
-    ------ "@trpc/server Section" -----
-    - @trpc/server back end procedures names with mongoose collection names involved for [/trpc/*.js]
-        auth prcedures...
-        app related procedures...
-        ... (only write sudo-code to desccibe, not to implement)
     
-    ------ "Mongoose Model Section" -----
-    - mongoose db collection table names for [/models/*.js]
-        ... (only write sudo-code to desccibe, not to implement)
-
+    
     
             `,
         model: model,
