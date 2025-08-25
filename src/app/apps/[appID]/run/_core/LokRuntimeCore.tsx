@@ -22,16 +22,6 @@ export function LokRuntimeCore({ files = [], appID = "" }) {
         });
 
         window.trpcSDK = sdk;
-        // window.trpcSDK
-        //     .runTRPC({
-        //         procedure: "hello",
-        //         input: { text: "sure been good" },
-        //     })
-        //     .then((here) => {
-        //         console.log(here);
-        //     });
-
-        //
     }, [appID]);
 
     React19.useEffect(() => {

@@ -49,12 +49,20 @@ export class LokLokSDK {
     }
 
     async runTRPC({ procedure = "hello", input }) {
-        return (this.client["app"][procedure] as any)
-            .mutate(input)
-            .then((data) => {
-                // console.log("data", data);
-                return data;
-            });
+        let app = this.client["app"];
+        let caller = app;
+        let list = procedure.split(".");
+
+        for (let each of list) {
+            if (caller[each]) {
+                caller = caller[each];
+            }
+        }
+
+        return (caller as any).mutate(input).then((data) => {
+            // console.log("data", data);
+            return data;
+        });
     }
 
     async setupPlatform({ procedure = "setFS", input }) {

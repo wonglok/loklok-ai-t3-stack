@@ -111,31 +111,30 @@ Instructions:
 - MUST ALWAYS stringify the userId: const userId = "" + ctx.session.user._id + ""
 
 - Example: "/trpc/auth.js" 
-(function ({ 
+(function ({
     // @ts-ignore  // MUST NOT modify the next line
-    z, models, allProcedures, publicProcedure, protectedProcedure, jwt, bcrypt, JWT_SECRET, ObjectId, mongoose, dbInstance  // MUST NOT modify this line
+    createTRPCRouter, z, models, rootRouter, publicProcedure, protectedProcedure, jwt, bcrypt, JWT_SECRET, ObjectId, mongoose, dbInstance  // MUST NOT modify this line
     // MUST NOT modify the above line
 }) {
     const User = dbInstance.model("User")
+        
+    const authRouter = createTRPCRouter({
+        register: publicProcedure
+            .input(z.object({
+                email: z.string(),
+                password: z.string().min(6),
+            }))
+            .mutation(async ({ input }) => {
+                const existing = await User.findOne({ email: input.email });
+                if (existing) throw new Error('Email already in use');
 
-    // Register a new user (public)
-    allProcedures.register = publicProcedure
-        .input(z.object({
-            email: z.string(),
-            password: z.string().min(6),
-        }))
-        .mutation(async ({ input }) => {
-            const existing = await User.findOne({ email: input.email });
-            if (existing) throw new Error('Email already in use');
+                const hashed = await bcrypt.hash(input.password, 10);
+                const user = await User.create({ email: input.email, passwordHash: hashed });
 
-            const hashed = await bcrypt.hash(input.password, 10);
-            const user = await User.create({ email: input.email, passwordHash: hashed });
-
-            const token = jwt.sign({ _id: String(user._id) }, JWT_SECRET, { expiresIn: '99999999years' });
-            return { token };
-        });
-
-    allProcedures.login = publicProcedure
+                const token = jwt.sign({ _id: String(user._id) }, JWT_SECRET, { expiresIn: '99999999years' });
+                return { token };
+            })
+        login: publicProcedure
             .input(z.object({
                 email: z.string(),
                 password: z.string(),
@@ -150,11 +149,17 @@ Instructions:
 
                 const token = jwt.sign({ _id: String(user._id) }, JWT_SECRET, { expiresIn: '99999999years' });
                 return { token };
-            });
+            }),
+            
+        // ... add missing code
+    })
+
+    // Register a new user (public)
+    rootRouter.auth = authRouter;
 
 }({ 
     // @ts-ignore  // MUST NOT modify the next line
-    z, models, allProcedures, publicProcedure, protectedProcedure, jwt, bcrypt, JWT_SECRET, ObjectId, mongoose, dbInstance  // MUST NOT modify this line
+    createTRPCRouter, z, models, rootRouter, publicProcedure, protectedProcedure, jwt, bcrypt, JWT_SECRET, ObjectId, mongoose, dbInstance  // MUST NOT modify this line
     // MUST NOT modify the above line
 }))
 

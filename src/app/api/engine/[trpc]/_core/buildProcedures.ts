@@ -66,11 +66,11 @@ const bcrypt = args.bcrypt;
 const JWT_SECRET = args.JWT_SECRET;
 const models = args.models;
 
-let allProcedures = {};
+let rootRouter = {};
 
 ${defineBackendProceduresContent}
 
-return allProcedures;
+return rootRouter;
     `,
     );
 
@@ -85,7 +85,7 @@ return allProcedures;
 
     try {
         output = func({
-            createTRPCRouter,
+            createTRPCRouter: createTRPCRouter,
             protectedProcedure: protectedProcedure,
             publicProcedure: publicProcedure,
             z,
