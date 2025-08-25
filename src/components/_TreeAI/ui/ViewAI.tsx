@@ -141,7 +141,7 @@ export function CoreRunner({ appID }) {
                                 <iframe
                                     className="h-full w-full"
                                     key={refreshID}
-                                    src={`/apps/${appID}/run`}
+                                    src={`/apps/${appID}/run?rand=${encodeURIComponent(refreshID)}`}
                                 ></iframe>
                             }
                         </div>

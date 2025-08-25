@@ -57,7 +57,7 @@ export function MyApp () {
                     }
                 } else {
                     try {
-                        setAppOutlet(<div className="w-full h-full from-yellow-300 to-teal-500 bg-gradient-to-br flex items-center justify-center text-white">Preparing for Preview Content...</div>)
+                        setAppOutlet(<div className="w-full h-full rounded-lg from-gray-100 to-gray-500 bg-gradient-to-br flex items-center justify-center text-white">Preparing for Preview Content...</div>)
                     } catch (e) {
                         console.log(e)
                     }
