@@ -35,6 +35,7 @@ import { removeUIMessage } from "../../removeUIMessage";
 import { listOutFilesToChatBlocks } from "../prompts/listOutFilesToChatBlocks";
 import { makeTicker } from "../_core/makeTicker";
 import { saveToCloud } from "@/components/_TreeAI/io/saveToCloud";
+import { addRelatedFiles } from "../prompts/addRelatedFiles";
 
 export const name = "handleReact";
 export const displayName = "React.JS";
@@ -133,6 +134,7 @@ export function App () {
 }
 ----- EXAMPLE /components/App.tsx -----
 
+${addRelatedFiles({ name: "/components" })}
 
 ${await getFileOutputFormatting()}
 

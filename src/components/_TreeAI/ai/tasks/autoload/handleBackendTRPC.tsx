@@ -38,6 +38,7 @@ import { makeTicker } from "../_core/makeTicker";
 import { saveToCloud } from "@/components/_TreeAI/io/saveToCloud";
 import { basename } from "path";
 import { ObjectId } from "mongodb";
+import { addRelatedFiles } from "../prompts/addRelatedFiles";
 
 export const name = "handleBackendTRPC";
 export const displayName = "TRPC Backend";
@@ -163,6 +164,8 @@ Requirements:
     createTRPCRouter, z, models, rootRouter, publicProcedure, protectedProcedure, jwt, bcrypt, JWT_SECRET, ObjectId, mongoose, dbInstance  // MUST NOT modify this line
     // MUST NOT modify the above line
 }))
+
+${addRelatedFiles({ name: "/trpc" })}
 
 ${await getFileOutputFormatting()}
 

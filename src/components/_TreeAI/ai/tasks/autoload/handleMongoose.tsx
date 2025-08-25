@@ -36,6 +36,7 @@ import { listOutFilesToChatBlocks } from "../prompts/listOutFilesToChatBlocks";
 import { makeTicker } from "../_core/makeTicker";
 import { saveToCloud } from "@/components/_TreeAI/io/saveToCloud";
 import { v4 } from "uuid";
+import { addRelatedFiles } from "../prompts/addRelatedFiles";
 
 export const name = "handleMongoose";
 export const displayName = "Mongoose DB ORM";
@@ -118,6 +119,8 @@ Instructions:
     // MUST NOT MODIFY THIS LINE
 })); // MUST NOT MODIFY THIS LINE
 ------------Example---------------
+
+${addRelatedFiles({ name: "/models" })}
 
 ${await getFileOutputFormatting()}
 

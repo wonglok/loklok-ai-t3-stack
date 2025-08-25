@@ -38,6 +38,7 @@ import { getFileOutputFormatting } from "../prompts/getFileOutputFormatting";
 import { listOutFilesToChatBlocks } from "../prompts/listOutFilesToChatBlocks";
 import { makeTicker } from "../_core/makeTicker";
 import { saveToCloud } from "@/components/_TreeAI/io/saveToCloud";
+import { addRelatedFiles } from "../prompts/addRelatedFiles";
 
 export const name = "handleZustand";
 export const displayName = "Zustand";
@@ -127,6 +128,7 @@ example: await window.trpcSDK.getAuthToken()
 - MUST ONLY import { create } from 'zustand'
 - MUST NOT common.js style require or module.export
 
+${addRelatedFiles({ name: "/store" })}
 
 ${await getFileOutputFormatting()}
 
