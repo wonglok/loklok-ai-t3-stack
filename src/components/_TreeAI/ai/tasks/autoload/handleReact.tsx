@@ -53,7 +53,7 @@ export async function handleReact({
     chatblocks.push({
         role: "assistant",
         content: `
-        Here's the entire tech spec, but only focus on reactjs part and front end pages part:
+        Here's the entire tech spec, but only focus on ------ "REACT JS Section" -----:
         ${await getAppOverviewPrompt()}
         `,
     });

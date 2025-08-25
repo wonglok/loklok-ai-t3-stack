@@ -54,7 +54,7 @@ export async function handleMongoose({
     chatblocks.push({
         role: "assistant",
         content: `
-        Here's the entire tech spec, but only focus on mongoose part:
+        Here's the entire tech spec, but only focus on ------ "Mongoose Model Section" -----:
         ${await getAppOverviewPrompt()}
         `,
     });

@@ -56,7 +56,7 @@ export async function handleZustand({
     chatblocks.push({
         role: "assistant",
         content: `
-        Here's the entire tech spec, but only focus on zustnad js part and @trpc/client part:
+        Here's the entire tech spec, but only focus on ------ "ZUSTAND & @trpc/client Section" -----:
         ${await getAppOverviewPrompt()}
         `,
     });
