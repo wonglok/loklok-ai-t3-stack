@@ -75,11 +75,10 @@ Instructions:
 - MUST KEEP Immediately Invoked Function Expression argument not changed
 - MUST NOT WRITE tRPC Procedures here 
 
+- ALWAYS make sure we implemented the code for All Mongoose Collection and write at: "/models/*.ts"
+
 - for eaxmple the Example User Schema & Models
 - NEVER common.js style require or module.export
-- ALWAYS make sure we implemented the code for User Mongoose Collection and write at: "/models/User.ts"
-- ALWAYS make sure we implemented the code for Other Mongoose Collection and write at: "/models/*.ts"
-
 // Example
 // Immediately Invoked Function Expression for "User" Collection
 (function ({ allModels, dbInstance, Schema, ObjectId }) {

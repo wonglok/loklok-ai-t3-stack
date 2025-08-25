@@ -99,7 +99,6 @@ await window.trpcSDK.runTRPC({
 });
 -------------------------
 
-
 ----- EXAMPLE /components/App.tsx -----
 import { Router, Route } from "wouter";
 import { useHashLocation } from "wouter/use-hash-location";
@@ -127,10 +126,10 @@ ${files
     .filter((r) => r.path.startsWith("/store"))
     .map((r) => {
         return `
+Implement React Component by fullfilling the zustand store:
 -------------------------------
 FilePath: ${r.path}
 Summary: ${r.summary}
-Content: 
 ${r.content}
 -------------------------------
     `;

@@ -36,6 +36,7 @@ import { listOutFilesToChatBlocks } from "../prompts/listOutFilesToChatBlocks";
 // import { refreshEngineSlot } from "../../refreshEngines";
 import { makeTicker } from "../_core/makeTicker";
 import { saveToCloud } from "@/components/_TreeAI/io/saveToCloud";
+import { basename } from "path";
 
 export const name = "handleBackendTRPC";
 export const displayName = "TRPC Backend";
@@ -64,7 +65,7 @@ export async function handleBackendTRPC({
 
 Instructions:
 
-- Identify trpc procedures for backend and implement them, use only javascript ".js" files:
+- Identify trpc procedures for backend and implement them, use javascript ".js" files:
 - DO NOT WRAP THE CODE WITH markdown
 - ONLY WRITE PURE CODE FOR
 
@@ -122,9 +123,6 @@ window.trpcSDK
 
 - ALWAYS use dbInstance.model(...) function to call models
 
-- ALWAYS make sure we implemented the code for login resgiter and write at: "/trpc/auth.ts"
-- ALWAYS make sure we implemented the code for other features and write at: "/trpc/*.ts"
-
 - Example: "/trpc/auth.ts"
 (function ({ z, models, allProcedures, publicProcedure, protectedProcedure, jwt, bcrypt, JWT_SECRET, ObjectId, mongoose, dbInstance }) {
     const User = dbInstance.model("User")
@@ -171,16 +169,18 @@ window.trpcSDK
 # instruction
 update suitable code files within "/trpc/*" to meet the latest requirements
 
-
+- ALWAYS make sure we implemented the code for all features and write at: "/trpc/*.ts"
 
 ${files
     .filter((r) => r.path.startsWith("/models"))
     .map((f) => {
         return `
-Implement for this mongoose model:
+- Implement /trpc/${basename(f.path)} for ${basename(f.path)} mongoose model:
 ---------------------------------------------
 FilePath: ${f.path}
 FileSummary: ${f.summary}
+Content:
+${f.content}
 ---------------------------------------------
     `;
     })

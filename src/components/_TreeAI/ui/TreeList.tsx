@@ -190,8 +190,8 @@ export function TreeList() {
                     })}
             </TreeItem>
             <TreeItem
-                itemId="/trpcs"
-                label={<>{`⚔️ trpcs`}</>}
+                itemId="/trpc"
+                label={<>{`⚔️ tRPCs`}</>}
                 onClick={() => {
                     //
                     useAI.setState({
