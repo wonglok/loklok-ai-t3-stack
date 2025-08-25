@@ -91,6 +91,8 @@ import * as React from 'react';
 - ALWAYS: import { useLocation } from 'wouter'; 
 - NEVER: import { useNavigate } from 'wouter';
 
+- ALWAYS: import { navigate } from "wouter/use-hash-location";
+
 -------------------------
 - NEVER DIRECTLY USE: 
 await window.trpcSDK.runTRPC({
@@ -111,7 +113,7 @@ export function App () {
             
             /* ... add more code here ..
             examples:
-                <Route path="/" component={LandingPage} />
+                <Route path="/" component={HomePage} />
                 <Route path="/login" component={LoginPage} />
                 <Route path="/register" component={RegisterPage} />
                 // ....

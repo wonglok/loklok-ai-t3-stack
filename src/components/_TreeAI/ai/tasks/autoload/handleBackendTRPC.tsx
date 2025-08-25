@@ -65,7 +65,7 @@ export async function handleBackendTRPC({
 
 Instructions:
 
-- Identify ALL trpc procedures (including user auth login regsiter) for backend and implement them, use javascript ".js" files:
+- Identify ALL trpc procedures and user auth login regsiter procedures for backend and implement them, use javascript ".js" files:
 - DO NOT WRAP THE CODE WITH markdown
 - ONLY WRITE PURE CODE FOR
 
@@ -143,7 +143,7 @@ window.trpcSDK
             const token = jwt.sign({ _id: String(user._id) }, JWT_SECRET, { expiresIn: '99999999years' });
             return { token };
         });
-    
+
     allProcedures.login = publicProcedure
             .input(z.object({
                 email: z.string(),
