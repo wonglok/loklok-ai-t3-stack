@@ -153,25 +153,6 @@ window.trpcSDK
 # instruction
 update suitable code trpc files to meet the latest requirements
 
-- ALWAYS make sure we implemented the code for all features and write at: "/trpc/*.ts"
-
-${files
-    .filter((r) => r.path.startsWith("/models"))
-    .map((f) => {
-        return `
-- Implement /trpc/${basename(f.path)} for ${basename(f.path).toLowerCase()} mongoose model:
-- make sure the mongoose collection's data properties & data types are correctly implemented in trpc procedures
----------------------------------------------
-FilePath: ${f.path}
-FileSummary: ${f.summary}
-Content:
-${f.content}
----------------------------------------------
-    `;
-    })
-    .join("\n\n")}
-
-
 ${await getFileOutputFormatting()}
 
                 `,

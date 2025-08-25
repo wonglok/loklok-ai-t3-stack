@@ -73,16 +73,11 @@ Instructions:
 - MUST NEVER export default anything
 
 - MUST WRITE the backend trpc procedures in this folder: "/models/*.js"
-- MUST WRITE Immediately Invoked Function Expression
-- MUST KEEP Immediately Invoked Function Expression argument not changed
-- MUST NOT WRITE tRPC Procedures here 
-
 
 - for eaxmple the Example User Schema & Models
 - NEVER common.js style require or module.export
 
 ------------Example---------------
-// Immediately Invoked Function Expression for "User" Collection
 (function ({ allModels, dbInstance, Schema, ObjectId }) {
     const db = dbInstance
 
