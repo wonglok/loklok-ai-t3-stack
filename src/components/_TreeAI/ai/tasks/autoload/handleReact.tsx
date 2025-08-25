@@ -85,17 +85,21 @@ import * as React from 'react';
 - use some "p-3" padding spacing 
 
 - MUST always use zustand to implement backend interaction 
-- MUST never use React.useState / useState
-- MUST never use React.useState
+- MUST NOT use React.useState / useState
+- MUST NOT use React.useState
 
 - ALWAYS use: import { useLocation } from 'wouter'; 
 - ALWAYS use: let [location,setLocation] = useLocation();
 
-- NEVER use: import { useNavigate } from 'wouter';
-- NEVER use: import { navigate } from "wouter/use-hash-location";
+- MUST NOT use: import { useNavigate } from 'wouter';
+- MUST NOT use: import { navigate } from "wouter/use-hash-location";
+
+- MUST USE: import { Link } from "wouter"
+- MUST USE: <Link href="/register">Register</Link>
+- MUST NOT USE: <a href="/register">Register</a>
 
 -------------------------
-- NEVER DIRECTLY USE: 
+- MUST NOT DIRECTLY USE: 
 await window.trpcSDK.runTRPC({
     procedure: '',
     input: {  }
@@ -103,7 +107,7 @@ await window.trpcSDK.runTRPC({
 -------------------------
 
 ----- EXAMPLE /components/App.tsx -----
-import { Router, Route } from "wouter";
+import { Router, Route, Link } from "wouter";
 import { useHashLocation } from "wouter/use-hash-location";
 // ...
 
@@ -124,6 +128,8 @@ export function App () {
     </>
 }
 ----- EXAMPLE /components/App.tsx -----
+
+
 
 ${files
     .filter((r) => r.path.startsWith("/store"))

@@ -93,9 +93,9 @@ ${f.content}
     })
     .join("\n\n")}
 
-- Never uses sub-procedure like "auth.hydrate"
-- Never uses sub-procedure like "auth.signup"
-- Never uses sub-procedure like "auth.login"
+- MUST NOT uses sub-procedure like "auth.hydrate"
+- MUST NOT uses sub-procedure like "auth.signup"
+- MUST NOT uses sub-procedure like "auth.login"
 - Always use top-level procedure like: "authHydrate"
 - Always use top-level procedure like: "authSingup"
 - Always use top-level procedure like: "authLogin"
@@ -129,16 +129,16 @@ example: await window.trpcSDK.getAuthToken()
 
 - MUST implmenet auth store with hydration logic, login, signup, logout and more .... and uses "await window.trpcSDK.getAuthToken()"
 
-- Never Impport "@/types"
+- MUST NOT Impport "@/types"
 - ALWAYS USE "_id" for object id (good)
-- NEVER USE "id" for object id (good)
+- MUST NOT USE "id" for object id (good)
 
-- NEVER IMPORT "@tanstack/react-query"
+- MUST NOT IMPORT "@tanstack/react-query"
 
 - MUST ONLY WRITE PURE CODE
-- MUST NEVER WRAP THE CODE WITH markdown
+- MUST NOT WRAP THE CODE WITH markdown
 - MUST ONLY import { create } from 'zustand'
-- NEVER common.js style require or module.export
+- MUST NOT common.js style require or module.export
 
 # instruction
 update suitable zustand store code files to meet the latest requirements
