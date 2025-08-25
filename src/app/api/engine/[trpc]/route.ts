@@ -122,10 +122,11 @@ return appRouter;
     }
 };
 
+let promise = mongoose.connect(
+    `${process.env.MONGO_DEVELOP}${process.env.MONGO_SUFFIX}`,
+);
 const handler = async (req: NextRequest) => {
-    await mongoose.connect(
-        `${process.env.MONGO_DEVELOP}${process.env.MONGO_SUFFIX}`,
-    );
+    await promise;
 
     let appID = req.headers.get("app-id");
 
