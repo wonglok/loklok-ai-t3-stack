@@ -131,6 +131,7 @@ example: await window.trpcSDK.getAuthToken()
 
 ${await getFileOutputFormatting()}
 
+
                 `,
     });
 
