@@ -64,6 +64,7 @@ export async function handleMongoose({
 Instructions:
 
 - Identify ALL mongoose models (including user model) for backend and implement them in "/models/*.js" one by one, use only javascript ".js" files:
+- MUST WRITE the mongoose models in this folder: "/models/*.js"
 - ALWAYS make sure we implemented the code for All Mongoose Collection and write at: "/models/*.js"
 
 - MUST ONLY WRITE PURE CODE
@@ -71,10 +72,6 @@ Instructions:
 - MUST NEVER import anything
 - MUST NEVER export { anything }
 - MUST NEVER export default anything
-
-- MUST WRITE the backend trpc procedures in this folder: "/models/*.js"
-
-- for eaxmple the Example User Schema & Models
 - NEVER common.js style require or module.export
 
 ------------Example---------------

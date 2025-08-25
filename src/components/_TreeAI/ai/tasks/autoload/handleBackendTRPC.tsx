@@ -66,28 +66,19 @@ export async function handleBackendTRPC({
 Instructions:
 
 - Identify ALL trpc procedures and user auth login regsiter procedures for backend and implement them, use javascript ".js" files:
+- MUST write all the backend trpc procedures in this file: "/trpc/*.js" one by one in each file.
+
 - DO NOT WRAP THE CODE WITH markdown
 - ONLY WRITE PURE CODE FOR
 
-- The app has a Global variable window.trpcSDK as a custom tRPC Frontend Client.
 
-- NEVER use common.js style require or module.export
-- NEVER use common.js nodejs
+- MUST ONLY WRITE PURE CODE
+- MUST NEVER WRAP THE CODE WITH markdown
+- MUST NEVER import anything
+- MUST NEVER export { anything }
+- MUST NEVER export default anything
+- NEVER common.js style require or module.export
 
-- MUST NOT import { anything } from 'anywhere'
-- MUST NOT export { anything }
-- MUST NOT export default anything
-
-window.trpcSDK
-    .runTRPC({
-        procedure: "hello", // [hello] is the procedure name
-        input: { text: "sure been good" },// [input] is the input paramter
-    })
-    .then((result) => {
-        console.log(result); // result is obtained via async functuin call
-    });
-
-- MUST write all the backend trpc procedures in this file: "/trpc/*.js" one by one in each file.
 
 - There are 2 global varaibles: "protectedProcedure" and "publicProcedure" for private and public access for appRouter
 
