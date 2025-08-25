@@ -99,10 +99,7 @@ import * as React from 'react';
 
 -------------------------
 - MUST NOT DIRECTLY USE: 
-await window.trpcSDK.runTRPC({
-    procedure: '',
-    input: {  }
-});
+await window.trpcSDK...
 -------------------------
 
 ----- EXAMPLE /components/App.tsx -----

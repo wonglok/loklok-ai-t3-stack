@@ -96,23 +96,16 @@ ${f.content}
 - MUST use sub-procedure like "auth.signup"
 - MUST use sub-procedure like "auth.login"
 
-- The app has a Global variable window.trpcSDK as a custom tRPC Frontend Client.
-example: window.trpcSDK
-    .runTRPC({
-        procedure: "hello", // [hello] is the procedure name
-        input: { text: "sure been good" },// [input] is the input paramter
-    })
-    .then((result) => {
-        console.log(result); // result is obtained via async functuin call
-    });
+- There's a Global variable window.trpcSDK as a custom tRPC Frontend Client.
+example: window.trpcSDK.client.app.auth.login.mutation({email: email, password: password})
 
-    
 - store when we receive JWT when login / register 
 example: window.trpcSDK.setAuthToken(result.token)
 
 declare global {
     interface Window {
         trpcSDK?: {
+            client: any;
             runTRPC: (v: any) => void;
             setAuthToken: (v: any) => Promise<void>;
             getAuthToken: (v: any) => Promise<string>;
