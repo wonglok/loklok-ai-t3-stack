@@ -108,25 +108,49 @@ export async function handleAppSpec({
     
     ------ "REACT JS Section" -----
     - Top Navigation Menu items Before Login for [/component/MenuBeforeLogion.jsx] 
+        Home, About, Login, Register ... 
         ... (dont write code)
 
     - Top Navigation Menu items After Login for [/component/MenuAfterLogin.jsx] 
+        App Home, and other app related pages..., Logout, About ...
         ... (dont write code)
 
     - Page route list for [/component/App.jsx] 
+        / - home page
+        /about - about the app page
+        /login - login page
+        /register - register page
+        /app - app's page
+        ... more pages
         ... (dont write code)
 
     - React UI Component names for [/component/*.js]
+        App.jsx (Router + Menu)
+        MenuBeforeLogin.jsx
+        MenuAfterLogin.jsx
+        About.jsx
+        HomePage.jsx
+        LoginPage.jsx
+        LogoutPage.jsx
+        RegisterPage.jsx
+        AppPage.jsx
         ... (dont write code)
 
     ------ "ZUSTAND & @trpc/client Section" -----
     - Zustand Store Attributes list name for [/store/*.js]
+        auth states...
+        app related states...
         ... (dont write code)
+        
     - Zustand Store Methods with @trpc/client list name and input params { email: string, password: string }  for [/store/*.js]
+        auth prcedures...
+        app related procedures...
         ... (dont write code)
     
     ------ "@trpc/server Section" -----
     - @trpc/server back end procedures names with mongoose collection names involved for [/trpc/*.js]
+        auth prcedures...
+        app related procedures...
         ... (dont write code)
     
     ------ "Mongoose Model Section" -----
