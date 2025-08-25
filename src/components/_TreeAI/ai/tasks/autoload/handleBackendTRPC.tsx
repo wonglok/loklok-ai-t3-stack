@@ -69,22 +69,6 @@ Instructions:
 - DO NOT WRAP THE CODE WITH markdown
 - ONLY WRITE PURE CODE FOR
 
-- Please refer to mongoose models in "/models/*.js" to have all features:
-
-${files
-    .filter((r) => r.path.startsWith("/models"))
-    .map((f) => {
-        return `
----------------------------------------------
-FilePath: ${f.path}
-FileSummary: ${f.summary}
-FileContent: 
-${f.content}
----------------------------------------------
-    `;
-    })
-    .join("\n\n")}
-
 - The app has a Global variable window.trpcSDK as a custom tRPC Frontend Client.
 
 - NEVER use common.js style require or module.export
