@@ -128,27 +128,6 @@ export function App () {
 ----- EXAMPLE /components/App.tsx -----
 
 
-
-${files
-    .filter((r) => r.path.startsWith("/store"))
-    .map((r) => {
-        return `
-Implement React Component by fullfilling the zustand store:
--------------------------------
-File Path: ${r.path}
-File Content:
-${r.content}
--------------------------------
-    `;
-    })}
-
-
-
-# instruction
-update suitable reactjs code files to meet the latest requirements
-
-use suitable zustand stores accordingly.
-
 ${await getFileOutputFormatting()}
 
                 `,

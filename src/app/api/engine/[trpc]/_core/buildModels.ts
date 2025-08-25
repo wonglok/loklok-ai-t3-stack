@@ -43,7 +43,7 @@ export const buildModels = async ({
             `try {
                 ${es6}
             } catch (e) {
-                console.log(${JSON.stringify(item.path)})
+                console.log('error at',${JSON.stringify(item.path)})
                 console.error(e.message);
             }
         ` + "\n";

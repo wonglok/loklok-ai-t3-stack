@@ -105,8 +105,8 @@ example: await window.trpcSDK.getAuthToken()
 - MUST implmenet auth store with hydration logic, login, signup, logout and more .... and uses "await window.trpcSDK.getAuthToken()"
 
 - MUST NOT Impport "@/types"
-- ALWAYS USE "_id" for object id (good)
-- MUST NOT USE "id" for object id (good)
+- MUST USE "_id" for object id ("_id" = good)
+- MUST NOT USE "id" for object id ("id" = bad)
 
 - MUST NOT IMPORT "@tanstack/react-query"
 
@@ -115,8 +115,6 @@ example: await window.trpcSDK.getAuthToken()
 - MUST ONLY import { create } from 'zustand'
 - MUST NOT common.js style require or module.export
 
-# instruction
-update suitable zustand store code files to meet the latest requirements
 
 ${await getFileOutputFormatting()}
 

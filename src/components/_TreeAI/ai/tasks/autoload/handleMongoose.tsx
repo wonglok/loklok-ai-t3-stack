@@ -114,9 +114,6 @@ Instructions:
 })); // MUST NOT MODIFY THIS LINE
 ------------Example---------------
 
-Help user build mongoose data collections:
-update suitable mongoose code files to meet the latest requirements
-
 ${await getFileOutputFormatting()}
 
                 `,

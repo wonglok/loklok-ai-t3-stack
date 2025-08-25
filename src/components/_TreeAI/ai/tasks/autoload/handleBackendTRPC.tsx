@@ -160,9 +160,6 @@ Instructions:
     // MUST NOT modify the above line
 }))
 
-# instruction
-update suitable code trpc files to meet the latest requirements
-
 ${await getFileOutputFormatting()}
 
                 `,
