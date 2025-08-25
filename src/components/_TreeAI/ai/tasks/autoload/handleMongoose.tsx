@@ -79,7 +79,8 @@ Instructions:
 
 - for eaxmple the Example User Schema & Models
 - NEVER common.js style require or module.export
-// Example
+
+------------Example---------------
 // Immediately Invoked Function Expression for "User" Collection
 (function ({ allModels, dbInstance, Schema, ObjectId }) {
     const db = dbInstance
@@ -97,6 +98,7 @@ Instructions:
     // @ts-ignore
     allModels, dbInstance, Schema, ObjectId 
 }));
+------------Example---------------
 
 # User Requirements:
 ${getModelMessagesFromUIMessages()
