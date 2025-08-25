@@ -103,7 +103,7 @@ await window.trpcSDK...
 -------------------------
 
 ----- EXAMPLE /components/App.tsx -----
-import { Router, Route, Link } from "wouter";
+import { Router, Route, Link, useLocation } from "wouter";
 import { useHashLocation } from "wouter/use-hash-location";
 // ...
 

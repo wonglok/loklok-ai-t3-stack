@@ -11,6 +11,7 @@ import z from "zod";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { ObjectId } from "mongodb";
+import { transform } from "sucrase";
 
 export const buildProcedures = async ({
     appHashID,
@@ -38,12 +39,21 @@ export const buildProcedures = async ({
     // console.log("trpcProcedures", data);
 
     for await (let item of data) {
+        console.log(item.path);
+        let es6 = transform(item.content || "", {
+            transforms: ["jsx", "typescript"],
+            preserveDynamicImport: true,
+            production: false,
+            jsxPragma: "React.createElement",
+            jsxFragmentPragma: "React.Fragment",
+        }).code;
+
         defineBackendProceduresContent +=
             `try {
-                ${item.content}
+                ${es6}
             } catch (e) {
                 console.log(${JSON.stringify(item.path)})
-                console.error(e);
+                console.error(e.message);
             }
         ` + "\n";
     }

@@ -97,21 +97,23 @@ ${f.content}
 - MUST use sub-procedure like "auth.login"
 
 - There's a Global variable window.trpcSDK as a custom tRPC Frontend Client.
-example: window.trpcSDK.client.app.auth.login.mutation({email: email, password: password})
-
-- store when we receive JWT when login / register 
-example: window.trpcSDK.setAuthToken(result.token)
 
 declare global {
     interface Window {
         trpcSDK?: {
             client: any;
-            runTRPC: (v: any) => void;
             setAuthToken: (v: any) => Promise<void>;
             getAuthToken: (v: any) => Promise<string>;
         };
     }
 }
+
+- use client.app.auth for authentication modules
+example login: window.trpcSDK.client.app.auth.login.mutation({email: email, password: password})
+
+- store when we receive JWT when login / register 
+example save token after login: window.trpcSDK.setAuthToken(result.token)
+
 
 - hydrate store state by using "window.trpcSDK.getAuthToken"
 example: await window.trpcSDK.getAuthToken()

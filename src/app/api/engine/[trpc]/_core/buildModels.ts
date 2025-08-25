@@ -7,7 +7,7 @@ import {
 import z from "zod";
 import { toJSON } from "./toJSON";
 import { ObjectId } from "mongodb";
-
+import { transform } from "sucrase";
 export const buildModels = async ({
     dbAppInstance,
     appHashID,
@@ -30,12 +30,21 @@ export const buildModels = async ({
     });
 
     for await (let item of data) {
+        console.log(item.path);
+        let es6 = transform(item.content || "", {
+            transforms: ["jsx", "typescript"],
+            preserveDynamicImport: true,
+            production: false,
+            jsxPragma: "React.createElement",
+            jsxFragmentPragma: "React.Fragment",
+        }).code;
+
         defineMongooseModelsContent +=
             `try {
-                ${item.content}
+                ${es6}
             } catch (e) {
                 console.log(${JSON.stringify(item.path)})
-                console.error(e);
+                console.error(e.message);
             }
         ` + "\n";
     }

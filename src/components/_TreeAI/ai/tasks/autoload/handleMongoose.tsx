@@ -75,11 +75,12 @@ Instructions:
 - NEVER common.js style require or module.export
 
 ------------Example---------------
-(function ({ 
+(function ({  // MUST NOT MODIFY THIS LINE
     // @ts-ignore // MUST NOT MODIFY THIS LINE
     allModels, dbInstance, Schema, ObjectId  // MUST NOT MODIFY THIS LINE
     // MUST NOT MODIFY THIS LINE
-}) {
+}) { // MUST NOT MODIFY THIS LINE
+
     const db = dbInstance
 
     // User schema
@@ -87,7 +88,7 @@ Instructions:
         email: { type: String, required: true, unique: true },
         passwordHash: { type: String, required: true }
     })
-        
+
     if (db.models['User']) {
         db.deleteModel("User")
     }
@@ -96,11 +97,15 @@ Instructions:
         db.model("User", UserSchema)
     }
     allModels.User = db.model("User");
-}({
+
+    // ... write code here if neded
+
+
+}({ // MUST NOT MODIFY THIS LINE
     // @ts-ignore // MUST NOT MODIFY THIS LINE
     allModels, dbInstance, Schema, ObjectId  // MUST NOT MODIFY THIS LINE
     // MUST NOT MODIFY THIS LINE
-}));
+})); // MUST NOT MODIFY THIS LINE
 ------------Example---------------
 
 Help user build mongoose data collections:
