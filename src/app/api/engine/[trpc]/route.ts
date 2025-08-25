@@ -2,7 +2,11 @@ import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 import { type NextRequest } from "next/server";
 
 import { env } from "@/env";
-import { createTRPCContext, createTRPCRouter } from "@/server/api/trpc";
+import {
+    createAppTRPCContext,
+    createTRPCContext,
+    createTRPCRouter,
+} from "@/server/api/trpc";
 import { z } from "zod";
 
 import { protectedProcedure, publicProcedure } from "@/server/api/trpc";
@@ -19,7 +23,7 @@ import { buildProcedures } from "./_core/buildProcedures";
  * handling a HTTP request (e.g. when you make requests from Client Components).
  */
 const createContext = async (req: NextRequest) => {
-    return createTRPCContext({
+    return createAppTRPCContext({
         headers: req.headers,
     });
 };
