@@ -99,13 +99,16 @@ Instructions:
 }));
 
 # instruction
-update suitable code files within "/models/*" to meet the latest requirements
 
+Here's the User & AI Chat History:
 ${getModelMessagesFromUIMessages()
     .map((msg) => {
         return `${msg.role}: ${msg.content}`;
     })
     .join("\n\n")}
+
+Help user build mongoose data collections:
+update suitable mongoose code files to meet the latest requirements
 
 ${await getFileOutputFormatting()}
 

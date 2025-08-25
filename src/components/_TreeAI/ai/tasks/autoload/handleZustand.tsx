@@ -117,7 +117,7 @@ declare global {
 - NEVER IMPORT "@tanstack/react-query"
 
 # instruction
-update suitable code files within "/store/*" to meet the latest requirements
+update suitable zustand store code files to meet the latest requirements
 
 ${await getFileOutputFormatting()}
 
