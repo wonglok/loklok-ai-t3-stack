@@ -5,32 +5,36 @@ import {
     protectedProcedure,
     publicProcedure,
 } from "@/server/api/trpc";
-import mongoose, { Schema } from "mongoose";
 import { ObjectId } from "mongodb";
+import { AppCodeDB, AppIDDB } from "./models";
 
-const AppCodeSchema = new Schema(
-    {
-        name: String,
-        userID: String,
-    },
-    { timestamps: true, versionKey: false },
-);
-
-if (mongoose.models["AppCodeSchema"]) {
-    mongoose.deleteModel("AppCodeSchema");
-}
-if (!mongoose.models["AppCodeSchema"]) {
-    mongoose.model("AppCodeSchema", AppCodeSchema);
-}
-
-const AppCodeDB = mongoose.model("AppCodeSchema");
-
-export const appInstanceRouter = createTRPCRouter({
+export const appCodeRouter = createTRPCRouter({
+    //
+    //
     create: protectedProcedure
-        .input(z.object({ name: z.string().min(1) }))
+        .input(
+            z.object({
+                //
+                appID: z.string(),
+                path: z.string(),
+                summary: z.string(),
+                content: z.string(),
+            }),
+        )
         .mutation(async ({ input, ctx }) => {
+            let app = await AppIDDB.findOne({
+                _id: ObjectId.createFromHexString(`${input.appID}`),
+                userID: `${ctx?.session?.user?.id}`,
+            });
+            if (!app) {
+                throw new Error("no app found");
+            }
+
             let data = await AppCodeDB.create({
-                name: input.name,
+                appID: input.appID,
+                path: input.path,
+                summary: input.summary,
+                content: input.content,
                 userID: `${ctx?.session?.user?.id}`,
             });
 
@@ -44,26 +48,85 @@ export const appInstanceRouter = createTRPCRouter({
         }),
 
     deleteOne: protectedProcedure
-        .input(z.object({ _id: z.string().min(1) }))
+        .input(
+            z.object({
+                appID: z.string(),
+                path: z.string(),
+            }),
+        )
         .mutation(async ({ input, ctx }) => {
+            let app = await AppIDDB.findOne({
+                _id: ObjectId.createFromHexString(`${input.appID}`),
+                userID: `${ctx?.session?.user?.id}`,
+            });
+            if (!app) {
+                throw new Error("no app found");
+            }
+
             await AppCodeDB.deleteOne({
-                userID: `${ctx.session.user.id}`,
-                _id: ObjectId.createFromHexString(`${input._id}`),
+                userID: `${ctx?.session?.user?.id}`,
+                appID: input.appID,
+                path: input.path,
+            });
+
+            return { ok: true };
+        }),
+
+    resetAll: protectedProcedure
+        .input(
+            z.object({
+                appID: z.string(),
+            }),
+        )
+        .mutation(async ({ input, ctx }) => {
+            let app = await AppIDDB.findOne({
+                _id: ObjectId.createFromHexString(`${input.appID}`),
+                userID: `${ctx?.session?.user?.id}`,
+            });
+            if (!app) {
+                throw new Error("no app found");
+            }
+
+            await AppCodeDB.deleteOne({
+                userID: `${ctx?.session?.user?.id}`,
+                appID: input.appID,
             });
 
             return { ok: true };
         }),
 
     updateOne: protectedProcedure
-        .input(z.object({ _id: z.string().min(1), name: z.string() }))
+        .input(
+            z.object({
+                //
+                appID: z.string(),
+                path: z.string(),
+                summary: z.string(),
+                content: z.string(),
+            }),
+        )
         .mutation(async ({ input, ctx }) => {
+            let app = await AppIDDB.findOne({
+                _id: ObjectId.createFromHexString(`${input.appID}`),
+                userID: `${ctx?.session?.user?.id}`,
+            });
+            if (!app) {
+                throw new Error("no app found");
+            }
+
             await AppCodeDB.findOneAndUpdate(
                 {
-                    userID: `${ctx.session.user.id}`,
-                    _id: ObjectId.createFromHexString(`${input._id}`),
+                    userID: `${ctx?.session?.user?.id}`,
+                    appID: input.appID,
+                    path: input.path,
                 },
                 {
-                    name: input.name,
+                    summary: input.summary,
+                    content: input.content,
+                },
+                {
+                    upsert: true,
+                    new: true,
                 },
             );
 
@@ -71,30 +134,48 @@ export const appInstanceRouter = createTRPCRouter({
         }),
 
     getOne: protectedProcedure
-        .input(z.object({ _id: z.string().min(1) }))
+        .input(
+            z.object({
+                //
+                appID: z.string(),
+                path: z.string(),
+                summary: z.string(),
+                content: z.string(),
+            }),
+        )
         .mutation(async ({ input, ctx }) => {
-            let data = await AppCodeDB.findOne({
-                _id: ObjectId.createFromHexString(`${input._id}`),
+            let app = await AppIDDB.findOne({
+                _id: ObjectId.createFromHexString(`${input.appID}`),
                 userID: `${ctx?.session?.user?.id}`,
+            });
+            if (!app) {
+                throw new Error("no app found");
+            }
+
+            let code = await AppCodeDB.findOne({
+                userID: `${ctx?.session?.user?.id}`,
+                appID: input.appID,
+                path: input.path,
             });
 
             return JSON.parse(
-                JSON.stringify({
-                    ...data,
-                    _id: `${data?._id}`,
-                }),
+                JSON.stringify({ ...code._doc, _id: `${code?._id}` }),
             );
+            //
         }),
 
     listMy: protectedProcedure
         //
-        .input(z.object({}))
-        .mutation(async ({ ctx }) => {
+        .input(
+            z.object({
+                appID: z.string(),
+            }),
+        )
+        .mutation(async ({ input, ctx }) => {
             let list = await AppCodeDB.find({
                 userID: `${ctx?.session?.user?.id}`,
+                appID: input.appID,
             });
-
-            // console.log(list);
 
             return JSON.parse(
                 JSON.stringify(

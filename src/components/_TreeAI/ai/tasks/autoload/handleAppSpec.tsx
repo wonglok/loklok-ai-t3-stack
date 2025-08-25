@@ -32,6 +32,7 @@ import { makeTicker } from "../_core/makeTicker";
 import { getModelMessagesFromUIMessages } from "../../getModelMessagesFromUIMessages";
 import { saveToCloud } from "@/components/_TreeAI/io/saveToCloud";
 import { listOutFilesToChatBlocks } from "../prompts/listOutFilesToChatBlocks";
+import { getFileOutputFormatting } from "../prompts/getFileOutputFormatting";
 
 export const name = "handleAppSpec";
 export const displayName = "Features";
@@ -107,25 +108,25 @@ export async function handleAppSpec({
     - zustand.js stores are located at: "/store/*.ts"
 
     ## Deliverables and Output foramtting:
-    ------ "Overall Section" -----
+    ------ "Overall Section" ----- write to "/docs/overall.md"
     - User Requirement list 
         ... (only write sudo-code to desccibe, not to implement)
 
     - NPM Libraries list
         ... (only write sudo-code to desccibe, not to implement)
     
-    ------ "Mongoose Model Section" -----
+    ------ "Mongoose Model Section" ----- "/docs/models.md"
     - mongoose db collection table names for [/models/*.js]
         ... (only write sudo-code to desccibe, not to implement)
     
-    ------ "@trpc/server Section" -----
+    ------ "@trpc/server Section" ----- "/docs/trpc.md"
     - @trpc/server back end procedures names with mongoose collection names involved for [/trpc/*.js]
         - auth prcedures...
         - app related procedures...
         - mongoose db collection table names needed by each of the procedures from [/models/*.js]
         ... (only write sudo-code to desccibe, not to implement)
     
-    ------ "ZUSTAND & @trpc/client Section" -----
+    ------ "ZUSTAND & @trpc/client Section" -----  "/docs/store.md"
     - Zustand Store Attributes list name for [/store/*.js]
         auth states...
         app related states...
@@ -136,7 +137,7 @@ export async function handleAppSpec({
         app related procedures...
         ... (only write sudo-code to desccibe, not to implement)
     
-    ------ "REACT JS Section" -----
+    ------ "REACT JS Section" ----- "/docs/components.md"
     - Top Navigation Menu items Before Login for [/component/MenuBeforeLogion.jsx] 
         Home, About, Login, Register ... 
         ... (only write sudo-code to desccibe, not to implement)
@@ -165,8 +166,8 @@ export async function handleAppSpec({
         RegisterPage.jsx
         AppPage.jsx
         ... (only write sudo-code to desccibe, not to implement)
-    
-    
+
+${await getFileOutputFormatting()}
             `,
         model: model,
         messages: [

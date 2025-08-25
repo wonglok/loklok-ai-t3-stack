@@ -105,6 +105,8 @@ import * as React from 'react';
 - MUST use: <a href="#/register">Register</a>
 - MUST NOT use: <a href="/register">Register</a>
 
+- MUST not: In HTML, <a> cannot be a descendant of <a>. This will cause a hydration error.
+
 -------------------------
 - MUST NOT DIRECTLY USE: 
 await window.trpcSDK.client...
@@ -133,6 +135,7 @@ export function App () {
     </>
 }
 ----- EXAMPLE /components/App.tsx -----
+
 
 ${addRelatedFiles({ name: "/store" })}
 ${addRelatedFiles({ name: "/components" })}

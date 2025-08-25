@@ -1,29 +1,8 @@
 import { z } from "zod";
 
-import {
-    createTRPCRouter,
-    protectedProcedure,
-    publicProcedure,
-} from "@/server/api/trpc";
-import mongoose, { Schema } from "mongoose";
+import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 import { ObjectId } from "mongodb";
-
-const AppIDSchema = new Schema(
-    {
-        name: String,
-        userID: String,
-    },
-    { timestamps: true, versionKey: false },
-);
-
-if (mongoose.models["AppIDSchema"]) {
-    mongoose.deleteModel("AppIDSchema");
-}
-if (!mongoose.models["AppIDSchema"]) {
-    mongoose.model("AppIDSchema", AppIDSchema);
-}
-
-const AppIDDB = mongoose.model("AppIDSchema");
+import { AppIDDB } from "./models";
 
 export const appInstanceRouter = createTRPCRouter({
     create: protectedProcedure
@@ -93,8 +72,6 @@ export const appInstanceRouter = createTRPCRouter({
             let list = await AppIDDB.find({
                 userID: `${ctx?.session?.user?.id}`,
             });
-
-            // console.log(list);
 
             return JSON.parse(
                 JSON.stringify(

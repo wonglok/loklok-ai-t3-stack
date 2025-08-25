@@ -1,3 +1,4 @@
+import { AppRouter } from "@/server/api/root";
 import {
     createTRPCClient,
     httpBatchStreamLink,
@@ -8,7 +9,7 @@ import SuperJSON from "superjson";
 
 export class LokLokSDK {
     public client: TRPCClient<AnyRouter>;
-    public platform: TRPCClient<AnyRouter>;
+    public platform: TRPCClient<AppRouter>;
     private appID: string;
     constructor({ appID }) {
         function getBaseUrl() {
@@ -42,7 +43,7 @@ export class LokLokSDK {
 
         this.client = client;
 
-        this.platform = createTRPCClient<AnyRouter>({
+        this.platform = createTRPCClient<AppRouter>({
             links: [
                 httpBatchStreamLink({
                     transformer: SuperJSON as any,
@@ -84,13 +85,41 @@ export class LokLokSDK {
     }
 
     async setupPlatform({ procedure = "setFS", input }) {
-        return (this.client["platform"][procedure] as any)
-            .mutate(input)
-            .then((data) => {
-                console.log("setup-platform-call", data);
-                return data;
-            });
+        //
+        if (procedure === "setFS") {
+            return this.platform.code.updateOne
+                .mutate({
+                    appID: this.appID,
+                    path: input.path,
+                    content: input.content,
+                    summary: input.summary,
+                })
+                .then((data) => {
+                    console.log("setup-code", input.path);
+
+                    return data;
+                });
+        } else if (procedure === "reset") {
+            return this.platform.code.resetAll
+                .mutate({
+                    appID: this.appID,
+                })
+                .then((data) => {
+                    console.log("reset-all", data);
+
+                    return data;
+                });
+        }
     }
+
+    // async setupPlatform({ procedure = "setFS", input }) {
+    //     return (this.client["platform"][procedure] as any)
+    //         .mutate(input)
+    //         .then((data) => {
+    //             console.log("setup-platform-call", data);
+    //             return data;
+    //         });
+    // }
 
     async publicRPC({ procedure = "getFiles", input }) {
         return (this.client["public"][procedure] as any)
