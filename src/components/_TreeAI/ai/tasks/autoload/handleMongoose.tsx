@@ -98,9 +98,7 @@ Instructions:
     allModels, dbInstance, Schema, ObjectId 
 }));
 
-# instruction
-
-Here's the User & AI Chat History:
+# User Requirements:
 ${getModelMessagesFromUIMessages()
     .map((msg) => {
         return `${msg.role}: ${msg.content}`;
