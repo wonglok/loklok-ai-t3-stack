@@ -100,7 +100,6 @@ Instructions:
     // @ts-ignore // MUST NOT MODIFY THIS LINE
     allModels, dbInstance, Schema, ObjectId  // MUST NOT MODIFY THIS LINE
     // MUST NOT MODIFY THIS LINE
-
 }));
 ------------Example---------------
 

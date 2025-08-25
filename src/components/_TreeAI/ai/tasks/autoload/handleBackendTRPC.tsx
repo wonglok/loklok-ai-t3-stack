@@ -91,23 +91,24 @@ Instructions:
 - MUST NOT USE for procedure ....query({...})
 - MUST NOT USE for procedure ....query({...})
 
-- ALWAYS USE "_id" for object id (good)
-- NEVER USE "id" for object id (bad)
+- MUST USE "_id" for object id (good)
+- MUST NOT USE "id" for object id (bad)
 - Example: USE { ...myObject, _id } instead of { ...myObject, id }
 
-- ALWAYS use: ctx.session.user to get user from the procedure context (GOOD)
-- NEVER use: ctx.user to get user from the procedure context (BAD)
+- MUST use: ctx.session.user to get user from the procedure context (GOOD)
+- MUST NOT use: ctx.user to get user from the procedure context (BAD)
 
-- ALWAYS use dbInstance.model(...) function to call models
+- MUST use dbInstance.model(...) function to call models
 
 
-- Never uses sub-procedure like "auth.hydrate"
-- Never uses sub-procedure like "auth.signup"
-- Never uses sub-procedure like "auth.login"
-- Always use top-level procedure like: "authHydrate"
-- Always use top-level procedure like: "authSingup"
-- Always use top-level procedure like: "authLogin"
+- MUST NOT uses sub-procedure like "auth.hydrate"
+- MUST NOT uses sub-procedure like "auth.signup"
+- MUST NOT uses sub-procedure like "auth.login"
+- MUST use top-level procedure like: "authHydrate"
+- MUST use top-level procedure like: "authSingup"
+- MUST use top-level procedure like: "authLogin"
 
+- MUST ALWAYS stringify the userId: const userId = "" + ctx.session.user._id + ""
 
 - Example: "/trpc/auth.js" 
 (function ({ 
