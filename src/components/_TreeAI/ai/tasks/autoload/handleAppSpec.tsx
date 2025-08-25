@@ -233,7 +233,7 @@ ${await getFileOutputFormatting()}
 
     console.log("text", text);
 
-    await writeFileContent({ path: `/docs/requirements.md`, content: text });
+    await writeFileContent({ path: `/docs/all.md`, content: text });
     await saveToBrowserDB();
     saveToCloud();
 
