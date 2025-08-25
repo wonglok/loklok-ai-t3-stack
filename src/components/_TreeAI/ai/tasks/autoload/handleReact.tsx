@@ -62,7 +62,7 @@ export async function handleReact({
         content: `
 # React Component
 
-- Identify ALL React Component including user login register, landing page, and implement them in typescript format, use only typescript ".ts" files:
+- Identify ALL React Component including user login register, landing page, and implement them in javascript format, use only javascript ".jsx" files:
 - MUST NOT WRAP THE CODE WITH markdown
 - ONLY WRITE PURE CODE FOR {code} etc
 - the folder for components is at "/components/*"
@@ -77,8 +77,8 @@ export function App () {...}
 - include the following lines:
 import * as React from 'react';
 
-- when write the App component, write file to "/components/App.tsx"
-- when write the other components, write file to "/components/*.tsx"
+- when write the App component, write file to "/components/App.jsx"
+- when write the other components, write file to "/components/*.jsx"
 
 - use tailwind css to style the elements
 - use some "border" "rounded-lg" together with "shadow-inner" but dont overuse them dear
@@ -103,7 +103,7 @@ import * as React from 'react';
 await window.trpcSDK.client...
 -------------------------
 
------ EXAMPLE /components/App.tsx -----
+----- EXAMPLE /components/App.jsx -----
 import { Router, Route, Link, useLocation } from "wouter";
 import { useHashLocation } from "wouter/use-hash-location";
 
