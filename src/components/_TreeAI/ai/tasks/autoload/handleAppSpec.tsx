@@ -101,19 +101,19 @@ export async function handleAppSpec({
     ## Deliverables and Output foramtting:
     ------ "Overall Section" -----
     - User Requirement list 
-        ... (dont write code)
+        ... (only write sudo-code to desccibe, not to implement)
 
     - NPM Libraries list
-        ... (dont write code)
+        ... (only write sudo-code to desccibe, not to implement)
     
     ------ "REACT JS Section" -----
     - Top Navigation Menu items Before Login for [/component/MenuBeforeLogion.jsx] 
         Home, About, Login, Register ... 
-        ... (dont write code)
+        ... (only write sudo-code to desccibe, not to implement)
 
     - Top Navigation Menu items After Login for [/component/MenuAfterLogin.jsx] 
         App Home, and other app related pages..., Logout, About ...
-        ... (dont write code)
+        ... (only write sudo-code to desccibe, not to implement)
 
     - Page route list for [/component/App.jsx] 
         / - home page
@@ -122,7 +122,7 @@ export async function handleAppSpec({
         /register - register page
         /app - app's page
         ... more pages
-        ... (dont write code)
+        ... (only write sudo-code to desccibe, not to implement)
 
     - React UI Component names for [/component/*.js]
         App.jsx (Router + Menu)
@@ -134,28 +134,28 @@ export async function handleAppSpec({
         LogoutPage.jsx
         RegisterPage.jsx
         AppPage.jsx
-        ... (dont write code)
+        ... (only write sudo-code to desccibe, not to implement)
 
     ------ "ZUSTAND & @trpc/client Section" -----
     - Zustand Store Attributes list name for [/store/*.js]
         auth states...
         app related states...
-        ... (dont write code)
+        ... (only write sudo-code to desccibe, not to implement)
         
     - Zustand Store Methods with @trpc/client list name and input params { email: string, password: string }  for [/store/*.js]
         auth prcedures...
         app related procedures...
-        ... (dont write code)
+        ... (only write sudo-code to desccibe, not to implement)
     
     ------ "@trpc/server Section" -----
     - @trpc/server back end procedures names with mongoose collection names involved for [/trpc/*.js]
         auth prcedures...
         app related procedures...
-        ... (dont write code)
+        ... (only write sudo-code to desccibe, not to implement)
     
     ------ "Mongoose Model Section" -----
     - mongoose db collection table names for [/models/*.js]
-        ... (dont write code)
+        ... (only write sudo-code to desccibe, not to implement)
 
     
             `,
