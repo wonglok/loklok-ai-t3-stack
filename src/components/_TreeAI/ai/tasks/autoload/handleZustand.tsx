@@ -69,6 +69,7 @@ export async function handleZustand({
 Instructions:
 
 - Identify ALL Zustand stores (includeing user login register) and implement them, use only javascript ".js" files:
+- MUST WRITE TO write to folder: "/stores/*.js"
 
 Requirements: 
 - DO NOT WRAP THE CODE WITH markdown

@@ -336,7 +336,7 @@ export function TreeList() {
                 ></TreeItem>
             </TreeItem>
 
-            {/* {files.map((r) => {
+            {files.map((r) => {
                 return (
                     <TreeItem
                         key={r.path + "any"}
@@ -350,7 +350,7 @@ export function TreeList() {
                         }}
                     />
                 );
-            })} */}
+            })}
         </SimpleTreeView>
     );
 }
