@@ -86,13 +86,10 @@ Instructions:
 
 - DO NOT USE In-memory mock store 
 
-- MUST ALWAYS USE protectedProcedure.mutation({...})
-- DO NOT USE protectedProcedure.query({...})
-- NEVER USE protectedProcedure.query({...})
-
-- MUST ALWAYS USE publicProcedure.mutation({...})
-- DO NOT USE publicProcedure.query({...})
-- NEVER USE publicProcedure.query({...})
+- MUST ALWAYS USE for procedure ...mutation({...})
+- MUST ALWAYS USE for procedure ...mutation({...})
+- MUST NOT USE for procedure ....query({...})
+- MUST NOT USE for procedure ....query({...})
 
 - ALWAYS USE "_id" for object id (good)
 - NEVER USE "id" for object id (bad)

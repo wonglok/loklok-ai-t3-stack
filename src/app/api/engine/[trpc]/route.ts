@@ -125,11 +125,9 @@ return appRouter;
 let promise;
 
 if (process.env.NODE_ENV === "development") {
-    if (mongoose.connections.length === 0) {
-        promise = mongoose.connect(
-            `${process.env.MONGO_DEVELOP}${process.env.MONGO_SUFFIX}`,
-        );
-    }
+    promise = mongoose.connect(
+        `${process.env.MONGO_DEVELOP}${process.env.MONGO_SUFFIX}`,
+    );
 } else {
     promise = mongoose.connect(
         `${process.env.MONGO_DEVELOP}${process.env.MONGO_SUFFIX}`,
