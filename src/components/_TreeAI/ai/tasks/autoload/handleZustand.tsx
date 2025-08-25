@@ -131,8 +131,6 @@ example: await window.trpcSDK.getAuthToken()
 - MUST ONLY WRITE PURE CODE
 - MUST NEVER WRAP THE CODE WITH markdown
 - MUST ONLY import { create } from 'zustand'
-- MUST NEVER export { anything }
-- MUST NEVER export default anything
 - NEVER common.js style require or module.export
 
 # instruction
