@@ -88,10 +88,11 @@ import * as React from 'react';
 - MUST never use React.useState / useState
 - MUST never use React.useState
 
-- ALWAYS: import { useLocation } from 'wouter'; 
-- NEVER: import { useNavigate } from 'wouter';
+- ALWAYS use: import { useLocation } from 'wouter'; 
+- ALWAYS use: let [location,setLocation] = useLocation();
 
-- ALWAYS: import { navigate } from "wouter/use-hash-location";
+- NEVER use: import { useNavigate } from 'wouter';
+- NEVER use: import { navigate } from "wouter/use-hash-location";
 
 -------------------------
 - NEVER DIRECTLY USE: 
