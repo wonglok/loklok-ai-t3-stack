@@ -34,7 +34,11 @@ export let makeTicker = ({ engineSettingData, displayName }) => {
             cursor2 = Math.abs(cursor1 % symbols.length);
 
             engineSettingData.bannerText = ` ${symbols[cursor1]} ${displayName} ${symbols[cursor2]}`;
-            uiMsg.parts[0].data = text;
+
+            let list = text.split("\n").filter((e, i, n) => {
+                return i >= n.length - 15;
+            });
+            uiMsg.parts[0].data = `...\n${list.join("\n")}`;
 
             putUIMessage(uiMsg as UIMessage);
             refreshEngineSlot(engineSettingData);
