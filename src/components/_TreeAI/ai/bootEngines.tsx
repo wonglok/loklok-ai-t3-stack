@@ -35,6 +35,13 @@ export const bootEngines = async () => {
             if (loadedEngines.some((r) => r.identifier === engine.modelName)) {
             } else {
                 try {
+                    let config = useAI
+                        .getState()
+                        .models.find(
+                            (r) =>
+                                r.modelOriginalName ===
+                                engine.modelOriginalName,
+                        );
                     await client?.llm
                         .load(engine.modelOriginalName, {
                             identifier: engine.modelName,
@@ -47,8 +54,8 @@ export const bootEngines = async () => {
                                 nprogress.set(ev);
                             },
                             config: {
-                                evalBatchSize: Math.floor(50000),
-                                contextLength: 1001844,
+                                evalBatchSize: Math.floor(config.evalSize),
+                                contextLength: config.context,
                             },
                         })
                         .catch((e) => {
