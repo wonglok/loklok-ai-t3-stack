@@ -142,11 +142,11 @@ export async function handleAppSpec({
     
     ------ "REACT JS Section" ----- "/docs/components.md"
     - Top Navigation Menu items Before Login for [/component/MenuBeforeLogion.jsx] 
-        Home, About, Login, Register ... 
+        Home, About, [other pages...]..., Login, Register ... 
         ... (no code, only describe)
 
     - Top Navigation Menu items After Login for [/component/MenuAfterLogin.jsx] 
-        Dashboard, Home, and other app related pages..., About ... , Logout
+        Dashboard, Home, [other pages...]..., About ... , Logout
         ... (no code, only describe)
 
     - Page route list for [/component/App.jsx] 
