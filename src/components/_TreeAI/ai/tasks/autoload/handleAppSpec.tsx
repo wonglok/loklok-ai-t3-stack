@@ -145,7 +145,7 @@ export async function handleAppSpec({
         ... (no code, only describe)
 
     - Top Navigation Menu items After Login for [/component/MenuAfterLogin.jsx] 
-        Dashboard, Home, App, and other app related pages..., Logout, About ...
+        Dashboard, Home, and other app related pages..., About ... , Logout
         ... (no code, only describe)
 
     - Page route list for [/component/App.jsx] 
@@ -166,7 +166,8 @@ export async function handleAppSpec({
         LoginPage.jsx
         LogoutPage.jsx
         RegisterPage.jsx
-        AppPage.jsx
+        [FeatureName]Page.jsx // FeatureName can be chagned
+        [AppName]Page.jsx // AppName can be chagned
         ... (no code, only describe)
     
     - Redirect to pages after login or register
