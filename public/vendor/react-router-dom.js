@@ -28,12 +28,18 @@ export const StaticRouter = NPM_CACHE["npm-react-router-dom"]['StaticRouter'];
 
 export const Switch = NPM_CACHE["npm-react-router-dom"]['Switch'];
 
-export const __esModule = NPM_CACHE["npm-react-router-dom"]['__esModule'];
-
 export default NPM_CACHE["npm-react-router-dom"]['default'];
 
 export const generatePath = NPM_CACHE["npm-react-router-dom"]['generatePath'];
 
 export const matchPath = NPM_CACHE["npm-react-router-dom"]['matchPath'];
+
+export const useHistory = NPM_CACHE["npm-react-router-dom"]['useHistory'];
+
+export const useLocation = NPM_CACHE["npm-react-router-dom"]['useLocation'];
+
+export const useParams = NPM_CACHE["npm-react-router-dom"]['useParams'];
+
+export const useRouteMatch = NPM_CACHE["npm-react-router-dom"]['useRouteMatch'];
 
 export const withRouter = NPM_CACHE["npm-react-router-dom"]['withRouter'];
