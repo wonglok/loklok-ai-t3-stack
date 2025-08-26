@@ -103,6 +103,7 @@ export function VercelLMStudio({ appID }: { appID: string }) {
                                         }
 
                                         useAI.setState({
+                                            topTab: "web",
                                             refreshID: `_${v4()}`,
                                         });
                                         nprogress.done();
