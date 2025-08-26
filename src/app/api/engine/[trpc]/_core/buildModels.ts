@@ -31,23 +31,27 @@ export const buildModels = async ({
     });
 
     for await (let item of data) {
-        console.log("transform sucrase:", item.path);
-        let es6 = transform(item.content || "", {
-            transforms: ["jsx", "typescript"],
-            preserveDynamicImport: true,
-            production: false,
-            jsxPragma: "React.createElement",
-            jsxFragmentPragma: "React.Fragment",
-        }).code;
+        try {
+            console.log("transform sucrase:", item.path);
+            let es6 = transform(item.content || "", {
+                transforms: ["jsx", "typescript"],
+                preserveDynamicImport: true,
+                production: false,
+                jsxPragma: "React.createElement",
+                jsxFragmentPragma: "React.Fragment",
+            }).code;
 
-        defineMongooseModelsContent +=
-            `try {
+            defineMongooseModelsContent +=
+                `try {
                 ${es6}
             } catch (e) {
                 console.log('error at',${JSON.stringify(item.path)})
                 console.error(e.message);
             }
         ` + "\n";
+        } catch (e) {
+            console.log("error", item.path);
+        }
     }
 
     //
