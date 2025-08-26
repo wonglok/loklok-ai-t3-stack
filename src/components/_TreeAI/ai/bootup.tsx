@@ -97,6 +97,30 @@ export const SettingsBootUp = () => {
         useAI.getState().engines[4].enabled =
             localStorage.getItem("engine4") === "ok";
 
+        useAI.getState().engines[0].modelName = "openai/gpt-oss-20b";
+        useAI.getState().engines[1].modelName =
+            localStorage.getItem("engine1-modelName") || "openai/gpt-oss-20b:2";
+        useAI.getState().engines[2].modelName =
+            localStorage.getItem("engine2-modelName") || "openai/gpt-oss-20b:3";
+        useAI.getState().engines[3].modelName =
+            localStorage.getItem("engine3-modelName") || "openai/gpt-oss-20b:4";
+        useAI.getState().engines[4].modelName =
+            localStorage.getItem("engine4-modelName") || "openai/gpt-oss-20b:5";
+
+        useAI.getState().engines[0].modelName = "openai/gpt-oss-20b";
+        useAI.getState().engines[1].modelName =
+            localStorage.getItem("engine1-modelOriginalName") ||
+            "openai/gpt-oss-20b";
+        useAI.getState().engines[2].modelName =
+            localStorage.getItem("engine2-modelOriginalName") ||
+            "openai/gpt-oss-20b";
+        useAI.getState().engines[3].modelName =
+            localStorage.getItem("engine3-modelOriginalName") ||
+            "openai/gpt-oss-20b";
+        useAI.getState().engines[4].modelName =
+            localStorage.getItem("engine4-modelOriginalName") ||
+            "openai/gpt-oss-20b";
+
         useAI.setState({
             engines: [...useAI.getState().engines],
         });
@@ -109,6 +133,24 @@ export const SettingsBootUp = () => {
                     } else {
                         localStorage.setItem(`engine${idx}`, "bad");
                     }
+                });
+            }
+
+            if (now.engines !== before.engines) {
+                now.engines.forEach((engine, idx) => {
+                    localStorage.setItem(
+                        `engine${idx}-modelName`,
+                        engine.modelName,
+                    );
+                });
+            }
+
+            if (now.engines !== before.engines) {
+                now.engines.forEach((engine, idx) => {
+                    localStorage.setItem(
+                        `engine${idx}-modelOriginalName`,
+                        engine.modelOriginalName,
+                    );
                 });
             }
         });
