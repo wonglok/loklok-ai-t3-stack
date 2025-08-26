@@ -99,7 +99,7 @@ export async function handleAppSpec({
     - axios / fetch in es6
     - @trpc/client
     - @trpc/server
-    - "wouter" for front end single page routing using hash-router
+    - react-router
     - javascript
     - mongoose
 

@@ -107,12 +107,8 @@ import * as React from 'react';
 - MUST NOT use React.useState / useState
 - MUST NOT use React.useState
 
-- MUST use: import { Router, Route, useLocation } from "wouter";
-- MUST use: import { useHashLocation } from "wouter/use-hash-location";
-- MUST use: let [currnetLocation, setLocation] = useLocation();
-
-- MUST NOT use: import { useNavigate } from 'wouter';
-- MUST NOT use: import { navigate } from "wouter/use-hash-location";
+- MUST use this line of code in App Component: import { HashRouter as Router, Route, Switch, Link, useHistory } from "react-router-dom";
+- MUST use histroy.push('/about') to navigate: const history = useHistory(); // history.push('/about')
 
 - MUST use hash link: <a href="#/register">Register</a>
 - MUST NOT use url link: <a href="/register">Register</a>
@@ -127,24 +123,25 @@ await window.trpcSDK.client...
 -------------------------
 
 ----- EXAMPLE /components/App.jsx -----
-import { Router, Route, useLocation } from "wouter";
-import { useHashLocation } from "wouter/use-hash-location";
+import { Router, Route, useLocation } from "react-router-dom";
+import { useHashLocation } from "react-router-dom";
 
 export function App () {
     let [currnetLocation, setLocation] = useLocation();
 
     return <>
-        <div>{...}</div> // top navigation menu ..
-        <Router hook={useHashLocation}>
-            
-            /* ... add more code here ..
-            examples:
-                <Route path="/" component={HomePage} />
-                <Route path="/login" component={LoginPage} />
-                <Route path="/register" component={RegisterPage} />
-                // ....
-                <Route path="/my-app" component={MyApp} />
-            */
+        <div>{...}</div> // top navigation menu .. and banner and etc
+
+        <Router>
+            <Switch>
+                <Route exact path="/">
+                    <HomePage />
+                </Route>
+                <Route path="/blog/:slug">
+                    <BlogPost />
+                </Route>
+                // add more pages here....
+            </Switch>
         </Router>
     </>
 }

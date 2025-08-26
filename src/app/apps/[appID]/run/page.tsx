@@ -4,8 +4,6 @@ import { useEffect } from "react";
 import { LokLokSDK } from "@/components/_TreeAI/web/LokLokSDK";
 import { useParams } from "next/navigation";
 import { rollupCode } from "@/components/_TreeAI/web/rollupCode";
-// import { RuntimeCore } from "@/app/test/_TreeAI/web/RuntimeCore";
-// import { LokRuntimeCore } from "./_run/LokRuntimeCore";
 import * as React19 from "react";
 import { NPMCacheTasks } from "@/components/_TreeAI/web/npm-globals";
 
@@ -113,14 +111,6 @@ let ttt = setInterval(() => {
 
                     // @ts-ignore
                     const NPM_CACHE = window.NPM_CACHE;
-
-                    // NPM_CACHE["npm-react-dom"] = ReactDOM19;
-                    // NPM_CACHE["npm-react"] = React19;
-                    // NPM_CACHE["npm-@react-three/drei"] = ReactThreeDrei;
-                    // NPM_CACHE["npm-@react-three/fiber"] = ReactThreeFiber;
-                    // NPM_CACHE["npm-zustand"] = Zustand;
-                    // NPM_CACHE["npm-wouter"] = WouterBase;
-                    // NPM_CACHE["npm-wouter/use-hash-location"] = WouterHash;
 
                     NPMCacheTasks.forEach((cacheNpm) => {
                         NPM_CACHE[cacheNpm.name] = cacheNpm.importVaraible;

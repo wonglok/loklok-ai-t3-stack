@@ -4,8 +4,6 @@ import * as React19 from "react";
 // import * as ReactThreeDrei from "@react-three/drei";
 // import * as ReactThreeFiber from "@react-three/fiber";
 // import * as Zustand from "zustand";
-// import * as WouterBase from "wouter";
-// import * as WouterHash from "wouter/use-hash-location";
 import { NPMCacheTasks } from "./npm-globals";
 import { LokLokSDK } from "./LokLokSDK";
 
@@ -53,14 +51,6 @@ export function RuntimeCore({ files = [], appID = "" }) {
 
             // @ts-ignore
             const NPM_CACHE = window.NPM_CACHE;
-
-            // NPM_CACHE["npm-react-dom"] = ReactDOM19;
-            // NPM_CACHE["npm-react"] = React19;
-            // NPM_CACHE["npm-@react-three/drei"] = ReactThreeDrei;
-            // NPM_CACHE["npm-@react-three/fiber"] = ReactThreeFiber;
-            // NPM_CACHE["npm-zustand"] = Zustand;
-            // NPM_CACHE["npm-wouter"] = WouterBase;
-            // NPM_CACHE["npm-wouter/use-hash-location"] = WouterHash;
 
             NPMCacheTasks.forEach((cacheNpm) => {
                 NPM_CACHE[cacheNpm.name] = cacheNpm.importVaraible;

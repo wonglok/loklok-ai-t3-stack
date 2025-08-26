@@ -3,8 +3,7 @@ import * as ReactDOM from 'react-dom/client'
 import * as Drei from '@react-three/drei'
 import * as Fiber from '@react-three/fiber'
 import * as Zustand from 'zustand'
-import * as WouterBase from 'wouter'
-import * as WouterHash from 'wouter/use-hash-location'
+import * as ReactRouterDOM from 'react-router-dom'
 import * as Axios from 'axios'
 import * as UUID from 'uuid'
 import * as ReactHookForm from 'react-hook-form'
@@ -43,14 +42,9 @@ export const NPMCacheTasks = [
         importVaraible: Zustand,
     },
     {
-        name: `npm-wouter`,
-        output: `/vendor/wouter.js`,
-        importVaraible: WouterBase,
-    },
-    {
-        name: `npm-wouter/use-hash-location`,
-        output: `/vendor/wouter-hash-location.js`,
-        importVaraible: WouterHash,
+        name: `npm-react-router-dom`,
+        output: `/vendor/react-router-dom.js`,
+        importVaraible: ReactRouterDOM,
     },
     {
         name: `npm-axios`,
