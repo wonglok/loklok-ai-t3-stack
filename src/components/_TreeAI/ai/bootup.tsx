@@ -32,6 +32,10 @@ export const SettingsBootUp = () => {
             return;
         }
 
+        useAI.setState({
+            uiMessages: [],
+        });
+
         let db = createInstance({
             name: `chatDB-${appID}`,
         });
