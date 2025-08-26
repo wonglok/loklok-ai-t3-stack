@@ -102,6 +102,8 @@ export class LokLokSDK {
                     appID: this.appID,
                 })
                 .then((data) => {
+                    //
+
                     console.log("reset-all", data);
 
                     return data;
