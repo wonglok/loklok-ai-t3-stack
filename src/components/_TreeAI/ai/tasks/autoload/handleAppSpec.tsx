@@ -76,6 +76,7 @@ export async function handleAppSpec({
     /login - login page
     /register - register page
     /app - app's page
+    /[other-feature] - other feature page
     ... more pages
 
     ## what are the top menu items before logged in
@@ -154,6 +155,7 @@ export async function handleAppSpec({
         /login - login page
         /register - register page
         /app - app's page
+        /{otherFeature} - {otherFeature}'s page
         ... more pages
         ... (no code, only describe)
 
