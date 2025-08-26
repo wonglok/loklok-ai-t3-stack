@@ -97,8 +97,6 @@ Instructions:
 - MUST use: String type for date
 - MUST use: Date type for datetime
 
-
-
 ------------Example---------------
 (function ({  // MUST NOT MODIFY THIS LINE
     // @ts-ignore // MUST NOT MODIFY THIS LINE

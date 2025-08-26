@@ -16,7 +16,7 @@ import { Response } from "@/components/ai-elements/response";
 import { useAI } from "../state/useAI";
 
 import { CodeEditorStream } from "./CodeEditorStream";
-import { useCallback } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { LoaderIcon } from "lucide-react";
 import { bootEngines } from "../ai/bootEngines";
 import { MyTaskManager } from "../ai/tasks/_core/MyTaskManager";
@@ -102,6 +102,21 @@ export const AIConversation = () => {
     );
 };
 
+function AutoBottom({ children }) {
+    let ref = useRef<any>(null);
+
+    useEffect(() => {
+        if (ref.current) {
+            ref.current.scrollTop = 9999999999999;
+        }
+    }, [children]);
+    return (
+        <div ref={ref} className="max-h-[300px] w-full overflow-auto">
+            {children}
+        </div>
+    );
+}
+
 function RenderMessages() {
     const uiMessages = useAI((r) => r.uiMessages);
     return (
@@ -145,13 +160,15 @@ function RenderMessages() {
                                         return (
                                             <div
                                                 key={`${message.id}-${i}`}
-                                                className="max-h-[500px] w-full overflow-x-auto"
+                                                className="max-h-[300px] w-full overflow-x-auto"
                                             >
                                                 <pre className="w-full text-xs whitespace-pre">
-                                                    {
-                                                        (part?.data ||
-                                                            "") as string
-                                                    }
+                                                    <AutoBottom>
+                                                        {
+                                                            (part?.data ||
+                                                                "") as string
+                                                        }
+                                                    </AutoBottom>
                                                 </pre>
                                             </div>
                                         );
