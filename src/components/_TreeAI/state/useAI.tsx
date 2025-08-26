@@ -34,14 +34,6 @@ export type MyModel = {
 const Models: MyModel[] = [
     {
         provider: "lmstudio",
-        name: "llama-3.1-8b-ultralong-1m-instruct",
-        modelOriginalName: "llama-3.1-8b-ultralong-1m-instruct",
-        context: 400000,
-        evalSize: 8192,
-    },
-
-    {
-        provider: "lmstudio",
         name: "qwen3-coder-30b-a3b-instruct-1m",
         modelOriginalName: "qwen3-coder-30b-a3b-instruct-1m",
         context: 500000,
