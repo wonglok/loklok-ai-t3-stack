@@ -92,7 +92,7 @@ export async function handleAppSpec({
     
     ## NPM Libraries
     - react.js
-    - @react-three/fiber for 3d app 
+    - @react-three/fiber for 3d app
     - @react-three/drei for 3d addons
     - zustand for state management for React.js
     - react.js uses zustand stores

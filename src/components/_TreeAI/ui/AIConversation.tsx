@@ -145,7 +145,7 @@ function RenderMessages() {
                                         return (
                                             <div
                                                 key={`${message.id}-${i}`}
-                                                className="w-full overflow-x-auto"
+                                                className="max-h-[500px] w-full overflow-x-auto"
                                             >
                                                 <pre className="w-full text-xs whitespace-pre">
                                                     {
