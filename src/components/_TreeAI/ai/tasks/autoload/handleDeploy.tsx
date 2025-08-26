@@ -45,7 +45,6 @@ export async function handleDeploy({
 }) {
     let { model, engineSettingData } = await getFreeAIAsync();
 
-    let ticker = makeTicker({ displayName, engineSettingData });
     let sdk = new LokLokSDK({
         appID: useAI.getState().appID,
     });
@@ -78,11 +77,10 @@ export async function handleDeploy({
 
         uiMsg.parts[0].type = "text";
         uiMsg.parts[0].text = `Uploading ${((i / files.length) * 100).toFixed(0)}%`;
-
         putUIMessage(uiMsg as UIMessage);
+
         engineSettingData.bannerText = `Uploading ${((i / files.length) * 100).toFixed(0)}%`;
         refreshEngineSlot(engineSettingData);
-        ticker.tick(`Uploading ${((i / files.length) * 100).toFixed(0)}%`);
         i++;
     }
 
@@ -101,7 +99,7 @@ export async function handleDeploy({
     });
 
     await saveToBrowserDB();
-    await saveToCloud();
+    // await saveToCloud();
 
     engineSettingData.bannerText = ``;
     refreshEngineSlot(engineSettingData);
@@ -113,8 +111,6 @@ export async function handleDeploy({
     useAI.setState({
         refreshID: `_${v4()}`,
     });
-
-    ticker.remove();
 
     try {
         const client = new LMStudioClient();

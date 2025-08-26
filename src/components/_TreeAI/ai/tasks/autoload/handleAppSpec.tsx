@@ -168,6 +168,8 @@ export async function handleAppSpec({
         RegisterPage.jsx
         AppPage.jsx
         ... (only write sudo-code to desccibe, not to implement)
+    
+    - Redirect to pages after login or register
 
 ${await getFileOutputFormatting()}
             `,
@@ -184,6 +186,7 @@ ${await getFileOutputFormatting()}
         ],
     });
 
+    //
     // let lastFile = "";
     let parseText = async (text) => {
         try {

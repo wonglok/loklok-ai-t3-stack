@@ -75,8 +75,9 @@ export const createAppTRPCContext = async (opts: { headers: Headers }) => {
 
     try {
         let userData = (await jwt.verify(authtoken, JWT_SECRET)) as {
-            id: string;
+            _id: string;
         };
+        console.log("userData", userData);
         const db = dbAppInstance;
         const UserSchema = new Schema({
             email: { type: String, required: true, unique: true },
@@ -93,21 +94,20 @@ export const createAppTRPCContext = async (opts: { headers: Headers }) => {
         let found = await dbAppInstance
             .model("User")
             .findOne({
-                _id: userData.id,
+                _id: ObjectId.createFromHexString(`${userData._id}`),
             })
             .select({
                 _id: true,
                 email: true,
                 createdAt: true,
-            })
-            .lean();
+            });
 
         user = {
-            ...found,
+            ...found._doc,
             id: (found as any)?._id?.toString(),
             _id: (found as any)?._id?.toString(),
         };
-        console.log(user);
+        console.log("createAppTRPCContext", user);
     } catch (e) {
         console.log(e);
     }
