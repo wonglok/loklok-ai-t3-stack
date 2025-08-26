@@ -86,7 +86,8 @@ Requirements:
 - ONLY WRITE PURE CODE FOR
 
 - MUST use: import { create } from 'zustand'; // good
-- MUST use: zustand selector like: const user = useAuthStore((r) => r.user) // good
+- MUST use: use zustand selector like: const login = useStore((r) => r.login) // good
+- MUST use: use zustand selector like: const user = useAuthStore((r) => r.user) // good
 - MUST NOT use: multiple properies zustand selector like: const {user, logout} = useAuthStore((r) => { // bad
     return { // bad
         user: r.user, // bad
@@ -126,8 +127,8 @@ example: await window.trpcSDK.getAuthToken()
 - MUST implmenet auth store with hydration logic, login, signup, logout and more .... and uses "await window.trpcSDK.getAuthToken()"
 
 - MUST NOT Impport "@/types"
-- MUST USE "_id" for object id ("_id" = good)
-- MUST NOT USE "id" for object id ("id" = bad)
+- MUST USE "_id" for ObjectId ("_id" = good)
+- MUST NOT USE "id" for ObjectId ("id" = bad)
 
 - MUST NOT IMPORT "@tanstack/react-query"
 
@@ -137,6 +138,8 @@ example: await window.trpcSDK.getAuthToken()
 - MUST NOT common.js style require or module.export
 
 - Redirect to suitable page after login or register or logout
+
+## References
 
 ${addRelatedFiles({ name: "/trpc", title: `here's the backend procedures, please make sure front end also implements all the backend endpoint in suitable zustnad stores.` })}
 ${addRelatedFiles({ name: "/store", title: `here's some existing zustand code:` })}
