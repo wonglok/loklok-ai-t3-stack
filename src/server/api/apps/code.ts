@@ -79,6 +79,7 @@ export const appCodeRouter = createTRPCRouter({
             }),
         )
         .mutation(async ({ input, ctx }) => {
+            console.log("resetAll", "resetAll");
             let app = await AppIDDB.findOne({
                 _id: ObjectId.createFromHexString(`${input.appID}`),
                 userID: `${ctx?.session?.user?.id}`,
@@ -87,7 +88,7 @@ export const appCodeRouter = createTRPCRouter({
                 throw new Error("no app found");
             }
 
-            await AppCodeDB.deleteOne({
+            await AppCodeDB.deleteMany({
                 userID: `${ctx?.session?.user?.id}`,
                 appID: input.appID,
             });
