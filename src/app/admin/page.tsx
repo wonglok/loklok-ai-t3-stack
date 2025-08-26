@@ -12,12 +12,11 @@ export default function HomePage() {
     return (
         <>
             <div className="p-4">
-                <div className="grid auto-rows-min gap-4 md:grid-cols-2">
+                <div className="grid auto-rows-min gap-4">
                     <div className="bg-muted/50 aspect-video rounded-xl">
                         <MyApps></MyApps>
                         <ListApps></ListApps>
                     </div>
-                    <div className="bg-muted/50 aspect-video rounded-xl"></div>
                 </div>
                 <div className="bg-muted/50 min-h-[100vh] flex-1 rounded-xl md:min-h-min" />
             </div>

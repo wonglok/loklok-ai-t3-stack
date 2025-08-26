@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { LokLokSDK } from "../web/LokLokSDK";
 import { v4 } from "uuid";
+import nprogress from "nprogress";
 
 export function VercelLMStudio({ appID }: { appID: string }) {
     useEffect(() => {
@@ -75,6 +76,9 @@ export function VercelLMStudio({ appID }: { appID: string }) {
                                             appID: useAI.getState().appID,
                                         });
 
+                                        nprogress.start();
+
+                                        let i = 0;
                                         for (let file of files) {
                                             if (
                                                 typeof file.path !==
@@ -82,6 +86,8 @@ export function VercelLMStudio({ appID }: { appID: string }) {
                                                 typeof file.content !==
                                                     "undefined"
                                             ) {
+                                                nprogress.set(i / files.length);
+
                                                 await sdk.setupPlatform({
                                                     procedure: "setFS",
                                                     input: {
@@ -93,13 +99,13 @@ export function VercelLMStudio({ appID }: { appID: string }) {
                                                     },
                                                 });
                                             }
+                                            i++;
                                         }
 
                                         useAI.setState({
                                             refreshID: `_${v4()}`,
                                         });
-
-                                        //
+                                        nprogress.done();
 
                                         alert("successfully imported! 🤩");
 

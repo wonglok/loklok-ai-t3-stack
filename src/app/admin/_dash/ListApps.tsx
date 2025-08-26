@@ -45,7 +45,7 @@ export function ListApps() {
                             return (
                                 <div key={it._id} className="my-1 p-2">
                                     <div className="flex items-center justify-between text-sm">
-                                        <div className="w-1/2">
+                                        <div className="w-full">
                                             <Input
                                                 className="w-full"
                                                 defaultValue={it.name}
@@ -71,7 +71,7 @@ export function ListApps() {
                                                 }}
                                             ></Input>
                                         </div>
-                                        <div>
+                                        <div className="ml-2 flex shrink-0 justify-end">
                                             <Button
                                                 onClick={() => {
                                                     if (
@@ -85,13 +85,13 @@ export function ListApps() {
                                                         apps.mutate({});
                                                     }
                                                 }}
-                                                className="mr-2"
+                                                className="mr-2 cursor-pointer"
                                                 variant="destructive"
                                             >
                                                 Delete
                                             </Button>
                                             <Button
-                                                className="mr-2"
+                                                className="mr-2 cursor-pointer"
                                                 onClick={() => {
                                                     ///
                                                     window.open(
@@ -102,6 +102,7 @@ export function ListApps() {
                                                 Preview
                                             </Button>
                                             <Button
+                                                className="cursor-pointer"
                                                 onClick={() => {
                                                     //
                                                     router.push(
