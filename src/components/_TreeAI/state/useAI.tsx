@@ -26,6 +26,8 @@ export type MyModel = {
     provider: string;
     modelOriginalName: string;
     name: string;
+    context: number;
+    evalSize: number;
 };
 
 const Models: MyModel[] = [
@@ -33,46 +35,64 @@ const Models: MyModel[] = [
         provider: "lmstudio",
         name: "qwen3-coder-30b-a3b-instruct-1m",
         modelOriginalName: "qwen3-coder-30b-a3b-instruct-1m",
+        context: 1001844,
+        evalSize: 50000,
     },
     {
         provider: "lmstudio",
         name: "qwen3-coder-30b-a3b-instruct-1m:2",
         modelOriginalName: "qwen3-coder-30b-a3b-instruct-1m",
+        context: 1001844,
+        evalSize: 50000,
     },
     {
         provider: "lmstudio",
         name: "qwen3-coder-30b-a3b-instruct-1m:3",
         modelOriginalName: "qwen3-coder-30b-a3b-instruct-1m",
+        context: 1001844,
+        evalSize: 50000,
     },
     {
         provider: "lmstudio",
         name: "openai/gpt-oss-120b",
         modelOriginalName: "openai/gpt-oss-20b",
+        context: 128000,
+        evalSize: 50000,
     },
     {
         provider: "lmstudio",
         name: "openai/gpt-oss-20b",
         modelOriginalName: "openai/gpt-oss-20b",
+        context: 128000,
+        evalSize: 50000,
     },
     {
         provider: "lmstudio",
         name: "openai/gpt-oss-20b:2",
         modelOriginalName: "openai/gpt-oss-20b",
+        context: 128000,
+        evalSize: 50000,
     },
     {
         provider: "lmstudio",
         name: "openai/gpt-oss-20b:3",
         modelOriginalName: "openai/gpt-oss-20b",
+        context: 128000,
+        evalSize: 50000,
     },
     {
         provider: "lmstudio",
         name: "openai/gpt-oss-20b:4",
         modelOriginalName: "openai/gpt-oss-20b",
+        context: 128000,
+        evalSize: 50000,
     },
     {
         provider: "lmstudio",
         name: "openai/gpt-oss-20b:5",
         modelOriginalName: "openai/gpt-oss-20b",
+        context: 128000,
+        evalSize: 50000,
     },
 ];
 
