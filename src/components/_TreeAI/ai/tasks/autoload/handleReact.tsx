@@ -63,12 +63,13 @@ export async function handleReact({
         })}
 
         
-
+        # Instruction:
+        # Page Routes and Component Structure section
+        - MUST implement all page routes in app rotuer in "/components/App.jsx" and also in MenuAfterLogin and MenuBeforeLogin accordingly
         ${await readFileContent({
             path: `/docs/components.md`,
         })}
 
-        - MUST implement all pages in Page Routes and Component Structure in App Router and also in MenuAfterLogin and MenuBeforeLogin accordingly
         `,
     });
 
@@ -115,7 +116,6 @@ import * as React from 'react';
 - MUST use hash link: <a href="#/register">Register</a>
 - MUST NOT use url link: <a href="/register">Register</a>
 - MUST NOT use a link within a link: <a href="/register">Register  <a href="/register">Register</a> </a> // bad practice
-
 
 - MUST not: In HTML, <a> cannot be a descendant of <a>. This will cause a hydration error.
 
