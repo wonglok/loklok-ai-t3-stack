@@ -60,7 +60,7 @@ export async function handleBackendTRPC({
     chatblocks.push({
         role: "assistant",
         content: `
-        Here's the entire tech spec, but only focus on ------ "@trpc/server Section" -----:
+        Here's the entire tech spec, but only focus on @trpc/server Section:
 
 
         ${await readFileContent({
