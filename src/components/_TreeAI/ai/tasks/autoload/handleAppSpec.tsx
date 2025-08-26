@@ -112,41 +112,41 @@ export async function handleAppSpec({
     ## Deliverables and Output foramtting:
     ------ "Overall Section" ----- write to "/docs/overall.md"
     - User Requirement list 
-        ... (only write sudo-code to desccibe, not to implement)
+        ... (no code, only describe)
 
     - NPM Libraries list
-        ... (only write sudo-code to desccibe, not to implement)
+        ... (no code, only describe)
     
     ------ "Mongoose Model Section" ----- "/docs/models.md"
     - mongoose db collection table names for [/models/*.js]
-        ... (only write sudo-code to desccibe, not to implement)
+        ... (no code, only describe)
     
     ------ "@trpc/server Section" ----- "/docs/trpc.md"
     - @trpc/server back end procedures names with mongoose collection names involved for [/trpc/*.js]
         - auth prcedures...
         - app related procedures...
         - mongoose db collection table names needed by each of the procedures from [/models/*.js]
-        ... (only write sudo-code to desccibe, not to implement)
+        ... (no code, only describe)
     
     ------ "ZUSTAND & @trpc/client Section" -----  "/docs/store.md"
     - Zustand Store Attributes list name for [/store/*.js]
         auth states...
         app related states...
-        ... (only write sudo-code to desccibe, not to implement)
+        ... (no code, only describe)
         
     - Zustand Store Methods with @trpc/client list name and input params { email: string, password: string }  for [/store/*.js]
         auth prcedures...
         app related procedures...
-        ... (only write sudo-code to desccibe, not to implement)
+        ... (no code, only describe)
     
     ------ "REACT JS Section" ----- "/docs/components.md"
     - Top Navigation Menu items Before Login for [/component/MenuBeforeLogion.jsx] 
         Home, About, Login, Register ... 
-        ... (only write sudo-code to desccibe, not to implement)
+        ... (no code, only describe)
 
     - Top Navigation Menu items After Login for [/component/MenuAfterLogin.jsx] 
         Dashboard, Home, App, and other app related pages..., Logout, About ...
-        ... (only write sudo-code to desccibe, not to implement)
+        ... (no code, only describe)
 
     - Page route list for [/component/App.jsx] 
         / - home page
@@ -155,7 +155,7 @@ export async function handleAppSpec({
         /register - register page
         /app - app's page
         ... more pages
-        ... (only write sudo-code to desccibe, not to implement)
+        ... (no code, only describe)
 
     - React UI Component names for [/component/*.js]
         App.jsx (Router + Menu)
@@ -167,7 +167,7 @@ export async function handleAppSpec({
         LogoutPage.jsx
         RegisterPage.jsx
         AppPage.jsx
-        ... (only write sudo-code to desccibe, not to implement)
+        ... (no code, only describe)
     
     - Redirect to pages after login or register
 
