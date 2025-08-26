@@ -1,15 +1,18 @@
 import { createInstance } from "localforage";
 import { useAI } from "../state/useAI";
 
+let ttt;
 export const saveToBrowserDB = async () => {
-    //
-    const appID = useAI.getState().appID;
-    const files = useAI.getState().files;
-    const appFiles = createInstance({
-        name: `${appID}-files`,
-    });
+    clearTimeout(ttt);
+    ttt = setTimeout(() => {
+        const appID = useAI.getState().appID;
+        const files = useAI.getState().files;
+        const appFiles = createInstance({
+            name: `${appID}-files`,
+        });
 
-    await appFiles.setItem("files", files);
+        appFiles.setItem("files", files);
 
-    console.log("save-browser-db");
+        console.log("save-browser-db");
+    }, 200);
 };
