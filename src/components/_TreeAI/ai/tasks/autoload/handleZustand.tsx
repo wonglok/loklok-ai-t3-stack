@@ -138,8 +138,8 @@ example: await window.trpcSDK.getAuthToken()
 
 - Redirect to suitable page after login or register or logout
 
-${addRelatedFiles({ name: "/trpc" })}
-${addRelatedFiles({ name: "/store" })}
+${addRelatedFiles({ name: "/trpc", title: `here's the backend procedures, please make sure front end also implements all the backend endpoint in suitable zustnad stores.` })}
+${addRelatedFiles({ name: "/store", title: `here's some existing zustand code:` })}
 
 ${await getFileOutputFormatting()}
 

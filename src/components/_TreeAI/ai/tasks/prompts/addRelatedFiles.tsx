@@ -10,8 +10,11 @@ export function addRelatedFiles({
 ${title}
         `;
 
+    let inc = "";
     for (let file of files) {
-        if (file.path.startsWith(name))
+        if (file.path.startsWith(name)) {
+            inc += "123";
+
             inject += `
 ------------------------
 File Path: ${file.path}
@@ -22,10 +25,11 @@ File Content:
 ${file.content}
 ------------------------
             `;
+        }
     }
 
-    if (inject === "") {
-        inject = "no files at this moment.";
+    if (inc === "") {
+        inject = "";
     }
 
     return inject;
