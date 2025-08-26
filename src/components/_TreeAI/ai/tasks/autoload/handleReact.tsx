@@ -146,8 +146,10 @@ export function App () {
 ----- EXAMPLE /components/App.tsx -----
 
 
-${addRelatedFiles({ name: "/store" })}
-${addRelatedFiles({ name: "/components" })}
+${addRelatedFiles({ name: "/models", title: `please implement all data requirements in react components, here's the mongoose models:` })}
+${addRelatedFiles({ name: "/trpc", title: `here's the backend procedures, please make sure front end has the error display slot and proper interatives.` })}
+${addRelatedFiles({ name: "/store", title: `here's the zustand state store for user interfaces, please make sure interactions with backend are implmented` })}
+${addRelatedFiles({ name: "/components", title: `here's the reactjs ui components.` })}
 
 ${await getFileOutputFormatting()}
 

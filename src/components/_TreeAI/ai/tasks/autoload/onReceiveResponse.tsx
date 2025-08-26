@@ -16,17 +16,17 @@
 // import { refreshUIMessages } from "../refreshUIMessages";
 // import { writeFileContent } from "../../io/writeFileContent";
 // import { removeUIMessages } from "../removeUIMessages";
-import { saveToBrowserDB } from "../../../io/saveToBrowserDB";
+// import { saveToBrowserDB } from "../../../io/saveToBrowserDB";
 import { putBackFreeAIAsync } from "../../putBackFreeAIAsync";
 import { getFreeAIAsync } from "../../getFreeAIAsync";
 import { MyTask, MyTaskManager } from "../_core/MyTaskManager";
-import md5 from "md5";
-import { useAI } from "../../../state/useAI";
-import { saveToCloud } from "@/components/_TreeAI/io/saveToCloud";
-import { generateObject } from "ai";
-import { getModelMessagesFromUIMessages } from "../../getModelMessagesFromUIMessages";
-import z from "zod";
-import { listOutFilesToChatBlocks } from "../prompts/listOutFilesToChatBlocks";
+// import md5 from "md5";
+// import { useAI } from "../../../state/useAI";
+// import { saveToCloud } from "@/components/_TreeAI/io/saveToCloud";
+// import { generateObject } from "ai";
+// import { getModelMessagesFromUIMessages } from "../../getModelMessagesFromUIMessages";
+// import z from "zod";
+// import { listOutFilesToChatBlocks } from "../prompts/listOutFilesToChatBlocks";
 // import { putUIMessage } from "../../putUIMessage";
 // import { v4 } from "uuid";
 

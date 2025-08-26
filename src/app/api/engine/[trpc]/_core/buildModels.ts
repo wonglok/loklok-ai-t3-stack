@@ -42,13 +42,14 @@ export const buildModels = async ({
             }).code;
 
             defineMongooseModelsContent +=
-                `try {
+                `
+            try {
                 ${es6}
             } catch (e) {
                 console.log('error at',${JSON.stringify(item.path)})
                 console.error(e.message);
             }
-        ` + "\n";
+` + "\n";
         } catch (e) {
             console.log("error", item.path);
         }

@@ -121,6 +121,7 @@ Requirements:
 - MUST use sub-procedure like "auth.login"
 
 - MUST use: for all object _id or foreign key _id: const userId = ctx?.session?.user?._id || ''
+- MUST use: ObjectId.createFromHexString(user._id)
 
 - Example: "/trpc/auth.js" 
 (function ({
@@ -175,8 +176,8 @@ Requirements:
     // MUST NOT modify the above line
 }))
 
-${addRelatedFiles({ name: "/mongoose" })}
-${addRelatedFiles({ name: "/trpc" })}
+${addRelatedFiles({ name: "/models", title: `please implement all data requirements in react components, here's the mongoose models:` })}
+${addRelatedFiles({ name: "/trpc", title: `here are tRPC backend procedure codes:` })}
 
 ${await getFileOutputFormatting()}
 

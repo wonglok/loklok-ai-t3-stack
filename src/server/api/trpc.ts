@@ -109,7 +109,8 @@ export const createAppTRPCContext = async (opts: { headers: Headers }) => {
         };
         console.log("createAppTRPCContext", user);
     } catch (e) {
-        console.log(e);
+        console.log("havent login");
+        // console.log(e);
     }
 
     return {

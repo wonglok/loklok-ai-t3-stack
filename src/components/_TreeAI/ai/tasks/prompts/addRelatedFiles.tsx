@@ -1,23 +1,26 @@
 import { useAI } from "@/components/_TreeAI/state/useAI";
 
-export function addRelatedFiles({ name = "" }) {
+export function addRelatedFiles({
+    name = "",
+    title = "## Here are the related files:",
+}) {
     let files = useAI.getState().files;
 
     let inject = `
-    ## Here are the related files:
+${title}
         `;
 
     for (let file of files) {
         if (file.path.startsWith(name))
             inject += `
-    ------------------------
-    File Path: ${file.path}
-    File Summary:
-    ${file.summary}
+------------------------
+File Path: ${file.path}
+File Summary:
+${file.summary}
 
-    File Content:
-    ${file.content}
-    ------------------------
+File Content:
+${file.content}
+------------------------
             `;
     }
 
