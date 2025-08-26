@@ -31,6 +31,11 @@ export type MyModel = {
 const Models: MyModel[] = [
     {
         provider: "lmstudio",
+        name: "qwen3-coder-30b-a3b-instruct-1m",
+        modelOriginalName: "qwen3-coder-30b-a3b-instruct-1m",
+    },
+    {
+        provider: "lmstudio",
         name: "openai/gpt-oss-20b",
         modelOriginalName: "openai/gpt-oss-20b",
     },
@@ -146,8 +151,8 @@ export const useAI = create<{
             {
                 name: "#01",
                 displayName: "AI Developer 01",
-                modelName: "openai/gpt-oss-20b",
-                modelOriginalName: "openai/gpt-oss-20b",
+                modelName: "qwen3-coder-30b-a3b-instruct-1m",
+                modelOriginalName: "qwen3-coder-30b-a3b-instruct-1m",
                 modelProvider: "lmstudio",
                 status: "empty",
                 enabled: true,

@@ -97,7 +97,8 @@ export const SettingsBootUp = () => {
         useAI.getState().engines[4].enabled =
             localStorage.getItem("engine4") === "ok";
 
-        useAI.getState().engines[0].modelName = "openai/gpt-oss-20b";
+        useAI.getState().engines[0].modelName =
+            localStorage.getItem("engine0-modelName") || "openai/gpt-oss-20b";
         useAI.getState().engines[1].modelName =
             localStorage.getItem("engine1-modelName") || "openai/gpt-oss-20b:2";
         useAI.getState().engines[2].modelName =
@@ -107,17 +108,19 @@ export const SettingsBootUp = () => {
         useAI.getState().engines[4].modelName =
             localStorage.getItem("engine4-modelName") || "openai/gpt-oss-20b:5";
 
-        useAI.getState().engines[0].modelName = "openai/gpt-oss-20b";
-        useAI.getState().engines[1].modelName =
+        useAI.getState().engines[0].modelOriginalName =
+            localStorage.getItem("engine0-modelOriginalName") ||
+            "openai/gpt-oss-20b";
+        useAI.getState().engines[1].modelOriginalName =
             localStorage.getItem("engine1-modelOriginalName") ||
             "openai/gpt-oss-20b";
-        useAI.getState().engines[2].modelName =
+        useAI.getState().engines[2].modelOriginalName =
             localStorage.getItem("engine2-modelOriginalName") ||
             "openai/gpt-oss-20b";
-        useAI.getState().engines[3].modelName =
+        useAI.getState().engines[3].modelOriginalName =
             localStorage.getItem("engine3-modelOriginalName") ||
             "openai/gpt-oss-20b";
-        useAI.getState().engines[4].modelName =
+        useAI.getState().engines[4].modelOriginalName =
             localStorage.getItem("engine4-modelOriginalName") ||
             "openai/gpt-oss-20b";
 
