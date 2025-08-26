@@ -57,7 +57,7 @@ export async function handleMongoose({
     chatblocks.push({
         role: "assistant",
         content: `
-        Here's the entire tech spec, but only focus on Mongoose Model Section:
+        Here's the entire tech spec, but only focus on Mongoose Model Section and implement mongoose models:
 
 
 
@@ -176,31 +176,33 @@ ${await getFileOutputFormatting()}
 
     //
 
-    // let lastFile = "";
+    let lastLength = -1;
     let parseText = async (text) => {
         try {
             const blocks = parseCodeBlocksGen3(`${text}`);
 
-            for (let block of blocks) {
-                if (block.action === "create-file") {
-                    await writeFileContent({
-                        summary: `${block.summary}`,
-                        path: `${block.fileName}`,
-                        content: block.code,
-                    });
-                    await saveToBrowserDB();
-                } else if (block.action === "update-file") {
-                    await writeFileContent({
-                        summary: `${block.summary}`,
-                        path: `${block.fileName}`,
-                        content: block.code,
-                    });
-                    await saveToBrowserDB();
-                } else if (block.action === "remove-file") {
-                    await removeFile({
-                        path: `${block.fileName}`,
-                    });
-                } else {
+            if (lastLength !== blocks.length) {
+                lastLength = blocks.length;
+
+                for (let block of blocks) {
+                    if (block.action === "create-file") {
+                        await writeFileContent({
+                            summary: `${block.summary}`,
+                            path: `${block.fileName}`,
+                            content: block.code,
+                        });
+                    } else if (block.action === "update-file") {
+                        await writeFileContent({
+                            summary: `${block.summary}`,
+                            path: `${block.fileName}`,
+                            content: block.code,
+                        });
+                    } else if (block.action === "remove-file") {
+                        await removeFile({
+                            path: `${block.fileName}`,
+                        });
+                    } else {
+                    }
                 }
             }
         } catch (e) {

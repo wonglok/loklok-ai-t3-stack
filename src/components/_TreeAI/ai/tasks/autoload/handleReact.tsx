@@ -56,8 +56,7 @@ export async function handleReact({
     chatblocks.push({
         role: "assistant",
         content: `
-        Here's the entire tech spec, but only focus on REACT JS Section:
-
+        Here's the entire tech spec, but only focus on REACT JS Section and implement ReactJS:
 
         ${await readFileContent({
             path: `/docs/overall.md`,
@@ -198,29 +197,33 @@ ${await getFileOutputFormatting()}
 
     //
 
-    // let lastFile = "";
+    let lastLength = -1;
     let parseText = async (text) => {
         try {
             const blocks = parseCodeBlocksGen3(`${text}`);
 
-            for (let block of blocks) {
-                if (block.action === "create-file") {
-                    await writeFileContent({
-                        summary: `${block.summary}`,
-                        path: `${block.fileName}`,
-                        content: block.code,
-                    });
-                } else if (block.action === "update-file") {
-                    await writeFileContent({
-                        summary: `${block.summary}`,
-                        path: `${block.fileName}`,
-                        content: block.code,
-                    });
-                } else if (block.action === "remove-file") {
-                    await removeFile({
-                        path: `${block.fileName}`,
-                    });
-                } else {
+            if (lastLength !== blocks.length) {
+                lastLength = blocks.length;
+
+                for (let block of blocks) {
+                    if (block.action === "create-file") {
+                        await writeFileContent({
+                            summary: `${block.summary}`,
+                            path: `${block.fileName}`,
+                            content: block.code,
+                        });
+                    } else if (block.action === "update-file") {
+                        await writeFileContent({
+                            summary: `${block.summary}`,
+                            path: `${block.fileName}`,
+                            content: block.code,
+                        });
+                    } else if (block.action === "remove-file") {
+                        await removeFile({
+                            path: `${block.fileName}`,
+                        });
+                    } else {
+                    }
                 }
             }
         } catch (e) {
@@ -240,13 +243,10 @@ ${await getFileOutputFormatting()}
     let text = "";
     for await (let part of response.textStream) {
         text += part;
-        // console.log(text);
 
         parseText(text);
 
         ticker.tick(text);
-
-        //
     }
     parseText(text);
 

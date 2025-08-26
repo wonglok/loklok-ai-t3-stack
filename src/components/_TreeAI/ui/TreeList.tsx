@@ -335,22 +335,24 @@ export function TreeList() {
                     }}
                 ></TreeItem>
             </TreeItem>
-            <>{`Debug`}</>
-            {files.map((r) => {
-                return (
-                    <TreeItem
-                        key={r.path + "any"}
-                        itemId={r.path + "itemid"}
-                        label={`${r.path}`}
-                        onClick={() => {
-                            useAI.setState({
-                                topTab: "code",
-                                currentPath: r.path,
-                            });
-                        }}
-                    />
-                );
-            })}
+            {/* <>
+                <>{`Debug`}</>
+                {files.map((r) => {
+                    return (
+                        <TreeItem
+                            key={r.path + "any"}
+                            itemId={r.path + "itemid"}
+                            label={`${r.path}`}
+                            onClick={() => {
+                                useAI.setState({
+                                    topTab: "code",
+                                    currentPath: r.path,
+                                });
+                            }}
+                        />
+                    );
+                })}
+            </> */}
         </SimpleTreeView>
     );
 }
