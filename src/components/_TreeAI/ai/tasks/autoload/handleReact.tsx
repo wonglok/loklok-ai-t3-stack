@@ -88,10 +88,8 @@ export async function handleReact({
 - MUST USE '/...' to import modules
 
 - use named export for "App" Component like the following: 
-- MUST EXPORT components with name like: "export function App () {...}" // good
-- MUST NOT EXPORT components with default like: "export default function App () {...}" // bad
-- MUST IMPORT reactjs components using named import like: import { App } from '/components/App.tsx' // good
-- MUST NOT IMPORT reactjs components using default import like: import App from '/components/App.tsx' // bad
+- MUST export reactjs components with default like: export default ... // good
+- MUST import reactjs components with default like: import App from '/components/App.tsx' // bad
 
 - include the following lines:
 import * as React from 'react';
@@ -126,7 +124,7 @@ await window.trpcSDK.client...
 import { Router, Route, useLocation } from "react-router-dom";
 import { useHashLocation } from "react-router-dom";
 
-export function App () {
+export default function App () {
     let [currnetLocation, setLocation] = useLocation();
 
     return <>

@@ -93,7 +93,10 @@ Instructions:
 - MUST write each model one by one in different files.
 - MUST use: authorId: { type: String, required: true }
 - MUST use: userId: { type: String, required: true }
-- MUST use String for foreign keys
+- MUST use String type for foreign keys
+- MUST use: String type for date
+- MUST use: Date type for datetime
+
 
 
 ------------Example---------------
