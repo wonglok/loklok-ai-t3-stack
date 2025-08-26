@@ -61,9 +61,14 @@ export async function handleReact({
         ${await readFileContent({
             path: `/docs/overall.md`,
         })}
+
+        
+
         ${await readFileContent({
             path: `/docs/components.md`,
         })}
+
+        - MUST implement all pages in Page Routes and Component Structure in App Router and also in MenuAfterLogin and MenuBeforeLogin accordingly
         `,
     });
 
@@ -151,7 +156,6 @@ ${addRelatedFiles({ name: "/models", title: `please implement all data requireme
 ${addRelatedFiles({ name: "/trpc", title: `here's the backend procedures, please make sure front end has the error display slot and proper interatives.` })}
 ${addRelatedFiles({ name: "/store", title: `here's the zustand state store for user interfaces, please make sure interactions with backend are implmented` })}
 ${addRelatedFiles({ name: "/components", title: `here's the reactjs ui components.` })}
-
 
 
 ${await getFileOutputFormatting()}
