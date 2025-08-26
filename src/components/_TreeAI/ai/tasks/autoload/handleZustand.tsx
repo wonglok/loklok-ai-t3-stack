@@ -141,6 +141,7 @@ example: await window.trpcSDK.getAuthToken()
 
 ## References
 
+
 ${addRelatedFiles({ name: "/trpc", title: `here's the backend procedures, please make sure front end also implements all the backend endpoint in suitable zustnad stores.` })}
 ${addRelatedFiles({ name: "/store", title: `here's some existing zustand code:` })}
 

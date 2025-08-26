@@ -104,15 +104,15 @@ import * as React from 'react';
 - MUST NOT use React.useState / useState
 - MUST NOT use React.useState
 
-- MUST use: import { Router, Route, Link, useLocation } from "wouter";
+- MUST use: import { Router, Route, useLocation } from "wouter";
 - MUST use: import { useHashLocation } from "wouter/use-hash-location";
 - MUST use: let [currnetLocation, setLocation] = useLocation();
 
 - MUST NOT use: import { useNavigate } from 'wouter';
 - MUST NOT use: import { navigate } from "wouter/use-hash-location";
 
-- MUST use: <a href="#/register">Register</a>
-- MUST NOT use: <a href="/register">Register</a>
+- MUST use hash link: <a href="#/register">Register</a>
+- MUST NOT use url link: <a href="/register">Register</a>
 
 - MUST not: In HTML, <a> cannot be a descendant of <a>. This will cause a hydration error.
 
@@ -122,7 +122,7 @@ await window.trpcSDK.client...
 -------------------------
 
 ----- EXAMPLE /components/App.jsx -----
-import { Router, Route, Link, useLocation } from "wouter";
+import { Router, Route, useLocation } from "wouter";
 import { useHashLocation } from "wouter/use-hash-location";
 
 export function App () {
@@ -146,10 +146,14 @@ export function App () {
 ----- EXAMPLE /components/App.tsx -----
 
 
+## References
+
 ${addRelatedFiles({ name: "/models", title: `please implement all data requirements in react components, here's the mongoose models:` })}
 ${addRelatedFiles({ name: "/trpc", title: `here's the backend procedures, please make sure front end has the error display slot and proper interatives.` })}
 ${addRelatedFiles({ name: "/store", title: `here's the zustand state store for user interfaces, please make sure interactions with backend are implmented` })}
 ${addRelatedFiles({ name: "/components", title: `here's the reactjs ui components.` })}
+
+
 
 ${await getFileOutputFormatting()}
 

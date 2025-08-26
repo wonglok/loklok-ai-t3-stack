@@ -335,7 +335,7 @@ export function TreeList() {
                     }}
                 ></TreeItem>
             </TreeItem>
-            <>{`Debug`}</>
+            {/* <>{`Debug`}</>
             {files.map((r) => {
                 return (
                     <TreeItem
@@ -350,7 +350,7 @@ export function TreeList() {
                         }}
                     />
                 );
-            })}
+            })} */}
         </SimpleTreeView>
     );
 }

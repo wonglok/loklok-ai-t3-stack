@@ -130,6 +130,8 @@ Instructions:
 })); // MUST NOT MODIFY THIS LINE
 ------------Example---------------
 
+## References
+
 ${addRelatedFiles({ name: "/models" })}
 
 ${await getFileOutputFormatting()}
