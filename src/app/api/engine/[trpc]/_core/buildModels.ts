@@ -1,32 +1,33 @@
 import mongoose from "mongoose";
 import {
     createTRPCRouter,
+    protectedAppProcedure,
     protectedProcedure,
     publicProcedure,
 } from "@/server/api/trpc";
 import z from "zod";
-import { toJSON } from "./toJSON";
+
 import { ObjectId } from "mongodb";
 import { transform } from "sucrase";
+import { AppCodeDB } from "@/server/api/apps/models";
 export const buildModels = async ({
     dbAppInstance,
     appHashID,
-    dbPlatform,
     phase,
     appID,
 }) => {
     //
     let defineMongooseModelsContent = "";
 
-    let queryResult = await dbPlatform
-        .model("AppCodeStore")
-        .find({ path: { $regex: "^" + "/models" } })
-        .lean();
+    let queryResult = await AppCodeDB.find({
+        appID: appID,
+        path: { $regex: "^" + "/models" },
+    });
 
     let data = queryResult.map((r) => {
         r = { ...r };
         delete r.__v;
-        return { ...r, _id: `${r._id}` };
+        return { ...r._doc, _id: `${r._id}` };
     });
 
     for await (let item of data) {
@@ -77,12 +78,11 @@ return allModels;
 
         output = func({
             createTRPCRouter,
-            protectedProcedure,
+            protectedProcedure: protectedAppProcedure,
             publicProcedure,
             z,
             mongoose,
             appHashID: appHashID,
-            dbPlatform: dbPlatform,
             dbInstance: dbAppInstance,
             Schema: mongoose.Schema,
             ObjectId: ObjectId,

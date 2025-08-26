@@ -36,9 +36,6 @@ export const getInfoByAppID = (appID) => {
         phase = "test";
     }
 
-    const dbPlatform = mongoose.connection.useDb(`os_${phase}_${appHashID}`, {
-        useCache: true,
-    });
     const dbAppInstance = mongoose.connection.useDb(
         `app_${phase}_${appHashID}`,
         {
@@ -47,7 +44,6 @@ export const getInfoByAppID = (appID) => {
     );
 
     return {
-        dbPlatform,
         dbAppInstance,
         appHashID,
         JWT_SECRET,
@@ -106,7 +102,11 @@ export const createAppTRPCContext = async (opts: { headers: Headers }) => {
             })
             .lean();
 
-        user = { ...found, _id: (found as any)?._id?.toString() };
+        user = {
+            ...found,
+            id: (found as any)?._id?.toString(),
+            _id: (found as any)?._id?.toString(),
+        };
         console.log(user);
     } catch (e) {
         console.log(e);

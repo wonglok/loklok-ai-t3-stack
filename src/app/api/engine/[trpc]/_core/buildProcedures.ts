@@ -3,6 +3,7 @@ import { toJSON } from "./toJSON";
 import {
     createTRPCRouter,
     getInfoByAppID,
+    protectedAppProcedure,
     protectedProcedure,
     publicProcedure,
 } from "@/server/api/trpc";
@@ -12,34 +13,29 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { ObjectId } from "mongodb";
 import { transform } from "sucrase";
+import { AppCodeDB } from "@/server/api/apps/models";
 
-export const buildProcedures = async ({
-    appHashID,
-    dbPlatform,
-    phase,
-    models,
-    appID,
-}) => {
+export const buildProcedures = async ({ appHashID, phase, models, appID }) => {
     let info = getInfoByAppID(appID);
     // User.find({ username: {$regex : "^" + req.params.username} });
 
     let defineBackendProceduresContent = "";
 
-    let queryResult = await dbPlatform
-        .model("AppCodeStore")
-        .find({ path: { $regex: "^" + "/trpc" } })
-        .lean();
+    let queryResult = await AppCodeDB.find({
+        appID: appID,
+        path: { $regex: "^" + "/trpc" },
+    });
 
     let data = queryResult.map((r) => {
         r = { ...r };
         delete r.__v;
-        return { ...r, _id: `${r._id}` };
+        return { ...r._doc, _id: `${r._id}` };
     });
 
     // console.log("trpcProcedures", data);
 
     for await (let item of data) {
-        console.log("transform sucrase:", item.path);
+        console.log("transform:", item.path);
         let es6 = transform(item.content || "", {
             transforms: ["jsx", "typescript"],
             preserveDynamicImport: true,
@@ -96,12 +92,11 @@ return rootRouter;
 
         output = func({
             createTRPCRouter: createTRPCRouter,
-            protectedProcedure: protectedProcedure,
+            protectedProcedure: protectedAppProcedure,
             publicProcedure: publicProcedure,
             z,
             mongoose,
             appHashID: appHashID,
-            dbPlatform: dbPlatform,
             dbInstance: dbAppInstance,
             Schema: mongoose.Schema,
             jwt: jwt,

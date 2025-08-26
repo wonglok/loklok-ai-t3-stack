@@ -84,9 +84,7 @@ export async function onReceiveResponse({
             "handleMongoose",
         ],
         name: "handleDeploy",
-        args: {
-            hash: `${md5(JSON.stringify(useAI.getState().files))}`,
-        },
+        args: {},
     });
 
     await MyTaskManager.doneTask(task.name);

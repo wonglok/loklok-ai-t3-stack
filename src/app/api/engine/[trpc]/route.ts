@@ -3,6 +3,7 @@ import { type NextRequest } from "next/server";
 
 import { env } from "@/env";
 import {
+    createAppTRPCContext,
     // createAppTRPCContext,
     createTRPCContext,
     createTRPCRouter,
@@ -13,10 +14,11 @@ import { protectedProcedure, publicProcedure } from "@/server/api/trpc";
 import mongoose from "mongoose";
 import md5 from "md5";
 import shortHash from "short-hash";
-import { toJSON } from "./_core/toJSON";
+// import { toJSON } from "./_core/toJSON";
 import { buildModels } from "./_core/buildModels";
 import { buildProcedures } from "./_core/buildProcedures";
 import { trackGlobal } from "../../_track/trackGlobal";
+import { AppCodeDB } from "@/server/api/apps/models";
 // import { appRouter } from "@/server/api/root";
 
 /**
@@ -24,12 +26,12 @@ import { trackGlobal } from "../../_track/trackGlobal";
  * handling a HTTP request (e.g. when you make requests from Client Components).
  */
 const createContext = async (req: NextRequest) => {
-    return createTRPCContext({
+    return createAppTRPCContext({
         headers: req.headers,
     });
 };
 
-const buildAppRouter = async ({ appID, appHashID, dbPlatform, phase }) => {
+const buildAppRouter = async ({ appID, appHashID, phase }) => {
     try {
         let buildAppRouter = new Function(
             `args`,
@@ -87,7 +89,6 @@ return appRouter;
         let models = await buildModels({
             appID,
             phase,
-            dbPlatform,
             appHashID,
             dbAppInstance,
         });
@@ -95,7 +96,6 @@ return appRouter;
         let procedures = await buildProcedures({
             appID,
             phase,
-            dbPlatform,
             appHashID,
             models,
         });
@@ -107,7 +107,7 @@ return appRouter;
             z,
             mongoose,
             appHashID: appHashID,
-            dbPlatform: dbPlatform,
+
             dbInstance: dbAppInstance,
             Schema: mongoose.Schema,
             procedures: procedures,
@@ -154,77 +154,9 @@ const handler = async (req: NextRequest) => {
     console.log("appHashID", appHashID);
     console.log("phase", phase);
 
-    const dbPlatform = mongoose.connection.useDb(`os_${phase}_${appHashID}`, {
-        useCache: true,
-    });
-
-    const AppCodeStore = new mongoose.Schema(
-        {
-            versionID: { type: String, required: false },
-            path: { type: String, required: true },
-            summary: { type: String, required: true },
-            content: { type: String },
-        },
-        {
-            timestamps: true,
-        },
-    );
-
-    if (!dbPlatform.models["AppCodeStore"]) {
-        dbPlatform.model("AppCodeStore", AppCodeStore);
-    }
-
-    let platformRouter = createTRPCRouter({
-        setFS: protectedProcedure
-            .input(
-                z.object({
-                    path: z.string(),
-                    content: z.string(),
-                    summary: z.string().optional(),
-                }),
-            )
-            .mutation(async ({ input, ctx }) => {
-                // console.log(ctx.session.user);
-
-                let updated = await dbPlatform
-                    .model("AppCodeStore")
-                    .findOneAndUpdate(
-                        {
-                            path: input.path,
-                        },
-                        {
-                            path: input.path,
-                            content: input.content || "",
-                            summary: input.summary || "",
-                        },
-                        { ["upsert"]: true, ["new"]: true },
-                    );
-                return {
-                    ok: "deployed",
-                    path: updated.path,
-                    content: updated.content,
-                };
-            }),
-        reset: protectedProcedure
-            .input(z.object({}))
-            .mutation(async ({ input, ctx }) => {
-                // console.log(ctx.session.user);
-                await dbPlatform.model("AppCodeStore").deleteMany({});
-                return { ok: "reset" };
-            }),
-        getFiles: protectedProcedure
-            .input(z.object({}))
-            .mutation(async ({ input, ctx }) => {
-                // console.log(ctx.session.user);
-                let files = await dbPlatform.model("AppCodeStore").find();
-                return JSON.parse(JSON.stringify(files));
-            }),
-    });
-
     let myTRPCRouter = createTRPCRouter({
         app: await buildAppRouter({
             phase,
-            dbPlatform,
             appHashID,
             appID,
         }).catch((e) => {
@@ -240,15 +172,6 @@ const handler = async (req: NextRequest) => {
                     }),
             });
         }),
-        public: createTRPCRouter({
-            getFiles: publicProcedure
-                .input(z.object({}))
-                .mutation(async ({ input }) => {
-                    let files = await dbPlatform.model("AppCodeStore").find();
-                    return JSON.parse(JSON.stringify(files));
-                }),
-        }),
-        platform: platformRouter,
     });
 
     return fetchRequestHandler({

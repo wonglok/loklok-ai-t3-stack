@@ -12,6 +12,8 @@ export class LokLokSDK {
     public platform: TRPCClient<AppRouter>;
     private appID: string;
     constructor({ appID }) {
+        this.appID = appID;
+
         function getBaseUrl() {
             if (typeof window !== "undefined") return window.location.origin;
             if (process.env.VERCEL_URL)
@@ -19,7 +21,7 @@ export class LokLokSDK {
             return "http://localhost:" + (process.env.PORT || 3000);
         }
 
-        const client = createTRPCClient<AnyRouter>({
+        this.client = createTRPCClient<AnyRouter>({
             links: [
                 httpBatchStreamLink({
                     transformer: SuperJSON as any,
@@ -39,10 +41,6 @@ export class LokLokSDK {
             ],
         });
 
-        this.appID = appID;
-
-        this.client = client;
-
         this.platform = createTRPCClient<AppRouter>({
             links: [
                 httpBatchStreamLink({
@@ -51,7 +49,6 @@ export class LokLokSDK {
                     headers: () => {
                         const headers = new Headers();
                         headers.set("x-trpc-source", "nextjs-react-app");
-
                         headers.set("app-id", appID);
 
                         return headers;
