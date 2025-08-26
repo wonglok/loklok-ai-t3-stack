@@ -36,6 +36,21 @@ const Models: MyModel[] = [
     },
     {
         provider: "lmstudio",
+        name: "qwen3-coder-30b-a3b-instruct-1m:2",
+        modelOriginalName: "qwen3-coder-30b-a3b-instruct-1m",
+    },
+    {
+        provider: "lmstudio",
+        name: "qwen3-coder-30b-a3b-instruct-1m:3",
+        modelOriginalName: "qwen3-coder-30b-a3b-instruct-1m",
+    },
+    {
+        provider: "lmstudio",
+        name: "openai/gpt-oss-120b",
+        modelOriginalName: "openai/gpt-oss-20b",
+    },
+    {
+        provider: "lmstudio",
         name: "openai/gpt-oss-20b",
         modelOriginalName: "openai/gpt-oss-20b",
     },
@@ -57,21 +72,6 @@ const Models: MyModel[] = [
     {
         provider: "lmstudio",
         name: "openai/gpt-oss-20b:5",
-        modelOriginalName: "openai/gpt-oss-20b",
-    },
-    {
-        provider: "lmstudio",
-        name: "openai/gpt-oss-20b:6",
-        modelOriginalName: "openai/gpt-oss-20b",
-    },
-    {
-        provider: "lmstudio",
-        name: "openai/gpt-oss-20b:7",
-        modelOriginalName: "openai/gpt-oss-20b",
-    },
-    {
-        provider: "lmstudio",
-        name: "openai/gpt-oss-120b",
         modelOriginalName: "openai/gpt-oss-20b",
     },
 ];
