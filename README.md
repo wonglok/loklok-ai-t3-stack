@@ -6,8 +6,12 @@ I want to practice making ai coding agent that works and i want to share my crea
 
 Thank you Theo for T3 Stack Opensource.
 
+# ScreenCapture
+<img width="5112" height="2376" alt="demo" src="https://github.com/user-attachments/assets/2bdc7058-9de7-4240-be18-d58cbd71a961" />
+
+
 # How to install?
-npm i;
+yarn;
 
 # What else do i need?
 MongodB Atlas free database cluster and some exmaple code proejct below. You also need to install lmstudio for LLM workload.
