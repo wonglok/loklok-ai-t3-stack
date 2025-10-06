@@ -1,4 +1,4 @@
-# EffectNode AI Coding Agent stack funz
+# EffectNode AI Coding Agent OpenSource
 made with 💕 in hong kong by github.com/wonglok
 
 # Why made this project?
